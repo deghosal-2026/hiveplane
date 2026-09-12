@@ -12,6 +12,13 @@ Centralized log of significant HivePlane design decisions, referenced as DD-NN.
 | DD-06 | Telemetry is OpenTelemetry-native; traces, metrics, and logs share run correlation IDs | accepted |
 | DD-07 | Every operator action is auditable and attributable | accepted |
 | DD-08 | The system must be useful locally (Docker Compose) before it claims scale | accepted |
+| DD-09 | Production admission requires valid, unexpired certification; uncertified agents are refused at the gate | accepted |
+| DD-10 | Certifications are signed attestations binding benchmark version, model identity, and environment | accepted |
+| DD-11 | Manifest changes require re-certification before promotion; regressions are blocked | accepted |
+| DD-12 | Drift is measured against the agent's own certification baseline, not a global standard | accepted |
+| DD-13 | Tool outputs are shaped at the boundary (filter, truncate, budget), not inside the agent | accepted |
+| DD-14 | Destructive runs execute in an isolated sandbox with resource caps and restricted egress | accepted |
+| DD-15 | Certification is necessary but not sufficient — budget, policy, sandbox, and approvals remain enforced at runtime | accepted |
 
 ## Format
 

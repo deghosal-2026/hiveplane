@@ -32,4 +32,5 @@ Design docs for HivePlane — organized by subsystem and PRD.
 
 ## Cross-Cutting
 
-- [Design Decisions](design-decisions.md) — DD-01 onward
+- [Design Decisions](design-decisions.md) — DD-01 through DD-15
+- **Certification Pipeline** — benchmark runner, certification engine, attestation, promotion gate, drift detector (documented in [PRD 01 Why](prd/01-why.md), [PRD 02 Architecture](prd/02-architecture.md), and [PRD 05 Features](prd/05-features.md); subsystem design doc to be added)
