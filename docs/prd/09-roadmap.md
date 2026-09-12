@@ -103,4 +103,4 @@ Each version ships with: release notes (`docs/release/`), field test report (`do
 - [Features](05-features.md)
 - [Success metrics](07-success-metrics.md)
 - [Risks](08-risks.md)
-- [v0.1.0 WBS](../../wbs/v0.1.0/wbs-v0.1.0-index.md)
+- [v0.1.0 WBS](../wbs/v0.1.0/wbs-v0.1.0-index.md)

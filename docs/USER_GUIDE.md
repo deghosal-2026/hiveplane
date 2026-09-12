@@ -43,7 +43,7 @@ hiveplane runs stop <run-id>
 | **Policy** | Rules governing tool permissions, budgets, and approvals |
 | **Adapter** | The bridge between HivePlane and a runtime (LangGraph, raw worker) |
 
-See [design/prd/04-users-and-cujs.md](design/prd/04-users-and-cujs.md) for critical user journeys.
+See [prd/04-users-and-cujs.md](prd/04-users-and-cujs.md) for critical user journeys.
 
 ## Configuration
 

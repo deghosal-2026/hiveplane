@@ -103,10 +103,10 @@ Client ──> Execution API ──> Registry (resolve + check certification)
 
 ## See Also
 
-- [Workload manifest design](../workload-manifest-design.md)
-- [Run lifecycle design](../run-lifecycle-design.md)
-- [Policy engine design](../policy-engine-design.md)
-- [Budget enforcement design](../budget-enforcement-design.md)
-- [Runtime adapter design](../runtime-adapter-design.md)
-- [Telemetry design](../telemetry-design.md)
-- [Design decisions](../design-decisions.md)
+- [Workload manifest design](../design/workload-manifest-design.md)
+- [Run lifecycle design](../design/run-lifecycle-design.md)
+- [Policy engine design](../design/policy-engine-design.md)
+- [Budget enforcement design](../design/budget-enforcement-design.md)
+- [Runtime adapter design](../design/runtime-adapter-design.md)
+- [Telemetry design](../design/telemetry-design.md)
+- [Design decisions](../design/design-decisions.md)
