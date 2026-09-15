@@ -1,0 +1,109 @@
+apiVersion: hiveplane/v1
+kind: AgentWorkload
+metadata:
+  name: incident-agent
+  owner: platform-team
+  team: platform
+  description: Triages alerts, acknowledges incidents, and drafts remediation.
+  labels:
+    environment: production
+    criticality: high
+spec:
+  runtime:
+    adapter: raw-worker
+    entrypoint: examples.incident_agent:run
+  model:
+    strategy: tiered
+    identity:
+      provider: openai
+      family: gpt-4o
+      version: "2024-08-06"
+  certification:
+    benchmark_corpus: corpora/incident-agent/v1
+    staging_threshold: 0.70
+    production_threshold: 0.90
+    no_critical_failures: true
+    latency_budget_ms: 30000
+    re_cert_interval: 7d
+    status: uncertified
+  tools:
+    allow:
+      - tool_id: prometheus.query
+        trust_level: read_only
+      - tool_id: github.create_pr_comment
+        trust_level: read_only
+      - tool_id: pagerduty.acknowledge
+        trust_level: destructive
+        require_approval: true
+    deny:
+      - github.delete_repo
+    mcp_servers:
+      - name: monitoring-tools
+        endpoint: http://mcp-fabric/monitoring
+      - name: github-tools
+        endpoint: http://mcp-fabric/github
+      - name: incident-tools
+        endpoint: http://mcp-fabric/incident
+    default_trust: read_only
+  budget:
+    per_run_usd: 0.80
+    per_day_usd: 8.00
+    per_team_usd: 50.00
+  approvals:
+    required_for:
+      - destructive
+    contact: "#platform-oncall"
+    auto_escalate_after: 300s
+  triggers:
+    - type: alert
+      source: pagerduty
+      match:
+        severity: [critical, warning]
+    - type: cron
+      schedule: "0 */6 * * *"
+      mode: watch
+      max_concurrent: 1
+  sandbox:
+    enabled: true
+    resource_caps:
+      memory_mb: 2048
+      cpu_cores: 2.0
+      wall_clock_s: 900
+    egress:
+      allow: ["api.pagerduty.com", "api.github.com"]
+      deny: ["169.254.169.254"]
+      mode: restricted
+    filesystem: isolated
+  output_shaping:
+    max_bytes: 65536
+    truncate_strategy: head
+    filter_rules:
+      - pattern: "(?i)(api[_-]?key|secret|token|password)"
+        action: redact
+    injection_scan: true
+  fan_out:
+    on_completed:
+      - type: slack
+        channel: "#incident-reports"
+      - type: webhook
+        url: https://hooks.example.com/hiveplane
+    on_escalation:
+      - type: teams
+        channel: "Platform Escalations"
+    on_failed:
+      - type: jira
+        project: PLAT
+        issue_type: Incident
+    always_include: [trace_link, attestation_link]
+  health:
+    readiness_probe:
+      type: dry_run
+      interval: 60s
+    slo:
+      availability_target: 0.99
+      quality_target: 0.90
+      error_budget_window: 24h
+    failure_rate_threshold: 0.15
+  observability:
+    contract: standard
+    trace_sampling: 1.0

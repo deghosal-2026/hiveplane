@@ -23,13 +23,15 @@ Stand up the HivePlane package skeleton, developer tooling, the local stack, and
 
 **Issues:** [#6](https://github.com/deghosal-2026/hiveplane/issues/6) · [#7](https://github.com/deghosal-2026/hiveplane/issues/7) · [#8](https://github.com/deghosal-2026/hiveplane/issues/8) · [#9](https://github.com/deghosal-2026/hiveplane/issues/9) · [#10](https://github.com/deghosal-2026/hiveplane/issues/10)
 
-- [ ] [#6](https://github.com/deghosal-2026/hiveplane/issues/6) — Core domain models (workload, run, event, usage, decision)
-- [ ] [#7](https://github.com/deghosal-2026/hiveplane/issues/7) — Certification domain models (cert, attestation, corpus, task)
-- [ ] [#8](https://github.com/deghosal-2026/hiveplane/issues/8) — Trigger, tool, fan-out, and health models
-- [ ] [#9](https://github.com/deghosal-2026/hiveplane/issues/9) — Manifest parser, validator, and JSON Schema export
-- [ ] [#10](https://github.com/deghosal-2026/hiveplane/issues/10) — Example workload manifests
+- [x] [#6](https://github.com/deghosal-2026/hiveplane/issues/6) — Core domain models (workload, run, event, usage, decision)
+- [x] [#7](https://github.com/deghosal-2026/hiveplane/issues/7) — Certification domain models (cert, attestation, corpus, task)
+- [x] [#8](https://github.com/deghosal-2026/hiveplane/issues/8) — Trigger, tool, fan-out, and health models
+- [x] [#9](https://github.com/deghosal-2026/hiveplane/issues/9) — Manifest parser, validator, and JSON Schema export
+- [x] [#10](https://github.com/deghosal-2026/hiveplane/issues/10) — Example workload manifests
 
 **Done when:** every model is typed and tested, manifests validate strictly, invalid manifests produce specific errors, and the three example workloads validate.
+
+**Status:** Complete. Domain models under `hiveplane.core` and `hiveplane.certification`; `hiveplane validate` CLI; `GET /manifest/schema`; `docs/workloads/manifest.schema.json`; three example workloads under `examples/workloads/`. Tests pass, coverage 98.6%, ruff clean, mypy strict clean. Milestone M2 closed; issues #6-#10 closed.
 
 ## Dependencies
 
@@ -37,16 +39,16 @@ Stand up the HivePlane package skeleton, developer tooling, the local stack, and
 
 ## Exit Gate (M1, M2)
 
-> M1 passed this gate on commit `8ecab27`. Boxes are checked when M2 completes, since the gate is re-run against the full system before Part 2 begins.
+> M1 passed this gate on commit `8ecab27`; M2 passed on the M2 commit. Part 1 is complete.
 
-- [ ] All tests in the system pass: `pytest`
-- [ ] Code coverage total > 95%
-- [ ] Ruff clean
-- [ ] Mypy strict clean
-- [ ] Update all relevant docs affected by this milestone
-- [ ] Verify all issues in this milestone are done
-- [ ] Close all completed issues
-- [ ] Commit and push changes
+- [x] All tests in the system pass: `pytest`
+- [x] Code coverage total > 95%
+- [x] Ruff clean
+- [x] Mypy strict clean
+- [x] Update all relevant docs affected by this milestone
+- [x] Verify all issues in this milestone are done
+- [x] Close all completed issues
+- [x] Commit and push changes
 
 ## See Also
 

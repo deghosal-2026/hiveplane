@@ -23,3 +23,12 @@ def test_readyz_reports_ready() -> None:
 
     assert response.status_code == 200
     assert response.json() == {"status": "ready"}
+
+
+def test_manifest_schema_endpoint() -> None:
+    client = TestClient(create_app())
+
+    response = client.get("/manifest/schema")
+
+    assert response.status_code == 200
+    assert response.json()["title"] == "AgentWorkload"

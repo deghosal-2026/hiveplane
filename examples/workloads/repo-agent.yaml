@@ -1,0 +1,100 @@
+apiVersion: hiveplane/v1
+kind: AgentWorkload
+metadata:
+  name: repo-agent
+  owner: platform-team
+  team: platform
+  description: Summarizes open pull requests and flags risky changes.
+  labels:
+    environment: production
+    criticality: medium
+spec:
+  runtime:
+    adapter: raw-worker
+    entrypoint: examples.repo_agent:run
+    env:
+      LOG_LEVEL: info
+  model:
+    strategy: tiered
+    identity:
+      provider: openai
+      family: gpt-4o
+      version: "2024-08-06"
+  certification:
+    benchmark_corpus: corpora/repo-agent/v1
+    staging_threshold: 0.80
+    production_threshold: 0.90
+    no_critical_failures: true
+    latency_budget_ms: 30000
+    re_cert_interval: 14d
+    status: uncertified
+  tools:
+    allow:
+      - tool_id: mcp.github.list_pull_requests
+        trust_level: read_only
+      - tool_id: mcp.github.read_issue
+        trust_level: read_only
+      - tool_id: mcp.github.create_pr_comment
+        trust_level: read_only
+    deny:
+      - mcp.github.delete_repo
+    mcp_servers:
+      - name: github-tools
+        endpoint: http://mcp-fabric/github
+    default_trust: read_only
+  budget:
+    per_run_usd: 0.50
+    per_day_usd: 5.00
+    per_team_usd: 50.00
+  approvals:
+    required_for:
+      - production_write
+    contact: "#platform-oncall"
+    auto_escalate_after: 300s
+  triggers:
+    - type: github_pr
+      events: [opened, synchronize]
+      match:
+        paths: ["src/**"]
+    - type: cron
+      schedule: "0 */6 * * *"
+      mode: scheduled
+      max_concurrent: 1
+  sandbox:
+    enabled: true
+    resource_caps:
+      memory_mb: 512
+      cpu_cores: 1.0
+      wall_clock_s: 300
+    egress:
+      allow: ["api.github.com"]
+      deny: ["169.254.169.254"]
+      mode: restricted
+    filesystem: isolated
+  output_shaping:
+    max_bytes: 16384
+    truncate_strategy: tail
+    filter_rules:
+      - pattern: "(?i)(api[_-]?key|secret|token|password)"
+        action: redact
+    injection_scan: true
+  fan_out:
+    on_completed:
+      - type: slack
+        channel: "#repo-agent-results"
+    on_failed:
+      - type: slack
+        channel: "#platform-oncall"
+    always_include: [trace_link, attestation_link]
+  health:
+    readiness_probe:
+      type: dry_run
+      interval: 60s
+    slo:
+      availability_target: 0.99
+      quality_target: 0.90
+      error_budget_window: 24h
+    failure_rate_threshold: 0.15
+  observability:
+    contract: standard
+    trace_sampling: 1.0

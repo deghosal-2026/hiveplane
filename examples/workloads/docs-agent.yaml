@@ -1,0 +1,93 @@
+apiVersion: hiveplane/v1
+kind: AgentWorkload
+metadata:
+  name: docs-agent
+  owner: docs-team
+  team: developer-experience
+  description: Drafts documentation updates and opens review PRs.
+  labels:
+    environment: staging
+    criticality: low
+spec:
+  runtime:
+    adapter: langgraph
+    entrypoint: examples.docs_agent:graph
+  model:
+    strategy: router
+    identity:
+      provider: openai
+      family: gpt-4o
+      version: "2024-08-06"
+  certification:
+    benchmark_corpus: corpora/docs-agent/v1
+    staging_threshold: 0.75
+    production_threshold: 0.90
+    no_critical_failures: true
+    latency_budget_ms: 45000
+    re_cert_interval: 14d
+    status: uncertified
+  tools:
+    allow:
+      - tool_id: mcp.github.read_issue
+        trust_level: read_only
+      - tool_id: mcp.github.create_pr
+        trust_level: destructive
+        require_approval: true
+    deny:
+      - mcp.github.delete_repo
+    mcp_servers:
+      - name: github-tools
+        endpoint: http://mcp-fabric/github
+    default_trust: read_only
+  budget:
+    per_run_usd: 0.80
+    per_day_usd: 8.00
+    per_team_usd: 40.00
+  approvals:
+    required_for:
+      - destructive
+      - production_write
+    contact: "#docs-oncall"
+    auto_escalate_after: 600s
+  triggers:
+    - type: github_pr
+      events: [opened, synchronize]
+      match:
+        paths: ["docs/**"]
+  sandbox:
+    enabled: true
+    resource_caps:
+      memory_mb: 1024
+      cpu_cores: 1.5
+      wall_clock_s: 600
+    egress:
+      allow: ["api.github.com"]
+      deny: ["169.254.169.254"]
+      mode: restricted
+    filesystem: isolated
+  output_shaping:
+    max_bytes: 32768
+    truncate_strategy: summary
+    filter_rules:
+      - pattern: "password|secret|token"
+        action: redact
+      - pattern: "\\b\\d{16}\\b"
+        action: mask
+    injection_scan: true
+  fan_out:
+    on_completed:
+      - type: slack
+        channel: "#docs-agent-results"
+    on_failed:
+      - type: slack
+        channel: "#docs-oncall"
+    always_include: [trace_link]
+  health:
+    slo:
+      availability_target: 0.98
+      quality_target: 0.85
+      error_budget_window: 48h
+    failure_rate_threshold: 0.20
+  observability:
+    contract: standard
+    trace_sampling: 1.0

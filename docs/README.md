@@ -57,6 +57,7 @@ Documentation for the HivePlane project — the control plane for production age
 ### Reference Docs
 
 - [Workload Manifest Format Spec](workloads/manifest-format-spec.md) — The stable contract (all fields)
+- [Manifest JSON Schema](workloads/manifest.schema.json) — Machine-readable contract; also served at `GET /manifest/schema`
 - [Contributing Workloads](workloads/CONTRIBUTING.md) — How to add a workload
 - [Adapters](ADAPTERS.md) — Adapter contract, conformance suite, sandbox + shaping + model-binding
 - [Observability](observability.md) — Signals, agent health model, certification metrics, cost showback

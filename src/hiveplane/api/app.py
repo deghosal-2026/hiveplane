@@ -6,9 +6,12 @@ intervention endpoints arrive in later milestones (M8-M12, M21-M22).
 
 from __future__ import annotations
 
+from typing import Any
+
 from fastapi import FastAPI
 
 from hiveplane import __version__
+from hiveplane.core.manifest import manifest_json_schema
 
 
 def create_app() -> FastAPI:
@@ -28,6 +31,11 @@ def create_app() -> FastAPI:
     def readyz() -> dict[str, str]:
         """Readiness probe: the control plane can accept traffic."""
         return {"status": "ready"}
+
+    @app.get("/manifest/schema", tags=["manifest"])
+    def manifest_schema() -> dict[str, Any]:
+        """Return the JSON Schema for the AgentWorkload manifest."""
+        return manifest_json_schema()
 
     return app
 

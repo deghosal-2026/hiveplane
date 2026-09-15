@@ -51,6 +51,9 @@ Homepage = "https://github.com/deghosal-2026/hiveplane"
 Repository = "https://github.com/deghosal-2026/hiveplane"
 Issues = "https://github.com/deghosal-2026/hiveplane/issues"
 
+[project.scripts]
+hiveplane = "hiveplane.cli:main"
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/hiveplane"]
 

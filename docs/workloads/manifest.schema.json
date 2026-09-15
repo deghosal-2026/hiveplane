@@ -1,0 +1,1061 @@
+{
+  "$defs": {
+    "ActionClass": {
+      "description": "Known action classes used by policy and approvals.",
+      "enum": [
+        "read_only",
+        "destructive",
+        "production_write",
+        "high_spend"
+      ],
+      "title": "ActionClass",
+      "type": "string"
+    },
+    "ApprovalsSpec": {
+      "additionalProperties": false,
+      "description": "Which action classes require human approval.",
+      "properties": {
+        "auto_escalate_after": {
+          "default": 300,
+          "title": "Auto Escalate After",
+          "type": "integer"
+        },
+        "contact": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Contact"
+        },
+        "required_for": {
+          "items": {
+            "$ref": "#/$defs/ActionClass"
+          },
+          "title": "Required For",
+          "type": "array"
+        }
+      },
+      "title": "ApprovalsSpec",
+      "type": "object"
+    },
+    "BudgetSpec": {
+      "additionalProperties": false,
+      "description": "Per-run, per-day, and per-team spend ceilings (DD-04).",
+      "properties": {
+        "per_day_usd": {
+          "exclusiveMinimum": 0.0,
+          "title": "Per Day Usd",
+          "type": "number"
+        },
+        "per_run_usd": {
+          "exclusiveMinimum": 0.0,
+          "title": "Per Run Usd",
+          "type": "number"
+        },
+        "per_team_usd": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Per Team Usd"
+        }
+      },
+      "required": [
+        "per_run_usd",
+        "per_day_usd"
+      ],
+      "title": "BudgetSpec",
+      "type": "object"
+    },
+    "CertificationSpec": {
+      "additionalProperties": false,
+      "description": "Benchmark reference, thresholds, and current certification status.",
+      "properties": {
+        "attestation_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Attestation Id"
+        },
+        "benchmark_corpus": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Benchmark Corpus"
+        },
+        "certified_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Certified At"
+        },
+        "certified_by": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Certified By"
+        },
+        "expires_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expires At"
+        },
+        "latency_budget_ms": {
+          "default": 30000,
+          "exclusiveMinimum": 0,
+          "title": "Latency Budget Ms",
+          "type": "integer"
+        },
+        "no_critical_failures": {
+          "default": true,
+          "title": "No Critical Failures",
+          "type": "boolean"
+        },
+        "production_threshold": {
+          "default": 0.9,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Production Threshold",
+          "type": "number"
+        },
+        "re_cert_interval": {
+          "default": 1209600,
+          "title": "Re Cert Interval",
+          "type": "integer"
+        },
+        "staging_threshold": {
+          "default": 0.8,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Staging Threshold",
+          "type": "number"
+        },
+        "status": {
+          "$ref": "#/$defs/CertificationStatus",
+          "default": "uncertified"
+        }
+      },
+      "title": "CertificationSpec",
+      "type": "object"
+    },
+    "CertificationStatus": {
+      "description": "Where a workload stands in the certification lifecycle.",
+      "enum": [
+        "uncertified",
+        "provisional",
+        "certified",
+        "quarantined"
+      ],
+      "title": "CertificationStatus",
+      "type": "string"
+    },
+    "EgressMode": {
+      "description": "Network egress policy for a sandboxed run.",
+      "enum": [
+        "open",
+        "restricted",
+        "none"
+      ],
+      "title": "EgressMode",
+      "type": "string"
+    },
+    "EgressSpec": {
+      "additionalProperties": false,
+      "description": "Network egress allow/deny lists and mode.",
+      "properties": {
+        "allow": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Allow",
+          "type": "array"
+        },
+        "deny": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Deny",
+          "type": "array"
+        },
+        "mode": {
+          "$ref": "#/$defs/EgressMode",
+          "default": "restricted"
+        }
+      },
+      "title": "EgressSpec",
+      "type": "object"
+    },
+    "FanOutDestination": {
+      "additionalProperties": false,
+      "description": "A single result-delivery destination.",
+      "properties": {
+        "channel": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Channel"
+        },
+        "issue_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Issue Type"
+        },
+        "project": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Project"
+        },
+        "type": {
+          "$ref": "#/$defs/FanOutType"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Url"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "title": "FanOutDestination",
+      "type": "object"
+    },
+    "FanOutSpec": {
+      "additionalProperties": false,
+      "description": "Destinations notified on each terminal outcome.",
+      "properties": {
+        "always_include": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Always Include",
+          "type": "array"
+        },
+        "on_completed": {
+          "items": {
+            "$ref": "#/$defs/FanOutDestination"
+          },
+          "title": "On Completed",
+          "type": "array"
+        },
+        "on_escalation": {
+          "items": {
+            "$ref": "#/$defs/FanOutDestination"
+          },
+          "title": "On Escalation",
+          "type": "array"
+        },
+        "on_failed": {
+          "items": {
+            "$ref": "#/$defs/FanOutDestination"
+          },
+          "title": "On Failed",
+          "type": "array"
+        }
+      },
+      "title": "FanOutSpec",
+      "type": "object"
+    },
+    "FanOutType": {
+      "description": "Supported result-delivery destination types.",
+      "enum": [
+        "slack",
+        "teams",
+        "jira",
+        "webhook"
+      ],
+      "title": "FanOutType",
+      "type": "string"
+    },
+    "FilesystemMode": {
+      "description": "Filesystem isolation mode.",
+      "enum": [
+        "isolated"
+      ],
+      "title": "FilesystemMode",
+      "type": "string"
+    },
+    "FilterAction": {
+      "description": "Action applied to a tool-output pattern match.",
+      "enum": [
+        "redact",
+        "mask"
+      ],
+      "title": "FilterAction",
+      "type": "string"
+    },
+    "FilterRule": {
+      "additionalProperties": false,
+      "description": "A regex rule applied to tool output before it reaches the agent.",
+      "properties": {
+        "action": {
+          "$ref": "#/$defs/FilterAction"
+        },
+        "pattern": {
+          "title": "Pattern",
+          "type": "string"
+        }
+      },
+      "required": [
+        "pattern",
+        "action"
+      ],
+      "title": "FilterRule",
+      "type": "object"
+    },
+    "HealthSpec": {
+      "additionalProperties": false,
+      "description": "Health configuration for a workload.",
+      "properties": {
+        "failure_rate_threshold": {
+          "default": 0.15,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Failure Rate Threshold",
+          "type": "number"
+        },
+        "readiness_probe": {
+          "$ref": "#/$defs/ReadinessProbe"
+        },
+        "slo": {
+          "$ref": "#/$defs/Slo"
+        }
+      },
+      "title": "HealthSpec",
+      "type": "object"
+    },
+    "McpServer": {
+      "additionalProperties": false,
+      "description": "An MCP server the workload may use, served by mcp-fabric.",
+      "properties": {
+        "endpoint": {
+          "minLength": 1,
+          "title": "Endpoint",
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "endpoint"
+      ],
+      "title": "McpServer",
+      "type": "object"
+    },
+    "Metadata": {
+      "additionalProperties": false,
+      "description": "Workload identity and ownership metadata.",
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "labels": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Labels",
+          "type": "object"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "owner": {
+          "minLength": 1,
+          "title": "Owner",
+          "type": "string"
+        },
+        "team": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Team"
+        }
+      },
+      "required": [
+        "name",
+        "owner"
+      ],
+      "title": "Metadata",
+      "type": "object"
+    },
+    "ModelIdentity": {
+      "additionalProperties": false,
+      "description": "The exact model identity a certification binds to (DD-10).",
+      "properties": {
+        "family": {
+          "minLength": 1,
+          "title": "Family",
+          "type": "string"
+        },
+        "provider": {
+          "minLength": 1,
+          "title": "Provider",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "provider",
+        "family",
+        "version"
+      ],
+      "title": "ModelIdentity",
+      "type": "object"
+    },
+    "ModelSpec": {
+      "additionalProperties": false,
+      "description": "Model strategy and the certification-bound model identity.",
+      "properties": {
+        "identity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ModelIdentity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "strategy": {
+          "$ref": "#/$defs/ModelStrategy",
+          "default": "tiered"
+        }
+      },
+      "title": "ModelSpec",
+      "type": "object"
+    },
+    "ModelStrategy": {
+      "description": "How models are selected for a workload.",
+      "enum": [
+        "fixed",
+        "tiered",
+        "router"
+      ],
+      "title": "ModelStrategy",
+      "type": "string"
+    },
+    "ObservabilitySpec": {
+      "additionalProperties": false,
+      "description": "Telemetry contract and trace sampling configuration (DD-06).",
+      "properties": {
+        "contract": {
+          "default": "standard",
+          "title": "Contract",
+          "type": "string"
+        },
+        "trace_sampling": {
+          "default": 1.0,
+          "exclusiveMinimum": 0.0,
+          "maximum": 1.0,
+          "title": "Trace Sampling",
+          "type": "number"
+        }
+      },
+      "title": "ObservabilitySpec",
+      "type": "object"
+    },
+    "OutputShapingSpec": {
+      "additionalProperties": false,
+      "description": "Tool-output boundary configuration for a workload.",
+      "properties": {
+        "filter_rules": {
+          "items": {
+            "$ref": "#/$defs/FilterRule"
+          },
+          "title": "Filter Rules",
+          "type": "array"
+        },
+        "injection_scan": {
+          "default": true,
+          "title": "Injection Scan",
+          "type": "boolean"
+        },
+        "max_bytes": {
+          "exclusiveMinimum": 0,
+          "title": "Max Bytes",
+          "type": "integer"
+        },
+        "truncate_strategy": {
+          "$ref": "#/$defs/TruncateStrategy",
+          "default": "head"
+        }
+      },
+      "required": [
+        "max_bytes"
+      ],
+      "title": "OutputShapingSpec",
+      "type": "object"
+    },
+    "ProbeType": {
+      "description": "Readiness probe strategy.",
+      "enum": [
+        "dry_run"
+      ],
+      "title": "ProbeType",
+      "type": "string"
+    },
+    "ReadinessProbe": {
+      "additionalProperties": false,
+      "description": "How the control plane checks agent readiness.",
+      "properties": {
+        "interval": {
+          "default": 60,
+          "title": "Interval",
+          "type": "integer"
+        },
+        "type": {
+          "$ref": "#/$defs/ProbeType",
+          "default": "dry_run"
+        }
+      },
+      "title": "ReadinessProbe",
+      "type": "object"
+    },
+    "ResourceCaps": {
+      "additionalProperties": false,
+      "description": "Per-run resource ceilings.",
+      "properties": {
+        "cpu_cores": {
+          "exclusiveMinimum": 0,
+          "title": "Cpu Cores",
+          "type": "number"
+        },
+        "memory_mb": {
+          "exclusiveMinimum": 0,
+          "title": "Memory Mb",
+          "type": "integer"
+        },
+        "wall_clock_s": {
+          "exclusiveMinimum": 0,
+          "title": "Wall Clock S",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "memory_mb",
+        "cpu_cores",
+        "wall_clock_s"
+      ],
+      "title": "ResourceCaps",
+      "type": "object"
+    },
+    "RuntimeAdapter": {
+      "description": "Supported runtime adapter types in v0.1.0.",
+      "enum": [
+        "raw-worker",
+        "langgraph"
+      ],
+      "title": "RuntimeAdapter",
+      "type": "string"
+    },
+    "RuntimeSpec": {
+      "additionalProperties": false,
+      "description": "Adapter type and entrypoint for a workload.",
+      "properties": {
+        "adapter": {
+          "$ref": "#/$defs/RuntimeAdapter"
+        },
+        "entrypoint": {
+          "minLength": 1,
+          "title": "Entrypoint",
+          "type": "string"
+        },
+        "env": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Env",
+          "type": "object"
+        }
+      },
+      "required": [
+        "adapter",
+        "entrypoint"
+      ],
+      "title": "RuntimeSpec",
+      "type": "object"
+    },
+    "SandboxSpec": {
+      "additionalProperties": false,
+      "description": "Execution isolation configuration for a workload.",
+      "properties": {
+        "egress": {
+          "$ref": "#/$defs/EgressSpec"
+        },
+        "enabled": {
+          "default": true,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "filesystem": {
+          "$ref": "#/$defs/FilesystemMode",
+          "default": "isolated"
+        },
+        "resource_caps": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ResourceCaps"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "SandboxSpec",
+      "type": "object"
+    },
+    "Slo": {
+      "additionalProperties": false,
+      "description": "Service-level objectives for an agent workload.",
+      "properties": {
+        "availability_target": {
+          "default": 0.99,
+          "exclusiveMinimum": 0.0,
+          "maximum": 1.0,
+          "title": "Availability Target",
+          "type": "number"
+        },
+        "error_budget_window": {
+          "default": 86400,
+          "title": "Error Budget Window",
+          "type": "integer"
+        },
+        "quality_target": {
+          "default": 0.9,
+          "exclusiveMinimum": 0.0,
+          "maximum": 1.0,
+          "title": "Quality Target",
+          "type": "number"
+        }
+      },
+      "title": "Slo",
+      "type": "object"
+    },
+    "ToolRef": {
+      "additionalProperties": false,
+      "description": "A reference to a registered MCP tool with its trust level.",
+      "properties": {
+        "require_approval": {
+          "default": false,
+          "title": "Require Approval",
+          "type": "boolean"
+        },
+        "tool_id": {
+          "minLength": 1,
+          "title": "Tool Id",
+          "type": "string"
+        },
+        "trust_level": {
+          "$ref": "#/$defs/ToolTrustLevel"
+        }
+      },
+      "required": [
+        "tool_id",
+        "trust_level"
+      ],
+      "title": "ToolRef",
+      "type": "object"
+    },
+    "ToolTrustLevel": {
+      "description": "Trust class of a tool; drives sandbox and approval requirements.",
+      "enum": [
+        "read_only",
+        "destructive"
+      ],
+      "title": "ToolTrustLevel",
+      "type": "string"
+    },
+    "ToolsSpec": {
+      "additionalProperties": false,
+      "description": "Allow/deny tool permissions. Deny wins over allow; unlisted tools are denied.",
+      "properties": {
+        "allow": {
+          "items": {
+            "$ref": "#/$defs/ToolRef"
+          },
+          "title": "Allow",
+          "type": "array"
+        },
+        "default_trust": {
+          "$ref": "#/$defs/ToolTrustLevel",
+          "default": "read_only"
+        },
+        "deny": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Deny",
+          "type": "array"
+        },
+        "mcp_servers": {
+          "items": {
+            "$ref": "#/$defs/McpServer"
+          },
+          "title": "Mcp Servers",
+          "type": "array"
+        }
+      },
+      "title": "ToolsSpec",
+      "type": "object"
+    },
+    "TriggerMatch": {
+      "additionalProperties": false,
+      "description": "Event-matching criteria shared by trigger types.",
+      "properties": {
+        "paths": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Paths",
+          "type": "array"
+        },
+        "service": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Service"
+        },
+        "severity": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Severity",
+          "type": "array"
+        }
+      },
+      "title": "TriggerMatch",
+      "type": "object"
+    },
+    "TriggerMode": {
+      "description": "How a trigger operates over time.",
+      "enum": [
+        "one-shot",
+        "watch",
+        "scheduled"
+      ],
+      "title": "TriggerMode",
+      "type": "string"
+    },
+    "TriggerRule": {
+      "additionalProperties": false,
+      "description": "A rule that matches an external event to this workload.",
+      "properties": {
+        "events": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Events",
+          "type": "array"
+        },
+        "match": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TriggerMatch"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "max_concurrent": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Concurrent"
+        },
+        "mode": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TriggerMode"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "schedule": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Schedule"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source"
+        },
+        "type": {
+          "$ref": "#/$defs/TriggerType"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Url"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "title": "TriggerRule",
+      "type": "object"
+    },
+    "TriggerType": {
+      "description": "Kinds of external events that can auto-start a run.",
+      "enum": [
+        "webhook",
+        "alert",
+        "github_pr",
+        "cron"
+      ],
+      "title": "TriggerType",
+      "type": "string"
+    },
+    "TruncateStrategy": {
+      "description": "How oversized tool output is truncated.",
+      "enum": [
+        "head",
+        "tail",
+        "summary"
+      ],
+      "title": "TruncateStrategy",
+      "type": "string"
+    },
+    "WorkloadSpec": {
+      "additionalProperties": false,
+      "description": "The complete specification block of an agent workload manifest.",
+      "properties": {
+        "approvals": {
+          "$ref": "#/$defs/ApprovalsSpec"
+        },
+        "budget": {
+          "$ref": "#/$defs/BudgetSpec"
+        },
+        "certification": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CertificationSpec"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "fan_out": {
+          "$ref": "#/$defs/FanOutSpec"
+        },
+        "health": {
+          "$ref": "#/$defs/HealthSpec"
+        },
+        "model": {
+          "$ref": "#/$defs/ModelSpec"
+        },
+        "observability": {
+          "$ref": "#/$defs/ObservabilitySpec"
+        },
+        "output_shaping": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OutputShapingSpec"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "runtime": {
+          "$ref": "#/$defs/RuntimeSpec"
+        },
+        "sandbox": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SandboxSpec"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "tools": {
+          "$ref": "#/$defs/ToolsSpec"
+        },
+        "triggers": {
+          "items": {
+            "$ref": "#/$defs/TriggerRule"
+          },
+          "title": "Triggers",
+          "type": "array"
+        }
+      },
+      "required": [
+        "runtime",
+        "budget"
+      ],
+      "title": "WorkloadSpec",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A registered agent workload and its desired state.",
+  "properties": {
+    "apiVersion": {
+      "const": "hiveplane/v1",
+      "default": "hiveplane/v1",
+      "title": "Apiversion",
+      "type": "string"
+    },
+    "kind": {
+      "const": "AgentWorkload",
+      "default": "AgentWorkload",
+      "title": "Kind",
+      "type": "string"
+    },
+    "metadata": {
+      "$ref": "#/$defs/Metadata"
+    },
+    "spec": {
+      "$ref": "#/$defs/WorkloadSpec"
+    }
+  },
+  "required": [
+    "metadata",
+    "spec"
+  ],
+  "title": "AgentWorkload",
+  "type": "object"
+}
