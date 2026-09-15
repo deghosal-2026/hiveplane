@@ -1,26 +1,60 @@
 """FastAPI application factory for the HivePlane control plane.
 
-M1 provides only the health surface; registry, execution, policy, and
-intervention endpoints arrive in later milestones (M8-M12, M21-M22).
+M1 provides the health surface; M3-M4 add the registry API (workload CRUD,
+fleet catalog, versioning, and dry-run). Execution, policy, and intervention
+endpoints arrive in later milestones.
 """
 
 from __future__ import annotations
 
 from typing import Any
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 
 from hiveplane import __version__
+from hiveplane.api.registry import router as registry_router
 from hiveplane.core.manifest import manifest_json_schema
+from hiveplane.registry.errors import (
+    AdmissionRefusedError,
+    AttestationAlreadyExistsError,
+    AttestationNotFoundError,
+    AttestationVerificationError,
+    DestructiveToolRequiresApprovalError,
+    ReCertificationRequiredError,
+    ToolAlreadyExistsError,
+    UnknownToolError,
+    VersionNotFoundError,
+    WorkloadAlreadyExistsError,
+    WorkloadNotFoundError,
+)
+from hiveplane.registry.service import RegistryService
+from hiveplane.registry.store import InMemoryRegistryStore
+
+#: Registry errors mapped to HTTP status codes.
+_ERROR_STATUS: tuple[tuple[type[Exception], int], ...] = (
+    (WorkloadNotFoundError, 404),
+    (VersionNotFoundError, 404),
+    (AttestationNotFoundError, 404),
+    (WorkloadAlreadyExistsError, 409),
+    (ReCertificationRequiredError, 409),
+    (ToolAlreadyExistsError, 409),
+    (AttestationAlreadyExistsError, 409),
+    (AdmissionRefusedError, 403),
+    (UnknownToolError, 422),
+    (DestructiveToolRequiresApprovalError, 422),
+    (AttestationVerificationError, 422),
+)
 
 
-def create_app() -> FastAPI:
+def create_app(registry_service: RegistryService | None = None) -> FastAPI:
     """Build and return the control-plane ASGI application."""
     app = FastAPI(
         title="HivePlane",
         version=__version__,
         summary="Control plane for production agent fleets.",
     )
+    app.state.registry_service = registry_service or RegistryService(InMemoryRegistryStore())
 
     @app.get("/healthz", tags=["health"])
     def healthz() -> dict[str, str]:
@@ -37,6 +71,30 @@ def create_app() -> FastAPI:
         """Return the JSON Schema for the AgentWorkload manifest."""
         return manifest_json_schema()
 
+    @app.exception_handler(WorkloadNotFoundError)
+    async def _workload_not_found(
+        request: Request, exc: WorkloadNotFoundError
+    ) -> JSONResponse:
+        return JSONResponse(status_code=404, content={"detail": str(exc)})
+
+    @app.exception_handler(WorkloadAlreadyExistsError)
+    async def _workload_exists(
+        request: Request, exc: WorkloadAlreadyExistsError
+    ) -> JSONResponse:
+        return JSONResponse(status_code=409, content={"detail": str(exc)})
+
+    def _make_handler(
+        error_type: type[Exception], status_code: int
+    ) -> Any:
+        async def _handler(request: Request, exc: Exception) -> JSONResponse:
+            return JSONResponse(status_code=status_code, content={"detail": str(exc)})
+
+        return _handler
+
+    for _error_type, _status_code in _ERROR_STATUS:
+        app.add_exception_handler(_error_type, _make_handler(_error_type, _status_code))
+
+    app.include_router(registry_router)
     return app
 
 

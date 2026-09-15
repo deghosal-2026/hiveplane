@@ -1,6 +1,6 @@
 # D3: Registry Service Design
 
-> Status: draft
+> Status: M3-M4 implemented (`hiveplane.registry`, `/workloads`, `/tools`, `/attestations`). Storage is the in-memory `RegistryStore`; the PostgreSQL-backed store and migrations land in M18 (Part 9).
 
 ## Problem
 
