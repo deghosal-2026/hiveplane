@@ -10,12 +10,14 @@ Stand up the HivePlane package skeleton, developer tooling, the local stack, and
 
 **Issues:** [#2](https://github.com/deghosal-2026/hiveplane/issues/2) · [#3](https://github.com/deghosal-2026/hiveplane/issues/3) · [#4](https://github.com/deghosal-2026/hiveplane/issues/4) · [#5](https://github.com/deghosal-2026/hiveplane/issues/5)
 
-- [ ] [#2](https://github.com/deghosal-2026/hiveplane/issues/2) — Scaffold package layout, `pyproject.toml`, and dev tooling
-- [ ] [#3](https://github.com/deghosal-2026/hiveplane/issues/3) — CI workflow (lint, type, test, coverage gate)
-- [ ] [#4](https://github.com/deghosal-2026/hiveplane/issues/4) — Docker Compose reference stack skeleton
-- [ ] [#5](https://github.com/deghosal-2026/hiveplane/issues/5) — Configuration module with environment overrides
+- [x] [#2](https://github.com/deghosal-2026/hiveplane/issues/2) — Scaffold package layout, `pyproject.toml`, and dev tooling
+- [x] [#3](https://github.com/deghosal-2026/hiveplane/issues/3) — CI workflow (lint, type, test, coverage gate)
+- [x] [#4](https://github.com/deghosal-2026/hiveplane/issues/4) — Docker Compose reference stack skeleton
+- [x] [#5](https://github.com/deghosal-2026/hiveplane/issues/5) — Configuration module with environment overrides
 
 **Done when:** `pip install -e ".[dev]"` works, CI is green, `docker compose up -d` is healthy, and config loads from env with clear errors.
+
+**Status:** Complete (commit `8ecab27`). `pyproject.toml` + package layout, CI workflow, Docker Compose stack (7 services healthy), and typed `hiveplane.config`. Tests pass, coverage 100%, ruff clean, mypy strict clean. Milestone M1 closed; issues #2-#5 closed.
 
 ## M2 — Domain Models
 
@@ -34,6 +36,8 @@ Stand up the HivePlane package skeleton, developer tooling, the local stack, and
 - None. This part unblocks everything else.
 
 ## Exit Gate (M1, M2)
+
+> M1 passed this gate on commit `8ecab27`. Boxes are checked when M2 completes, since the gate is re-run against the full system before Part 2 begins.
 
 - [ ] All tests in the system pass: `pytest`
 - [ ] Code coverage total > 95%
