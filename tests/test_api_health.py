@@ -1,0 +1,25 @@
+"""Tests for the API health surface."""
+
+from __future__ import annotations
+
+from fastapi.testclient import TestClient
+
+from hiveplane.api.app import create_app
+
+
+def test_healthz_reports_ok() -> None:
+    client = TestClient(create_app())
+
+    response = client.get("/healthz")
+
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}
+
+
+def test_readyz_reports_ready() -> None:
+    client = TestClient(create_app())
+
+    response = client.get("/readyz")
+
+    assert response.status_code == 200
+    assert response.json() == {"status": "ready"}

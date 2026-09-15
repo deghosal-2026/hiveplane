@@ -320,6 +320,41 @@ Take 2-3 existing agents you already own. Define one common workload manifest fo
 
 ---
 
+## Development
+
+### Setup
+
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -e ".[dev]"
+```
+
+### Quality gates
+
+```bash
+make test    # pytest
+make cov     # pytest with coverage report (> 95% required)
+make lint    # ruff
+make type    # mypy (strict)
+make check   # lint + type + cov
+```
+
+CI (`.github/workflows/ci.yml`) runs the same gates on Python 3.12 and 3.13 and fails the build below 95% coverage.
+
+### Local stack
+
+```bash
+scripts/dev-up.sh        # copies .env.example -> .env, builds, starts the stack
+docker compose ps
+docker compose down
+```
+
+Services: API (`:8000`), PostgreSQL (`:5432`), Redis (`:6379`), OpenTelemetry Collector (`:4317` gRPC / `:4318` HTTP), Tempo (`:3200`), Prometheus (`:9090`), Grafana (`:3000`). Every service has a healthcheck.
+
+### Configuration
+
+Settings load from environment variables prefixed `HIVEPLANE_`, with `__` separating nested sections (for example `HIVEPLANE_DATABASE__HOST`), falling back to a `.env` file and then defaults. See `.env.example` for the full reference.
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
