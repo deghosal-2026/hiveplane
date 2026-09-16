@@ -6,6 +6,19 @@
 
 Every tool call is a policy decision with a reason. Context changes the decision. Guarded actions wait for a human.
 
+## Status
+
+The policy engine and approvals have landed. `hiveplane.policy` provides a
+deny-by-default, context-aware `PolicyEngine` implementing the admission
+`PolicyGate` seam, team policy packs (tighten-only), blast-radius scoring, an
+`ApprovalService`, and an `/policy/evaluate` explainability surface. Escalated
+runs pause, request an approval, and fan out to `spec.fan_out.on_escalation`;
+approving resumes the run and denying fails it.
+
+Injection scanning of tool outputs (a policy engine concern) is implemented with
+the sandbox/shaping work; the engine already accepts an `injection_detected`
+input and returns `block_injection`. See `docs/design/execution-path-design.md`.
+
 ## M11 — Policy Evaluation Engine
 
 **Issues:** [#32](https://github.com/deghosal-2026/hiveplane/issues/32) · [#33](https://github.com/deghosal-2026/hiveplane/issues/33)

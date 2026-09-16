@@ -73,6 +73,26 @@ generic webhook in v0.1.0).
 > (permissive, unlimited, and manifest-derived respectively). The real engines
 > land with their own milestones, as does the PostgreSQL store.
 
+## Policy and Approvals
+
+Policy is evaluated deny-by-default and returns an explainable decision (the
+originating `rule`, a `reason`, and a blast-radius score):
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `POST` | `/policy/evaluate` | Evaluate policy for a context (tool, environment, sensitivity) |
+| `GET` | `/policy-packs` | List team policy packs |
+| `POST` | `/policy-packs` | Register a team policy pack |
+| `GET` | `/approvals` | List approval requests (`?status=`, `?workload=`) |
+| `GET` | `/approvals/{id}` | Inspect an approval request |
+| `POST` | `/approvals/{id}/approve` | Approve and resume the paused run |
+| `POST` | `/approvals/{id}/deny` | Deny and fail the paused run |
+
+A destructive tool, an explicit `require_approval`, or an action class listed in
+`spec.approvals.required_for` escalates a run: admission pauses it, requests an
+approval, and fans out to `spec.fan_out.on_escalation`. Approving resumes the
+run; denying fails it with the recorded reason.
+
 ## Configuration
 
 Configuration options and environment variables are documented as they land in v0.1.0.

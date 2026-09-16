@@ -1972,3 +1972,22 @@ Injection scanning implementation is deferred to phase 4; the engine accepts `in
 **Placeholder scan:** no `TODO`/`TBD`/"handle edge cases"/"similar to Task N". Every code step is complete.
 
 **Type consistency:** `ApprovalRecord` is defined once in Task 1 and used in Tasks 4/5/6. `PolicyContext` fields added in Task 1 (`tools`, `approval_required_for`, `injection_detected`) are used in Task 3. `ApprovalService.request` keyword names (`run_id`, `workload`, `rule`, `reason`, `action_class`) match the `ApprovalRequests` protocol and the Task 5 tests. `RunService` constructor gains only `approvals`, defaulted, so phase-1 tests keep passing. `build_run_service` signature changes in Task 6; all callers (`create_app`) are updated in the same task.
+
+---
+
+## Execution notes
+
+Deviations made while executing this plan, recorded for accuracy:
+
+- Added `notify_escalation` to the `FanOut` protocol in
+  `execution/gates.py`, and updated the phase-1 `_FanOut` test double in
+  `tests/test_execution_service.py` to implement it. `RunService` needs the
+  escalation path on its fan-out seam, and the protocol change made the existing
+  double structurally incomplete.
+- `tests/test_policy_api.py` holds a reference to the `FastAPI` app rather than
+  reading `client.app`, because `TestClient.app` is typed as the ASGI callable
+  and mypy strict rejects attribute access on it.
+- Extended `tests/test_policy_engine.py` with PII, pack-escalate, run-level pack
+  deny, and medium-blast tests to keep coverage above the exit gate.
+- `PermissivePolicyGate` remains in `execution/gates.py` as a documented
+  test/fallback gate but is no longer used by `build_run_service`.

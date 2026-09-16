@@ -235,3 +235,74 @@ def test_decision_is_explainable() -> None:
     assert decision.reason
     assert decision.blast_radius is not None
     assert decision.certification_status is CertificationStatus.CERTIFIED
+
+
+def test_pii_denies_destructive() -> None:
+    tools = _tools(allow=[ToolRef(tool_id="t1", trust_level=ToolTrustLevel.DESTRUCTIVE)])
+    decision = _engine().evaluate(
+        _context(
+            tool_id="t1",
+            tools=tools,
+            tool_trust=ToolTrustLevel.DESTRUCTIVE,
+            data_sensitivity=DataSensitivity.PII,
+        )
+    )
+    assert decision.outcome is DecisionOutcome.DENY
+    assert decision.rule == "sensitivity.pii"
+
+
+def test_pack_escalate_tightens() -> None:
+    store = InMemoryPolicyPackStore()
+    store.save(
+        PolicyPack(
+            metadata=PolicyPackMetadata(name="staging-escalate", team="platform", version="1.0.0"),
+            spec=PolicyPackSpec(
+                overrides=[
+                    PolicyPackOverride(
+                        match=PolicyPackRuleMatch(environment=AdmissionContext.STAGING),
+                        rules=[PolicyPackRule(action=DecisionOutcome.ESCALATE)],
+                    )
+                ]
+            ),
+        )
+    )
+    tools = _tools(allow=[ToolRef(tool_id="t1", trust_level=ToolTrustLevel.READ_ONLY)])
+    decision = PolicyEngine(store, clock=_clock).evaluate(
+        _context(tool_id="t1", tools=tools, team="platform")
+    )
+    assert decision.outcome is DecisionOutcome.ESCALATE
+    assert decision.rule == "pack.escalate"
+
+
+def test_run_level_pack_denies() -> None:
+    store = InMemoryPolicyPackStore()
+    store.save(
+        PolicyPack(
+            metadata=PolicyPackMetadata(name="run-deny", team="platform", version="1.0.0"),
+            spec=PolicyPackSpec(
+                overrides=[
+                    PolicyPackOverride(
+                        match=PolicyPackRuleMatch(environment=AdmissionContext.STAGING),
+                        rules=[PolicyPackRule(action=DecisionOutcome.DENY)],
+                    )
+                ]
+            ),
+        )
+    )
+    decision = PolicyEngine(store, clock=_clock).evaluate(_context(team="platform"))
+    assert decision.outcome is DecisionOutcome.DENY
+    assert decision.rule == "pack.deny"
+
+
+def test_medium_blast_radius_escalates() -> None:
+    tools = _tools(allow=[ToolRef(tool_id="t1", trust_level=ToolTrustLevel.READ_ONLY)])
+    decision = _engine().evaluate(
+        _context(
+            tool_id="t1",
+            tools=tools,
+            action_class=ActionClass.HIGH_SPEND,
+            certification_status=CertificationStatus.PROVISIONAL,
+        )
+    )
+    assert decision.outcome is DecisionOutcome.ESCALATE
+    assert decision.rule == "blast_radius.medium"

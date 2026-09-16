@@ -13,6 +13,8 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from hiveplane import __version__
+from hiveplane.api.approvals import router as approvals_router
+from hiveplane.api.policy import router as policy_router
 from hiveplane.api.registry import router as registry_router
 from hiveplane.api.runs import router as runs_router
 from hiveplane.core.manifest import manifest_json_schema
@@ -24,6 +26,16 @@ from hiveplane.execution.errors import (
 )
 from hiveplane.execution.service import RunService
 from hiveplane.execution.wiring import build_run_service
+from hiveplane.policy.approvals import ApprovalService
+from hiveplane.policy.engine import PolicyEngine
+from hiveplane.policy.errors import (
+    ApprovalAlreadyDecidedError,
+    ApprovalNotFoundError,
+    PolicyPackAlreadyExistsError,
+    PolicyPackNotFoundError,
+)
+from hiveplane.policy.packs import InMemoryPolicyPackStore
+from hiveplane.policy.store import InMemoryApprovalStore
 from hiveplane.registry.errors import (
     AdmissionRefusedError,
     AttestationAlreadyExistsError,
@@ -68,7 +80,15 @@ def create_app(
     )
     registry = registry_service or RegistryService(InMemoryRegistryStore())
     app.state.registry_service = registry
-    app.state.run_service = run_service or build_run_service(registry)
+    policy_pack_store = InMemoryPolicyPackStore()
+    policy_engine = PolicyEngine(policy_pack_store)
+    approval_service = ApprovalService(InMemoryApprovalStore())
+    app.state.policy_pack_store = policy_pack_store
+    app.state.policy_engine = policy_engine
+    app.state.approval_service = approval_service
+    app.state.run_service = run_service or build_run_service(
+        registry, policy_engine, approval_service
+    )
 
     @app.get("/healthz", tags=["health"])
     def healthz() -> dict[str, str]:
@@ -116,8 +136,18 @@ def create_app(
     ):
         app.add_exception_handler(_run_error, _make_handler(_run_error, _run_status))
 
+    for _policy_error, _policy_status in (
+        (ApprovalNotFoundError, 404),
+        (PolicyPackNotFoundError, 404),
+        (PolicyPackAlreadyExistsError, 409),
+        (ApprovalAlreadyDecidedError, 409),
+    ):
+        app.add_exception_handler(_policy_error, _make_handler(_policy_error, _policy_status))
+
     app.include_router(registry_router)
     app.include_router(runs_router)
+    app.include_router(policy_router)
+    app.include_router(approvals_router)
     return app
 
 

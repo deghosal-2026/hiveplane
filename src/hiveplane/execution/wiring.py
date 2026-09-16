@@ -7,9 +7,10 @@ from hiveplane.core.fanout import FanOutType
 from hiveplane.execution.admission import AdmissionPipeline
 from hiveplane.execution.fanout import FanOutService, SlackTransport, WebhookTransport
 from hiveplane.execution.gates import (
+    ApprovalRequests,
     ManifestSandboxGate,
     NullRunExecutor,
-    PermissivePolicyGate,
+    PolicyGate,
     RegistryCertificationGate,
     UnlimitedBudgetGate,
 )
@@ -18,8 +19,12 @@ from hiveplane.execution.store import InMemoryRunStore
 from hiveplane.registry.service import RegistryService
 
 
-def build_run_service(registry_service: RegistryService) -> RunService:
-    """Build a RunService with phase-1 default gates and an in-memory store."""
+def build_run_service(
+    registry_service: RegistryService,
+    policy_gate: PolicyGate,
+    approvals: ApprovalRequests,
+) -> RunService:
+    """Build a RunService with the real policy gate and approval seam."""
     settings = get_settings()
     store = InMemoryRunStore()
     fanout = FanOutService(
@@ -38,10 +43,11 @@ def build_run_service(registry_service: RegistryService) -> RunService:
         registry_service,
         admission=AdmissionPipeline(
             RegistryCertificationGate(registry_service),
-            PermissivePolicyGate(),
+            policy_gate,
             UnlimitedBudgetGate(),
             ManifestSandboxGate(),
         ),
         executor=NullRunExecutor(),
         fanout=fanout,
+        approvals=approvals,
     )
