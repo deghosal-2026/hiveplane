@@ -39,6 +39,7 @@ Design docs for HivePlane — organized by subsystem and PRD.
 
 ## Cross-Cutting
 
+- [Execution Path Design](execution-path-design.md) — implementation blueprint for the run lifecycle, policy, budget, sandbox, shaping, and adapters
 - [Design Decisions](design-decisions.md) — DD-01 through DD-15
 - **Certification Pipeline** (D10) — benchmark runner, certification engine, signed attestation, promotion gate, regression diff, drift detector, certification API
 - **Execution Sandbox** (D11) — isolation, resource caps, restricted egress, adapter integration
