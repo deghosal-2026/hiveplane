@@ -25,3 +25,14 @@ class CertificationNotFoundError(CertificationError):
     def __init__(self, certification_id: str) -> None:
         self.certification_id = certification_id
         super().__init__(f"certification {certification_id!r} not found")
+
+
+class ExecutorNotConfiguredError(CertificationError):
+    """Raised when certification is attempted with no benchmark executor configured."""
+
+    def __init__(self) -> None:
+        super().__init__(
+            "no benchmark executor is configured; set "
+            "HIVEPLANE_CERTIFICATION__EXECUTOR=reference for local demos or install a "
+            "runtime adapter"
+        )

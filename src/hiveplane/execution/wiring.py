@@ -16,8 +16,16 @@ from hiveplane.execution.gates import (
     SandboxRuntime,
 )
 from hiveplane.execution.service import RunService
-from hiveplane.execution.store import InMemoryRunStore
+from hiveplane.execution.store import InMemoryRunStore, JsonFileRunStore, RunStore
 from hiveplane.registry.service import RegistryService
+
+
+def build_run_store() -> RunStore:
+    """Build the configured run store (durable JSON by default)."""
+    settings = get_settings()
+    if settings.execution.store == "json":
+        return JsonFileRunStore(settings.execution.data_dir)
+    return InMemoryRunStore()
 
 
 def build_run_service(
@@ -29,7 +37,7 @@ def build_run_service(
 ) -> RunService:
     """Build a RunService with the real policy and budget gates."""
     settings = get_settings()
-    store = InMemoryRunStore()
+    store = build_run_store()
     fanout = FanOutService(
         store,
         {

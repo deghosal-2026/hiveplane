@@ -170,3 +170,33 @@ def test_json_store_writes_one_file_per_run(tmp_path: Path) -> None:
     store.save_run(_run("run-1"))
     store.save_run(_run("run-2"))
     assert sorted(p.name for p in tmp_path.glob("*.json")) == ["run-1.json", "run-2.json"]
+
+
+def test_json_store_write_is_atomic(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from pathlib import Path as PathClass
+
+    store = JsonFileRunStore(tmp_path)
+    store.save_run(_run("run-1"))
+    original = (tmp_path / "run-1.json").read_text(encoding="utf-8")
+
+    def _boom(self: PathClass, target: PathClass) -> PathClass:
+        raise OSError("simulated crash")
+
+    monkeypatch.setattr(PathClass, "replace", _boom)
+
+    with pytest.raises(OSError):
+        store.save_run(_run("run-1", state=RunState.RUNNING))
+
+    assert (tmp_path / "run-1.json").read_text(encoding="utf-8") == original
+
+
+def test_default_run_store_is_durable_json(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from hiveplane.config import get_settings
+    from hiveplane.execution.wiring import build_run_store
+
+    monkeypatch.setenv("HIVEPLANE_EXECUTION__DATA_DIR", str(tmp_path))
+    get_settings.cache_clear()
+
+    assert isinstance(build_run_store(), JsonFileRunStore)

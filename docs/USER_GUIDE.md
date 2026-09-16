@@ -56,18 +56,33 @@ The run lifecycle is exposed over HTTP:
 | `GET` | `/runs/{id}` | Inspect a run |
 | `GET` | `/runs/{id}/events` | Read the attributed event log |
 | `GET` | `/runs/{id}/usage` | Read usage reports |
+| `POST` | `/runs/{id}/start` | Start a queued run (adapter pickup or operator) |
 | `POST` | `/runs/{id}/pause` | Pause a running run |
 | `POST` | `/runs/{id}/resume` | Resume a paused run |
 | `POST` | `/runs/{id}/stop` | Stop a run immediately |
+| `POST` | `/runs/{id}/tool-calls` | Authorize a tool call (policy + egress + shaping) |
 
 Submission runs admission checks in order — certification status, model-identity
 binding, budget, policy, and sandbox requirement. A refusal returns `403` with the
 failing step and reason. Illegal transitions return `409`, and unknown runs `404`.
 
-Run state is persisted through a pluggable store (in-memory, or JSON file for
-local durability), every transition is recorded as an attributed event, and
+Run state is persisted through a pluggable store (durable JSON files by
+default, or in-memory), every transition is recorded as an attributed event, and
 terminal runs fan out to the destinations configured in `spec.fan_out` (Slack and
 generic webhook in v0.1.0).
+
+### Tool calls
+
+Adapters authorize every tool call at the control-plane boundary via
+`POST /runs/{id}/tool-calls` (body: `tool_id`, optional `action_class`,
+`data_sensitivity`, `tool_trust`, `output`, `host`). The boundary evaluates
+deny-by-default policy with the full tool context, enforces the manifest's
+sandbox egress allowlist for any `host`, and shapes `output` (filter, truncate,
+injection scan) before it reaches the agent. Escalations pause the run and open an
+approval; every decision is recorded as a `policy_decision` run event.
+
+> With no runtime adapter installed, nothing calls the boundary automatically —
+> adapters (M16-M17) route their tool calls through it.
 
 > Status: the policy, budget, and sandbox engines are wired in. PostgreSQL
 > persistence lands with the state-store milestone.
@@ -159,11 +174,19 @@ run's model identity to match the attestation — a model swap is refused.
 
 > Local runs use a `ReferenceExecutor` that replays each task's declared outcome
 > until runtime adapters (Part 8) land. It exercises the full flow but does not
-> measure a real agent.
+> measure a real agent, so it is **off by default**: certification returns `503`
+> unless `HIVEPLANE_CERTIFICATION__EXECUTOR=reference` is set explicitly.
 
 ## Configuration
 
-Configuration options and environment variables are documented as they land in v0.1.0.
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `HIVEPLANE_CERTIFICATION__EXECUTOR` | `none` | `reference` enables the local replay executor (demo/CI only) |
+| `HIVEPLANE_CERTIFICATION__CORPORA_DIR` | `examples` | Root directory corpora are loaded from |
+| `HIVEPLANE_EXECUTION__STORE` | `json` | Run store: `json` (durable) or `memory` |
+| `HIVEPLANE_EXECUTION__DATA_DIR` | `.hiveplane/runs` | Directory for the durable run store |
+
+Unknown configuration lives in `hiveplane.config` as it lands in v0.1.0.
 
 ## Troubleshooting
 

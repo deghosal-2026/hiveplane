@@ -5,6 +5,8 @@ from __future__ import annotations
 from collections.abc import Callable
 from datetime import UTC, datetime
 
+import pytest
+
 from hiveplane.budget.pricing import CostTable
 from hiveplane.budget.service import BudgetService
 from hiveplane.budget.store import InMemoryBudgetStore
@@ -95,3 +97,30 @@ def test_over_budget_usage_fails_the_run(make_manifest: Callable[..., AgentWorkl
     failed = service.record_usage(run.id, _report(tokens=1000))
     assert failed.state is RunState.FAILED
     assert failed.failure_reason is not None
+
+
+def test_late_usage_after_failure_is_ignored(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    service, workload = _service(make_manifest, per_run=0.001)
+    run = service.submit(workload=workload, caller="cli", context=AdmissionContext.SANDBOX)
+    service.transition(run.id, RunState.RUNNING, actor="scheduler")
+    failed = service.record_usage(run.id, _report(tokens=1000))
+    assert failed.state is RunState.FAILED
+
+    again = service.record_usage(run.id, _report(tokens=1000))
+
+    assert again.state is RunState.FAILED
+    assert again.cost_usd == failed.cost_usd
+
+
+def test_usage_cost_is_priced_server_side(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    service, workload = _service(make_manifest)
+    run = service.submit(workload=workload, caller="cli", context=AdmissionContext.SANDBOX)
+    service.transition(run.id, RunState.RUNNING, actor="scheduler")
+
+    service.record_usage(run.id, _report(tokens=1000))
+
+    assert service.usage(run.id)[0].cost_usd == pytest.approx(0.005)

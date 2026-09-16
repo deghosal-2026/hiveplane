@@ -25,6 +25,8 @@ def regression_diff(
     before_by_id = {task.task_id: task for task in before.tasks}
     after_by_id = {task.task_id: task for task in after.tasks}
     common = sorted(set(before_by_id) & set(after_by_id))
+    added = sorted(set(after_by_id) - set(before_by_id))
+    removed = sorted(set(before_by_id) - set(after_by_id))
 
     regressed: list[TaskDelta] = []
     improved: list[TaskDelta] = []
@@ -54,5 +56,8 @@ def regression_diff(
         passed_after=sum(1 for task in after.tasks if task.status is CheckStatus.PASS),
         regressed=regressed,
         improved=improved,
-        blocked=bool(regressed),
+        added=added,
+        removed=removed,
+        blocked=bool(regressed)
+        or any(before_by_id[task_id].status is CheckStatus.PASS for task_id in removed),
     )

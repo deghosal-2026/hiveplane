@@ -26,7 +26,7 @@ def compute_blast_radius(context: PolicyContext) -> BlastRadius:
     if context.tool_trust is ToolTrustLevel.DESTRUCTIVE:
         factors["tool_trust"] = 35
     if context.environment is AdmissionContext.PRODUCTION:
-        factors["environment"] = 30
+        factors["environment"] = 50
     elif context.environment is AdmissionContext.STAGING:
         factors["environment"] = 15
     if context.data_sensitivity is DataSensitivity.RESTRICTED:
@@ -107,6 +107,17 @@ class PolicyEngine:
                 blast,
             )
         if (
+            context.data_sensitivity is DataSensitivity.RESTRICTED
+            and context.action_class is ActionClass.READ_ONLY
+        ):
+            return self._decide(
+                context,
+                DecisionOutcome.ESCALATE,
+                "sensitivity.restricted.read",
+                "read-only access to restricted data requires approval",
+                blast,
+            )
+        if (
             context.data_sensitivity is DataSensitivity.PII
             and context.tool_trust is ToolTrustLevel.DESTRUCTIVE
         ):
@@ -165,6 +176,17 @@ class PolicyEngine:
                 blast,
             )
         if blast.score >= 71:
+            if (
+                context.environment is AdmissionContext.PRODUCTION
+                and context.certification_status is CertificationStatus.CERTIFIED
+            ):
+                return self._decide(
+                    context,
+                    DecisionOutcome.ALLOW,
+                    "blast_radius.high.certified",
+                    "high blast radius permitted by production certification",
+                    blast,
+                )
             return self._decide(
                 context, DecisionOutcome.DENY, "blast_radius.high", "blast radius is high", blast
             )

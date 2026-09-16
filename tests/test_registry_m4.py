@@ -577,3 +577,17 @@ def test_re_cert_flag_blocks_production_admission(
     decision = service.check_admission("repo-agent", AdmissionContext.PRODUCTION)
 
     assert decision.admitted is False
+
+
+def test_increment_production_runs_and_reset_on_transition(
+    service: RegistryService, make_manifest: ManifestFactory
+) -> None:
+    service.create(make_manifest("repo-agent"))
+    service.record_certification_event("repo-agent", CertificationEvent.STAGING_PASS)
+
+    service.increment_production_runs("repo-agent")
+    service.increment_production_runs("repo-agent")
+    assert service.get("repo-agent").production_runs_survived == 2
+
+    service.record_certification_event("repo-agent", CertificationEvent.RECERT_FAIL)
+    assert service.get("repo-agent").production_runs_survived == 0

@@ -20,7 +20,7 @@ from typing import Protocol
 
 from pydantic import BaseModel, ConfigDict, Field, JsonValue
 
-from hiveplane.certification.errors import UnsupportedCheckError
+from hiveplane.certification.errors import ExecutorNotConfiguredError, UnsupportedCheckError
 from hiveplane.certification.models import (
     BenchmarkAggregate,
     BenchmarkCorpus,
@@ -33,6 +33,11 @@ from hiveplane.certification.models import (
     Environment,
 )
 
+#: Version of the benchmark runner and check semantics. Bump whenever the
+#: evaluation logic changes so attestations bind to the semantics that produced
+#: them. Attestations record this value.
+BENCHMARK_VERSION = "1.0.0"
+
 
 class TaskExecution(BaseModel):
     """The observable result of executing one benchmark task."""
@@ -44,6 +49,7 @@ class TaskExecution(BaseModel):
     latency_ms: int = Field(ge=0)
     tokens: int = Field(default=0, ge=0)
     trace_id: str | None = None
+    network_used: bool = False
 
 
 class TaskExecutor(Protocol):
@@ -69,6 +75,29 @@ class ReferenceExecutor:
         if task.check.type is CheckType.ACTION_AUDIT:
             return TaskExecution(actions=list(task.check.required_actions), latency_ms=1)
         raise UnsupportedCheckError(task.check.type)
+
+
+class UnconfiguredTaskExecutor:
+    """A task executor that refuses to run until a real adapter is configured."""
+
+    def execute(self, task: BenchmarkTask) -> TaskExecution:
+        """Raise, so the control plane cannot certify without an executor."""
+        raise ExecutorNotConfiguredError()
+
+
+def _enforce_bounds(task: BenchmarkTask, execution: TaskExecution) -> tuple[bool, str | None]:
+    """Enforce the task's per-task wall-clock and network contract.
+
+    The executor receives the task (and thus ``timeout_seconds``/``allow_network``);
+    the runner enforces the outcome deterministically.
+    """
+    if execution.latency_ms > task.timeout_seconds * 1000:
+        return False, (
+            f"timeout: {execution.latency_ms}ms exceeds {task.timeout_seconds}s limit"
+        )
+    if execution.network_used and not task.allow_network:
+        return False, "network: task used the network but allow_network is false"
+    return True, None
 
 
 def evaluate_check(
@@ -125,7 +154,9 @@ class BenchmarkRunner:
         results: list[BenchmarkTaskResult] = []
         for task in corpus.tasks:
             execution = self._executor.execute(task)
-            passed, reason = evaluate_check(task.check, execution)
+            passed, reason = _enforce_bounds(task, execution)
+            if passed:
+                passed, reason = evaluate_check(task.check, execution)
             results.append(
                 BenchmarkTaskResult(
                     task_id=task.id,

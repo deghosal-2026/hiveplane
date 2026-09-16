@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from datetime import UTC, datetime
 
+from hiveplane.budget.errors import MissingModelIdentityError
 from hiveplane.budget.metrics import BudgetMetrics, NullBudgetMetrics
 from hiveplane.budget.models import BudgetSnapshot, CostAttribution
 from hiveplane.budget.pricing import CostTable
@@ -70,12 +71,11 @@ class BudgetService:
 
     def record_usage(self, workload: AgentWorkload, report: UsageReport) -> BudgetOutcome:
         """Price a usage event, accumulate spend, and return the run check."""
-        if report.model_identity is not None:
-            cost = self._pricing.price(
-                report.model_identity, report.input_tokens, report.output_tokens
-            )
-        else:
-            cost = report.cost_usd
+        if report.model_identity is None:
+            raise MissingModelIdentityError()
+        cost = self._pricing.price(
+            report.model_identity, report.input_tokens, report.output_tokens
+        )
         day = self._today()
         self._store.add_run_spend(report.run_id, cost)
         self._store.add_day_spend(workload.name, day, cost)

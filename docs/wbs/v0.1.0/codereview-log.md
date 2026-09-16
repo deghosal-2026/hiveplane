@@ -80,3 +80,32 @@ criteria, and closed GitHub issues.
 2. **With Part 8 (M16–M17):** #72 (run start path), #73 (tool-call boundary), #66/#67
    (sandbox caps/egress enforcement), #71 (task timeout/network in runner).
 3. **Quick wins, any time:** #74, #65, #75, #76, #77, #78, #79, #80, #81.
+
+## Resolution
+
+All 20 findings are fixed on `main`. Summary of the fixes and the tests that cover them:
+
+| # | Fix | Key tests |
+|---|-----|-----------|
+| #62 | `CertificationCoordinator._resolve_corpus_path` resolves and confines corpus references to the corpora root | `test_certify_rejects_corpus_path_traversal`, `test_certify_allows_in_root_corpus_override` |
+| #63 | Default app uses `UnconfiguredTaskExecutor`; `ReferenceExecutor` requires `HIVEPLANE_CERTIFICATION__EXECUTOR=reference`; `503` otherwise | `test_default_app_refuses_certification_without_executor`, `test_reference_executor_opt_in_allows_certification` |
+| #64 | `production_runs_survived` tracked server-side on `WorkloadRecord`; incremented on completed production runs; removed from the API | `test_production_certification_requires_server_side_survived_runs`, `test_increment_production_runs_and_reset_on_transition` |
+| #65 | `BudgetService.record_usage` raises `MissingModelIdentityError` instead of trusting caller cost | `test_record_usage_without_model_identity_is_rejected` |
+| #66 | CPU cap bounds by wall clock (not cores); `inspect_caps` records `caps_applied`/`cap_errors` | `test_cpu_cap_uses_wall_clock_not_core_count`, `test_process_sandbox_records_applied_caps`, `test_cap_errors_are_recorded` |
+| #67 | `EgressGuard` enforced at the tool boundary for any call carrying a `host` | `test_disallowed_egress_is_denied`, `test_allowed_egress_and_shaping` |
+| #68 | Engine emits `RECOVER` for a passing re-certification of a quarantined workload | `test_quarantined_passing_recert_recovers_to_provisional`, `test_quarantined_recovers_on_passing_recert` |
+| #69 | Records keyed by unique `record_id` (attestation id); append-only history | `test_records_are_append_only` |
+| #70 | `workload_policy` honors the manifest's thresholds; service passes an effective policy to the engine | `test_workload_policy_overrides_fleet_thresholds`, `test_manifest_staging_threshold_overrides_fleet_default` |
+| #71 | Runner enforces per-task `timeout_seconds` and `allow_network` (`network_used`) | `test_task_timeout_is_enforced`, `test_network_use_is_blocked_when_not_allowed`, `test_network_use_allowed_when_task_permits` |
+| #72 | `POST /runs/{id}/start` (QUEUED→RUNNING); QUEUED→CANCELLED permitted | `test_start_queued_run`, `test_stop_queued_run` |
+| #73 | `ToolGateway` (+ `POST /runs/{id}/tool-calls`) is the live policy/shaping boundary and records `policy_decision` events | `tests/test_tool_gateway.py`, `test_tool_call_endpoint_denies_unlisted_tool` |
+| #74 | `record_usage` no-ops after terminal states; prices before persisting | `test_late_usage_after_failure_is_ignored`, `test_usage_cost_is_priced_server_side` |
+| #75 | `canonical_model_identity` / `validate_model_identity`; canonical form enforced on submission | `test_run_submission_rejects_non_canonical_model_identity` |
+| #76 | Diff reports `added`/`removed`; removing a passing task blocks promotion | `test_regression_diff_blocks_on_removed_passing_task`, `test_regression_diff_surfaces_added_task` |
+| #77 | Coordinator links `previous_attestation_id` from the workload's latest attestation | `test_attestations_form_a_chain` |
+| #78 | Restricted read-only escalates; high blast allows a certified production tool | `test_restricted_read_only_escalates`, `test_high_blast_radius_allowed_with_production_certification` |
+| #79 | Approve/deny reject when the run is not paused, keeping records consistent | `tests/test_approval_api.py` |
+| #80 | Atomic JSON writes (temp + replace); durable JSON store by default with config | `test_json_store_write_is_atomic`, `test_default_run_store_is_durable_json` |
+| #81 | `BENCHMARK_VERSION` lives with the runner and is the attestation default | covered by certification/service suites |
+
+Verification: `pytest` 474 passed, coverage 97%, `ruff check` clean, `mypy` strict clean.

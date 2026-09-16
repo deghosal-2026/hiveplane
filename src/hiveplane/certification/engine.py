@@ -22,6 +22,36 @@ from hiveplane.certification.models import (
     Thresholds,
     advance_status,
 )
+from hiveplane.core.spec import CertificationSpec
+
+
+def workload_policy(spec: CertificationSpec, base: CertificationPolicy) -> CertificationPolicy:
+    """Return the effective policy for a workload, honoring its manifest thresholds.
+
+    Per-workload values (staging/production thresholds, critical-failure rule,
+    latency budget, re-cert interval) override the fleet default; the survival
+    gate and grace margin come from the fleet policy.
+    """
+    critical = 0 if spec.no_critical_failures else base.production.max_critical_failures
+    staging_critical = (
+        0 if spec.no_critical_failures else base.staging.max_critical_failures
+    )
+    return CertificationPolicy(
+        staging=Thresholds(
+            min_pass_rate=spec.staging_threshold,
+            max_critical_failures=staging_critical,
+            max_p95_latency_ms=spec.latency_budget_ms,
+            min_production_runs_survived=base.staging.min_production_runs_survived,
+        ),
+        production=Thresholds(
+            min_pass_rate=spec.production_threshold,
+            max_critical_failures=critical,
+            max_p95_latency_ms=spec.latency_budget_ms,
+            min_production_runs_survived=base.production.min_production_runs_survived,
+        ),
+        re_cert_interval=spec.re_cert_interval,
+        grace_margin=base.grace_margin,
+    )
 
 
 def passes_threshold(summary: EvalSummary, thresholds: Thresholds) -> bool:
@@ -61,6 +91,7 @@ class CertificationEngine:
         current_status: CertificationStatus,
         target_context: TargetContext,
         production_runs_survived: int = 0,
+        policy: CertificationPolicy | None = None,
     ) -> Certification:
         """Evaluate a benchmark result and return the resulting certification.
 
@@ -68,12 +99,14 @@ class CertificationEngine:
         passing production result promotes ``provisional`` to ``certified`` once
         the workload has survived the required production runs; until then the
         status is deferred (unchanged). A failed re-certification quarantines a
-        provisional or certified workload.
+        provisional or certified workload. A passing re-certification of a
+        quarantined workload recovers it to ``provisional`` (DD-09).
         """
+        effective = policy or self._policy
         thresholds = (
-            self._policy.production
+            effective.production
             if target_context is TargetContext.PRODUCTION
-            else self._policy.staging
+            else effective.staging
         )
         summary = result.to_eval_summary()
         status = self._resolve_status(
@@ -105,6 +138,8 @@ class CertificationEngine:
     ) -> CertificationStatus:
         if not passes_threshold(summary, thresholds):
             return _try_transition(current_status, CertificationEvent.RECERT_FAIL)
+        if current_status is CertificationStatus.QUARANTINED:
+            return _try_transition(current_status, CertificationEvent.RECOVER)
         if target_context is TargetContext.PRODUCTION:
             if production_runs_survived < thresholds.min_production_runs_survived:
                 return current_status

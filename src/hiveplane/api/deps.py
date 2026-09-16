@@ -6,6 +6,7 @@ from fastapi import Request
 
 from hiveplane.certification.workflow import CertificationCoordinator
 from hiveplane.execution.service import RunService
+from hiveplane.execution.tools import ToolGateway
 from hiveplane.policy.approvals import ApprovalService
 from hiveplane.policy.engine import PolicyEngine
 from hiveplane.policy.packs import PolicyPackStore
@@ -46,3 +47,9 @@ def get_certification_coordinator(request: Request) -> CertificationCoordinator:
     """Return the certification coordinator bound to the application state."""
     coordinator: CertificationCoordinator = request.app.state.certification_coordinator
     return coordinator
+
+
+def get_tool_gateway(request: Request) -> ToolGateway:
+    """Return the tool-call boundary bound to the application state."""
+    gateway: ToolGateway = request.app.state.tool_gateway
+    return gateway

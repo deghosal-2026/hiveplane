@@ -27,7 +27,7 @@ class AdmissionContext(StrEnum):
 
 
 _RUN_TRANSITIONS: dict[RunState, set[RunState]] = {
-    RunState.QUEUED: {RunState.RUNNING},
+    RunState.QUEUED: {RunState.RUNNING, RunState.CANCELLED},
     RunState.RUNNING: {
         RunState.PAUSED,
         RunState.COMPLETED,

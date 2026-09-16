@@ -88,3 +88,43 @@ def test_process_sandbox_records_exit_code() -> None:
     )
     assert result.status is SandboxStatus.FAILED
     assert result.exit_code == 3
+
+
+def test_process_sandbox_records_applied_caps() -> None:
+    manager = ProcessSandboxManager(clock=_clock)
+
+    instance = manager.execute(
+        run_id="run-1",
+        workload="agent-1",
+        command=[sys.executable, "-c", "pass"],
+        spec=_spec(),
+    )
+
+    assert instance.status is SandboxStatus.COMPLETED
+    assert "memory_mb" in instance.caps_applied
+    assert "cpu" in instance.caps_applied
+    assert instance.cap_errors == []
+
+
+def test_cpu_cap_uses_wall_clock_not_core_count() -> None:
+    from hiveplane.sandbox.manager import _cpu_seconds
+
+    caps = ResourceCaps(memory_mb=128, cpu_cores=4.0, wall_clock_s=7)
+
+    assert _cpu_seconds(caps) == 7
+
+
+def test_cap_errors_are_recorded(monkeypatch: pytest.MonkeyPatch) -> None:
+    import resource
+
+    monkeypatch.setattr(resource, "getrlimit", lambda resource_id: (0, 1024))
+    manager = ProcessSandboxManager(clock=_clock)
+
+    instance = manager.execute(
+        run_id="run-1",
+        workload="agent-1",
+        command=[sys.executable, "-c", "pass"],
+        spec=_spec(),
+    )
+
+    assert "memory_mb" in instance.cap_errors

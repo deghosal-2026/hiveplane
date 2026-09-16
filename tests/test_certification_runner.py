@@ -274,3 +274,64 @@ def test_expected_outcome_is_available_on_task() -> None:
     assert corpus.tasks[0].expected == ExpectedOutcome(
         outcome="ok", required_fields=["summary"]
     )
+
+
+def test_task_timeout_is_enforced() -> None:
+    corpus = _corpus(
+        [
+            {
+                "id": "t1",
+                "name": "a",
+                "timeout_seconds": 1,
+                "check": {"type": "exact_match", "field": "x", "value": 1},
+            }
+        ]
+    )
+    executor = FakeExecutor({"t1": TaskExecution(output={"x": 1}, latency_ms=1500)})
+
+    result = _runner(executor, corpus).run(corpus, workload_id="w", manifest_version=1)
+
+    assert result.tasks[0].status == "fail"
+    assert result.tasks[0].failure_reason is not None
+    assert "timeout" in result.tasks[0].failure_reason
+
+
+def test_network_use_is_blocked_when_not_allowed() -> None:
+    corpus = _corpus(
+        [
+            {
+                "id": "t1",
+                "name": "a",
+                "check": {"type": "exact_match", "field": "x", "value": 1},
+            }
+        ]
+    )
+    executor = FakeExecutor(
+        {"t1": TaskExecution(output={"x": 1}, latency_ms=1, network_used=True)}
+    )
+
+    result = _runner(executor, corpus).run(corpus, workload_id="w", manifest_version=1)
+
+    assert result.tasks[0].status == "fail"
+    assert result.tasks[0].failure_reason is not None
+    assert "network" in result.tasks[0].failure_reason
+
+
+def test_network_use_allowed_when_task_permits() -> None:
+    corpus = _corpus(
+        [
+            {
+                "id": "t1",
+                "name": "a",
+                "allow_network": True,
+                "check": {"type": "exact_match", "field": "x", "value": 1},
+            }
+        ]
+    )
+    executor = FakeExecutor(
+        {"t1": TaskExecution(output={"x": 1}, latency_ms=1, network_used=True)}
+    )
+
+    result = _runner(executor, corpus).run(corpus, workload_id="w", manifest_version=1)
+
+    assert result.tasks[0].status == "pass"

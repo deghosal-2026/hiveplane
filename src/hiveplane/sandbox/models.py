@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from enum import StrEnum
 
-from pydantic import AwareDatetime, BaseModel, ConfigDict
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 
 from hiveplane.core.sandbox import EgressMode, ResourceCaps
 
@@ -36,3 +36,5 @@ class SandboxInstance(BaseModel):
     finished_at: AwareDatetime | None = None
     exit_code: int | None = None
     failure_reason: str | None = None
+    caps_applied: list[str] = Field(default_factory=list)
+    cap_errors: list[str] = Field(default_factory=list)

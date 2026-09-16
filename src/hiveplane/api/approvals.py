@@ -4,11 +4,12 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, ConfigDict, Field
 
 from hiveplane.api.deps import get_approval_service, get_run_service
 from hiveplane.core.approval import ApprovalRecord, ApprovalStatus
+from hiveplane.core.run import RunState
 from hiveplane.execution.models import InterventionAction
 from hiveplane.execution.service import RunService
 from hiveplane.policy.approvals import ApprovalService
@@ -49,6 +50,8 @@ def approve(
     approval_id: str, payload: ApprovalDecisionRequest, service: ApprovalDep, runs: RunDep
 ) -> ApprovalRecord:
     """Approve a request and resume the paused run."""
+    approval = service.get(approval_id)
+    _require_paused(runs, approval.run_id)
     record = service.decide(
         approval_id,
         status=ApprovalStatus.APPROVED,
@@ -64,6 +67,8 @@ def deny(
     approval_id: str, payload: ApprovalDecisionRequest, service: ApprovalDep, runs: RunDep
 ) -> ApprovalRecord:
     """Deny a request and fail the paused run."""
+    approval = service.get(approval_id)
+    _require_paused(runs, approval.run_id)
     record = service.decide(
         approval_id,
         status=ApprovalStatus.DENIED,
@@ -72,3 +77,12 @@ def deny(
     )
     runs.fail(record.run_id, actor=payload.operator, reason=payload.reason or "approval denied")
     return record
+
+
+def _require_paused(runs: RunService, run_id: str) -> None:
+    """Reject a decision when the run is no longer paused, so records stay consistent."""
+    if runs.get(run_id).state is not RunState.PAUSED:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"run {run_id!r} is not paused; approval cannot be applied",
+        )

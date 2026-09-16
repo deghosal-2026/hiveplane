@@ -29,7 +29,6 @@ class CertificationRequest(BaseModel):
     workload: str
     target_context: TargetContext = TargetContext.STAGING
     corpus: str | None = None
-    production_runs_survived: int = 0
 
 
 @router.post(
@@ -45,7 +44,6 @@ def start_certification(
         payload.workload,
         target_context=payload.target_context,
         corpus_ref=payload.corpus,
-        production_runs_survived=payload.production_runs_survived,
     )
 
 
@@ -69,9 +67,7 @@ def compare_certifications(
     return coordinator.compare(before_id, after_id)
 
 
-@router.get("/certifications/{certification_id}", response_model=CertificationRecord)
-def get_certification(
-    certification_id: str, coordinator: CoordinatorDep
-) -> CertificationRecord:
-    """Return a certification record by id."""
-    return coordinator.get(certification_id)
+@router.get("/certifications/{record_id}", response_model=CertificationRecord)
+def get_certification(record_id: str, coordinator: CoordinatorDep) -> CertificationRecord:
+    """Return a certification record by record id."""
+    return coordinator.get(record_id)

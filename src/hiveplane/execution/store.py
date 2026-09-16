@@ -160,4 +160,6 @@ class JsonFileRunStore(_BundleStore):
     def _commit(self, run_id: str) -> None:
         bundle = self._bundles[run_id]
         target = self._dir / f"{run_id}.json"
-        target.write_text(bundle.model_dump_json(), encoding="utf-8")
+        temp = target.with_name(f"{target.name}.tmp")
+        temp.write_text(bundle.model_dump_json(), encoding="utf-8")
+        temp.replace(target)

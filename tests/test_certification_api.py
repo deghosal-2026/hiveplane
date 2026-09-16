@@ -22,6 +22,7 @@ from hiveplane.certification.service import CertificationService
 from hiveplane.certification.signing import generate_keypair
 from hiveplane.certification.store import InMemoryCertificationStore
 from hiveplane.certification.workflow import CertificationCoordinator
+from hiveplane.config import get_settings
 from hiveplane.core.workload import AgentWorkload
 from hiveplane.registry.service import RegistryService
 from hiveplane.registry.store import InMemoryRegistryStore
@@ -141,7 +142,7 @@ def test_get_and_list_certifications(
     created = client.post(
         "/certifications", json={"workload": "repo-agent", "target_context": "staging"}
     ).json()
-    certification_id = created["certification"]["certification_id"]
+    certification_id = created["record_id"]
 
     fetched = client.get(f"/certifications/{certification_id}")
     listed = client.get("/certifications", params={"workload": "repo-agent"})
@@ -173,8 +174,8 @@ def test_compare_certifications(
 
     response = client.get(
         "/certifications/compare/"
-        f"{first['certification']['certification_id']}/"
-        f"{second['certification']['certification_id']}"
+        f"{first['record_id']}/"
+        f"{second['record_id']}"
     )
 
     assert response.status_code == 200
@@ -182,3 +183,50 @@ def test_compare_certifications(
     assert body["blocked"] is False
     assert body["before_attestation_id"] == "att-1"
     assert body["after_attestation_id"] == "att-2"
+
+
+def test_default_app_refuses_certification_without_executor(
+    make_manifest: Callable[..., AgentWorkload], tmp_path: Path, monkeypatch: Any
+) -> None:
+    (tmp_path / "corpus.yaml").write_text(
+        yaml.safe_dump({"id": "demo-corpus", "version": 1, "tasks": _TASKS}),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("HIVEPLANE_CERTIFICATION__CORPORA_DIR", str(tmp_path))
+    get_settings.cache_clear()
+    app = create_app()
+    registry: RegistryService = app.state.registry_service
+    registry.create(
+        make_manifest(name="repo-agent", certification={"benchmark_corpus": "corpus.yaml"})
+    )
+    client = TestClient(app)
+
+    response = client.post(
+        "/certifications", json={"workload": "repo-agent", "target_context": "staging"}
+    )
+
+    assert response.status_code == 503
+
+
+def test_reference_executor_opt_in_allows_certification(
+    make_manifest: Callable[..., AgentWorkload], tmp_path: Path, monkeypatch: Any
+) -> None:
+    (tmp_path / "corpus.yaml").write_text(
+        yaml.safe_dump({"id": "demo-corpus", "version": 1, "tasks": _TASKS}),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("HIVEPLANE_CERTIFICATION__CORPORA_DIR", str(tmp_path))
+    monkeypatch.setenv("HIVEPLANE_CERTIFICATION__EXECUTOR", "reference")
+    get_settings.cache_clear()
+    app = create_app()
+    registry: RegistryService = app.state.registry_service
+    registry.create(
+        make_manifest(name="repo-agent", certification={"benchmark_corpus": "corpus.yaml"})
+    )
+    client = TestClient(app)
+
+    response = client.post(
+        "/certifications", json={"workload": "repo-agent", "target_context": "staging"}
+    )
+
+    assert response.status_code == 201

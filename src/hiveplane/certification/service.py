@@ -13,7 +13,7 @@ from datetime import UTC, datetime, timedelta
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
-from hiveplane.certification.engine import CertificationEngine
+from hiveplane.certification.engine import CertificationEngine, workload_policy
 from hiveplane.certification.models import (
     Attestation,
     BenchmarkResult,
@@ -24,6 +24,7 @@ from hiveplane.certification.models import (
     Signer,
     TargetContext,
 )
+from hiveplane.certification.runner import BENCHMARK_VERSION
 from hiveplane.certification.signing import sign_attestation
 from hiveplane.registry.service import RegistryService
 
@@ -43,7 +44,7 @@ class CertificationService:
         environment: Environment,
         identity: str = "certification-service@hiveplane",
         key_id: str = "hp-signing-key-01",
-        benchmark_version: str = "1.0.0",
+        benchmark_version: str = BENCHMARK_VERSION,
         clock: Callable[[], datetime] | None = None,
         id_factory: Callable[[], str] | None = None,
     ) -> None:
@@ -62,14 +63,12 @@ class CertificationService:
         result: BenchmarkResult,
         *,
         target_context: TargetContext,
-        production_runs_survived: int = 0,
         previous_attestation_id: str | None = None,
     ) -> Attestation:
         """Evaluate, sign, store, and record an attestation for a benchmark result."""
         return self.certify_with_result(
             result,
             target_context=target_context,
-            production_runs_survived=production_runs_survived,
             previous_attestation_id=previous_attestation_id,
         ).attestation
 
@@ -78,16 +77,22 @@ class CertificationService:
         result: BenchmarkResult,
         *,
         target_context: TargetContext,
-        production_runs_survived: int = 0,
         previous_attestation_id: str | None = None,
     ) -> CertificationRecord:
-        """Like :meth:`certify` but returns the certification, attestation, and result."""
+        """Like :meth:`certify` but returns the certification, attestation, and result.
+
+        The production-survival count is read from the registry record, never from
+        the caller, so a client cannot claim runs it did not survive.
+        """
         record = self._registry.get(result.workload_id)
+        spec = record.manifest.spec.certification
+        policy = workload_policy(spec, self._engine.policy) if spec is not None else None
         certification = self._engine.evaluate(
             result,
             current_status=record.certification_status,
             target_context=target_context,
-            production_runs_survived=production_runs_survived,
+            production_runs_survived=record.production_runs_survived,
+            policy=policy,
         )
         attestation = Attestation(
             attestation_id=self._id_factory(),
@@ -108,25 +113,30 @@ class CertificationService:
         )
         stored = self._registry.store_attestation(sign_attestation(attestation, self._private_key))
         if certification.status is not record.certification_status:
-            event = _event_for(certification.status)
+            event = _event_for(record.certification_status, certification.status)
             if event is not None:
                 expires_at = stored.timestamp + timedelta(
-                    seconds=self._engine.policy.re_cert_interval
+                    seconds=(policy or self._engine.policy).re_cert_interval
                 )
                 self._registry.apply_attestation(stored, event=event, expires_at=expires_at)
         return CertificationRecord(
+            record_id=stored.attestation_id,
             certification=certification,
             attestation=stored,
             benchmark_result=result,
         )
 
 
-def _event_for(status: CertificationStatus) -> CertificationEvent | None:
+def _event_for(
+    current: CertificationStatus, resolved: CertificationStatus
+) -> CertificationEvent | None:
     """Map a resolved certification status onto the lifecycle event that caused it."""
-    if status is CertificationStatus.PROVISIONAL:
+    if current is CertificationStatus.QUARANTINED and resolved is CertificationStatus.PROVISIONAL:
+        return CertificationEvent.RECOVER
+    if resolved is CertificationStatus.PROVISIONAL:
         return CertificationEvent.STAGING_PASS
-    if status is CertificationStatus.CERTIFIED:
+    if resolved is CertificationStatus.CERTIFIED:
         return CertificationEvent.PRODUCTION_PASS
-    if status is CertificationStatus.QUARANTINED:
+    if resolved is CertificationStatus.QUARANTINED:
         return CertificationEvent.RECERT_FAIL
     return None

@@ -340,6 +340,8 @@ class RegressionDiff(BaseModel):
     passed_after: int = Field(ge=0)
     regressed: list[TaskDelta] = Field(default_factory=list)
     improved: list[TaskDelta] = Field(default_factory=list)
+    added: list[str] = Field(default_factory=list)
+    removed: list[str] = Field(default_factory=list)
     blocked: bool
 
 
@@ -348,6 +350,7 @@ class CertificationRecord(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
+    record_id: str = Field(min_length=1)
     certification: Certification
     attestation: Attestation
     benchmark_result: BenchmarkResult

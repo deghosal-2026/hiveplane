@@ -212,3 +212,28 @@ def test_certify_failing_recert_quarantines(setup: Setup) -> None:
     assert failed.status is CertificationStatus.QUARANTINED
     assert registry.get("repo-agent").certification_status is CertificationStatus.QUARANTINED
     assert registry.check_admission("repo-agent", AdmissionContext.STAGING).admitted is False
+
+
+def test_quarantined_recovers_on_passing_recert(setup: Setup) -> None:
+    service, registry, _ = setup
+    service.certify(_result(), target_context=TargetContext.STAGING)
+    quarantined = service.certify(
+        _result(_summary(pass_rate=0.10, critical_failures=3)),
+        target_context=TargetContext.STAGING,
+    )
+    assert quarantined.status is CertificationStatus.QUARANTINED
+
+    recovered = service.certify(_result(), target_context=TargetContext.STAGING)
+
+    assert recovered.status is CertificationStatus.PROVISIONAL
+    assert registry.get("repo-agent").certification_status is CertificationStatus.PROVISIONAL
+
+
+def test_manifest_staging_threshold_overrides_fleet_default(setup: Setup) -> None:
+    service, _, _ = setup
+
+    certification = service.certify(
+        _result(_summary(pass_rate=0.75)), target_context=TargetContext.STAGING
+    )
+
+    assert certification.status is CertificationStatus.UNCERTIFIED

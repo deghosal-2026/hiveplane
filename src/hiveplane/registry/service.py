@@ -102,6 +102,13 @@ def requires_re_certification(changes: list[str]) -> bool:
     return any(field in CERT_RELEVANT_FIELDS for field in changes)
 
 
+def _survival_after_transition(current: int, status: CertificationStatus) -> int:
+    """Reset the production-run survival counter when a new survival cycle begins."""
+    if status in (CertificationStatus.PROVISIONAL, CertificationStatus.QUARANTINED):
+        return 0
+    return current
+
+
 class RegistryService:
     """Desired-state registry over a :class:`RegistryStore`."""
 
@@ -343,8 +350,20 @@ class RegistryService:
                 "certification_status": new_status,
                 "manifest": manifest,
                 "needs_re_certification": False if resolved else record.needs_re_certification,
+                "production_runs_survived": _survival_after_transition(
+                    record.production_runs_survived, new_status
+                ),
                 "updated_at": self._now(),
             }
+        )
+        self._store.save_workload(updated)
+        return updated
+
+    def increment_production_runs(self, name: str) -> WorkloadRecord:
+        """Count a completed production run toward the certification survival gate."""
+        record = self.get(name)
+        updated = record.model_copy(
+            update={"production_runs_survived": record.production_runs_survived + 1}
         )
         self._store.save_workload(updated)
         return updated
@@ -398,6 +417,9 @@ class RegistryService:
                 "certification_status": new_status,
                 "manifest": manifest,
                 "needs_re_certification": False if resolved else record.needs_re_certification,
+                "production_runs_survived": _survival_after_transition(
+                    record.production_runs_survived, new_status
+                ),
                 "updated_at": self._now(),
             }
         )

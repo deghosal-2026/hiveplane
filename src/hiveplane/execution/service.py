@@ -29,7 +29,7 @@ from hiveplane.execution.models import AdmissionOutcome, InterventionAction, Run
 from hiveplane.execution.store import RunStore
 from hiveplane.registry.service import RegistryService
 
-_TERMINAL = (RunState.COMPLETED, RunState.FAILED)
+_TERMINAL = (RunState.COMPLETED, RunState.FAILED, RunState.CANCELLED)
 
 
 class RunService:
@@ -155,6 +155,10 @@ class RunService:
         """Return a run by id."""
         return self._require(run_id)
 
+    def start(self, run_id: str, *, actor: str) -> Run:
+        """Start a queued run (adapter pickup or operator start)."""
+        return self.transition(run_id, RunState.RUNNING, actor=actor)
+
     def list_runs(
         self, *, workload: str | None = None, state: RunState | None = None
     ) -> list[Run]:
@@ -165,6 +169,18 @@ class RunService:
         """Return the ordered event log for a run."""
         self._require(run_id)
         return self._store.list_events(run_id)
+
+    def record_event(
+        self,
+        run_id: str,
+        event_type: EventType,
+        actor: str,
+        *,
+        detail: str | None = None,
+    ) -> None:
+        """Append an attributed event to a run's history."""
+        self._require(run_id)
+        self._append_event(run_id, event_type, actor, detail=detail)
 
     def usage(self, run_id: str) -> list[UsageReport]:
         """Return the recorded usage reports for a run."""
@@ -236,6 +252,8 @@ class RunService:
             )
         if target in _TERMINAL:
             manifest = self._registry.get(run.workload_id).manifest
+            if target is RunState.COMPLETED and run.context is AdmissionContext.PRODUCTION:
+                self._registry.increment_production_runs(run.workload_id)
             self._fanout.notify(updated, manifest)
         return updated
 
@@ -268,19 +286,34 @@ class RunService:
         )
 
     def record_usage(self, run_id: str, report: UsageReport) -> Run:
-        """Record usage for a run, enforce budget, and update accumulated cost."""
+        """Record usage for a run, enforce budget, and update accumulated cost.
+
+        Usage that arrives after a run is terminal is acknowledged without
+        mutating state; pricing happens before anything is persisted, so an
+        unpriceable report cannot leave partial state behind.
+        """
         run = self._require(run_id)
+        if run.state in _TERMINAL:
+            self._append_event(
+                run_id,
+                EventType.USAGE,
+                "adapter",
+                detail=f"late usage ignored (state={run.state.value})",
+            )
+            return run
         workload = self._registry.get(run.workload_id).manifest
         if report.model_identity is None and run.model_identity is not None:
             report = report.model_copy(update={"model_identity": run.model_identity})
-        self._store.add_usage(report)
-        self._append_event(run_id, EventType.USAGE, "adapter", detail=str(report.cost_usd))
         cost = report.cost_usd
         check = None
         if self._budget is not None:
             outcome = self._budget.record_usage(workload, report)
             cost = outcome.cost_usd
             check = outcome.check
+        if cost != report.cost_usd:
+            report = report.model_copy(update={"cost_usd": cost})
+        self._store.add_usage(report)
+        self._append_event(run_id, EventType.USAGE, "adapter", detail=str(cost))
         updated = run.model_copy(
             update={"cost_usd": run.cost_usd + cost, "updated_at": self._clock()}
         )

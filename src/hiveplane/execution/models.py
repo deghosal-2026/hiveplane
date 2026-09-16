@@ -4,10 +4,11 @@ from __future__ import annotations
 
 from enum import StrEnum
 
-from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, JsonValue
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, JsonValue, field_validator
 
 from hiveplane.core.fanout import FanOutType
 from hiveplane.core.run import AdmissionContext, Run
+from hiveplane.core.spec import validate_model_identity
 from hiveplane.core.workload import AgentWorkload
 
 
@@ -102,3 +103,10 @@ class RunSubmission(BaseModel):
     context: AdmissionContext
     task: dict[str, JsonValue] = Field(default_factory=dict)
     model_identity: str | None = None
+
+    @field_validator("model_identity")
+    @classmethod
+    def _validate_model_identity(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        return validate_model_identity(value)

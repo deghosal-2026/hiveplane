@@ -6,16 +6,18 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 
-from hiveplane.api.deps import get_run_service
+from hiveplane.api.deps import get_run_service, get_tool_gateway
 from hiveplane.core.event import RunEvent
 from hiveplane.core.run import Run, RunState
 from hiveplane.core.usage import UsageReport
 from hiveplane.execution.models import InterventionAction, RunSubmission
 from hiveplane.execution.service import RunService
+from hiveplane.execution.tools import ToolCallRequest, ToolCallResult, ToolGateway
 
 router = APIRouter(tags=["runs"])
 
 ServiceDep = Annotated[RunService, Depends(get_run_service)]
+GatewayDep = Annotated[ToolGateway, Depends(get_tool_gateway)]
 
 
 @router.post("/runs", response_model=Run, status_code=status.HTTP_201_CREATED)
@@ -74,3 +76,17 @@ def resume_run(run_id: str, service: ServiceDep) -> Run:
 def stop_run(run_id: str, service: ServiceDep) -> Run:
     """Stop a run immediately."""
     return service.intervene(run_id, InterventionAction.STOP, actor="api")
+
+
+@router.post("/runs/{run_id}/tool-calls", response_model=ToolCallResult)
+def invoke_tool_call(
+    run_id: str, payload: ToolCallRequest, gateway: GatewayDep
+) -> ToolCallResult:
+    """Authorize a tool call through policy, egress, and shaping."""
+    return gateway.invoke(run_id, payload)
+
+
+@router.post("/runs/{run_id}/start", response_model=Run)
+def start_run(run_id: str, service: ServiceDep) -> Run:
+    """Start a queued run (adapter pickup or operator start)."""
+    return service.start(run_id, actor="api")

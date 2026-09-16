@@ -171,7 +171,13 @@ class ApprovalRequests(Protocol):
     """Requests a human approval for an escalated run."""
 
     def request(
-        self, *, run_id: str, workload: str, rule: str, reason: str
+        self,
+        *,
+        run_id: str,
+        workload: str,
+        rule: str,
+        reason: str,
+        action_class: ActionClass | None = None,
     ) -> ApprovalRecord: ...
 
 

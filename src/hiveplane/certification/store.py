@@ -12,7 +12,7 @@ class CertificationStore(Protocol):
 
     def add(self, record: CertificationRecord) -> None: ...
 
-    def get(self, certification_id: str) -> CertificationRecord | None: ...
+    def get(self, record_id: str) -> CertificationRecord | None: ...
 
     def list(
         self,
@@ -31,12 +31,12 @@ class InMemoryCertificationStore:
         self._records: dict[str, CertificationRecord] = {}
 
     def add(self, record: CertificationRecord) -> None:
-        """Store a certification record, keyed by certification id."""
-        self._records[record.certification.certification_id] = record.model_copy(deep=True)
+        """Store a certification record, keyed by its unique record id."""
+        self._records[record.record_id] = record.model_copy(deep=True)
 
-    def get(self, certification_id: str) -> CertificationRecord | None:
+    def get(self, record_id: str) -> CertificationRecord | None:
         """Return a certification record by id, or ``None``."""
-        record = self._records.get(certification_id)
+        record = self._records.get(record_id)
         return record.model_copy(deep=True) if record is not None else None
 
     def list(

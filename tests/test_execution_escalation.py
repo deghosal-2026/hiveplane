@@ -50,7 +50,15 @@ class _Approvals:
     def __init__(self) -> None:
         self.requested: list[tuple[str, str, str, str]] = []
 
-    def request(self, *, run_id: str, workload: str, rule: str, reason: str) -> ApprovalRecord:
+    def request(
+        self,
+        *,
+        run_id: str,
+        workload: str,
+        rule: str,
+        reason: str,
+        action_class: object | None = None,
+    ) -> ApprovalRecord:
         self.requested.append((run_id, workload, rule, reason))
         return ApprovalRecord(
             approval_id="ap-1",

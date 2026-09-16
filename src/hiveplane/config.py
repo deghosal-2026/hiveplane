@@ -92,6 +92,7 @@ class CertificationSettings(BaseModel):
     drift_threshold_pass_rate: float = Field(default=0.10, ge=0.0, le=1.0)
     max_new_failures: int = Field(default=2, ge=0)
     corpora_dir: str = "examples"
+    executor: Literal["none", "reference"] = "none"
 
     @model_validator(mode="after")
     def _production_not_weaker_than_staging(self) -> CertificationSettings:
@@ -119,6 +120,13 @@ class SandboxSettings(BaseModel):
 
     enabled: bool = True
     defaults: SandboxDefaults = Field(default_factory=SandboxDefaults)
+
+
+class ExecutionSettings(BaseModel):
+    """Run-store configuration (DD-05): memory or durable JSON files."""
+
+    store: Literal["memory", "json"] = "json"
+    data_dir: str = ".hiveplane/runs"
 
 
 class FanoutSettings(BaseModel):
@@ -150,6 +158,7 @@ class Settings(BaseSettings):
     otel: OtelSettings = Field(default_factory=OtelSettings)
     certification: CertificationSettings = Field(default_factory=CertificationSettings)
     sandbox: SandboxSettings = Field(default_factory=SandboxSettings)
+    execution: ExecutionSettings = Field(default_factory=ExecutionSettings)
     fanout: FanoutSettings = Field(default_factory=FanoutSettings)
 
 

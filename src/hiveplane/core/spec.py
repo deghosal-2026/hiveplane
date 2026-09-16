@@ -58,6 +58,26 @@ class ModelIdentity(BaseModel):
     version: str = Field(min_length=1)
 
 
+def canonical_model_identity(identity: ModelIdentity) -> str:
+    """Return the canonical ``provider/family/version`` model identity string."""
+    return f"{identity.provider}/{identity.family}/{identity.version}"
+
+
+def validate_model_identity(value: str) -> str:
+    """Validate a canonical ``provider/family/version`` model identity string.
+
+    Raises:
+        ValueError: when the value is not three non-empty slash-separated parts.
+    """
+    parts = value.split("/")
+    if len(parts) != 3 or any(not part.strip() for part in parts):
+        raise ValueError(
+            "model_identity must be 'provider/family/version' "
+            f"(e.g. 'openai/gpt-4o/2024-08-06'), got {value!r}"
+        )
+    return value
+
+
 class ModelSpec(BaseModel):
     """Model strategy and the certification-bound model identity."""
 

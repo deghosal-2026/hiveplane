@@ -91,3 +91,30 @@ def test_errors_carry_context() -> None:
     refused = RunAdmissionRefusedError(_result())
     assert "agent-1" in str(refused)
     assert RunNotIntervenableError("run-1", "pause").run_id == "run-1"
+
+
+def test_run_submission_rejects_non_canonical_model_identity() -> None:
+    with pytest.raises(ValidationError):
+        RunSubmission(
+            workload="w",
+            caller="c",
+            context=AdmissionContext.PRODUCTION,
+            model_identity="gpt-4o-2024-08-06",
+        )
+
+
+def test_run_submission_accepts_canonical_model_identity() -> None:
+    submission = RunSubmission(
+        workload="w",
+        caller="c",
+        context=AdmissionContext.PRODUCTION,
+        model_identity="openai/gpt-4o/2024-08-06",
+    )
+
+    assert submission.model_identity == "openai/gpt-4o/2024-08-06"
+
+
+def test_run_submission_allows_absent_model_identity() -> None:
+    submission = RunSubmission(workload="w", caller="c", context=AdmissionContext.SANDBOX)
+
+    assert submission.model_identity is None

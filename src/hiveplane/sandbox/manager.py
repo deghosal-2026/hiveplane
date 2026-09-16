@@ -123,9 +123,41 @@ class InMemorySandboxManager(_Bookkeeper):
 def _limit_process(caps: ResourceCaps) -> Callable[[], None]:
     def _apply() -> None:
         _set_soft_limit(resource.RLIMIT_AS, caps.memory_mb * 1024 * 1024)
-        _set_soft_limit(resource.RLIMIT_CPU, max(1, int(caps.cpu_cores)))
+        _set_soft_limit(resource.RLIMIT_CPU, _cpu_seconds(caps))
 
     return _apply
+
+
+def _cpu_seconds(caps: ResourceCaps) -> int:
+    """Bound cumulative CPU time by the wall-clock cap.
+
+    ``cpu_cores`` is a rate, not a cumulative limit, so it cannot map onto
+    ``RLIMIT_CPU`` (which counts CPU seconds). Until a cgroup/container backend
+    enforces core counts (M16-M17), we bound CPU time by the wall-clock cap so a
+    spin loop still terminates.
+    """
+    return max(1, caps.wall_clock_s)
+
+
+def inspect_caps(caps: ResourceCaps) -> tuple[list[str], list[str]]:
+    """Return (applied, errors) for the caps, pre-flighting the OS limits."""
+    applied: list[str] = []
+    errors: list[str] = []
+    checks = (
+        ("memory_mb", resource.RLIMIT_AS, caps.memory_mb * 1024 * 1024),
+        ("cpu", resource.RLIMIT_CPU, _cpu_seconds(caps)),
+    )
+    for name, resource_id, target in checks:
+        try:
+            _, hard = resource.getrlimit(resource_id)
+        except (OSError, ValueError):
+            errors.append(name)
+            continue
+        if hard != resource.RLIM_INFINITY and target > hard:
+            errors.append(name)
+        else:
+            applied.append(name)
+    return applied, errors
 
 
 def _set_soft_limit(resource_id: int, soft: int) -> None:
@@ -150,6 +182,7 @@ class ProcessSandboxManager(_Bookkeeper):
     ) -> SandboxInstance:
         """Run a command in an isolated subprocess and record the outcome."""
         caps = spec.resource_caps if spec is not None else None
+        applied, cap_errors = inspect_caps(caps) if caps is not None else ([], [])
         instance = SandboxInstance(
             sandbox_id=self._id_factory(),
             run_id=run_id,
@@ -158,6 +191,8 @@ class ProcessSandboxManager(_Bookkeeper):
             resource_caps=caps,
             egress_mode=spec.egress.mode if spec is not None else EgressMode.RESTRICTED,
             started_at=self._clock(),
+            caps_applied=applied,
+            cap_errors=cap_errors,
         )
         self._save(instance)
         scratch = Path(tempfile.mkdtemp(prefix="hiveplane-sandbox-"))

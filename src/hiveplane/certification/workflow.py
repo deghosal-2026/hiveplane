@@ -22,9 +22,10 @@ from hiveplane.certification.models import (
     RegressionDiff,
     TargetContext,
 )
-from hiveplane.certification.runner import BenchmarkRunner, TaskExecutor
+from hiveplane.certification.runner import BENCHMARK_VERSION, BenchmarkRunner, TaskExecutor
 from hiveplane.certification.service import CertificationService
 from hiveplane.certification.store import CertificationStore
+from hiveplane.core.spec import canonical_model_identity
 from hiveplane.core.workload import AgentWorkload
 from hiveplane.registry.service import RegistryService
 
@@ -41,7 +42,7 @@ class CertificationCoordinator:
         executor: TaskExecutor,
         corpora_dir: str | Path,
         environment: Environment,
-        benchmark_version: str = "1.0.0",
+        benchmark_version: str = BENCHMARK_VERSION,
         clock: Callable[[], datetime] | None = None,
     ) -> None:
         self._registry = registry
@@ -64,7 +65,6 @@ class CertificationCoordinator:
         *,
         target_context: TargetContext,
         corpus_ref: str | None = None,
-        production_runs_survived: int = 0,
     ) -> CertificationRecord:
         """Run the workload's corpus, certify it, and store the record."""
         record = self._registry.get(workload)
@@ -74,7 +74,7 @@ class CertificationCoordinator:
         )
         if not reference:
             raise CorpusError(f"workload {workload!r} has no benchmark_corpus configured")
-        corpus = load_corpus(self._corpora_dir / reference)
+        corpus = load_corpus(self._resolve_corpus_path(reference))
         runner = BenchmarkRunner(
             self._executor,
             model_identity=_model_identity(record.manifest),
@@ -85,19 +85,32 @@ class CertificationCoordinator:
         result = runner.run(
             corpus, workload_id=workload, manifest_version=record.current_version
         )
+        previous = self._registry.list_attestations(workload)
         certification_record = self._service.certify_with_result(
             result,
             target_context=target_context,
-            production_runs_survived=production_runs_survived,
+            previous_attestation_id=(
+                previous[-1].attestation_id if previous else None
+            ),
         )
         self._store.add(certification_record)
         return certification_record
 
-    def get(self, certification_id: str) -> CertificationRecord:
+    def _resolve_corpus_path(self, reference: str) -> Path:
+        """Resolve a corpus reference under the corpora root, rejecting escapes."""
+        root = self._corpora_dir.resolve()
+        candidate = (root / reference).resolve()
+        if not candidate.is_relative_to(root):
+            raise CorpusError(
+                f"corpus reference {reference!r} escapes the corpora root {str(root)!r}"
+            )
+        return candidate
+
+    def get(self, record_id: str) -> CertificationRecord:
         """Return a stored certification record or raise."""
-        record = self._store.get(certification_id)
+        record = self._store.get(record_id)
         if record is None:
-            raise CertificationNotFoundError(certification_id)
+            raise CertificationNotFoundError(record_id)
         return record
 
     def list(
@@ -129,4 +142,4 @@ def _model_identity(manifest: AgentWorkload) -> str:
     identity = manifest.spec.model.identity
     if identity is None:
         return "unspecified"
-    return f"{identity.provider}/{identity.family}/{identity.version}"
+    return canonical_model_identity(identity)

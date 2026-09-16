@@ -7,7 +7,7 @@ from datetime import UTC, datetime
 
 import pytest
 
-from hiveplane.budget.errors import UnknownModelPriceError
+from hiveplane.budget.errors import MissingModelIdentityError, UnknownModelPriceError
 from hiveplane.budget.pricing import CostTable
 from hiveplane.budget.service import BudgetService
 from hiveplane.budget.store import InMemoryBudgetStore
@@ -136,7 +136,7 @@ def test_check_denies_when_team_exhausted(make_manifest: Callable[..., AgentWork
     assert check.level is BudgetLevel.TEAM
 
 
-def test_record_usage_without_model_identity_uses_reported_cost(
+def test_record_usage_without_model_identity_is_rejected(
     make_manifest: Callable[..., AgentWorkload],
 ) -> None:
     service, _, _ = _service()
@@ -148,5 +148,6 @@ def test_record_usage_without_model_identity_uses_reported_cost(
         cost_usd=0.02,
         timestamp=_clock(),
     )
-    outcome = service.record_usage(make_manifest(), report)
-    assert outcome.cost_usd == 0.02
+
+    with pytest.raises(MissingModelIdentityError):
+        service.record_usage(make_manifest(), report)

@@ -306,3 +306,78 @@ def test_medium_blast_radius_escalates() -> None:
     )
     assert decision.outcome is DecisionOutcome.ESCALATE
     assert decision.rule == "blast_radius.medium"
+
+
+def _high_blast_context(**overrides: object) -> PolicyContext:
+    tools = _tools(allow=[ToolRef(tool_id="t1", trust_level=ToolTrustLevel.READ_ONLY)])
+    data: dict[str, object] = {
+        "tool_id": "t1",
+        "tools": tools,
+        "tool_trust": ToolTrustLevel.READ_ONLY,
+        "action_class": ActionClass.PRODUCTION_WRITE,
+        "data_sensitivity": DataSensitivity.INTERNAL,
+        "environment": AdmissionContext.PRODUCTION,
+        "certification_status": CertificationStatus.CERTIFIED,
+    }
+    data.update(overrides)
+    return _context(**data)
+
+
+def test_high_blast_radius_allowed_with_production_certification() -> None:
+    blast = compute_blast_radius(_high_blast_context())
+    assert blast.score >= 71
+
+    decision = _engine().evaluate(_high_blast_context())
+
+    assert decision.outcome is DecisionOutcome.ALLOW
+    assert decision.rule == "blast_radius.high.certified"
+
+
+def test_high_blast_uncertified_production_is_denied() -> None:
+    decision = _engine().evaluate(
+        _high_blast_context(certification_status=CertificationStatus.PROVISIONAL)
+    )
+
+    assert decision.outcome is DecisionOutcome.DENY
+    assert decision.rule == "certification.production"
+
+
+def test_high_blast_destructive_still_escalates() -> None:
+    tools = _tools(
+        allow=[
+            ToolRef(
+                tool_id="t1",
+                trust_level=ToolTrustLevel.DESTRUCTIVE,
+                require_approval=True,
+            )
+        ]
+    )
+    decision = _engine().evaluate(
+        _context(
+            tool_id="t1",
+            tools=tools,
+            tool_trust=ToolTrustLevel.DESTRUCTIVE,
+            action_class=ActionClass.PRODUCTION_WRITE,
+            environment=AdmissionContext.PRODUCTION,
+            certification_status=CertificationStatus.CERTIFIED,
+        )
+    )
+
+    assert decision.outcome is DecisionOutcome.ESCALATE
+    assert decision.rule == "trust.destructive"
+
+
+def test_restricted_read_only_escalates() -> None:
+    tools = _tools(allow=[ToolRef(tool_id="t1", trust_level=ToolTrustLevel.READ_ONLY)])
+    decision = _engine().evaluate(
+        _context(
+            tool_id="t1",
+            tools=tools,
+            tool_trust=ToolTrustLevel.READ_ONLY,
+            action_class=ActionClass.READ_ONLY,
+            data_sensitivity=DataSensitivity.RESTRICTED,
+        )
+    )
+
+    assert decision.outcome is DecisionOutcome.ESCALATE
+    assert decision.rule == "sensitivity.restricted.read"

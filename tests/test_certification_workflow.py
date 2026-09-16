@@ -7,10 +7,13 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+import pytest
 import yaml
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
 from hiveplane.certification.diff import regression_diff
 from hiveplane.certification.engine import CertificationEngine
+from hiveplane.certification.errors import CorpusError
 from hiveplane.certification.models import (
     BenchmarkAggregate,
     BenchmarkResult,
@@ -215,7 +218,7 @@ def test_coordinator_certifies_and_records(
     assert record.attestation.workload_id == "repo-agent"
     assert record.benchmark_result.aggregate.total == 2
     assert record.benchmark_result.aggregate.passed == 2
-    assert coordinator.store.get(record.certification.certification_id) is not None
+    assert coordinator.store.get(record.record_id) is not None
 
 
 def test_coordinator_promotes_to_certified(
@@ -240,7 +243,7 @@ def test_store_get_and_list_filters(
 
     store = coordinator.store
 
-    assert store.get(record.certification.certification_id) is not None
+    assert store.get(record.record_id) is not None
     assert store.get("missing") is None
     assert len(store.list(workload="repo-agent")) == 1
     assert len(store.list(status=CertificationStatus.PROVISIONAL)) == 1
@@ -257,9 +260,165 @@ def test_compare_certifications(
     second = coordinator.certify("repo-agent", target_context=TargetContext.PRODUCTION)
 
     diff = coordinator.compare(
-        first.certification.certification_id, second.certification.certification_id
+        first.record_id, second.record_id
     )
 
     assert diff.blocked is False
     assert diff.before_attestation_id == first.attestation.attestation_id
     assert diff.after_attestation_id == second.attestation.attestation_id
+
+
+def test_certify_rejects_corpus_path_traversal(
+    make_manifest: Callable[..., AgentWorkload], tmp_path: Path
+) -> None:
+    outside = tmp_path.parent / "outside"
+    outside.mkdir(exist_ok=True)
+    (outside / "corpus.yaml").write_text(
+        yaml.safe_dump({"id": "evil", "version": 1, "tasks": _TASKS}), encoding="utf-8"
+    )
+    corpora_dir = _write_corpus(tmp_path, _TASKS)
+    _, _, coordinator = _setup(make_manifest, corpora_dir)
+
+    with pytest.raises(CorpusError, match="escapes"):
+        coordinator.certify(
+            "repo-agent",
+            target_context=TargetContext.STAGING,
+            corpus_ref="../outside/corpus.yaml",
+        )
+
+
+def test_certify_allows_in_root_corpus_override(
+    make_manifest: Callable[..., AgentWorkload], tmp_path: Path
+) -> None:
+    corpora_dir = _write_corpus(tmp_path, _TASKS)
+    alt = corpora_dir / "alt"
+    alt.mkdir()
+    (alt / "corpus.yaml").write_text(
+        yaml.safe_dump({"id": "alt", "version": 1, "tasks": _TASKS}), encoding="utf-8"
+    )
+    _, _, coordinator = _setup(make_manifest, corpora_dir)
+
+    record = coordinator.certify(
+        "repo-agent",
+        target_context=TargetContext.STAGING,
+        corpus_ref="alt/corpus.yaml",
+    )
+
+    assert record.benchmark_result.corpus_id == "alt"
+
+
+def _service_with_survival(
+    registry: RegistryService, corpora_dir: Path, minimum: int, private_key: Ed25519PrivateKey
+) -> CertificationCoordinator:
+    policy = CertificationPolicy(
+        staging=Thresholds(
+            min_pass_rate=0.70, max_critical_failures=2, max_p95_latency_ms=60000
+        ),
+        production=Thresholds(
+            min_pass_rate=0.85,
+            max_critical_failures=0,
+            max_p95_latency_ms=30000,
+            min_production_runs_survived=minimum,
+        ),
+    )
+    engine = CertificationEngine(policy, clock=lambda: _FIXED_NOW)
+    counter = {"n": 0}
+
+    def _id() -> str:
+        counter["n"] += 1
+        return f"att-{counter['n']}"
+
+    service = CertificationService(
+        engine,
+        registry,
+        private_key=private_key,
+        environment=_ENV,
+        clock=lambda: _FIXED_NOW,
+        id_factory=_id,
+    )
+    return CertificationCoordinator(
+        registry,
+        service,
+        InMemoryCertificationStore(),
+        executor=ReferenceExecutor(),
+        corpora_dir=corpora_dir,
+        environment=_ENV,
+        clock=lambda: _FIXED_NOW,
+    )
+
+
+def test_production_certification_requires_server_side_survived_runs(
+    make_manifest: Callable[..., AgentWorkload], tmp_path: Path
+) -> None:
+    corpora_dir = _write_corpus(tmp_path, _TASKS)
+    private_key, public_key = generate_keypair()
+    registry = RegistryService(
+        InMemoryRegistryStore(),
+        clock=lambda: _FIXED_NOW,
+        attestation_public_key=public_key,
+    )
+    registry.create(
+        make_manifest(name="survival-agent", certification={"benchmark_corpus": "corpus.yaml"})
+    )
+    coordinator = _service_with_survival(registry, corpora_dir, 2, private_key)
+
+    coordinator.certify("survival-agent", target_context=TargetContext.STAGING)
+    deferred = coordinator.certify("survival-agent", target_context=TargetContext.PRODUCTION)
+    assert deferred.certification.status is CertificationStatus.PROVISIONAL
+
+    registry.increment_production_runs("survival-agent")
+    registry.increment_production_runs("survival-agent")
+    promoted = coordinator.certify("survival-agent", target_context=TargetContext.PRODUCTION)
+
+    assert promoted.certification.status is CertificationStatus.CERTIFIED
+
+
+def test_records_are_append_only(
+    make_manifest: Callable[..., AgentWorkload], tmp_path: Path
+) -> None:
+    corpora_dir = _write_corpus(tmp_path, _TASKS)
+    _, _, coordinator = _setup(make_manifest, corpora_dir)
+
+    first = coordinator.certify("repo-agent", target_context=TargetContext.STAGING)
+    second = coordinator.certify("repo-agent", target_context=TargetContext.STAGING)
+
+    records = coordinator.store.list(workload="repo-agent")
+
+    assert len(records) == 2
+    assert {record.record_id for record in records} == {first.record_id, second.record_id}
+    assert first.record_id != second.record_id
+
+
+def test_regression_diff_blocks_on_removed_passing_task() -> None:
+    before = _result([_task_result("t1", CheckStatus.PASS), _task_result("t2", CheckStatus.PASS)])
+    after = _result([_task_result("t1", CheckStatus.PASS)])
+
+    diff = regression_diff(before, after, before_attestation_id="a", after_attestation_id="b")
+
+    assert diff.removed == ["t2"]
+    assert diff.blocked is True
+
+
+def test_regression_diff_surfaces_added_task() -> None:
+    before = _result([_task_result("t1", CheckStatus.PASS)])
+    after = _result([_task_result("t1", CheckStatus.PASS), _task_result("t2", CheckStatus.PASS)])
+
+    diff = regression_diff(before, after, before_attestation_id="a", after_attestation_id="b")
+
+    assert diff.added == ["t2"]
+    assert diff.blocked is False
+
+
+def test_attestations_form_a_chain(
+    make_manifest: Callable[..., AgentWorkload], tmp_path: Path
+) -> None:
+    corpora_dir = _write_corpus(tmp_path, _TASKS)
+    _, _, coordinator = _setup(make_manifest, corpora_dir)
+
+    first = coordinator.certify("repo-agent", target_context=TargetContext.STAGING)
+    second = coordinator.certify("repo-agent", target_context=TargetContext.STAGING)
+
+    assert first.attestation.previous_attestation_id is None
+    assert (
+        second.attestation.previous_attestation_id == first.attestation.attestation_id
+    )

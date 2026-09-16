@@ -86,3 +86,36 @@ def test_usage_endpoint_is_empty_initially(make_manifest: Callable[..., AgentWor
     client = _client(make_manifest)
     run_id = client.post("/runs", json=_payload()).json()["id"]
     assert client.get(f"/runs/{run_id}/usage").json() == []
+
+
+def test_tool_call_endpoint_denies_unlisted_tool(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    client = _client(make_manifest)
+    run_id = client.post("/runs", json=_payload()).json()["id"]
+
+    response = client.post(f"/runs/{run_id}/tool-calls", json={"tool_id": "mcp.t.read"})
+
+    assert response.status_code == 200
+    assert response.json()["outcome"] == "denied"
+    assert response.json()["rule"] == "default.deny"
+
+
+def test_start_queued_run(make_manifest: Callable[..., AgentWorkload]) -> None:
+    client = _client(make_manifest)
+    run_id = client.post("/runs", json=_payload()).json()["id"]
+
+    response = client.post(f"/runs/{run_id}/start")
+
+    assert response.status_code == 200
+    assert response.json()["state"] == "running"
+
+
+def test_stop_queued_run(make_manifest: Callable[..., AgentWorkload]) -> None:
+    client = _client(make_manifest)
+    run_id = client.post("/runs", json=_payload()).json()["id"]
+
+    response = client.post(f"/runs/{run_id}/stop")
+
+    assert response.status_code == 200
+    assert response.json()["state"] == "cancelled"

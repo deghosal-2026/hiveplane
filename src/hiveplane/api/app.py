@@ -19,14 +19,18 @@ from hiveplane.api.certifications import router as certifications_router
 from hiveplane.api.policy import router as policy_router
 from hiveplane.api.registry import router as registry_router
 from hiveplane.api.runs import router as runs_router
-from hiveplane.budget.errors import UnknownModelPriceError
+from hiveplane.budget.errors import MissingModelIdentityError, UnknownModelPriceError
 from hiveplane.budget.pricing import CostTable
 from hiveplane.budget.service import BudgetService
 from hiveplane.budget.store import InMemoryBudgetStore
 from hiveplane.certification.engine import CertificationEngine
-from hiveplane.certification.errors import CertificationNotFoundError, CorpusError
+from hiveplane.certification.errors import (
+    CertificationNotFoundError,
+    CorpusError,
+    ExecutorNotConfiguredError,
+)
 from hiveplane.certification.models import CertificationPolicy, Environment, Thresholds
-from hiveplane.certification.runner import ReferenceExecutor
+from hiveplane.certification.runner import ReferenceExecutor, UnconfiguredTaskExecutor
 from hiveplane.certification.service import CertificationService
 from hiveplane.certification.signing import generate_keypair
 from hiveplane.certification.store import InMemoryCertificationStore
@@ -40,6 +44,7 @@ from hiveplane.execution.errors import (
     RunNotIntervenableError,
 )
 from hiveplane.execution.service import RunService
+from hiveplane.execution.tools import ToolGateway
 from hiveplane.execution.wiring import build_run_service
 from hiveplane.policy.approvals import ApprovalService
 from hiveplane.policy.engine import PolicyEngine
@@ -67,6 +72,8 @@ from hiveplane.registry.errors import (
 from hiveplane.registry.service import RegistryService
 from hiveplane.registry.store import InMemoryRegistryStore
 from hiveplane.sandbox.manager import InMemorySandboxManager
+from hiveplane.shaping.injection import InjectionScanner
+from hiveplane.shaping.pipeline import ShapingPipeline
 
 #: Registry errors mapped to HTTP status codes.
 _ERROR_STATUS: tuple[tuple[type[Exception], int], ...] = (
@@ -83,6 +90,7 @@ _ERROR_STATUS: tuple[tuple[type[Exception], int], ...] = (
     (AttestationVerificationError, 422),
     (CertificationNotFoundError, 404),
     (CorpusError, 422),
+    (ExecutorNotConfiguredError, 503),
 )
 
 
@@ -114,6 +122,13 @@ def create_app(
     app.state.sandbox_manager = sandbox_manager
     app.state.run_service = run_service or build_run_service(
         registry, policy_engine, approval_service, budget_service, sandbox_manager
+    )
+    app.state.tool_gateway = ToolGateway(
+        registry,
+        policy_engine,
+        app.state.run_service,
+        shaping=ShapingPipeline(InjectionScanner()),
+        approvals=approval_service,
     )
     if certification_coordinator is None and registry_service is None:
         certification_coordinator = _build_certification_coordinator(registry, private_key)
@@ -171,6 +186,7 @@ def create_app(
         (PolicyPackAlreadyExistsError, 409),
         (ApprovalAlreadyDecidedError, 409),
         (UnknownModelPriceError, 422),
+        (MissingModelIdentityError, 422),
     ):
         app.add_exception_handler(_policy_error, _make_handler(_policy_error, _policy_status))
 
@@ -204,11 +220,14 @@ def _build_certification_coordinator(
         private_key=private_key,
         environment=environment,
     )
+    executor: ReferenceExecutor | UnconfiguredTaskExecutor = (
+        ReferenceExecutor() if cert.executor == "reference" else UnconfiguredTaskExecutor()
+    )
     return CertificationCoordinator(
         registry,
         service,
         InMemoryCertificationStore(),
-        executor=ReferenceExecutor(),
+        executor=executor,
         corpora_dir=cert.corpora_dir,
         environment=environment,
     )

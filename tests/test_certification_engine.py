@@ -9,6 +9,7 @@ import pytest
 from hiveplane.certification.engine import (
     CertificationEngine,
     passes_threshold,
+    workload_policy,
 )
 from hiveplane.certification.models import (
     BenchmarkAggregate,
@@ -238,3 +239,33 @@ def test_certification_records_eval_summary_and_thresholds() -> None:
     assert certification.workload_id == "repo-agent"
     assert certification.benchmark_run_id == "br-1"
     assert certification.attestation_id is None
+
+
+def test_quarantined_passing_recert_recovers_to_provisional() -> None:
+    certification = _engine().evaluate(
+        _result(_summary(pass_rate=0.90)),
+        current_status=CertificationStatus.QUARANTINED,
+        target_context=TargetContext.STAGING,
+    )
+
+    assert certification.status is CertificationStatus.PROVISIONAL
+
+
+def test_workload_policy_overrides_fleet_thresholds() -> None:
+    from hiveplane.core.spec import CertificationSpec
+
+    spec = CertificationSpec(
+        benchmark_corpus="corpora/x/v1",
+        staging_threshold=0.60,
+        production_threshold=0.95,
+        no_critical_failures=True,
+        latency_budget_ms=1234,
+    )
+
+    policy = workload_policy(spec, _policy())
+
+    assert policy.staging.min_pass_rate == 0.60
+    assert policy.production.min_pass_rate == 0.95
+    assert policy.production.max_critical_failures == 0
+    assert policy.staging.max_p95_latency_ms == 1234
+    assert policy.production.min_production_runs_survived == 50
