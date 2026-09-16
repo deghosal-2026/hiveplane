@@ -1,1 +1,1 @@
-"""Execution sandbox and tool-output shaping (M14-M15)."""
+"""Execution isolation: sandbox managers and the egress guard."""
