@@ -7,6 +7,7 @@ from datetime import UTC, datetime
 import pytest
 from pydantic import ValidationError
 
+from hiveplane.core.approval import ApprovalRecord, ApprovalStatus
 from hiveplane.core.decision import (
     ActionClass,
     BlastRadius,
@@ -16,6 +17,7 @@ from hiveplane.core.decision import (
     PolicyDecision,
 )
 from hiveplane.core.run import AdmissionContext, Run, RunState
+from hiveplane.core.tools import ToolRef, ToolsSpec, ToolTrustLevel
 from hiveplane.core.usage import BudgetCheck, BudgetLevel
 
 
@@ -111,3 +113,36 @@ def test_budget_check_bounds() -> None:
             spent_usd=0.0,
             remaining_usd=-1.0,
         )
+
+
+def test_approval_record_defaults() -> None:
+    record = ApprovalRecord(
+        approval_id="ap-1",
+        run_id="run-1",
+        workload="agent-1",
+        rule="approvals.required",
+        reason="destructive tool requires approval",
+        requested_at=datetime(2026, 1, 1, tzinfo=UTC),
+    )
+    assert record.status is ApprovalStatus.PENDING
+    assert record.decided_at is None
+    assert record.action_class is None
+
+
+def test_policy_context_carries_tools_and_injection() -> None:
+    tools = ToolsSpec(
+        allow=[ToolRef(tool_id="t1", trust_level=ToolTrustLevel.DESTRUCTIVE, require_approval=True)]
+    )
+    context = PolicyContext(
+        run_id="run-1",
+        workload="agent-1",
+        environment=AdmissionContext.PRODUCTION,
+        tool_id="t1",
+        tool_trust=ToolTrustLevel.DESTRUCTIVE,
+        tools=tools,
+        approval_required_for=[ActionClass.DESTRUCTIVE],
+        injection_detected=True,
+    )
+    assert context.tools is tools
+    assert context.injection_detected is True
+    assert context.approval_required_for == [ActionClass.DESTRUCTIVE]

@@ -8,7 +8,7 @@ from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 
 from hiveplane.certification.models import CertificationStatus
 from hiveplane.core.run import AdmissionContext
-from hiveplane.core.tools import ToolTrustLevel
+from hiveplane.core.tools import ToolsSpec, ToolTrustLevel
 
 
 class DecisionOutcome(StrEnum):
@@ -61,6 +61,9 @@ class PolicyContext(BaseModel):
     tool_trust: ToolTrustLevel | None = None
     data_sensitivity: DataSensitivity = DataSensitivity.INTERNAL
     certification_status: CertificationStatus = CertificationStatus.UNCERTIFIED
+    tools: ToolsSpec | None = None
+    approval_required_for: list[ActionClass] = Field(default_factory=list)
+    injection_detected: bool = False
 
 
 class PolicyDecision(BaseModel):
