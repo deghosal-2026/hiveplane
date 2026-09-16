@@ -6,6 +6,20 @@
 
 Accept runs only when registered, certified, permitted, and in budget. Move every run through one durable, observable state machine. Let operators intervene. Deliver results.
 
+## Status
+
+The run lifecycle core has landed. `hiveplane.execution` provides the `Run`
+aggregate, a `RunStore` protocol with in-memory and JSON-file implementations,
+the admission pipeline, the state machine with attributed events, pause/resume/
+stop intervention, usage recording, and Slack/webhook result fan-out. The
+`/runs` API exposes submission, inspection, and intervention.
+
+Admission evaluates certification, model-identity binding, budget, policy, and
+sandbox in order and returns a precise refusal. The policy, budget, and sandbox
+gates are phase-1 defaults (permissive, unlimited, and manifest-derived); the
+real engines land in their own parts, and PostgreSQL persistence lands with the
+state-store part. See `docs/design/execution-path-design.md`.
+
 ## M8 — Task Submission & Admission
 
 **Issues:** [#27](https://github.com/deghosal-2026/hiveplane/issues/27)

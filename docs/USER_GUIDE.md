@@ -45,6 +45,34 @@ hiveplane runs stop <run-id>
 
 See [prd/04-users-and-cujs.md](prd/04-users-and-cujs.md) for critical user journeys.
 
+## Execution API
+
+The run lifecycle is exposed over HTTP:
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `POST` | `/runs` | Submit a run for admission |
+| `GET` | `/runs` | List runs (`?workload=`, `?state=`) |
+| `GET` | `/runs/{id}` | Inspect a run |
+| `GET` | `/runs/{id}/events` | Read the attributed event log |
+| `GET` | `/runs/{id}/usage` | Read usage reports |
+| `POST` | `/runs/{id}/pause` | Pause a running run |
+| `POST` | `/runs/{id}/resume` | Resume a paused run |
+| `POST` | `/runs/{id}/stop` | Stop a run immediately |
+
+Submission runs admission checks in order — certification status, model-identity
+binding, budget, policy, and sandbox requirement. A refusal returns `403` with the
+failing step and reason. Illegal transitions return `409`, and unknown runs `404`.
+
+Run state is persisted through a pluggable store (in-memory, or JSON file for
+local durability), every transition is recorded as an attributed event, and
+terminal runs fan out to the destinations configured in `spec.fan_out` (Slack and
+generic webhook in v0.1.0).
+
+> Status: the policy, budget, and sandbox gates are currently phase-1 defaults
+> (permissive, unlimited, and manifest-derived respectively). The real engines
+> land with their own milestones, as does the PostgreSQL store.
+
 ## Configuration
 
 Configuration options and environment variables are documented as they land in v0.1.0.

@@ -6,6 +6,8 @@ from collections.abc import Callable
 from datetime import UTC, datetime
 from typing import Any
 
+import pytest
+
 from hiveplane.core.fanout import FanOutDestination, FanOutType
 from hiveplane.core.run import Run, RunState
 from hiveplane.core.workload import AgentWorkload
@@ -130,3 +132,15 @@ def test_webhook_transport_uses_destination_url() -> None:
         {"run_id": "run-1"},
     )
     assert posted[0][0] == "https://example.test/hook"
+
+
+def test_slack_transport_without_url_raises() -> None:
+    transport = SlackTransport(webhook_url=None)
+    with pytest.raises(RuntimeError):
+        transport.send(FanOutDestination(type=FanOutType.SLACK, channel="#ops"), {})
+
+
+def test_webhook_transport_without_url_raises() -> None:
+    transport = WebhookTransport(default_url=None)
+    with pytest.raises(RuntimeError):
+        transport.send(FanOutDestination(type=FanOutType.SLACK, channel="#ops"), {})

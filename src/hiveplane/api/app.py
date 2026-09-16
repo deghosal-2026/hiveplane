@@ -14,7 +14,16 @@ from fastapi.responses import JSONResponse
 
 from hiveplane import __version__
 from hiveplane.api.registry import router as registry_router
+from hiveplane.api.runs import router as runs_router
 from hiveplane.core.manifest import manifest_json_schema
+from hiveplane.execution.errors import (
+    IllegalTransitionError,
+    RunAdmissionRefusedError,
+    RunNotFoundError,
+    RunNotIntervenableError,
+)
+from hiveplane.execution.service import RunService
+from hiveplane.execution.wiring import build_run_service
 from hiveplane.registry.errors import (
     AdmissionRefusedError,
     AttestationAlreadyExistsError,
@@ -47,14 +56,19 @@ _ERROR_STATUS: tuple[tuple[type[Exception], int], ...] = (
 )
 
 
-def create_app(registry_service: RegistryService | None = None) -> FastAPI:
+def create_app(
+    registry_service: RegistryService | None = None,
+    run_service: RunService | None = None,
+) -> FastAPI:
     """Build and return the control-plane ASGI application."""
     app = FastAPI(
         title="HivePlane",
         version=__version__,
         summary="Control plane for production agent fleets.",
     )
-    app.state.registry_service = registry_service or RegistryService(InMemoryRegistryStore())
+    registry = registry_service or RegistryService(InMemoryRegistryStore())
+    app.state.registry_service = registry
+    app.state.run_service = run_service or build_run_service(registry)
 
     @app.get("/healthz", tags=["health"])
     def healthz() -> dict[str, str]:
@@ -94,7 +108,16 @@ def create_app(registry_service: RegistryService | None = None) -> FastAPI:
     for _error_type, _status_code in _ERROR_STATUS:
         app.add_exception_handler(_error_type, _make_handler(_error_type, _status_code))
 
+    for _run_error, _run_status in (
+        (RunNotFoundError, 404),
+        (IllegalTransitionError, 409),
+        (RunNotIntervenableError, 409),
+        (RunAdmissionRefusedError, 403),
+    ):
+        app.add_exception_handler(_run_error, _make_handler(_run_error, _run_status))
+
     app.include_router(registry_router)
+    app.include_router(runs_router)
     return app
 
 

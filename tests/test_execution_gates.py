@@ -6,15 +6,17 @@ from collections.abc import Callable
 from datetime import UTC, datetime
 
 from hiveplane.core.decision import ActionClass, DecisionOutcome, PolicyContext
-from hiveplane.core.run import AdmissionContext
+from hiveplane.core.run import AdmissionContext, Run, RunState
 from hiveplane.core.usage import BudgetLevel, UsageReport
 from hiveplane.core.workload import AgentWorkload
 from hiveplane.execution.gates import (
     ManifestSandboxGate,
+    NullRunExecutor,
     PermissivePolicyGate,
     RegistryCertificationGate,
     UnlimitedBudgetGate,
 )
+from hiveplane.execution.models import RunContext
 from hiveplane.registry.models import AdmissionDecision
 
 
@@ -104,3 +106,25 @@ def test_manifest_sandbox_gate(make_manifest: Callable[..., AgentWorkload]) -> N
     without = make_manifest()
     assert gate.required(without, AdmissionContext.PRODUCTION, None) is False
     assert gate.required(without, AdmissionContext.PRODUCTION, ActionClass.DESTRUCTIVE) is True
+
+
+def test_null_run_executor_tracks_state(make_manifest: Callable[..., AgentWorkload]) -> None:
+    executor = NullRunExecutor()
+    run = Run(
+        id="run-1",
+        workload_id="agent-1",
+        caller="cli",
+        state=RunState.QUEUED,
+        created_at=_clock(),
+        updated_at=_clock(),
+    )
+    executor.start(RunContext(run=run, workload=make_manifest(), sandbox=False))
+    assert executor.status("run-1") is RunState.RUNNING
+    assert executor.pause("run-1") is True
+    assert executor.status("run-1") is RunState.PAUSED
+    assert executor.resume("run-1") is True
+    assert executor.status("run-1") is RunState.RUNNING
+    executor.cancel("run-1")
+    assert executor.status("run-1") is RunState.CANCELLED
+    assert executor.usage("run-1") is None
+    assert executor.status("unknown") is RunState.QUEUED

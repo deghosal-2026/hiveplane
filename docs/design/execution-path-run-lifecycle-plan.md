@@ -2854,3 +2854,22 @@ Deferred by design (not part of this plan): real policy engine, real budget serv
 **Type consistency:** `AdmissionResult` field names (`run_id`, `workload`, `context`, `outcome`, `checks`, `sandbox`, `escalation_required`, `refused_reason`) are used identically in Tasks 2, 5, 6, 7. `RunService` constructor keyword names (`admission`, `executor`, `fanout`, `clock`, `id_factory`) match Task 7's tests and Task 9's wiring. `RunExecutor` method signatures match between Task 5 and Task 7/9. `BudgetCheck`/`BudgetLevel` are defined once in Task 1 and used in Tasks 5/6.
 
 **Import hygiene:** Task 7's `transition` fetches `self._registry.get(run.workload_id).manifest` in each branch; the `RUNNING` and terminal branches are mutually exclusive, so the manifest is fetched at most once per call. Test files import only names they use (ruff `F401` applies to `tests/`).
+
+---
+
+## Execution notes
+
+Deviations made while executing this plan, recorded for accuracy:
+
+- Added a `FanOut` protocol to `src/hiveplane/execution/gates.py`. `RunService`
+  depends on that seam rather than the concrete `FanOutService`, so the fan-out
+  task stays independent of the service task.
+- Renamed `RunService.list` to `RunService.list_runs`. A method named `list`
+  shadowed the builtin inside the class body and broke mypy strict on later
+  annotations.
+- Extended `tests/test_execution_gates.py` with a `NullRunExecutor` test and
+  `tests/test_execution_fanout.py` with transport error-path tests to keep
+  coverage above the exit gate.
+- The phase-1 gate defaults (`PermissivePolicyGate`, `UnlimitedBudgetGate`,
+  `ManifestSandboxGate`, `NullRunExecutor`) are wired in
+  `execution/wiring.py` and are replaced by real engines in later phases.
