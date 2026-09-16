@@ -90,7 +90,7 @@ def test_unlimited_budget_gate_allows(make_manifest: Callable[..., AgentWorkload
         cost_usd=0.05,
         timestamp=_clock(),
     )
-    assert gate.record_usage(usage).allowed is True
+    assert gate.record_usage(workload, usage).check.allowed is True
 
 
 def test_manifest_sandbox_gate(make_manifest: Callable[..., AgentWorkload]) -> None:

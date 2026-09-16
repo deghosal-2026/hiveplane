@@ -19,7 +19,7 @@ from hiveplane.core.decision import (
     PolicyDecision,
 )
 from hiveplane.core.run import AdmissionContext, Run, RunState
-from hiveplane.core.usage import BudgetCheck, BudgetLevel, UsageReport
+from hiveplane.core.usage import BudgetCheck, BudgetLevel, BudgetOutcome, UsageReport
 from hiveplane.core.workload import AgentWorkload
 from hiveplane.execution.models import DeliveryRecord, RunContext
 from hiveplane.registry.models import AdmissionDecision
@@ -76,11 +76,11 @@ class PermissivePolicyGate:
 
 
 class BudgetGate(Protocol):
-    """Checks budget headroom and records usage."""
+    """Checks budget headroom and records priced usage."""
 
     def check(self, workload: AgentWorkload, context: AdmissionContext) -> BudgetCheck: ...
 
-    def record_usage(self, report: UsageReport) -> BudgetCheck: ...
+    def record_usage(self, workload: AgentWorkload, report: UsageReport) -> BudgetOutcome: ...
 
 
 class UnlimitedBudgetGate:
@@ -97,14 +97,18 @@ class UnlimitedBudgetGate:
             remaining_usd=limit,
         )
 
-    def record_usage(self, report: UsageReport) -> BudgetCheck:
-        """Return an allow check for a usage report."""
-        return BudgetCheck(
-            allowed=True,
-            level=BudgetLevel.RUN,
-            limit_usd=report.cost_usd,
-            spent_usd=report.cost_usd,
-            remaining_usd=0.0,
+    def record_usage(self, workload: AgentWorkload, report: UsageReport) -> BudgetOutcome:
+        """Return an allow outcome that passes cost through unchanged."""
+        limit = workload.spec.budget.per_run_usd
+        return BudgetOutcome(
+            check=BudgetCheck(
+                allowed=True,
+                level=BudgetLevel.RUN,
+                limit_usd=limit,
+                spent_usd=report.cost_usd,
+                remaining_usd=max(0.0, limit - report.cost_usd),
+            ),
+            cost_usd=report.cost_usd,
         )
 
 

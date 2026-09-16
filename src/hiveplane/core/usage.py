@@ -39,8 +39,18 @@ class UsageReport(BaseModel):
     tool_calls: int = Field(ge=0)
     cost_usd: float = Field(ge=0.0)
     timestamp: AwareDatetime
+    model_identity: str | None = None
 
     @property
     def total_tokens(self) -> int:
         """Total tokens consumed (input + output)."""
         return self.input_tokens + self.output_tokens
+
+
+class BudgetOutcome(BaseModel):
+    """A usage record's effect on budget: the check and the priced cost."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    check: BudgetCheck
+    cost_usd: float = Field(ge=0.0)

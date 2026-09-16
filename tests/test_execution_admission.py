@@ -7,7 +7,7 @@ from datetime import UTC, datetime
 
 from hiveplane.core.decision import DecisionOutcome, PolicyContext, PolicyDecision
 from hiveplane.core.run import AdmissionContext, Run, RunState
-from hiveplane.core.usage import BudgetCheck, BudgetLevel
+from hiveplane.core.usage import BudgetCheck, BudgetLevel, BudgetOutcome, UsageReport
 from hiveplane.core.workload import AgentWorkload
 from hiveplane.execution.admission import AdmissionPipeline
 from hiveplane.execution.models import AdmissionOutcome
@@ -77,7 +77,7 @@ class _Budget:
             reason=None if self._allowed else "budget exhausted",
         )
 
-    def record_usage(self, report: object) -> BudgetCheck:
+    def record_usage(self, workload: AgentWorkload, report: UsageReport) -> BudgetOutcome:
         raise AssertionError("not used during admission")
 
 

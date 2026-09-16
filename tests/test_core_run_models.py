@@ -18,7 +18,7 @@ from hiveplane.core.decision import (
 )
 from hiveplane.core.run import AdmissionContext, Run, RunState
 from hiveplane.core.tools import ToolRef, ToolsSpec, ToolTrustLevel
-from hiveplane.core.usage import BudgetCheck, BudgetLevel
+from hiveplane.core.usage import BudgetCheck, BudgetLevel, BudgetOutcome, UsageReport
 
 
 def _run(**overrides: object) -> Run:
@@ -146,3 +146,25 @@ def test_policy_context_carries_tools_and_injection() -> None:
     assert context.tools is tools
     assert context.injection_detected is True
     assert context.approval_required_for == [ActionClass.DESTRUCTIVE]
+
+
+def test_usage_report_carries_model_identity() -> None:
+    report = UsageReport(
+        run_id="run-1",
+        input_tokens=10,
+        output_tokens=5,
+        tool_calls=1,
+        cost_usd=0.02,
+        timestamp=datetime(2026, 1, 1, tzinfo=UTC),
+        model_identity="openai/gpt-4o/2024-08-06",
+    )
+    assert report.model_identity == "openai/gpt-4o/2024-08-06"
+
+
+def test_budget_outcome_wraps_check_and_cost() -> None:
+    check = BudgetCheck(
+        allowed=True, level=BudgetLevel.RUN, limit_usd=1.0, spent_usd=0.02, remaining_usd=0.98
+    )
+    outcome = BudgetOutcome(check=check, cost_usd=0.02)
+    assert outcome.check.allowed is True
+    assert outcome.cost_usd == 0.02
