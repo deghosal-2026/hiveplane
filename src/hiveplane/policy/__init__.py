@@ -1,1 +1,1 @@
-"""Policy engine and approval flows evaluated at the control-plane boundary (M11-M12)."""
+"""Policy engine, team policy packs, and human approvals."""
