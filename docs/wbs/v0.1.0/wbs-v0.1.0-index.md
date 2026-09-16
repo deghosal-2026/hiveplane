@@ -8,7 +8,7 @@
 
 > **Milestone exit gate:** Every milestone must pass the [exit gate](#milestone-exit-gate) before the next begins.
 > **Issue tracking:** All work is tracked on GitHub. Milestones M1-M24 mirror the parts below; issues carry the `[0.1.0]` prefix and are grouped by milestone.
-> **Progress:** Part 1 (M1-M2) and Part 2 (M3-M4) complete — 17/60 issues closed.
+> **Progress:** Parts 1, 2, 4, 5, 6, and 7 complete — 32/60 issues closed. Part 3 (certification) and Part 8 (adapters) remain.
 
 ---
 

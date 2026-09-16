@@ -23,8 +23,8 @@ input and returns `block_injection`. See `docs/design/execution-path-design.md`.
 
 **Issues:** [#32](https://github.com/deghosal-2026/hiveplane/issues/32) · [#33](https://github.com/deghosal-2026/hiveplane/issues/33)
 
-- [ ] [#32](https://github.com/deghosal-2026/hiveplane/issues/32) — Deny-by-default policy evaluation with explainable decisions
-- [ ] [#33](https://github.com/deghosal-2026/hiveplane/issues/33) — Context-aware policy (environment, data sensitivity, blast radius)
+- [x] [#32](https://github.com/deghosal-2026/hiveplane/issues/32) — Deny-by-default policy evaluation with explainable decisions
+- [x] [#33](https://github.com/deghosal-2026/hiveplane/issues/33) — Context-aware policy (environment, data sensitivity, blast radius)
 
 **Done when:** deny-by-default is verified; every decision carries a reason and rule id; the same tool is allowed in staging and gated in production; team policy packs apply.
 
@@ -32,8 +32,8 @@ input and returns `block_injection`. See `docs/design/execution-path-design.md`.
 
 **Issues:** [#34](https://github.com/deghosal-2026/hiveplane/issues/34) · [#35](https://github.com/deghosal-2026/hiveplane/issues/35)
 
-- [ ] [#34](https://github.com/deghosal-2026/hiveplane/issues/34) — Escalation to pending approval with evidence
-- [ ] [#35](https://github.com/deghosal-2026/hiveplane/issues/35) — Slack notification on approval-needed
+- [x] [#34](https://github.com/deghosal-2026/hiveplane/issues/34) — Escalation to pending approval with evidence
+- [x] [#35](https://github.com/deghosal-2026/hiveplane/issues/35) — Slack notification on approval-needed
 
 **Done when:** a guarded tool call blocks until decided; approve resumes and deny fails with a recorded reason; escalation pings Slack without blocking the run.
 

@@ -15,16 +15,16 @@ stop intervention, usage recording, and Slack/webhook result fan-out. The
 `/runs` API exposes submission, inspection, and intervention.
 
 Admission evaluates certification, model-identity binding, budget, policy, and
-sandbox in order and returns a precise refusal. The policy, budget, and sandbox
-gates are phase-1 defaults (permissive, unlimited, and manifest-derived); the
-real engines land in their own parts, and PostgreSQL persistence lands with the
-state-store part. See `docs/design/execution-path-design.md`.
+sandbox in order and returns a precise refusal. The real policy, budget, and
+sandbox engines are now wired in (Parts 5-7); PostgreSQL persistence lands with
+the state-store part, with the JSON-file store providing local durability. See
+`docs/design/execution-path-design.md`.
 
 ## M8 — Task Submission & Admission
 
 **Issues:** [#27](https://github.com/deghosal-2026/hiveplane/issues/27)
 
-- [ ] [#27](https://github.com/deghosal-2026/hiveplane/issues/27) — Task submission endpoint with admission checks
+- [x] [#27](https://github.com/deghosal-2026/hiveplane/issues/27) — Task submission endpoint with admission checks
 
 **Done when:** admission runs registry → certification → policy → budget; each failure returns a specific error; uncertified production submission is refused.
 
@@ -32,8 +32,8 @@ state-store part. See `docs/design/execution-path-design.md`.
 
 **Issues:** [#28](https://github.com/deghosal-2026/hiveplane/issues/28) · [#29](https://github.com/deghosal-2026/hiveplane/issues/29)
 
-- [ ] [#28](https://github.com/deghosal-2026/hiveplane/issues/28) — Run state machine and transition persistence
-- [ ] [#29](https://github.com/deghosal-2026/hiveplane/issues/29) — Durable run state across control-plane restart
+- [x] [#28](https://github.com/deghosal-2026/hiveplane/issues/28) — Run state machine and transition persistence
+- [x] [#29](https://github.com/deghosal-2026/hiveplane/issues/29) — Durable run state across control-plane restart
 
 **Done when:** a full lifecycle event log exists, illegal transitions are rejected, and a paused run survives a restart with context intact.
 
@@ -41,8 +41,8 @@ state-store part. See `docs/design/execution-path-design.md`.
 
 **Issues:** [#30](https://github.com/deghosal-2026/hiveplane/issues/30) · [#31](https://github.com/deghosal-2026/hiveplane/issues/31)
 
-- [ ] [#30](https://github.com/deghosal-2026/hiveplane/issues/30) — Intervention API (pause, resume, stop)
-- [ ] [#31](https://github.com/deghosal-2026/hiveplane/issues/31) — Result fan-out service (Slack + webhook)
+- [x] [#30](https://github.com/deghosal-2026/hiveplane/issues/30) — Intervention API (pause, resume, stop)
+- [x] [#31](https://github.com/deghosal-2026/hiveplane/issues/31) — Result fan-out service (Slack + webhook)
 
 **Done when:** each action is audited with an actor; stop is immediate; pause is cooperative and honest; completion/failure/escalation fan out with a trace link and retries are recorded.
 

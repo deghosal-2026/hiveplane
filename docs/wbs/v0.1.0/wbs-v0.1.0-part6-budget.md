@@ -20,8 +20,8 @@ waste detection, ROI flags) remain with the cost-service effort.
 
 **Issues:** [#36](https://github.com/deghosal-2026/hiveplane/issues/36) · [#37](https://github.com/deghosal-2026/hiveplane/issues/37)
 
-- [ ] [#36](https://github.com/deghosal-2026/hiveplane/issues/36) — Cost table and per-model pricing
-- [ ] [#37](https://github.com/deghosal-2026/hiveplane/issues/37) — Per-run and per-day budget enforcement
+- [x] [#36](https://github.com/deghosal-2026/hiveplane/issues/36) — Cost table and per-model pricing
+- [x] [#37](https://github.com/deghosal-2026/hiveplane/issues/37) — Per-run and per-day budget enforcement
 
 **Done when:** known token counts map to expected cost, unknown models fail loudly, a seeded over-budget run is blocked or escalated, and budget-burn metrics are emitted.
 

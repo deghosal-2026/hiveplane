@@ -26,8 +26,8 @@ quotas remain documented follow-ons.
 
 **Issues:** [#38](https://github.com/deghosal-2026/hiveplane/issues/38) · [#39](https://github.com/deghosal-2026/hiveplane/issues/39)
 
-- [ ] [#38](https://github.com/deghosal-2026/hiveplane/issues/38) — Sandbox execution context
-- [ ] [#39](https://github.com/deghosal-2026/hiveplane/issues/39) — Resource caps and restricted egress
+- [x] [#38](https://github.com/deghosal-2026/hiveplane/issues/38) — Sandbox execution context
+- [x] [#39](https://github.com/deghosal-2026/hiveplane/issues/39) — Resource caps and restricted egress
 
 **Done when:** a destructive run executes without reaching control-plane resources; sandboxes are destroyed after the run; a run exceeding a cap is terminated and reported; disallowed egress is blocked.
 
@@ -35,8 +35,8 @@ quotas remain documented follow-ons.
 
 **Issues:** [#40](https://github.com/deghosal-2026/hiveplane/issues/40) · [#41](https://github.com/deghosal-2026/hiveplane/issues/41)
 
-- [ ] [#40](https://github.com/deghosal-2026/hiveplane/issues/40) — Tool-output shaping pipeline (filter, truncate, budget)
-- [ ] [#41](https://github.com/deghosal-2026/hiveplane/issues/41) — Injection scanning of tool outputs
+- [x] [#40](https://github.com/deghosal-2026/hiveplane/issues/40) — Tool-output shaping pipeline (filter, truncate, budget)
+- [x] [#41](https://github.com/deghosal-2026/hiveplane/issues/41) — Injection scanning of tool outputs
 
 **Done when:** a large payload is bounded before reaching the agent; truncation is visible and recorded; a seeded injection via tool output is blocked or escalated; no false positives on the demo corpus.
 
