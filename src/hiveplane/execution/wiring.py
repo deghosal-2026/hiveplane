@@ -13,6 +13,7 @@ from hiveplane.execution.gates import (
     NullRunExecutor,
     PolicyGate,
     RegistryCertificationGate,
+    SandboxRuntime,
 )
 from hiveplane.execution.service import RunService
 from hiveplane.execution.store import InMemoryRunStore
@@ -24,6 +25,7 @@ def build_run_service(
     policy_gate: PolicyGate,
     approvals: ApprovalRequests,
     budget_gate: BudgetGate,
+    sandbox_runtime: SandboxRuntime,
 ) -> RunService:
     """Build a RunService with the real policy and budget gates."""
     settings = get_settings()
@@ -52,4 +54,5 @@ def build_run_service(
         fanout=fanout,
         approvals=approvals,
         budget=budget_gate,
+        sandbox_runtime=sandbox_runtime,
     )

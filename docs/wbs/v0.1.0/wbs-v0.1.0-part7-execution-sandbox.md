@@ -6,6 +6,22 @@
 
 Isolate destructive runs and keep large tool payloads out of the context window. This is the safety substrate the certification benchmark runs inside.
 
+## Status
+
+Execution isolation and output shaping have landed. `hiveplane.sandbox` provides
+sandbox bookkeeping (`SandboxManager`), a `ProcessSandboxManager` that runs a
+command in a subprocess with POSIX resource caps, a wall-clock watchdog, an
+ephemeral scratch directory, and guaranteed teardown, and an `EgressGuard` that
+enforces the manifest allowlist (cloud metadata always denied). The run
+lifecycle provisions a sandbox when a sandboxed run starts and destroys it on any
+terminal transition.
+
+`hiveplane.shaping` provides the `ShapingPipeline` (filter, truncate, cumulative
+output budget) and the `InjectionScanner` (high-confidence block,
+low-confidence escalate). Adapters call the pipeline before tool output reaches
+the agent. The container backend, real network namespaces, and filesystem
+quotas remain documented follow-ons.
+
 ## M14 — Execution Isolation
 
 **Issues:** [#38](https://github.com/deghosal-2026/hiveplane/issues/38) · [#39](https://github.com/deghosal-2026/hiveplane/issues/39)

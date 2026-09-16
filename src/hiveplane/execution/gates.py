@@ -19,11 +19,13 @@ from hiveplane.core.decision import (
     PolicyDecision,
 )
 from hiveplane.core.run import AdmissionContext, Run, RunState
+from hiveplane.core.sandbox import SandboxSpec
 from hiveplane.core.usage import BudgetCheck, BudgetLevel, BudgetOutcome, UsageReport
 from hiveplane.core.workload import AgentWorkload
 from hiveplane.execution.models import DeliveryRecord, RunContext
 from hiveplane.registry.models import AdmissionDecision
 from hiveplane.registry.service import RegistryService
+from hiveplane.sandbox.models import SandboxInstance
 
 
 class CertificationGate(Protocol):
@@ -171,6 +173,16 @@ class ApprovalRequests(Protocol):
     def request(
         self, *, run_id: str, workload: str, rule: str, reason: str
     ) -> ApprovalRecord: ...
+
+
+class SandboxRuntime(Protocol):
+    """Provisions and destroys sandbox instances for sandboxed runs."""
+
+    def provision(
+        self, *, run_id: str, workload: str, spec: SandboxSpec | None = None
+    ) -> SandboxInstance: ...
+
+    def destroy(self, sandbox_id: str) -> None: ...
 
 
 class NullRunExecutor:

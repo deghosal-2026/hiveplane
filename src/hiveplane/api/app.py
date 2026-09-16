@@ -55,6 +55,7 @@ from hiveplane.registry.errors import (
 )
 from hiveplane.registry.service import RegistryService
 from hiveplane.registry.store import InMemoryRegistryStore
+from hiveplane.sandbox.manager import InMemorySandboxManager
 
 #: Registry errors mapped to HTTP status codes.
 _ERROR_STATUS: tuple[tuple[type[Exception], int], ...] = (
@@ -88,12 +89,14 @@ def create_app(
     policy_engine = PolicyEngine(policy_pack_store)
     approval_service = ApprovalService(InMemoryApprovalStore())
     budget_service = BudgetService(InMemoryBudgetStore(), CostTable())
+    sandbox_manager = InMemorySandboxManager()
     app.state.policy_pack_store = policy_pack_store
     app.state.policy_engine = policy_engine
     app.state.approval_service = approval_service
     app.state.budget_service = budget_service
+    app.state.sandbox_manager = sandbox_manager
     app.state.run_service = run_service or build_run_service(
-        registry, policy_engine, approval_service, budget_service
+        registry, policy_engine, approval_service, budget_service, sandbox_manager
     )
 
     @app.get("/healthz", tags=["health"])

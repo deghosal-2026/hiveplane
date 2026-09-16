@@ -109,6 +109,25 @@ team's day total; a run that exceeds its limit transitions to `failed` with the
 budget reason recorded. Every usage event is attributed for showback
 (`budget.models.CostAttribution`).
 
+## Execution Sandbox and Output Shaping
+
+Sandboxed runs (a workload with `spec.sandbox.enabled`, or any run in the
+`sandbox` context) are provisioned an isolated execution context when they start
+and torn down on every terminal transition. The local backend runs the workload
+in a subprocess with:
+
+- **Resource caps** — memory (`RLIMIT_AS`), CPU (`RLIMIT_CPU`), and a wall-clock
+  watchdog; a run that exceeds the wall-clock cap is terminated and reported as
+  `failed` with reason `timeout`.
+- **Restricted egress** — `EgressGuard` enforces the manifest allowlist and
+  always denies cloud metadata endpoints (`169.254.169.254`).
+- **Isolated filesystem** — an ephemeral scratch directory, removed on exit.
+
+Tool outputs are shaped before they reach the agent via `ShapingPipeline`:
+filter (redact/mask), truncate to `max_bytes` (head/tail/summary), a cumulative
+per-run output budget, and an injection scan. High-confidence injection patterns
+are blocked; lower-confidence patterns escalate; benign output passes unchanged.
+
 ## Configuration
 
 Configuration options and environment variables are documented as they land in v0.1.0.

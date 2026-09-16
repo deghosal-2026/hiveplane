@@ -18,7 +18,13 @@ from hiveplane.execution.errors import (
     RunNotFoundError,
     RunNotIntervenableError,
 )
-from hiveplane.execution.gates import ApprovalRequests, BudgetGate, FanOut, RunExecutor
+from hiveplane.execution.gates import (
+    ApprovalRequests,
+    BudgetGate,
+    FanOut,
+    RunExecutor,
+    SandboxRuntime,
+)
 from hiveplane.execution.models import AdmissionOutcome, InterventionAction, RunContext
 from hiveplane.execution.store import RunStore
 from hiveplane.registry.service import RegistryService
@@ -39,6 +45,7 @@ class RunService:
         fanout: FanOut,
         approvals: ApprovalRequests | None = None,
         budget: BudgetGate | None = None,
+        sandbox_runtime: SandboxRuntime | None = None,
         clock: Callable[[], datetime] | None = None,
         id_factory: Callable[[], str] | None = None,
     ) -> None:
@@ -49,6 +56,7 @@ class RunService:
         self._fanout = fanout
         self._approvals = approvals
         self._budget = budget
+        self._sandbox_runtime = sandbox_runtime
         self._clock = clock or (lambda: datetime.now(UTC))
         self._id_factory = id_factory or (lambda: f"run-{uuid4().hex[:12]}")
 
@@ -185,6 +193,15 @@ class RunService:
         if target in (RunState.COMPLETED, RunState.FAILED, RunState.CANCELLED):
             updates["finished_at"] = now
         updated = run.model_copy(update=updates)
+        if target is RunState.RUNNING and run.state is RunState.QUEUED:
+            manifest = self._registry.get(run.workload_id).manifest
+            if updated.sandbox and self._sandbox_runtime is not None:
+                instance = self._sandbox_runtime.provision(
+                    run_id=run_id,
+                    workload=run.workload_id,
+                    spec=manifest.spec.sandbox,
+                )
+                updated = updated.model_copy(update={"sandbox_id": instance.sandbox_id})
         self._store.save_run(updated)
         self._append_event(
             run_id,
@@ -195,9 +212,27 @@ class RunService:
             detail=detail,
         )
         if target is RunState.RUNNING and run.state is RunState.QUEUED:
-            manifest = self._registry.get(run.workload_id).manifest
             self._executor.start(
                 RunContext(run=updated, workload=manifest, sandbox=updated.sandbox)
+            )
+            if updated.sandbox_id is not None:
+                self._append_event(
+                    run_id,
+                    EventType.SANDBOX,
+                    actor,
+                    detail=f"provisioned {updated.sandbox_id}",
+                )
+        if (
+            target in (RunState.COMPLETED, RunState.FAILED, RunState.CANCELLED)
+            and updated.sandbox_id is not None
+            and self._sandbox_runtime is not None
+        ):
+            self._sandbox_runtime.destroy(updated.sandbox_id)
+            self._append_event(
+                run_id,
+                EventType.SANDBOX,
+                actor,
+                detail=f"destroyed {updated.sandbox_id}",
             )
         if target in _TERMINAL:
             manifest = self._registry.get(run.workload_id).manifest

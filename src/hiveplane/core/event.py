@@ -18,6 +18,7 @@ class EventType(StrEnum):
     TOOL_CALL = "tool_call"
     USAGE = "usage"
     OPERATOR_ACTION = "operator_action"
+    SANDBOX = "sandbox"
 
 
 class RunEvent(BaseModel):

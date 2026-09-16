@@ -78,3 +78,4 @@ class Run(BaseModel):
     result: JsonValue | None = None
     failure_reason: str | None = None
     cost_usd: float = Field(default=0.0, ge=0.0)
+    sandbox_id: str | None = None

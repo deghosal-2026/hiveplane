@@ -1268,3 +1268,20 @@ The container backend, real network-namespace enforcement, and filesystem-quota 
 **Type consistency:** `SandboxInstance`/`SandboxStatus` defined in Task 1, used in Tasks 2/5. `ShapedOutput`/`InjectionVerdict` defined in Task 3, used in Task 4. `SandboxRuntime` provision/destroy signatures match `SandboxManager` and Task 5's calls. `RunService` gains only `sandbox_runtime`, defaulted, so earlier tests keep passing.
 
 **Known platform note:** `preexec_fn` and `resource.setrlimit` are POSIX-only (macOS/Linux/CI). The `noqa` markers for `S404`/`S603` are unnecessary because bandit rules are not enabled; remove them to avoid `RUF100` unused-noqa errors.
+---
+
+## Execution notes
+
+Deviations made while executing this plan, recorded for accuracy:
+
+- `_limit_process` sets soft resource limits best-effort via a new
+  `_set_soft_limit` helper. Setting `RLIMIT_AS` to a finite hard limit raised
+  `SubprocessError` on macOS; the helper reads the current hard limit and lowers
+  only the soft limit, ignoring `OSError`/`ValueError`.
+- The `noqa: S404`/`S603` markers and `type: ignore[union-attr]` comments were
+  removed as planned; bandit rules are not enabled, so they would have tripped
+  `RUF100`.
+- `Run.sandbox_id` and `EventType.SANDBOX` were added for run-level visibility of
+  sandbox provisioning and teardown.
+- `SIM102` required combining the terminal-state and sandbox-id checks into a
+  single `if` in `RunService.transition`.
