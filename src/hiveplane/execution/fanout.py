@@ -116,6 +116,16 @@ class FanOutService:
             records.append(self._deliver(run, destination, message))
         return records
 
+    def notify_escalation(self, run: Run, workload: AgentWorkload) -> list[DeliveryRecord]:
+        """Deliver an escalation notice to on_escalation destinations."""
+        if not self._enabled:
+            return []
+        message = _message(run, workload)
+        records: list[DeliveryRecord] = []
+        for destination in workload.spec.fan_out.on_escalation:
+            records.append(self._deliver(run, destination, message))
+        return records
+
     def _deliver(
         self,
         run: Run,

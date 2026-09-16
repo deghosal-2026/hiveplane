@@ -18,7 +18,7 @@ from hiveplane.execution.errors import (
     RunNotFoundError,
     RunNotIntervenableError,
 )
-from hiveplane.execution.gates import FanOut, RunExecutor
+from hiveplane.execution.gates import ApprovalRequests, FanOut, RunExecutor
 from hiveplane.execution.models import AdmissionOutcome, InterventionAction, RunContext
 from hiveplane.execution.store import RunStore
 from hiveplane.registry.service import RegistryService
@@ -37,6 +37,7 @@ class RunService:
         admission: AdmissionPipeline,
         executor: RunExecutor,
         fanout: FanOut,
+        approvals: ApprovalRequests | None = None,
         clock: Callable[[], datetime] | None = None,
         id_factory: Callable[[], str] | None = None,
     ) -> None:
@@ -45,6 +46,7 @@ class RunService:
         self._admission = admission
         self._executor = executor
         self._fanout = fanout
+        self._approvals = approvals
         self._clock = clock or (lambda: datetime.now(UTC))
         self._id_factory = id_factory or (lambda: f"run-{uuid4().hex[:12]}")
 
@@ -128,6 +130,15 @@ class RunService:
                 to_state=RunState.PAUSED,
                 detail="escalation",
             )
+            if self._approvals is not None:
+                check = result.policy_check()
+                self._approvals.request(
+                    run_id=run.id,
+                    workload=workload,
+                    rule=check.rule if check and check.rule else "approvals.required",
+                    reason=check.reason if check and check.reason else "approval required",
+                )
+            self._fanout.notify_escalation(run, record.manifest)
         return run
 
     def get(self, run_id: str) -> Run:
@@ -157,6 +168,7 @@ class RunService:
         *,
         actor: str,
         detail: str | None = None,
+        failure_reason: str | None = None,
     ) -> Run:
         """Move a run to a target state, persisting before side effects."""
         run = self._require(run_id)
@@ -164,6 +176,8 @@ class RunService:
             raise IllegalTransitionError(run_id, run.state, target)
         now = self._clock()
         updates: dict[str, object] = {"state": target, "updated_at": now}
+        if failure_reason is not None:
+            updates["failure_reason"] = failure_reason
         if target is RunState.RUNNING and run.started_at is None:
             updates["started_at"] = now
         if target in (RunState.COMPLETED, RunState.FAILED, RunState.CANCELLED):
@@ -206,6 +220,15 @@ class RunService:
         self._executor.cancel(run_id)
         self._append_event(run_id, EventType.OPERATOR_ACTION, actor, detail=action.value)
         return self.transition(run_id, RunState.CANCELLED, actor=actor)
+
+    def fail(self, run_id: str, *, actor: str, reason: str) -> Run:
+        """Move a live run to failed with a recorded reason."""
+        run = self._require(run_id)
+        if not can_transition(run.state, RunState.FAILED):
+            raise IllegalTransitionError(run_id, run.state, RunState.FAILED)
+        return self.transition(
+            run_id, RunState.FAILED, actor=actor, detail=reason, failure_reason=reason
+        )
 
     def record_usage(self, run_id: str, report: UsageReport) -> Run:
         """Record usage for a run and update its accumulated cost."""

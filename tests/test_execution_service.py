@@ -38,6 +38,10 @@ class _FanOut:
         self.notified.append(run.id)
         return []
 
+    def notify_escalation(self, run: Run, workload: AgentWorkload) -> list[DeliveryRecord]:
+        self.notified.append(run.id)
+        return []
+
 
 class _Executor:
     def __init__(self) -> None:

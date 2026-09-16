@@ -11,6 +11,7 @@ from collections.abc import Callable
 from datetime import UTC, datetime
 from typing import Protocol
 
+from hiveplane.core.approval import ApprovalRecord
 from hiveplane.core.decision import (
     ActionClass,
     DecisionOutcome,
@@ -156,6 +157,16 @@ class FanOut(Protocol):
     """Delivers terminal run outcomes to configured destinations."""
 
     def notify(self, run: Run, workload: AgentWorkload) -> list[DeliveryRecord]: ...
+
+    def notify_escalation(self, run: Run, workload: AgentWorkload) -> list[DeliveryRecord]: ...
+
+
+class ApprovalRequests(Protocol):
+    """Requests a human approval for an escalated run."""
+
+    def request(
+        self, *, run_id: str, workload: str, rule: str, reason: str
+    ) -> ApprovalRecord: ...
 
 
 class NullRunExecutor:

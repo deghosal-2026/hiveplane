@@ -44,6 +44,13 @@ class AdmissionResult(BaseModel):
     escalation_required: bool = False
     refused_reason: str | None = None
 
+    def policy_check(self) -> AdmissionCheck | None:
+        """Return the policy step check, if present."""
+        for check in self.checks:
+            if check.step == "policy":
+                return check
+        return None
+
 
 class InterventionAction(StrEnum):
     """Operator interventions on a live run."""
