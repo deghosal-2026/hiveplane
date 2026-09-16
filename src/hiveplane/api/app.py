@@ -17,6 +17,10 @@ from hiveplane.api.approvals import router as approvals_router
 from hiveplane.api.policy import router as policy_router
 from hiveplane.api.registry import router as registry_router
 from hiveplane.api.runs import router as runs_router
+from hiveplane.budget.errors import UnknownModelPriceError
+from hiveplane.budget.pricing import CostTable
+from hiveplane.budget.service import BudgetService
+from hiveplane.budget.store import InMemoryBudgetStore
 from hiveplane.core.manifest import manifest_json_schema
 from hiveplane.execution.errors import (
     IllegalTransitionError,
@@ -83,11 +87,13 @@ def create_app(
     policy_pack_store = InMemoryPolicyPackStore()
     policy_engine = PolicyEngine(policy_pack_store)
     approval_service = ApprovalService(InMemoryApprovalStore())
+    budget_service = BudgetService(InMemoryBudgetStore(), CostTable())
     app.state.policy_pack_store = policy_pack_store
     app.state.policy_engine = policy_engine
     app.state.approval_service = approval_service
+    app.state.budget_service = budget_service
     app.state.run_service = run_service or build_run_service(
-        registry, policy_engine, approval_service
+        registry, policy_engine, approval_service, budget_service
     )
 
     @app.get("/healthz", tags=["health"])
@@ -141,6 +147,7 @@ def create_app(
         (PolicyPackNotFoundError, 404),
         (PolicyPackAlreadyExistsError, 409),
         (ApprovalAlreadyDecidedError, 409),
+        (UnknownModelPriceError, 422),
     ):
         app.add_exception_handler(_policy_error, _make_handler(_policy_error, _policy_status))
 

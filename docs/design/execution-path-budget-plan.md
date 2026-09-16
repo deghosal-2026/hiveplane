@@ -1195,3 +1195,21 @@ Cost showback (CPCT, waste, ROI, spend views) is deferred to the cost-service ef
 **Type consistency:** `BudgetOutcome` is defined in Task 1 and returned by `UnlimitedBudgetGate` and `BudgetService.record_usage` in Tasks 1/4. `BudgetGate.record_usage(workload, report)` matches `RunService` usage in Task 5. `BudgetLevel` is reused from `core.usage`. `CostAttribution`/`BudgetSnapshot` are defined once in Task 3 and used in Tasks 4/5.
 
 **Known coupling:** the budget seam signature changes in Task 1, and the phase-1 `_Budget` fake and `UnlimitedBudgetGate` test are updated in the same task so the suite stays green before the real service lands.
+
+---
+
+## Execution notes
+
+Deviations made while executing this plan, recorded for accuracy:
+
+- `UsageReport` now includes an optional `model_identity`, set by `RunService`
+  from the run's model identity when the adapter omits it, so the budget service
+  can price tokens even when the adapter does not know the model.
+- `tests/test_budget_service.py` seeds the day total before recording usage for
+  the day-limit test. `BudgetSpec` requires `per_day_usd >= per_run_usd`, so a
+  usage event cannot exceed the day limit before the run limit without prior
+  day spend from other runs.
+- Extended `tests/test_budget_service.py` with a team-exhaustion check and a
+  no-model-identity fallback test to keep coverage above the exit gate.
+- `BudgetService` also exposes `snapshot(workload, run_id)` for spend
+  observability; no HTTP endpoint is added in this phase.

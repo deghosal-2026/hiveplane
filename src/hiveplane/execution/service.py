@@ -18,7 +18,7 @@ from hiveplane.execution.errors import (
     RunNotFoundError,
     RunNotIntervenableError,
 )
-from hiveplane.execution.gates import ApprovalRequests, FanOut, RunExecutor
+from hiveplane.execution.gates import ApprovalRequests, BudgetGate, FanOut, RunExecutor
 from hiveplane.execution.models import AdmissionOutcome, InterventionAction, RunContext
 from hiveplane.execution.store import RunStore
 from hiveplane.registry.service import RegistryService
@@ -38,6 +38,7 @@ class RunService:
         executor: RunExecutor,
         fanout: FanOut,
         approvals: ApprovalRequests | None = None,
+        budget: BudgetGate | None = None,
         clock: Callable[[], datetime] | None = None,
         id_factory: Callable[[], str] | None = None,
     ) -> None:
@@ -47,6 +48,7 @@ class RunService:
         self._executor = executor
         self._fanout = fanout
         self._approvals = approvals
+        self._budget = budget
         self._clock = clock or (lambda: datetime.now(UTC))
         self._id_factory = id_factory or (lambda: f"run-{uuid4().hex[:12]}")
 
@@ -231,12 +233,23 @@ class RunService:
         )
 
     def record_usage(self, run_id: str, report: UsageReport) -> Run:
-        """Record usage for a run and update its accumulated cost."""
+        """Record usage for a run, enforce budget, and update accumulated cost."""
         run = self._require(run_id)
+        workload = self._registry.get(run.workload_id).manifest
+        if report.model_identity is None and run.model_identity is not None:
+            report = report.model_copy(update={"model_identity": run.model_identity})
         self._store.add_usage(report)
         self._append_event(run_id, EventType.USAGE, "adapter", detail=str(report.cost_usd))
+        cost = report.cost_usd
+        check = None
+        if self._budget is not None:
+            outcome = self._budget.record_usage(workload, report)
+            cost = outcome.cost_usd
+            check = outcome.check
         updated = run.model_copy(
-            update={"cost_usd": run.cost_usd + report.cost_usd, "updated_at": self._clock()}
+            update={"cost_usd": run.cost_usd + cost, "updated_at": self._clock()}
         )
         self._store.save_run(updated)
+        if check is not None and not check.allowed:
+            return self.fail(run_id, actor="budget", reason=check.reason or "budget exceeded")
         return updated

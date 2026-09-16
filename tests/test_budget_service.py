@@ -125,3 +125,28 @@ def test_snapshot_reports_spend(make_manifest: Callable[..., AgentWorkload]) -> 
     assert snapshot.run_usd == pytest.approx(0.005)
     assert snapshot.team_usd == pytest.approx(0.005)
     assert snapshot.day == "2026-01-01"
+
+
+def test_check_denies_when_team_exhausted(make_manifest: Callable[..., AgentWorkload]) -> None:
+    service, store, _ = _service()
+    workload = make_manifest(team="platform")
+    store.add_team_spend("platform", "2026-01-01", workload.spec.budget.per_team_usd or 50.0)
+    check = service.check(workload, AdmissionContext.PRODUCTION)
+    assert check.allowed is False
+    assert check.level is BudgetLevel.TEAM
+
+
+def test_record_usage_without_model_identity_uses_reported_cost(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    service, _, _ = _service()
+    report = UsageReport(
+        run_id="run-1",
+        input_tokens=0,
+        output_tokens=0,
+        tool_calls=0,
+        cost_usd=0.02,
+        timestamp=_clock(),
+    )
+    outcome = service.record_usage(make_manifest(), report)
+    assert outcome.cost_usd == 0.02

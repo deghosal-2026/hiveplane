@@ -6,6 +6,16 @@
 
 Stop spend during execution, not after. Price usage accurately and enforce per-run and per-day limits.
 
+## Status
+
+Budget enforcement has landed. `hiveplane.budget` provides a per-model
+`CostTable` (unknown models fail loudly), a `BudgetService` that prices usage
+from tokens and enforces per-run, per-day, and per-team limits, a spend/
+attribution store, and burn-metric hooks. The service implements the admission
+`BudgetGate` seam and is wired into `RunService.record_usage`, which fails a run
+when a limit is exceeded. Cost showback analytics (cost-per-completed-task,
+waste detection, ROI flags) remain with the cost-service effort.
+
 ## M13 — Budget Enforcement
 
 **Issues:** [#36](https://github.com/deghosal-2026/hiveplane/issues/36) · [#37](https://github.com/deghosal-2026/hiveplane/issues/37)

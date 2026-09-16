@@ -93,6 +93,22 @@ A destructive tool, an explicit `require_approval`, or an action class listed in
 approval, and fans out to `spec.fan_out.on_escalation`. Approving resumes the
 run; denying fails it with the recorded reason.
 
+## Budget
+
+Usage is priced from the exact model identity via a per-model cost table
+(token prices per 1,000 tokens); an unknown model fails loudly rather than
+silently costing zero. Spend is enforced at three levels:
+
+- **Per run** — `spec.budget.per_run_usd`
+- **Per day** — `spec.budget.per_day_usd` (per workload)
+- **Per team** — `spec.budget.per_team_usd` (aggregate across the team)
+
+Admission checks day and team headroom before a run is queued. As usage is
+recorded, spend accumulates against the run, the workload's day total, and the
+team's day total; a run that exceeds its limit transitions to `failed` with the
+budget reason recorded. Every usage event is attributed for showback
+(`budget.models.CostAttribution`).
+
 ## Configuration
 
 Configuration options and environment variables are documented as they land in v0.1.0.
