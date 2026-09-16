@@ -15,6 +15,19 @@ All three declare `certification.status: uncertified`. They cannot be admitted t
 a production context until they pass their benchmark corpus and are certified
 (DD-09).
 
+## Benchmark corpora
+
+Each manifest references a versioned corpus under [`examples/corpora/`](../corpora).
+Only the demo workload ships a seeded corpus today:
+
+| Workload | Corpus | Tasks |
+|----------|--------|-------|
+| `repo-agent` | [`corpora/repo-agent/v1`](../corpora/repo-agent/v1/corpus.yaml) | 7 positive risk-classification tasks + 4 counterexamples (refuse/flag) |
+
+Corpora for `docs-agent` and `incident-agent` land with the field test (M23). See
+[`docs/workloads/corpus-format.md`](../../docs/workloads/corpus-format.md) for the
+format and check types.
+
 ## Validate
 
 ```bash

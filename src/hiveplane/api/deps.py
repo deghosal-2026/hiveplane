@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from fastapi import Request
 
+from hiveplane.certification.workflow import CertificationCoordinator
 from hiveplane.execution.service import RunService
 from hiveplane.policy.approvals import ApprovalService
 from hiveplane.policy.engine import PolicyEngine
@@ -39,3 +40,9 @@ def get_approval_service(request: Request) -> ApprovalService:
     """Return the approval service bound to the application state."""
     service: ApprovalService = request.app.state.approval_service
     return service
+
+
+def get_certification_coordinator(request: Request) -> CertificationCoordinator:
+    """Return the certification coordinator bound to the application state."""
+    coordinator: CertificationCoordinator = request.app.state.certification_coordinator
+    return coordinator

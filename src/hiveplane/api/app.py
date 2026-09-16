@@ -9,11 +9,13 @@ from __future__ import annotations
 
 from typing import Any
 
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from hiveplane import __version__
 from hiveplane.api.approvals import router as approvals_router
+from hiveplane.api.certifications import router as certifications_router
 from hiveplane.api.policy import router as policy_router
 from hiveplane.api.registry import router as registry_router
 from hiveplane.api.runs import router as runs_router
@@ -21,6 +23,15 @@ from hiveplane.budget.errors import UnknownModelPriceError
 from hiveplane.budget.pricing import CostTable
 from hiveplane.budget.service import BudgetService
 from hiveplane.budget.store import InMemoryBudgetStore
+from hiveplane.certification.engine import CertificationEngine
+from hiveplane.certification.errors import CertificationNotFoundError, CorpusError
+from hiveplane.certification.models import CertificationPolicy, Environment, Thresholds
+from hiveplane.certification.runner import ReferenceExecutor
+from hiveplane.certification.service import CertificationService
+from hiveplane.certification.signing import generate_keypair
+from hiveplane.certification.store import InMemoryCertificationStore
+from hiveplane.certification.workflow import CertificationCoordinator
+from hiveplane.config import get_settings
 from hiveplane.core.manifest import manifest_json_schema
 from hiveplane.execution.errors import (
     IllegalTransitionError,
@@ -70,12 +81,15 @@ _ERROR_STATUS: tuple[tuple[type[Exception], int], ...] = (
     (UnknownToolError, 422),
     (DestructiveToolRequiresApprovalError, 422),
     (AttestationVerificationError, 422),
+    (CertificationNotFoundError, 404),
+    (CorpusError, 422),
 )
 
 
 def create_app(
     registry_service: RegistryService | None = None,
     run_service: RunService | None = None,
+    certification_coordinator: CertificationCoordinator | None = None,
 ) -> FastAPI:
     """Build and return the control-plane ASGI application."""
     app = FastAPI(
@@ -83,7 +97,10 @@ def create_app(
         version=__version__,
         summary="Control plane for production agent fleets.",
     )
-    registry = registry_service or RegistryService(InMemoryRegistryStore())
+    private_key, public_key = generate_keypair()
+    registry = registry_service or RegistryService(
+        InMemoryRegistryStore(), attestation_public_key=public_key
+    )
     app.state.registry_service = registry
     policy_pack_store = InMemoryPolicyPackStore()
     policy_engine = PolicyEngine(policy_pack_store)
@@ -98,6 +115,9 @@ def create_app(
     app.state.run_service = run_service or build_run_service(
         registry, policy_engine, approval_service, budget_service, sandbox_manager
     )
+    if certification_coordinator is None and registry_service is None:
+        certification_coordinator = _build_certification_coordinator(registry, private_key)
+    app.state.certification_coordinator = certification_coordinator
 
     @app.get("/healthz", tags=["health"])
     def healthz() -> dict[str, str]:
@@ -158,7 +178,40 @@ def create_app(
     app.include_router(runs_router)
     app.include_router(policy_router)
     app.include_router(approvals_router)
+    app.include_router(certifications_router)
     return app
+
+
+def _build_certification_coordinator(
+    registry: RegistryService, private_key: Ed25519PrivateKey
+) -> CertificationCoordinator:
+    """Build the default certification coordinator from settings."""
+    settings = get_settings()
+    cert = settings.certification
+    policy = CertificationPolicy(
+        staging=Thresholds(**cert.staging.model_dump()),
+        production=Thresholds(**cert.production.model_dump()),
+        re_cert_interval=cert.re_cert_interval_days * 86400,
+    )
+    environment = Environment(
+        sandbox_image="hiveplane/sandbox:0.1.0",
+        runtime_adapter="control-plane",
+        control_plane_version=__version__,
+    )
+    service = CertificationService(
+        CertificationEngine(policy),
+        registry,
+        private_key=private_key,
+        environment=environment,
+    )
+    return CertificationCoordinator(
+        registry,
+        service,
+        InMemoryCertificationStore(),
+        executor=ReferenceExecutor(),
+        corpora_dir=cert.corpora_dir,
+        environment=environment,
+    )
 
 
 app = create_app()

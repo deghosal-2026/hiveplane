@@ -1,1 +1,1 @@
-"""Certification pipeline: benchmark runner, engine, promotion gate, drift (M5-M7)."""
+"""Certification pipeline: corpus, runner, engine, attestations, and workflow (M5-M7)."""

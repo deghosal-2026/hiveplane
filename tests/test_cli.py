@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import io
+import json
 import urllib.error
 from email.message import Message
 from pathlib import Path
@@ -154,3 +155,127 @@ def test_post_workload_handles_url_error(monkeypatch: Any) -> None:
     code, _ = _post_workload("http://api", {})
 
     assert code == 0
+
+
+# --------------------------------------------------------------------------- #
+# Certification CLI
+# --------------------------------------------------------------------------- #
+def test_certify_reports_status_and_attestation(monkeypatch: Any) -> None:
+    captured: dict[str, Any] = {}
+
+    def fake_request(
+        method: str, url: str, payload: dict[str, Any] | None = None
+    ) -> tuple[int, str]:
+        captured["method"] = method
+        captured["url"] = url
+        captured["payload"] = payload
+        return (
+            201,
+            json.dumps(
+                {
+                    "certification": {"status": "provisional"},
+                    "attestation": {"attestation_id": "att-1"},
+                }
+            ),
+        )
+
+    monkeypatch.setattr("hiveplane.cli._request", fake_request)
+
+    result = runner.invoke(
+        app, ["certify", "repo-agent", "--context", "staging", "--api-url", "http://api.test"]
+    )
+
+    assert result.exit_code == 0
+    assert captured["method"] == "POST"
+    assert captured["url"] == "http://api.test/certifications"
+    assert captured["payload"]["workload"] == "repo-agent"
+    assert captured["payload"]["target_context"] == "staging"
+    assert "provisional" in result.output
+    assert "att-1" in result.output
+
+
+def test_certify_reports_failure(monkeypatch: Any) -> None:
+    monkeypatch.setattr(
+        "hiveplane.cli._request", lambda method, url, payload=None: (422, "bad corpus")
+    )
+
+    result = runner.invoke(app, ["certify", "repo-agent"])
+
+    assert result.exit_code == 1
+    assert "422" in result.output
+
+
+def test_certs_list(monkeypatch: Any) -> None:
+    def fake_request(
+        method: str, url: str, payload: dict[str, Any] | None = None
+    ) -> tuple[int, str]:
+        assert method == "GET"
+        assert "workload=repo-agent" in url
+        return (
+            200,
+            json.dumps(
+                [
+                    {
+                        "certification": {
+                            "certification_id": "cert-1",
+                            "workload_id": "repo-agent",
+                            "status": "certified",
+                        },
+                        "attestation": {"attestation_id": "att-1"},
+                    }
+                ]
+            ),
+        )
+
+    monkeypatch.setattr("hiveplane.cli._request", fake_request)
+
+    result = runner.invoke(app, ["certs", "list", "--workload", "repo-agent"])
+
+    assert result.exit_code == 0
+    assert "cert-1" in result.output
+    assert "certified" in result.output
+
+
+def test_certs_show(monkeypatch: Any) -> None:
+    monkeypatch.setattr(
+        "hiveplane.cli._request",
+        lambda method, url, payload=None: (
+            200,
+            json.dumps(
+                {
+                    "certification": {"certification_id": "cert-1", "status": "certified"},
+                    "attestation": {"attestation_id": "att-1"},
+                }
+            ),
+        ),
+    )
+
+    result = runner.invoke(app, ["certs", "show", "cert-1"])
+
+    assert result.exit_code == 0
+    assert "att-1" in result.output
+
+
+def test_certs_compare_reports_regressions(monkeypatch: Any) -> None:
+    monkeypatch.setattr(
+        "hiveplane.cli._request",
+        lambda method, url, payload=None: (
+            200,
+            json.dumps(
+                {
+                    "blocked": True,
+                    "total": 2,
+                    "passed_before": 2,
+                    "passed_after": 1,
+                    "regressed": [{"task_id": "t2"}],
+                    "improved": [],
+                }
+            ),
+        ),
+    )
+
+    result = runner.invoke(app, ["certs", "compare", "cert-1", "cert-2"])
+
+    assert result.exit_code == 0
+    assert "t2" in result.output
+    assert "blocked" in result.output.lower()

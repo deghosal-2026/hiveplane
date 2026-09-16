@@ -91,6 +91,7 @@ class CertificationSettings(BaseModel):
     re_cert_interval_days: int = Field(default=14, ge=1)
     drift_threshold_pass_rate: float = Field(default=0.10, ge=0.0, le=1.0)
     max_new_failures: int = Field(default=2, ge=0)
+    corpora_dir: str = "examples"
 
     @model_validator(mode="after")
     def _production_not_weaker_than_staging(self) -> CertificationSettings:

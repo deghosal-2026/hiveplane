@@ -69,9 +69,8 @@ local durability), every transition is recorded as an attributed event, and
 terminal runs fan out to the destinations configured in `spec.fan_out` (Slack and
 generic webhook in v0.1.0).
 
-> Status: the policy, budget, and sandbox gates are currently phase-1 defaults
-> (permissive, unlimited, and manifest-derived respectively). The real engines
-> land with their own milestones, as does the PostgreSQL store.
+> Status: the policy, budget, and sandbox engines are wired in. PostgreSQL
+> persistence lands with the state-store milestone.
 
 ## Policy and Approvals
 
@@ -127,6 +126,40 @@ Tool outputs are shaped before they reach the agent via `ShapingPipeline`:
 filter (redact/mask), truncate to `max_bytes` (head/tail/summary), a cumulative
 per-run output budget, and an injection scan. High-confidence injection patterns
 are blocked; lower-confidence patterns escalate; benign output passes unchanged.
+
+## Certification
+
+Certification is the thesis: an agent earns production admission by passing a
+reproducible benchmark corpus, and the result is a signed attestation.
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `POST` | `/certifications` | Run a workload's corpus and certify it |
+| `GET` | `/certifications` | List records (`?workload=`, `?status=`) |
+| `GET` | `/certifications/{id}` | Show a record (certification, attestation, result) |
+| `GET` | `/certifications/compare/{v1}/{v2}` | Per-task regression diff between two certifications |
+
+From the CLI:
+
+```bash
+hiveplane certify repo-agent --context staging
+hiveplane certs list --workload repo-agent
+hiveplane certs show <certification-id>
+hiveplane certs compare <v1> <v2>
+```
+
+A corpus is a versioned `corpus.yaml` (see
+[corpus-format.md](workloads/corpus-format.md)). The runner evaluates
+deterministic `exact_match` and `action_audit` checks; the engine applies
+staging/production thresholds and advances status (`uncertified → provisional →
+certified`, or `quarantined` on a failed re-certification). Each certification
+produces an Ed25519-signed attestation stored append-only and verified on every
+read. Production admission requires the referenced attestation to verify and the
+run's model identity to match the attestation — a model swap is refused.
+
+> Local runs use a `ReferenceExecutor` that replays each task's declared outcome
+> until runtime adapters (Part 8) land. It exercises the full flow but does not
+> measure a real agent.
 
 ## Configuration
 

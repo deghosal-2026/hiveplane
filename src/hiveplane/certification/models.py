@@ -252,6 +252,107 @@ class CertificationPolicy(BaseModel):
         return self
 
 
+class CheckStatus(StrEnum):
+    """Pass/fail outcome of a single benchmark task."""
+
+    PASS = "pass"
+    FAIL = "fail"
+
+
+class BenchmarkTaskResult(BaseModel):
+    """The result of executing and checking one benchmark task."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    task_id: str = Field(min_length=1)
+    status: CheckStatus
+    latency_ms: int = Field(ge=0)
+    tokens: int = Field(default=0, ge=0)
+    trace_id: str | None = None
+    critical: bool = False
+    failure_reason: str | None = None
+
+
+class BenchmarkAggregate(BaseModel):
+    """Aggregate metrics across every task in a benchmark run."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    total: int = Field(ge=0)
+    passed: int = Field(ge=0)
+    failed: int = Field(ge=0)
+    pass_rate: float = Field(ge=0.0, le=1.0)
+    critical_failures: int = Field(ge=0)
+    p50_latency_ms: int = Field(ge=0)
+    p95_latency_ms: int = Field(ge=0)
+    total_tokens: int = Field(ge=0)
+
+
+class BenchmarkResult(BaseModel):
+    """The structured, reproducible result of running a corpus."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    benchmark_run_id: str = Field(min_length=1)
+    workload_id: str = Field(min_length=1)
+    manifest_version: int = Field(ge=1)
+    corpus_id: str = Field(min_length=1)
+    corpus_version: int = Field(ge=1)
+    model_identity: str = Field(min_length=1)
+    environment: Environment
+    started_at: datetime
+    finished_at: datetime
+    tasks: list[BenchmarkTaskResult] = Field(default_factory=list)
+    aggregate: BenchmarkAggregate
+
+    def to_eval_summary(self) -> EvalSummary:
+        """Return the certification-facing summary for this result."""
+        return EvalSummary(
+            pass_rate=self.aggregate.pass_rate,
+            critical_failures=self.aggregate.critical_failures,
+            p95_latency_ms=self.aggregate.p95_latency_ms,
+            tasks_passed=self.aggregate.passed,
+            tasks_failed=self.aggregate.failed,
+        )
+
+
+class TaskDelta(BaseModel):
+    """A change in one task's pass/fail status between two results."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    task_id: str = Field(min_length=1)
+    before: CheckStatus
+    after: CheckStatus
+    failure_reason: str | None = None
+
+
+class RegressionDiff(BaseModel):
+    """Task-level regression comparison between two certifications (DD-11)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    workload_id: str = Field(min_length=1)
+    before_attestation_id: str = Field(min_length=1)
+    after_attestation_id: str = Field(min_length=1)
+    total: int = Field(ge=0)
+    passed_before: int = Field(ge=0)
+    passed_after: int = Field(ge=0)
+    regressed: list[TaskDelta] = Field(default_factory=list)
+    improved: list[TaskDelta] = Field(default_factory=list)
+    blocked: bool
+
+
+class CertificationRecord(BaseModel):
+    """A certification outcome bundled with its attestation and benchmark result."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    certification: Certification
+    attestation: Attestation
+    benchmark_result: BenchmarkResult
+
+
 _TRANSITIONS: dict[CertificationStatus, dict[CertificationEvent, CertificationStatus]] = {
     CertificationStatus.UNCERTIFIED: {
         CertificationEvent.STAGING_PASS: CertificationStatus.PROVISIONAL,

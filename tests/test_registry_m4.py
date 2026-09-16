@@ -248,6 +248,7 @@ def test_expired_attestation_blocks_production(
                 "staging_threshold": 0.8,
                 "production_threshold": 0.9,
                 "status": "uncertified",
+                "attestation_id": "att-1",
                 "expires_at": "2020-01-01T00:00:00Z",
             },
         )
@@ -327,6 +328,7 @@ def test_production_admitted_with_valid_attestation(
                 "staging_threshold": 0.8,
                 "production_threshold": 0.9,
                 "status": "uncertified",
+                "attestation_id": "att-1",
                 "expires_at": "2999-01-01T00:00:00Z",
             },
         )

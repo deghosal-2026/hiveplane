@@ -358,6 +358,52 @@ class RegistryService:
         new_spec = manifest.spec.model_copy(update={"certification": new_certification})
         return manifest.model_copy(update={"spec": new_spec})
 
+    def apply_attestation(
+        self,
+        attestation: Attestation,
+        *,
+        event: CertificationEvent,
+        expires_at: datetime | None = None,
+    ) -> WorkloadRecord:
+        """Advance certification status and attach a signed attestation to the manifest."""
+        record = self.get(attestation.workload_id)
+        new_status = advance_status(record.certification_status, event)
+        certification = record.manifest.spec.certification
+        if certification is None:
+            raise ValueError(
+                f"workload {attestation.workload_id!r} has no certification block"
+            )
+        updated_certification = certification.model_copy(
+            update={
+                "status": new_status,
+                "attestation_id": attestation.attestation_id,
+                "certified_at": attestation.timestamp,
+                "certified_by": attestation.signer.identity,
+                "expires_at": expires_at,
+            }
+        )
+        manifest = record.manifest.model_copy(
+            update={
+                "spec": record.manifest.spec.model_copy(
+                    update={"certification": updated_certification}
+                )
+            }
+        )
+        resolved = new_status in (
+            CertificationStatus.PROVISIONAL,
+            CertificationStatus.CERTIFIED,
+        )
+        updated = record.model_copy(
+            update={
+                "certification_status": new_status,
+                "manifest": manifest,
+                "needs_re_certification": False if resolved else record.needs_re_certification,
+                "updated_at": self._now(),
+            }
+        )
+        self._store.save_workload(updated)
+        return updated
+
     def check_admission(self, name: str, context: AdmissionContext) -> AdmissionDecision:
         """Evaluate admission for a target context without raising."""
         record = self.get(name)
@@ -405,13 +451,12 @@ class RegistryService:
             return False
         if certification.expires_at <= self._now():
             return False
-        if self._attestation_public_key is None:
+        if self._attestation_public_key is None or not certification.attestation_id:
             return False
-        attestations = self._store.list_attestations(record.name)
-        return any(
-            verify_attestation(attestation, self._attestation_public_key)
-            for attestation in attestations
-        )
+        attestation = self._store.get_attestation(certification.attestation_id)
+        if attestation is None or attestation.workload_id != record.name:
+            return False
+        return verify_attestation(attestation, self._attestation_public_key)
 
     # ------------------------------------------------------------------ #
     # Attestations
