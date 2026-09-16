@@ -8,6 +8,7 @@ from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, JsonValue
 
 from hiveplane.certification.models import CertificationStatus
 from hiveplane.core.decision import ActionClass
+from hiveplane.core.run import AdmissionContext as AdmissionContext
 from hiveplane.core.spec import RuntimeAdapter
 from hiveplane.core.tools import ToolTrustLevel
 from hiveplane.core.triggers import TriggerRule
@@ -20,14 +21,6 @@ class VersionStatus(StrEnum):
     ACTIVE = "active"
     PENDING = "pending"
     SUPERSEDED = "superseded"
-
-
-class AdmissionContext(StrEnum):
-    """Target contexts a run can be admitted to."""
-
-    SANDBOX = "sandbox"
-    STAGING = "staging"
-    PRODUCTION = "production"
 
 
 class WorkloadRecord(BaseModel):

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from enum import StrEnum
 
-from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, JsonValue
 
 
 class RunState(StrEnum):
@@ -16,6 +16,14 @@ class RunState(StrEnum):
     COMPLETED = "completed"
     FAILED = "failed"
     CANCELLED = "cancelled"
+
+
+class AdmissionContext(StrEnum):
+    """Target contexts a run can be admitted to."""
+
+    SANDBOX = "sandbox"
+    STAGING = "staging"
+    PRODUCTION = "production"
 
 
 _RUN_TRANSITIONS: dict[RunState, set[RunState]] = {
@@ -63,3 +71,10 @@ class Run(BaseModel):
     started_at: AwareDatetime | None = None
     finished_at: AwareDatetime | None = None
     trigger_origin: TriggerOrigin | None = None
+    manifest_version: int | None = None
+    context: AdmissionContext | None = None
+    sandbox: bool = False
+    task: dict[str, JsonValue] = Field(default_factory=dict)
+    result: JsonValue | None = None
+    failure_reason: str | None = None
+    cost_usd: float = Field(default=0.0, ge=0.0)

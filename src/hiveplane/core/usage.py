@@ -2,7 +2,30 @@
 
 from __future__ import annotations
 
+from enum import StrEnum
+
 from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
+
+
+class BudgetLevel(StrEnum):
+    """The budget scope a check applies to."""
+
+    RUN = "run"
+    DAY = "day"
+    TEAM = "team"
+
+
+class BudgetCheck(BaseModel):
+    """The result of a budget check at run, day, or team scope."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    allowed: bool
+    level: BudgetLevel
+    limit_usd: float = Field(ge=0.0)
+    spent_usd: float = Field(ge=0.0)
+    remaining_usd: float = Field(ge=0.0)
+    reason: str | None = None
 
 
 class UsageReport(BaseModel):
