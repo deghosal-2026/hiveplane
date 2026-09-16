@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import threading
+from pathlib import Path
 from typing import Protocol
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -139,3 +140,24 @@ class _BundleStore:
 
 class InMemoryRunStore(_BundleStore):
     """A process-local, thread-safe run store."""
+
+
+class JsonFileRunStore(_BundleStore):
+    """A run store that persists each run bundle to a JSON file.
+
+    Used for local durability and restart tests until the PostgreSQL-backed
+    store is available.
+    """
+
+    def __init__(self, base_dir: str | Path) -> None:
+        super().__init__()
+        self._dir = Path(base_dir)
+        self._dir.mkdir(parents=True, exist_ok=True)
+        for path in sorted(self._dir.glob("*.json")):
+            bundle = RunBundle.model_validate_json(path.read_text(encoding="utf-8"))
+            self._bundles[bundle.run.id] = bundle
+
+    def _commit(self, run_id: str) -> None:
+        bundle = self._bundles[run_id]
+        target = self._dir / f"{run_id}.json"
+        target.write_text(bundle.model_dump_json(), encoding="utf-8")

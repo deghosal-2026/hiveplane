@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime
+from pathlib import Path
 
 import pytest
 
@@ -17,7 +18,7 @@ from hiveplane.execution.models import (
     DeliveryRecord,
     DeliveryStatus,
 )
-from hiveplane.execution.store import InMemoryRunStore
+from hiveplane.execution.store import InMemoryRunStore, JsonFileRunStore
 
 
 def _now() -> datetime:
@@ -131,3 +132,41 @@ def test_admission_and_usage_and_delivery_round_trip() -> None:
     assert admission.outcome is AdmissionOutcome.SANDBOX_ONLY
     assert store.list_usage("run-1")[0].total_tokens == 15
     assert store.list_deliveries("run-1")[0].status is DeliveryStatus.DELIVERED
+
+
+def test_json_store_survives_reconstruction(tmp_path: Path) -> None:
+    store = JsonFileRunStore(tmp_path)
+    store.save_run(_run(state=RunState.PAUSED))
+    store.add_event(
+        RunEvent(
+            run_id="run-1",
+            sequence=0,
+            type=EventType.STATE_CHANGE,
+            actor="operator",
+            timestamp=_now(),
+            from_state=RunState.RUNNING,
+            to_state=RunState.PAUSED,
+        )
+    )
+    store.add_usage(
+        UsageReport(
+            run_id="run-1",
+            input_tokens=3,
+            output_tokens=4,
+            tool_calls=0,
+            cost_usd=0.02,
+            timestamp=_now(),
+        )
+    )
+
+    reopened = JsonFileRunStore(tmp_path)
+    assert reopened.get_run("run-1").state is RunState.PAUSED  # type: ignore[union-attr]
+    assert reopened.list_events("run-1")[0].to_state is RunState.PAUSED
+    assert reopened.list_usage("run-1")[0].total_tokens == 7
+
+
+def test_json_store_writes_one_file_per_run(tmp_path: Path) -> None:
+    store = JsonFileRunStore(tmp_path)
+    store.save_run(_run("run-1"))
+    store.save_run(_run("run-2"))
+    assert sorted(p.name for p in tmp_path.glob("*.json")) == ["run-1.json", "run-2.json"]
