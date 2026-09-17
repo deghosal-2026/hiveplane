@@ -45,6 +45,7 @@ dev = [
   "ruff>=0.6",
   "types-pyyaml>=6.0",
 ]
+langgraph = ["langgraph>=0.2"]
 
 [project.urls]
 Homepage = "https://github.com/deghosal-2026/hiveplane"
