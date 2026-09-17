@@ -170,7 +170,11 @@ from hiveplane.persistence import models  # noqa: F401  (registers tables)
 
 
 def _index_names(table: str) -> set[str]:
-    return {index.name for index in Base.metadata.tables[table].indexes}
+    return {
+        str(index.name)
+        for index in Base.metadata.tables[table].indexes
+        if index.name is not None
+    }
 
 
 def test_all_design_tables_exist() -> None:
