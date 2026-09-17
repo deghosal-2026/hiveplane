@@ -22,6 +22,7 @@ from hiveplane.execution.gates import (
     ApprovalRequests,
     BudgetGate,
     FanOut,
+    NullRunExecutor,
     RunExecutor,
     SandboxRuntime,
 )
@@ -41,7 +42,7 @@ class RunService:
         registry: RegistryService,
         *,
         admission: AdmissionPipeline,
-        executor: RunExecutor,
+        executor: RunExecutor | None = None,
         fanout: FanOut,
         approvals: ApprovalRequests | None = None,
         budget: BudgetGate | None = None,
@@ -52,13 +53,17 @@ class RunService:
         self._store = store
         self._registry = registry
         self._admission = admission
-        self._executor = executor
+        self._executor: RunExecutor = executor or NullRunExecutor()
         self._fanout = fanout
         self._approvals = approvals
         self._budget = budget
         self._sandbox_runtime = sandbox_runtime
         self._clock = clock or (lambda: datetime.now(UTC))
         self._id_factory = id_factory or (lambda: f"run-{uuid4().hex[:12]}")
+
+    def attach_executor(self, executor: RunExecutor) -> None:
+        """Bind the runtime adapter that executes runs after service construction."""
+        self._executor = executor
 
     def _require(self, run_id: str) -> Run:
         run = self._store.get_run(run_id)
@@ -195,6 +200,7 @@ class RunService:
         actor: str,
         detail: str | None = None,
         failure_reason: str | None = None,
+        result: JsonValue | None = None,
     ) -> Run:
         """Move a run to a target state, persisting before side effects."""
         run = self._require(run_id)
@@ -204,6 +210,8 @@ class RunService:
         updates: dict[str, object] = {"state": target, "updated_at": now}
         if failure_reason is not None:
             updates["failure_reason"] = failure_reason
+        if result is not None:
+            updates["result"] = result
         if target is RunState.RUNNING and run.started_at is None:
             updates["started_at"] = now
         if target in (RunState.COMPLETED, RunState.FAILED, RunState.CANCELLED):
