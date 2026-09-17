@@ -600,7 +600,7 @@ def _context(
         workload=make_manifest(),
         sandbox=True,
         tools=tools,  # type: ignore[arg-type]
-        reporter=reporter,  # type: ignore[arg-type]
+        reporter=reporter,
         control=control or RunControl(),
         tool_calls=tool_calls if tool_calls is not None else [],
         clock=lambda: _NOW,
