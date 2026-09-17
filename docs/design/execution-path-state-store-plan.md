@@ -1415,10 +1415,10 @@ from collections.abc import Callable
 from datetime import UTC, datetime
 
 from hiveplane.core.decision import DecisionOutcome
-from hiveplane.core.run import AdmissionContext, RunState
+from hiveplane.core.run import AdmissionContext, Run, RunState
 from hiveplane.core.workload import AgentWorkload
 from hiveplane.execution.admission import AdmissionPipeline
-from hiveplane.execution.models import InterventionAction
+from hiveplane.execution.models import DeliveryRecord, InterventionAction
 from hiveplane.execution.service import RunService
 from hiveplane.execution.store import InMemoryRunStore
 from hiveplane.persistence.audit import InMemoryAuditLog
@@ -1428,10 +1428,10 @@ from test_execution_admission import _Budget, _Cert, _Policy, _Sandbox
 
 
 class _FanOut:
-    def notify(self, run: object, workload: object) -> list[object]:
+    def notify(self, run: Run, workload: AgentWorkload) -> list[DeliveryRecord]:
         return []
 
-    def notify_escalation(self, run: object, workload: object) -> list[object]:
+    def notify_escalation(self, run: Run, workload: AgentWorkload) -> list[DeliveryRecord]:
         return []
 
 
@@ -1441,7 +1441,9 @@ def _service(make_manifest: Callable[..., AgentWorkload], audit: InMemoryAuditLo
     return RunService(
         InMemoryRunStore(),
         registry,
-        admission=AdmissionPipeline(_Cert(True), _Policy(DecisionOutcome.ALLOW), _Budget(True), _Sandbox(False)),
+        admission=AdmissionPipeline(
+            _Cert(True), _Policy(DecisionOutcome.ALLOW), _Budget(True), _Sandbox(False)
+        ),
         executor=None,
         fanout=_FanOut(),
         audit=audit,

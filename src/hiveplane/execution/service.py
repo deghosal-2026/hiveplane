@@ -28,6 +28,7 @@ from hiveplane.execution.gates import (
 )
 from hiveplane.execution.models import AdmissionOutcome, InterventionAction, RunContext
 from hiveplane.execution.store import RunStore
+from hiveplane.persistence.audit import AuditLog
 from hiveplane.registry.service import RegistryService
 
 _TERMINAL = (RunState.COMPLETED, RunState.FAILED, RunState.CANCELLED)
@@ -47,6 +48,7 @@ class RunService:
         approvals: ApprovalRequests | None = None,
         budget: BudgetGate | None = None,
         sandbox_runtime: SandboxRuntime | None = None,
+        audit: AuditLog | None = None,
         clock: Callable[[], datetime] | None = None,
         id_factory: Callable[[], str] | None = None,
     ) -> None:
@@ -58,6 +60,7 @@ class RunService:
         self._approvals = approvals
         self._budget = budget
         self._sandbox_runtime = sandbox_runtime
+        self._audit = audit
         self._clock = clock or (lambda: datetime.now(UTC))
         self._id_factory = id_factory or (lambda: f"run-{uuid4().hex[:12]}")
 
@@ -263,7 +266,14 @@ class RunService:
             if target is RunState.COMPLETED and run.context is AdmissionContext.PRODUCTION:
                 self._registry.increment_production_runs(run.workload_id)
             self._fanout.notify(updated, manifest)
+            self._record_audit(actor, "transition", run_id, detail=target.value)
         return updated
+
+    def _record_audit(
+        self, actor: str, action: str, run_id: str, *, detail: str | None = None
+    ) -> None:
+        if self._audit is not None:
+            self._audit.append(actor, action, run_id, detail=detail)
 
     def intervene(self, run_id: str, action: InterventionAction, *, actor: str) -> Run:
         """Apply an operator intervention to a live run."""
@@ -273,16 +283,24 @@ class RunService:
                 raise RunNotIntervenableError(run_id, action.value)
             confirmed = self._executor.pause(run_id)
             self._append_event(run_id, EventType.OPERATOR_ACTION, actor, detail=action.value)
-            return self.transition(run_id, RunState.PAUSED, actor=actor) if confirmed else run
+            if not confirmed:
+                return run
+            paused = self.transition(run_id, RunState.PAUSED, actor=actor)
+            self._record_audit(actor, action.value, run_id)
+            return paused
         if action is InterventionAction.RESUME:
             if run.state is not RunState.PAUSED:
                 raise RunNotIntervenableError(run_id, action.value)
             self._executor.resume(run_id)
             self._append_event(run_id, EventType.OPERATOR_ACTION, actor, detail=action.value)
-            return self.transition(run_id, RunState.RUNNING, actor=actor)
+            resumed = self.transition(run_id, RunState.RUNNING, actor=actor)
+            self._record_audit(actor, action.value, run_id)
+            return resumed
         self._executor.cancel(run_id)
         self._append_event(run_id, EventType.OPERATOR_ACTION, actor, detail=action.value)
-        return self.transition(run_id, RunState.CANCELLED, actor=actor)
+        cancelled = self.transition(run_id, RunState.CANCELLED, actor=actor)
+        self._record_audit(actor, action.value, run_id)
+        return cancelled
 
     def fail(self, run_id: str, *, actor: str, reason: str) -> Run:
         """Move a live run to failed with a recorded reason."""
