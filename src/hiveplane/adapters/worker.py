@@ -184,3 +184,8 @@ class WorkerContext:
     def checkpoint(self) -> None:
         """Yield control: block while paused, raise when cancelled."""
         self._control.checkpoint()
+
+    @property
+    def tool_calls(self) -> list[ToolCallResult]:
+        """The tool calls routed through the boundary so far."""
+        return list(self._tool_calls)

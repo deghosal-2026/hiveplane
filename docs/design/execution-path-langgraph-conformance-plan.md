@@ -1371,3 +1371,16 @@ git commit -m "docs(adapters): document LangGraph support and record M17"
 **Known simplifications (documented):** resume uses `Command(resume=True)`; approval values are not threaded through `Adapter.resume` in v0.1.0. Interrupted-run durability across control-plane restart is Part 9 (state store).
 
 **Verification order:** implement Tasks 1-5 first (unit-level), then Task 6 (conformance), then Task 7 (docs/gate). If `langgraph` is unavailable, `pytest.importorskip` skips the LangGraph specs; ensure the rest still clears the 95% coverage gate.
+
+## As-Built Deviations
+
+Applied while executing this plan; the committed code is the source of truth.
+
+- The `CompiledGraph.stream` parameter is named `payload`, not `input`, to satisfy ruff `A002`
+  (builtin shadowing).
+- `LangGraphAdapter.register` imports `EntrypointLoadError` at module scope (not inline) and casts
+  the loaded object with `cast("CompiledGraph", graph)` instead of a `type: ignore`.
+- `LangGraphAdapter.__init__` annotates `self._command_factory: Callable[..., Any]` so mypy strict
+  accepts calling it with keywords.
+- `WorkerContext.tool_calls` property is added to M16's `worker.py`; `LangGraphAdapter.tool_calls`
+  uses it.
