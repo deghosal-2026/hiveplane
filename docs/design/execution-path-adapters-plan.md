@@ -904,8 +904,9 @@ from __future__ import annotations
 import importlib
 import sys
 from collections.abc import Callable, Iterator
-from contextlib import contextmanager
+from contextlib import contextmanager, suppress
 from pathlib import Path
+from typing import cast
 
 from pydantic import JsonValue
 
@@ -922,10 +923,8 @@ def _prepend_sys_path(root: str) -> Iterator[None]:
     try:
         yield
     finally:
-        try:
+        with suppress(ValueError):
             sys.path.remove(root)
-        except ValueError:
-            pass
 
 
 class EntrypointLoader:
@@ -949,7 +948,7 @@ class EntrypointLoader:
             raise EntrypointLoadError(entrypoint, f"module has no attribute {attr!r}")
         if not callable(target):
             raise EntrypointLoadError(entrypoint, f"attribute {attr!r} is not callable")
-        return target
+        return cast("Entrypoint", target)
 ```
 
 - [ ] **Step 4: Run test to verify it passes**
