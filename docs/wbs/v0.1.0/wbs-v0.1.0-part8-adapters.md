@@ -2,6 +2,8 @@
 
 **Milestones:** M16-M17 · **Issues:** #42-#45
 
+> **Status:** M16 complete — #42, #43 closed (2026-09-16). M17 (#44, #45) remains.
+
 ## Goal
 
 Prove the pluggability contract with two concrete runtimes and a conformance suite that keeps every adapter honest.
@@ -29,7 +31,20 @@ Prove the pluggability contract with two concrete runtimes and a conformance sui
 - Part 4 (run lifecycle)
 - Part 7 (sandbox + shaping)
 
-## Exit Gate (M16, M17)
+## Exit Gate
+
+### M16 — passed (2026-09-16); push pending
+
+- [x] All tests in the system pass: `pytest` — 519 passed
+- [x] Code coverage total > 95% — 97%
+- [x] Ruff clean
+- [x] Mypy strict clean
+- [x] Update all relevant docs affected by this milestone — `docs/ADAPTERS.md`, index, this file
+- [x] Verify all issues in this milestone are done
+- [x] Close all completed issues — #42, #43
+- [ ] Commit and push changes — committed to `main` (`eacbe67`..`03d477c`); push pending
+
+### M17 — pending
 
 - [ ] All tests in the system pass: `pytest`
 - [ ] Code coverage total > 95%
