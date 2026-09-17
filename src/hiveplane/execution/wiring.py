@@ -23,17 +23,32 @@ from hiveplane.execution.gates import (
 from hiveplane.execution.service import RunService
 from hiveplane.execution.store import InMemoryRunStore, JsonFileRunStore, RunStore
 from hiveplane.execution.tools import ToolGateway
+from hiveplane.persistence.audit import AuditLog, InMemoryAuditLog
+from hiveplane.persistence.base import create_engine_from_settings
+from hiveplane.persistence.postgres_audit import PostgresAuditLog
+from hiveplane.persistence.run_store import PostgresRunStore
 from hiveplane.registry.service import RegistryService
 from hiveplane.shaping.injection import InjectionScanner
 from hiveplane.shaping.pipeline import ShapingPipeline
 
 
-def build_run_store() -> RunStore:
+def build_run_store(store: str | None = None) -> RunStore:
     """Build the configured run store (durable JSON by default)."""
     settings = get_settings()
-    if settings.execution.store == "json":
+    selected = store or settings.execution.store
+    if selected == "postgres":
+        return PostgresRunStore(create_engine_from_settings(settings))
+    if selected == "json":
         return JsonFileRunStore(settings.execution.data_dir)
     return InMemoryRunStore()
+
+
+def build_audit_log() -> AuditLog:
+    """Build the configured audit log (Postgres when the store is Postgres)."""
+    settings = get_settings()
+    if settings.execution.store == "postgres":
+        return PostgresAuditLog(create_engine_from_settings(settings))
+    return InMemoryAuditLog()
 
 
 def build_run_service(
@@ -71,6 +86,7 @@ def build_run_service(
         approvals=approvals,
         budget=budget_gate,
         sandbox_runtime=sandbox_runtime,
+        audit=build_audit_log() if settings.execution.store == "postgres" else None,
     )
 
 

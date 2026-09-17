@@ -1,6 +1,7 @@
 # D7: State Store Design
 
-> Status: draft
+> Status: implemented (M18) — full schema + migrations; runs and audit are live on PostgreSQL,
+> the other entities are schema-only until their stores land.
 
 ## Problem
 

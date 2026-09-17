@@ -183,8 +183,26 @@ run's model identity to match the attestation — a model swap is refused.
 |----------|---------|---------|
 | `HIVEPLANE_CERTIFICATION__EXECUTOR` | `none` | `reference` enables the local replay executor (demo/CI only) |
 | `HIVEPLANE_CERTIFICATION__CORPORA_DIR` | `examples` | Root directory corpora are loaded from |
-| `HIVEPLANE_EXECUTION__STORE` | `json` | Run store: `json` (durable) or `memory` |
+| `HIVEPLANE_EXECUTION__STORE` | `json` | Run store: `json` (durable), `memory`, or `postgres` |
 | `HIVEPLANE_EXECUTION__DATA_DIR` | `.hiveplane/runs` | Directory for the durable run store |
+| `HIVEPLANE_EXECUTION__ADAPTER` | `none` | `raw-worker` enables in-process workload execution |
+| `HIVEPLANE_EXECUTION__ENTRYPOINTS_ROOT` | `.` | Root directory workload entrypoints are loaded from |
+| `HIVEPLANE_DATABASE__*` | localhost:5432 | PostgreSQL connection (used when store is `postgres`) |
+
+### Persistence
+
+Set `HIVEPLANE_EXECUTION__STORE=postgres` to run the control plane on PostgreSQL. Run migrations
+first:
+
+```bash
+alembic upgrade head
+```
+
+Runs, run events, usage, admissions, and deliveries are persisted in PostgreSQL, and operator
+actions plus terminal transitions are written to a tamper-evident `audit_log` (chained SHA-256).
+Verify the chain with `hiveplane`'s audit helpers or by recomputing `AuditChain.verify` over
+`audit_log`. When the store is `json`, durability comes from one atomic file per run and audit
+falls back to an in-memory log.
 
 Unknown configuration lives in `hiveplane.config` as it lands in v0.1.0.
 

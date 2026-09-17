@@ -25,6 +25,26 @@ jobs:
       matrix:
         python-version: ["3.12", "3.13"]
 
+    env:
+      HIVEPLANE_DATABASE__HOST: localhost
+      HIVEPLANE_DATABASE__PORT: "5432"
+      HIVEPLANE_DATABASE__NAME: hiveplane
+      HIVEPLANE_DATABASE__USER: hiveplane
+      HIVEPLANE_DATABASE__PASSWORD: hiveplane
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: hiveplane
+          POSTGRES_USER: hiveplane
+          POSTGRES_PASSWORD: hiveplane
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U hiveplane -d hiveplane"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+
     steps:
       - uses: actions/checkout@v4
 
@@ -50,6 +70,9 @@ jobs:
 
       - name: Mypy (strict)
         run: mypy src/ tests/
+
+      - name: Migrate database
+        run: alembic upgrade head
 
       - name: Pytest with coverage gate
         run: pytest --cov=src/hiveplane --cov-report=term-missing --cov-fail-under=95
