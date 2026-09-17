@@ -10,8 +10,8 @@ Prove the pluggability contract with two concrete runtimes and a conformance sui
 
 **Issues:** [#42](https://github.com/deghosal-2026/hiveplane/issues/42) · [#43](https://github.com/deghosal-2026/hiveplane/issues/43)
 
-- [ ] [#42](https://github.com/deghosal-2026/hiveplane/issues/42) — Adapter interface definition
-- [ ] [#43](https://github.com/deghosal-2026/hiveplane/issues/43) — Raw Python worker reference adapter
+- [x] [#42](https://github.com/deghosal-2026/hiveplane/issues/42) — Adapter interface definition
+- [x] [#43](https://github.com/deghosal-2026/hiveplane/issues/43) — Raw Python worker reference adapter
 
 **Done when:** the interface is documented and typed; the worker completes a run through the full lifecycle; usage is reported and priced; tool calls route through policy and shaping.
 

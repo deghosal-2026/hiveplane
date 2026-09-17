@@ -25,6 +25,61 @@ An adapter must translate:
 | **Tool-output routing** | Route all tool outputs through the shaping layer before they reach the agent context |
 | **Injection scanning** | Submit tool outputs to the injection scanner at the boundary |
 
+### Typed contract
+
+The contract is a `typing.Protocol` in `hiveplane.adapters`. An adapter reports state and
+usage and routes tool calls through the control-plane boundary; it never decides policy.
+
+```python
+from hiveplane.adapters import Adapter, AdapterRunExecutor, StubAdapter
+
+class Adapter(Protocol):
+    def register(self, workload: AgentWorkload) -> None: ...
+    def submit(self, context: RunContext) -> None: ...
+    def pause(self, run_id: str) -> bool: ...
+    def resume(self, run_id: str) -> bool: ...
+    def cancel(self, run_id: str) -> None: ...
+    def status(self, run_id: str) -> RunState: ...
+    def usage(self, run_id: str) -> UsageReport | None: ...
+    def tool_calls(self, run_id: str) -> list[ToolCallResult]: ...
+```
+
+- `submit` receives a `RunContext` (run, workload, sandbox flag) and starts execution.
+- `status` must report honest state; `pause`/`resume` return whether the request was accepted.
+- `usage` returns spend since the last report for budget accounting.
+- `tool_calls` returns the calls the adapter routed through the tool boundary for audit.
+- `AdapterRunExecutor` bridges an adapter onto the run lifecycle's `RunExecutor` seam, so
+  the lifecycle never depends on adapter internals.
+- `StubAdapter` is the in-memory conformance baseline (`hiveplane.adapters.stub`).
+
+### Writing a worker
+
+A raw-worker entrypoint is `module:function` (from `spec.runtime.entrypoint`) and has the
+signature `run(task: dict, ctx: WorkerContext) -> JsonValue`.
+
+```python
+from hiveplane.adapters.worker import WorkerContext
+
+def run(task: dict, ctx: WorkerContext) -> dict:
+    result = ctx.tool_call("mcp.github.list_pull_requests", host="api.github.com")
+    ctx.report_usage(input_tokens=120, output_tokens=40, tool_calls=1)
+    ctx.checkpoint()
+    return {"tool": result.tool_id}
+```
+
+- `ctx.tool_call(...)` routes through the policy, egress, and shaping boundary and raises
+  `ToolCallDeniedError`, `ToolCallBlockedError`, or `ToolCallEscalatedError` when the call is
+  not allowed.
+- `ctx.report_usage(...)` is priced server-side and enforced against the run budget; it raises
+  `RunTerminatedError` if the run has gone terminal.
+- `ctx.checkpoint()` blocks while the run is paused and raises `RunCancelledError` when stopped.
+- The adapter records the returned value as the run result and reports the terminal state; it
+  never decides policy.
+
+Raw-worker execution is opt-in: set `HIVEPLANE_EXECUTION__ADAPTER=raw-worker` (default `none`)
+and point `HIVEPLANE_EXECUTION__ENTRYPOINTS_ROOT` at the project root that holds the entrypoint
+modules.
+
 ### Execution Sandbox
 
 When a workload has `sandbox.enabled: true`, the adapter must:
