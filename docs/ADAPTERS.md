@@ -121,12 +121,33 @@ Tool outputs are a primary injection vector (threat T14). A malicious tool respo
 2. **Escalate on detection** — suspicious patterns (e.g. "ignore previous instructions", "you are now in admin mode", embedded command sequences) escalate for human approval rather than being passed through.
 3. **Log the scan result** — every scan outcome (clean, suspicious, blocked) is recorded in the audit trail with the matched patterns.
 
-## Planned Adapters
+## Adapters (v0.1.0)
 
-### v0.1.0
+### Raw Python worker
 
-- **Raw Python worker** — reference adapter, no framework dependency
-- **LangGraph** — example adapter for a compiled graph
+Reference adapter, no framework dependency. The entrypoint is `module:function` with signature
+`run(task, ctx)`. Enabled with `HIVEPLANE_EXECUTION__ADAPTER=raw-worker`; see **Writing a worker**
+above.
+
+### LangGraph
+
+Example adapter for a compiled graph. Install the optional extra and enable it:
+
+```bash
+pip install -e ".[langgraph]"
+HIVEPLANE_EXECUTION__ADAPTER=langgraph
+```
+
+- The entrypoint (`spec.runtime.entrypoint`) resolves to a **compiled graph object**
+  (`module:graph`), not a function.
+- Nodes reach the control-plane client through
+  `config["configurable"]["hiveplane_ctx"]` and call `ctx.tool_call(...)`, `ctx.report_usage(...)`,
+  and `ctx.checkpoint()` exactly as a raw worker does.
+- Supersteps are streamed (`stream_mode="values"`); `ctx.checkpoint()` between supersteps gives
+  operators cooperative pause/resume/cancel.
+- A LangGraph `interrupt(...)` maps to run `PAUSED`; resume re-drives the graph with
+  `Command(resume=True)` on the same `thread_id`.
+- `examples/docs_agent.py` is the reference graph.
 
 ### Later
 

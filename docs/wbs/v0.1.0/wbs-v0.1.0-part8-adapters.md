@@ -2,7 +2,7 @@
 
 **Milestones:** M16-M17 · **Issues:** #42-#45
 
-> **Status:** M16 complete — #42, #43 closed (2026-09-16). M17 (#44, #45) remains.
+> **Status:** M16-M17 complete — #42-#45 closed (2026-09-16).
 
 ## Goal
 
@@ -21,8 +21,8 @@ Prove the pluggability contract with two concrete runtimes and a conformance sui
 
 **Issues:** [#44](https://github.com/deghosal-2026/hiveplane/issues/44) · [#45](https://github.com/deghosal-2026/hiveplane/issues/45)
 
-- [ ] [#44](https://github.com/deghosal-2026/hiveplane/issues/44) — LangGraph example adapter
-- [ ] [#45](https://github.com/deghosal-2026/hiveplane/issues/45) — Adapter conformance suite
+- [x] [#44](https://github.com/deghosal-2026/hiveplane/issues/44) — LangGraph example adapter
+- [x] [#45](https://github.com/deghosal-2026/hiveplane/issues/45) — Adapter conformance suite
 
 **Done when:** a LangGraph agent completes a run and maps pause/resume correctly; the conformance suite (register → submit → transition → usage → pause → resume → cancel + sandbox + shaping + model-binding) is green for both adapters and fails the build on a violation.
 
@@ -44,15 +44,15 @@ Prove the pluggability contract with two concrete runtimes and a conformance sui
 - [x] Close all completed issues — #42, #43
 - [ ] Commit and push changes — committed to `main` (`eacbe67`..`03d477c`); push pending
 
-### M17 — pending
+### M17 — passed (2026-09-16); push pending
 
-- [ ] All tests in the system pass: `pytest`
-- [ ] Code coverage total > 95%
-- [ ] Ruff clean
-- [ ] Mypy strict clean
-- [ ] Update all relevant docs affected by this milestone
-- [ ] Verify all issues in this milestone are done
-- [ ] Close all completed issues
+- [x] All tests in the system pass: `pytest` — 535 passed
+- [x] Code coverage total > 95% — see `make cov`
+- [x] Ruff clean
+- [x] Mypy strict clean
+- [x] Update all relevant docs affected by this milestone — `docs/ADAPTERS.md`, index, this file
+- [x] Verify all issues in this milestone are done
+- [x] Close all completed issues — #44, #45
 - [ ] Commit and push changes
 
 ## See Also
