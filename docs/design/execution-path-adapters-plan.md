@@ -2011,6 +2011,19 @@ git commit -m "feat(adapters): ship the raw worker adapter and reference workloa
 
 ---
 
+## As-Built Deviations
+
+Applied while executing this plan; the committed code is the source of truth.
+
+- Exception names carry the `Error` suffix (`ToolCallDeniedError`, `ToolCallBlockedError`,
+  `ToolCallEscalatedError`, `RunTerminatedError`, `RunCancelledError`) to satisfy ruff `N818`.
+- `contextlib.suppress` replaces `try/except/pass` (ruff `SIM105`) in `loader.py` and
+  `raw_worker.py`.
+- `EntrypointLoader.load` casts the resolved attribute to `Entrypoint` (mypy `no-any-return`).
+- `RawWorkerAdapter._execute` catches broad `Exception` without a `noqa` (the rule is not enabled).
+- Worker/control tests read properties into locals before asserting, and use `JsonValue` task
+  types on the `WorkerContext`/`Entrypoint` boundary, to stay mypy-strict clean.
+
 ## Self-Review
 
 **Spec coverage (design sections):**
