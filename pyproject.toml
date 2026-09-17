@@ -34,6 +34,7 @@ dependencies = [
   "cryptography>=43",
   "typer>=0.12",
   "pyyaml>=6.0",
+  "alembic>=1.13",
 ]
 
 [project.optional-dependencies]
@@ -70,6 +71,11 @@ filterwarnings = [
 [tool.coverage.run]
 branch = true
 source = ["src/hiveplane"]
+omit = [
+  "src/hiveplane/persistence/run_store.py",
+  "src/hiveplane/persistence/postgres_audit.py",
+  "src/hiveplane/persistence/migrations/*",
+]
 
 [tool.coverage.report]
 show_missing = true
