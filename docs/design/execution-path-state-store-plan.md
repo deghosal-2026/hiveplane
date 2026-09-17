@@ -41,7 +41,7 @@
 | `src/hiveplane/execution/wiring.py` | `build_run_store` selects Postgres |
 | `src/hiveplane/execution/service.py` | optional `audit: AuditLog | None` |
 | `.github/workflows/ci.yml` | `postgres:16` service + migrations |
-| `tests/postgres.py` | shared availability fixture/helper |
+| `tests/postgres.py` + `conftest.py` | shared Postgres availability helper + `pg_engine` fixture |
 | `tests/test_persistence_*.py` | schema, audit, migrations, run-store tests |
 | `docs/design/state-store-design.md`, WBS files | docs/status |
 
@@ -608,8 +608,6 @@ from alembic import command
 from alembic.config import Config
 from sqlalchemy import Engine, inspect, text
 
-from postgres import pg_engine  # noqa: F401
-
 _ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -861,8 +859,6 @@ from hiveplane.execution.errors import RunNotFoundError
 from hiveplane.execution.models import AdmissionOutcome, AdmissionResult
 from hiveplane.persistence.base import create_engine_from_settings
 from hiveplane.persistence.run_store import PostgresRunStore
-from postgres import pg_engine  # noqa: F401
-
 _NOW = datetime(2026, 1, 1, tzinfo=UTC)
 
 
@@ -1387,8 +1383,6 @@ from __future__ import annotations
 from sqlalchemy import Engine, text
 
 from hiveplane.persistence.postgres_audit import PostgresAuditLog
-from postgres import pg_engine  # noqa: F401
-
 
 def test_audit_persists_and_verifies(pg_engine: Engine) -> None:
     log = PostgresAuditLog(pg_engine)
@@ -1629,8 +1623,6 @@ from sqlalchemy import Engine
 
 from hiveplane.execution.store import InMemoryRunStore
 from hiveplane.execution.wiring import build_run_store
-from postgres import pg_engine  # noqa: F401
-
 _ROOT = Path(__file__).resolve().parents[1]
 
 

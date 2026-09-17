@@ -8,10 +8,12 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from sqlalchemy import Engine
 
 from hiveplane.config import get_settings
 from hiveplane.core.manifest import parse_manifest
 from hiveplane.core.workload import AgentWorkload
+from postgres import postgres_engine
 
 
 @pytest.fixture(autouse=True)
@@ -67,3 +69,13 @@ def make_manifest() -> Callable[..., AgentWorkload]:
         )
 
     return _make
+
+
+@pytest.fixture
+def pg_engine() -> Iterator[Engine]:
+    """Provide a live Postgres engine, skipping the test when unavailable."""
+    engine = postgres_engine()
+    try:
+        yield engine
+    finally:
+        engine.dispose()
