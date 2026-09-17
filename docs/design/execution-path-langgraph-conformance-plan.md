@@ -188,7 +188,7 @@ class _Snapshot:
 
 class _Graph:
     def stream(
-        self, input: Any, config: dict[str, Any], *, stream_mode: str = "values"
+        self, payload: Any, config: dict[str, Any], *, stream_mode: str = "values"
     ) -> Iterator[dict[str, Any]]:
         yield {"note": "a"}
 
@@ -244,7 +244,7 @@ class CompiledGraph(Protocol):
     """The subset of a compiled LangGraph the adapter drives."""
 
     def stream(
-        self, input: Any, config: dict[str, Any], *, stream_mode: str = "values"
+        self, payload: Any, config: dict[str, Any], *, stream_mode: str = "values"
     ) -> Iterator[dict[str, Any]]:
         """Stream state values as the graph advances."""
         ...
@@ -337,7 +337,7 @@ class _Graph:
         self._snapshot = snapshot
 
     def stream(
-        self, input: Any, config: dict[str, Any], *, stream_mode: str = "values"
+        self, payload: Any, config: dict[str, Any], *, stream_mode: str = "values"
     ) -> Iterator[dict[str, Any]]:
         yield from self._chunks
 
@@ -426,7 +426,7 @@ def test_graph_exception_fails_the_run(
 ) -> None:
     class _Boom(_Graph):
         def stream(
-            self, input: Any, config: dict[str, Any], *, stream_mode: str = "values"
+            self, payload: Any, config: dict[str, Any], *, stream_mode: str = "values"
         ) -> Iterator[dict[str, Any]]:
             raise RuntimeError("kaboom")
 
