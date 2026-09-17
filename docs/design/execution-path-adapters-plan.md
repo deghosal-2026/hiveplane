@@ -2023,6 +2023,12 @@ Applied while executing this plan; the committed code is the source of truth.
 - `RawWorkerAdapter._execute` catches broad `Exception` without a `noqa` (the rule is not enabled).
 - Worker/control tests read properties into locals before asserting, and use `JsonValue` task
   types on the `WorkerContext`/`Entrypoint` boundary, to stay mypy-strict clean.
+- **The raw worker is opt-in in the app**: `ExecutionSettings.adapter: Literal["none", "raw-worker"]`
+  defaults to `"none"`, and `create_app` attaches the adapter only when it is `"raw-worker"`
+  (`HIVEPLANE_EXECUTION__ADAPTER=raw-worker`). This mirrors the certification executor's
+  opt-in (#63) and keeps `create_app()` deterministic for existing API tests; `attach_raw_worker`
+  is still the direct wiring entry point used by the end-to-end test and by deployments.
+- `attach_raw_worker(root=...)` accepts `str | Path | None` so tests can pass `tmp_path`.
 
 ## Self-Review
 

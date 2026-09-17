@@ -44,8 +44,7 @@ from hiveplane.execution.errors import (
     RunNotIntervenableError,
 )
 from hiveplane.execution.service import RunService
-from hiveplane.execution.tools import ToolGateway
-from hiveplane.execution.wiring import build_run_service
+from hiveplane.execution.wiring import attach_raw_worker, build_run_service, build_tool_gateway
 from hiveplane.policy.approvals import ApprovalService
 from hiveplane.policy.engine import PolicyEngine
 from hiveplane.policy.errors import (
@@ -72,8 +71,6 @@ from hiveplane.registry.errors import (
 from hiveplane.registry.service import RegistryService
 from hiveplane.registry.store import InMemoryRegistryStore
 from hiveplane.sandbox.manager import InMemorySandboxManager
-from hiveplane.shaping.injection import InjectionScanner
-from hiveplane.shaping.pipeline import ShapingPipeline
 
 #: Registry errors mapped to HTTP status codes.
 _ERROR_STATUS: tuple[tuple[type[Exception], int], ...] = (
@@ -123,12 +120,13 @@ def create_app(
     app.state.run_service = run_service or build_run_service(
         registry, policy_engine, approval_service, budget_service, sandbox_manager
     )
-    app.state.tool_gateway = ToolGateway(
-        registry,
-        policy_engine,
-        app.state.run_service,
-        shaping=ShapingPipeline(InjectionScanner()),
-        approvals=approval_service,
+    app.state.tool_gateway = build_tool_gateway(
+        registry, policy_engine, app.state.run_service, approval_service
+    )
+    app.state.adapter = (
+        attach_raw_worker(app.state.run_service, app.state.tool_gateway)
+        if get_settings().execution.adapter == "raw-worker"
+        else None
     )
     if certification_coordinator is None and registry_service is None:
         certification_coordinator = _build_certification_coordinator(registry, private_key)

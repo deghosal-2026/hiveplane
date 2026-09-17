@@ -123,10 +123,12 @@ class SandboxSettings(BaseModel):
 
 
 class ExecutionSettings(BaseModel):
-    """Run-store configuration (DD-05): memory or durable JSON files."""
+    """Run-store configuration (DD-05) and runtime execution selection."""
 
     store: Literal["memory", "json"] = "json"
     data_dir: str = ".hiveplane/runs"
+    entrypoints_root: str = "."
+    adapter: Literal["none", "raw-worker"] = "none"
 
 
 class FanoutSettings(BaseModel):

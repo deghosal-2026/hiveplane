@@ -2,6 +2,11 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
+from hiveplane.adapters.base import AdapterRunExecutor
+from hiveplane.adapters.loader import EntrypointLoader
+from hiveplane.adapters.raw_worker import RawWorkerAdapter, Spawner
 from hiveplane.config import get_settings
 from hiveplane.core.fanout import FanOutType
 from hiveplane.execution.admission import AdmissionPipeline
@@ -17,7 +22,10 @@ from hiveplane.execution.gates import (
 )
 from hiveplane.execution.service import RunService
 from hiveplane.execution.store import InMemoryRunStore, JsonFileRunStore, RunStore
+from hiveplane.execution.tools import ToolGateway
 from hiveplane.registry.service import RegistryService
+from hiveplane.shaping.injection import InjectionScanner
+from hiveplane.shaping.pipeline import ShapingPipeline
 
 
 def build_run_store() -> RunStore:
@@ -64,3 +72,38 @@ def build_run_service(
         budget=budget_gate,
         sandbox_runtime=sandbox_runtime,
     )
+
+
+def build_tool_gateway(
+    registry_service: RegistryService,
+    policy_gate: PolicyGate,
+    run_service: RunService,
+    approvals: ApprovalRequests | None,
+) -> ToolGateway:
+    """Build the tool-call boundary over the live run service."""
+    return ToolGateway(
+        registry_service,
+        policy_gate,
+        run_service,
+        shaping=ShapingPipeline(InjectionScanner()),
+        approvals=approvals,
+    )
+
+
+def attach_raw_worker(
+    run_service: RunService,
+    tool_gateway: ToolGateway,
+    *,
+    root: str | Path | None = None,
+    spawner: Spawner | None = None,
+) -> RawWorkerAdapter:
+    """Build the raw-worker adapter and bind it as the run service's executor."""
+    settings = get_settings()
+    adapter = RawWorkerAdapter(
+        run_service,
+        tool_gateway,
+        EntrypointLoader(root=root or settings.execution.entrypoints_root),
+        spawner=spawner,
+    )
+    run_service.attach_executor(AdapterRunExecutor(adapter))
+    return adapter
