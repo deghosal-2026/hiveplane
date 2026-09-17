@@ -39,8 +39,8 @@ class EntrypointLoader:
     def __init__(self, *, root: str | Path = ".") -> None:
         self._root = Path(root)
 
-    def load(self, entrypoint: str) -> Entrypoint:
-        """Import and return the callable named by ``entrypoint``."""
+    def load_object(self, entrypoint: str) -> object:
+        """Import and return the attribute named by ``entrypoint``."""
         module_name, _, attr = entrypoint.partition(":")
         if not module_name or not attr:
             raise EntrypointLoadError(entrypoint, "expected 'module:function'")
@@ -52,6 +52,12 @@ class EntrypointLoader:
         target = getattr(module, attr, None)
         if target is None:
             raise EntrypointLoadError(entrypoint, f"module has no attribute {attr!r}")
+        return target
+
+    def load(self, entrypoint: str) -> Entrypoint:
+        """Import and return the callable named by ``entrypoint``."""
+        target = self.load_object(entrypoint)
         if not callable(target):
+            _, _, attr = entrypoint.partition(":")
             raise EntrypointLoadError(entrypoint, f"attribute {attr!r} is not callable")
         return cast("Entrypoint", target)

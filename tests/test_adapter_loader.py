@@ -40,3 +40,21 @@ def test_non_callable_attribute_raises(tmp_path: Path) -> None:
 def test_malformed_entrypoint_raises() -> None:
     with pytest.raises(EntrypointLoadError):
         EntrypointLoader().load("not-an-entrypoint")
+
+
+def test_load_object_returns_non_callable_attribute(tmp_path: Path) -> None:
+    _write_module(tmp_path, "worker_graph", "graph = object()\n")
+    loaded = EntrypointLoader(root=tmp_path).load_object("worker_graph:graph")
+    assert loaded is not None
+    assert not callable(loaded)
+
+
+def test_load_object_can_return_a_callable(tmp_path: Path) -> None:
+    _write_module(tmp_path, "worker_ok2", "def run(task, ctx):\n    return task\n")
+    assert callable(EntrypointLoader(root=tmp_path).load_object("worker_ok2:run"))
+
+
+def test_load_object_rejects_malformed_entrypoint() -> None:
+    with pytest.raises(EntrypointLoadError):
+        EntrypointLoader().load_object("nope")
+

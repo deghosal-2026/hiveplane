@@ -52,3 +52,13 @@ def test_run_cancelled_carries_state() -> None:
 
 def test_error_is_an_exception() -> None:
     assert isinstance(RunTerminatedError(RunState.FAILED), Exception)
+
+
+def test_missing_dependency_carries_adapter_and_reason() -> None:
+    from hiveplane.adapters.errors import MissingAdapterDependencyError
+
+    exc = MissingAdapterDependencyError("langgraph", "no module named langgraph")
+    assert exc.adapter == "langgraph"
+    assert exc.reason == "no module named langgraph"
+    assert "langgraph" in str(exc)
+

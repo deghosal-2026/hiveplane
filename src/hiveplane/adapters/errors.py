@@ -27,6 +27,15 @@ class EntrypointLoadError(AdapterError):
         self.reason = reason
 
 
+class MissingAdapterDependencyError(AdapterError):
+    """Raised when an adapter's optional runtime dependency is not installed."""
+
+    def __init__(self, adapter: str, reason: str) -> None:
+        super().__init__(f"adapter {adapter!r} is unavailable: {reason}")
+        self.adapter = adapter
+        self.reason = reason
+
+
 class WorkerError(AdapterError):
     """Base class for errors a worker raises through the control plane."""
 
