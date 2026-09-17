@@ -742,7 +742,7 @@ import pytest
 pytest.importorskip("langgraph")
 pytest.importorskip("langchain_core")
 
-from hiveplane.adapters.loader import EntrypointLoader  # noqa: E402
+from hiveplane.adapters.loader import EntrypointLoader
 
 _PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
@@ -768,13 +768,13 @@ class _Ctx:
 
 
 def test_docs_agent_graph_loads() -> None:
-    graph = EntrypointLoader(root=_PROJECT_ROOT).load_object("examples.docs_agent:graph")
+    graph: Any = EntrypointLoader(root=_PROJECT_ROOT).load_object("examples.docs_agent:graph")
     assert callable(getattr(graph, "stream", None))
     assert callable(getattr(graph, "get_state", None))
 
 
 def test_docs_agent_calls_tool_and_interrupts() -> None:
-    graph = EntrypointLoader(root=_PROJECT_ROOT).load_object("examples.docs_agent:graph")
+    graph: Any = EntrypointLoader(root=_PROJECT_ROOT).load_object("examples.docs_agent:graph")
     ctx = _Ctx()
     config = {"configurable": {"thread_id": "run-1", "hiveplane_ctx": ctx}}
 
