@@ -1138,7 +1138,7 @@ def release(run_id):
 
 
 class S(TypedDict, total=False):
-    task: dict[str, Any]
+    hold: bool
     done: bool
 
 
@@ -1146,7 +1146,7 @@ def work(state: S, config: RunnableConfig) -> S:
     ctx = config["configurable"]["hiveplane_ctx"]
     ctx.tool_call("mcp.t.read", host="api.example.com", output="payload")
     ctx.report_usage(input_tokens=100, output_tokens=50)
-    if (state.get("task") or {}).get("hold"):
+    if state.get("hold"):
         _HELD.setdefault(ctx.run_id, threading.Event()).set()
         _RELEASE.setdefault(ctx.run_id, threading.Event()).wait(10.0)
         ctx.checkpoint()
@@ -1384,3 +1384,10 @@ Applied while executing this plan; the committed code is the source of truth.
   accepts calling it with keywords.
 - `WorkerContext.tool_calls` property is added to M16's `worker.py`; `LangGraphAdapter.tool_calls`
   uses it.
+- The conformance `_service` must register the allowed tool (`registry.register_tool(ToolRecord(...))`)
+  before `registry.create(workload)`, because the registry validates the manifest's allow-list
+  against the tool catalog.
+- The LangGraph conformance graph receives the run's task as its top-level input, so its node reads
+  `state.get("hold")` (not `state["task"]["hold"]`).
+- Scenario module names are suffixed with a counter so re-imports in separate tests do not collide
+  in `sys.modules`.
