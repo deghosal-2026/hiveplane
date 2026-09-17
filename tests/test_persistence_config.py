@@ -11,7 +11,7 @@ _ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_postgres_store_is_selectable() -> None:
-    settings = Settings(execution={"store": "postgres"})
+    settings = Settings.model_validate({"execution": {"store": "postgres"}})
     assert settings.execution.store == "postgres"
 
 
