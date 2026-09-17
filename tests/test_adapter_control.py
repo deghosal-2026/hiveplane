@@ -25,7 +25,8 @@ def test_checkpoint_raises_when_cancelled() -> None:
 def test_checkpoint_blocks_while_paused_then_resumes() -> None:
     control = RunControl()
     control.pause()
-    assert control.paused is True
+    paused_before = control.paused
+    assert paused_before is True
     reached = threading.Event()
 
     def _worker() -> None:
@@ -37,7 +38,8 @@ def test_checkpoint_blocks_while_paused_then_resumes() -> None:
     assert reached.wait(0.05) is False
 
     control.resume()
-    assert control.paused is False
+    paused_after = control.paused
+    assert paused_after is False
     assert reached.wait(1.0) is True
     thread.join()
 
