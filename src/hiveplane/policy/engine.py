@@ -7,7 +7,7 @@ from datetime import UTC, datetime
 
 from opentelemetry.util.types import AttributeValue
 
-from hiveplane import telemetry
+from hiveplane import metrics, telemetry
 from hiveplane.certification.models import CertificationStatus
 from hiveplane.core.decision import (
     ActionClass,
@@ -83,6 +83,12 @@ class PolicyEngine:
             decision = self._evaluate(context)
             active.set_attribute("decision", decision.outcome.value)
             active.set_attribute("rule", decision.rule)
+            metrics.get_metrics().record_policy_decision(
+                workload=context.workload,
+                team=context.team,
+                decision=decision.outcome.value,
+                rule=decision.rule,
+            )
             return decision
 
     def _evaluate(self, context: PolicyContext) -> PolicyDecision:

@@ -15,7 +15,7 @@ from typing import Protocol
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from hiveplane import telemetry
+from hiveplane import metrics, telemetry
 from hiveplane.core.decision import (
     ActionClass,
     DataSensitivity,
@@ -125,6 +125,14 @@ class ToolGateway:
             active.set_attribute("outcome", result.outcome.value)
             if result.rule is not None:
                 active.set_attribute("rule", result.rule)
+            trust = request.tool_trust or _trust_for(workload.spec.tools, request.tool_id)
+            metrics.get_metrics().record_tool_call(
+                workload=workload.name,
+                team=workload.team,
+                tool_id=request.tool_id,
+                trust_level=trust.value,
+                outcome=result.outcome.value,
+            )
             return result
 
     def _invoke(

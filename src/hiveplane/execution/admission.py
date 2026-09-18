@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from datetime import UTC, datetime
 
-from hiveplane import telemetry
+from hiveplane import metrics, telemetry
 from hiveplane.core.decision import DecisionOutcome, PolicyContext
 from hiveplane.core.run import AdmissionContext, Run
 from hiveplane.core.workload import AgentWorkload
@@ -72,6 +72,7 @@ class AdmissionPipeline:
             )
         )
         if not model_ok:
+            metrics.get_metrics().record_model_swap_block(workload=workload.name)
             return self._refused(
                 run, context, checks, "model swap: runtime model differs from attestation"
             )

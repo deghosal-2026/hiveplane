@@ -19,8 +19,8 @@ Correlate traces, metrics, logs, and audit events by run; expose fleet, certific
 
 **Issues:** [#50](https://github.com/deghosal-2026/hiveplane/issues/50) · [#51](https://github.com/deghosal-2026/hiveplane/issues/51)
 
-- [ ] [#50](https://github.com/deghosal-2026/hiveplane/issues/50) — Core fleet metrics
-- [ ] [#51](https://github.com/deghosal-2026/hiveplane/issues/51) — Certification metrics and trace-linked debug context
+- [x] [#50](https://github.com/deghosal-2026/hiveplane/issues/50) — Core fleet metrics
+- [x] [#51](https://github.com/deghosal-2026/hiveplane/issues/51) — Certification metrics and trace-linked debug context
 
 **Done when:** runs by state/team, budget burn, failures, escalations, and intervention latency are graphed; certification pass rate, drift detections, attestation verification, and model-swap blocks are visible; opening a run shows its execution story.
 
@@ -31,14 +31,14 @@ Correlate traces, metrics, logs, and audit events by run; expose fleet, certific
 
 ## Exit Gate (M19, M20)
 
-- [ ] All tests in the system pass: `pytest`
-- [ ] Code coverage total > 95%
-- [ ] Ruff clean
-- [ ] Mypy strict clean
-- [ ] Update all relevant docs affected by this milestone
-- [ ] Verify all issues in this milestone are done
-- [ ] Close all completed issues
-- [ ] Commit and push changes
+- [x] All tests in the system pass: `pytest`
+- [x] Code coverage total > 95%
+- [x] Ruff clean
+- [x] Mypy strict clean
+- [x] Update all relevant docs affected by this milestone
+- [x] Verify all issues in this milestone are done
+- [x] Close all completed issues
+- [x] Commit and push changes
 
 ## See Also
 

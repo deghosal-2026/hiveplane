@@ -2,14 +2,15 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from datetime import UTC, datetime
 from uuid import uuid4
 
 from opentelemetry.util.types import AttributeValue
 from pydantic import JsonValue
 
-from hiveplane import telemetry
+from hiveplane import metrics, telemetry
+from hiveplane.core.approval import ApprovalRecord
 from hiveplane.core.event import EventType, RunEvent
 from hiveplane.core.run import AdmissionContext, Run, RunState, can_transition
 from hiveplane.core.usage import UsageReport
@@ -28,8 +29,15 @@ from hiveplane.execution.gates import (
     RunExecutor,
     SandboxRuntime,
 )
-from hiveplane.execution.models import AdmissionOutcome, InterventionAction, RunContext
+from hiveplane.execution.models import (
+    AdmissionOutcome,
+    AdmissionResult,
+    DeliveryRecord,
+    InterventionAction,
+    RunContext,
+)
 from hiveplane.execution.store import RunStore
+from hiveplane.execution.story import RunStory, build_run_story
 from hiveplane.persistence.audit import AuditLog
 from hiveplane.registry.service import RegistryService
 
@@ -123,6 +131,7 @@ class RunService:
             manifest_version=record.current_version,
             context=context,
             task=task or {},
+            trace_id=telemetry.current_trace_id(),
         )
         result = self._admission.check(run, record.manifest)
         if result.outcome is AdmissionOutcome.REFUSED:
@@ -150,15 +159,22 @@ class RunService:
                 to_state=RunState.PAUSED,
                 detail="escalation",
             )
+            check = result.policy_check()
+            rule = check.rule if check and check.rule else "approvals.required"
             if self._approvals is not None:
-                check = result.policy_check()
                 self._approvals.request(
                     run_id=run.id,
                     workload=workload,
-                    rule=check.rule if check and check.rule else "approvals.required",
+                    rule=rule,
                     reason=check.reason if check and check.reason else "approval required",
                 )
             self._fanout.notify_escalation(run, record.manifest)
+            metrics.get_metrics().record_escalation(
+                workload=workload, team=record.team, rule=rule
+            )
+        metrics.get_metrics().record_run_state(
+            workload=workload, team=record.team, state=run.state.value
+        )
         return run
 
     def get(self, run_id: str) -> Run:
@@ -197,6 +213,30 @@ class RunService:
         self._require(run_id)
         return self._store.list_usage(run_id)
 
+    def admission(self, run_id: str) -> AdmissionResult | None:
+        """Return the admission result recorded for a run, if any."""
+        self._require(run_id)
+        return self._store.get_admission(run_id)
+
+    def deliveries(self, run_id: str) -> list[DeliveryRecord]:
+        """Return the fan-out delivery attempts recorded for a run."""
+        self._require(run_id)
+        return self._store.list_deliveries(run_id)
+
+    def story(self, run_id: str, *, approvals: Sequence[ApprovalRecord] = ()) -> RunStory:
+        """Assemble a run's execution story from its persisted records."""
+        run = self._require(run_id)
+        workload = self._registry.get(run.workload_id).manifest
+        return build_run_story(
+            run=run,
+            workload=workload,
+            admission=self._store.get_admission(run_id),
+            events=self._store.list_events(run_id),
+            usage=self._store.list_usage(run_id),
+            deliveries=self._store.list_deliveries(run_id),
+            approvals=approvals,
+        )
+
     def transition(
         self,
         run_id: str,
@@ -211,6 +251,7 @@ class RunService:
         run = self._require(run_id)
         if not can_transition(run.state, target):
             raise IllegalTransitionError(run_id, run.state, target)
+        manifest = self._registry.get(run.workload_id).manifest
         now = self._clock()
         updates: dict[str, object] = {"state": target, "updated_at": now}
         if failure_reason is not None:
@@ -221,23 +262,29 @@ class RunService:
             updates["started_at"] = now
         if target in (RunState.COMPLETED, RunState.FAILED, RunState.CANCELLED):
             updates["finished_at"] = now
+        trace_id = telemetry.current_trace_id()
+        if trace_id is not None:
+            updates["trace_id"] = trace_id
         updated = run.model_copy(update=updates)
-        if target is RunState.RUNNING and run.state is RunState.QUEUED:
-            manifest = self._registry.get(run.workload_id).manifest
-            if updated.sandbox and self._sandbox_runtime is not None:
-                with telemetry.span(
-                    "sandbox",
-                    run=updated,
-                    workload=manifest,
-                    attributes={"operation": "provision"},
-                ) as active:
-                    instance = self._sandbox_runtime.provision(
-                        run_id=run_id,
-                        workload=run.workload_id,
-                        spec=manifest.spec.sandbox,
-                    )
-                    active.set_attribute("sandbox_id", instance.sandbox_id)
-                updated = updated.model_copy(update={"sandbox_id": instance.sandbox_id})
+        if (
+            target is RunState.RUNNING
+            and run.state is RunState.QUEUED
+            and updated.sandbox
+            and self._sandbox_runtime is not None
+        ):
+            with telemetry.span(
+                "sandbox",
+                run=updated,
+                workload=manifest,
+                attributes={"operation": "provision"},
+            ) as active:
+                instance = self._sandbox_runtime.provision(
+                    run_id=run_id,
+                    workload=run.workload_id,
+                    spec=manifest.spec.sandbox,
+                )
+                active.set_attribute("sandbox_id", instance.sandbox_id)
+            updated = updated.model_copy(update={"sandbox_id": instance.sandbox_id})
         self._store.save_run(updated)
         self._append_event(
             run_id,
@@ -246,6 +293,9 @@ class RunService:
             from_state=run.state,
             to_state=target,
             detail=detail,
+        )
+        metrics.get_metrics().record_run_state(
+            workload=run.workload_id, team=manifest.team, state=target.value
         )
         if target is RunState.RUNNING and run.state is RunState.QUEUED:
             self._executor.start(
@@ -263,11 +313,10 @@ class RunService:
             and updated.sandbox_id is not None
             and self._sandbox_runtime is not None
         ):
-            workload = self._registry.get(run.workload_id).manifest
             with telemetry.span(
                 "sandbox",
                 run=updated,
-                workload=workload,
+                workload=manifest,
                 attributes={
                     "operation": "destroy",
                     "sandbox_id": updated.sandbox_id,
@@ -281,11 +330,22 @@ class RunService:
                 detail=f"destroyed {updated.sandbox_id}",
             )
         if target in _TERMINAL:
-            manifest = self._registry.get(run.workload_id).manifest
             if target is RunState.COMPLETED and run.context is AdmissionContext.PRODUCTION:
                 self._registry.increment_production_runs(run.workload_id)
             self._fanout.notify(updated, manifest)
             self._record_audit(actor, "transition", run_id, detail=target.value)
+            if updated.started_at is not None and updated.finished_at is not None:
+                metrics.get_metrics().record_run_duration(
+                    workload=run.workload_id,
+                    team=manifest.team,
+                    seconds=(updated.finished_at - updated.started_at).total_seconds(),
+                )
+            if target is RunState.FAILED:
+                metrics.get_metrics().record_failure(
+                    workload=run.workload_id,
+                    team=manifest.team,
+                    reason=updated.failure_reason or "unknown",
+                )
         return updated
 
     def _record_audit(
@@ -304,6 +364,7 @@ class RunService:
             self._append_event(run_id, EventType.OPERATOR_ACTION, actor, detail=action.value)
             if not confirmed:
                 return run
+            self._record_intervention_latency(run)
             paused = self.transition(run_id, RunState.PAUSED, actor=actor)
             self._record_audit(actor, action.value, run_id)
             return paused
@@ -312,14 +373,23 @@ class RunService:
                 raise RunNotIntervenableError(run_id, action.value)
             self._executor.resume(run_id)
             self._append_event(run_id, EventType.OPERATOR_ACTION, actor, detail=action.value)
+            self._record_intervention_latency(run)
             resumed = self.transition(run_id, RunState.RUNNING, actor=actor)
             self._record_audit(actor, action.value, run_id)
             return resumed
         self._executor.cancel(run_id)
         self._append_event(run_id, EventType.OPERATOR_ACTION, actor, detail=action.value)
+        self._record_intervention_latency(run)
         cancelled = self.transition(run_id, RunState.CANCELLED, actor=actor)
         self._record_audit(actor, action.value, run_id)
         return cancelled
+
+    def _record_intervention_latency(self, run: Run) -> None:
+        """Record how long the run sat in its last state before an operator acted."""
+        metrics.get_metrics().record_intervention_latency(
+            workload=run.workload_id,
+            seconds=(self._clock() - run.updated_at).total_seconds(),
+        )
 
     def fail(self, run_id: str, *, actor: str, reason: str) -> Run:
         """Move a live run to failed with a recorded reason."""
@@ -376,6 +446,12 @@ class RunService:
             )
             self._store.save_run(updated)
             active.set_attribute("cost_usd", cost)
+            metrics.get_metrics().record_budget_burn(
+                workload=workload.name,
+                team=workload.team,
+                run_id=run_id,
+                cost_usd=updated.cost_usd,
+            )
             if check is not None and not check.allowed:
                 active.set_attribute("outcome", "budget_exceeded")
                 return self.fail(run_id, actor="budget", reason=check.reason or "budget exceeded")

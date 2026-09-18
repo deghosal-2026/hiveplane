@@ -13,6 +13,7 @@ from sqlalchemy import Engine
 from hiveplane.config import get_settings
 from hiveplane.core.manifest import parse_manifest
 from hiveplane.core.workload import AgentWorkload
+from metrics import MetricReader, RecordingMetrics
 from postgres import postgres_engine
 from telemetry import SpanRecorder
 
@@ -90,3 +91,23 @@ def telemetry_spans(monkeypatch: pytest.MonkeyPatch) -> SpanRecorder:
     recorder = SpanRecorder()
     monkeypatch.setattr(telemetry, "get_tracer", lambda: recorder.tracer)
     return recorder
+
+
+@pytest.fixture
+def fleet_metrics(monkeypatch: pytest.MonkeyPatch) -> RecordingMetrics:
+    """Capture HivePlane metric emissions as method calls."""
+    from hiveplane import metrics
+
+    recorder = RecordingMetrics()
+    monkeypatch.setattr(metrics, "_metrics", recorder)
+    return recorder
+
+
+@pytest.fixture
+def metric_reader(monkeypatch: pytest.MonkeyPatch) -> MetricReader:
+    """Route HivePlane metrics through a real OTel meter for assertions."""
+    from hiveplane import metrics
+
+    reader = MetricReader()
+    monkeypatch.setattr(metrics, "_metrics", metrics.OtelFleetMetrics(reader.meter))
+    return reader

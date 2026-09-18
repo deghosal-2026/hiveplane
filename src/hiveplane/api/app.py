@@ -95,10 +95,12 @@ _ERROR_STATUS: tuple[tuple[type[Exception], int], ...] = (
 
 @asynccontextmanager
 async def _lifespan(app: FastAPI) -> AsyncIterator[None]:
-    """Install the OpenTelemetry pipeline and flush spans on shutdown."""
+    """Install the OpenTelemetry pipeline and flush signals on shutdown."""
     provider = telemetry.configure_telemetry(get_settings().otel)
+    meter_provider = telemetry.configure_metrics(get_settings().otel)
     yield
     provider.force_flush()
+    meter_provider.force_flush()
 
 
 def create_app(

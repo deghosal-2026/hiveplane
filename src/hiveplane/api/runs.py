@@ -6,18 +6,21 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 
-from hiveplane.api.deps import get_run_service, get_tool_gateway
+from hiveplane.api.deps import get_approval_service, get_run_service, get_tool_gateway
 from hiveplane.core.event import RunEvent
 from hiveplane.core.run import Run, RunState
 from hiveplane.core.usage import UsageReport
 from hiveplane.execution.models import InterventionAction, RunSubmission
 from hiveplane.execution.service import RunService
+from hiveplane.execution.story import RunStory
 from hiveplane.execution.tools import ToolCallRequest, ToolCallResult, ToolGateway
+from hiveplane.policy.approvals import ApprovalService
 
 router = APIRouter(tags=["runs"])
 
 ServiceDep = Annotated[RunService, Depends(get_run_service)]
 GatewayDep = Annotated[ToolGateway, Depends(get_tool_gateway)]
+ApprovalDep = Annotated[ApprovalService, Depends(get_approval_service)]
 
 
 @router.post("/runs", response_model=Run, status_code=status.HTTP_201_CREATED)
@@ -58,6 +61,12 @@ def list_events(run_id: str, service: ServiceDep) -> list[RunEvent]:
 def list_usage(run_id: str, service: ServiceDep) -> list[UsageReport]:
     """Return a run's usage reports."""
     return service.usage(run_id)
+
+
+@router.get("/runs/{run_id}/story", response_model=RunStory)
+def get_run_story(run_id: str, service: ServiceDep, approvals: ApprovalDep) -> RunStory:
+    """Return a run's execution story, with approvals and its trace link."""
+    return service.story(run_id, approvals=approvals.list(run_id=run_id))
 
 
 @router.post("/runs/{run_id}/pause", response_model=Run)

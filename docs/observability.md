@@ -128,6 +128,27 @@ healthchecks and provisioned datasources and dashboards:
 Point the API at the collector with `HIVEPLANE_OTEL__ENDPOINT=http://localhost:4318`
 (Compose sets this automatically).
 
+### Metrics (M20)
+
+The control plane exports fleet, cost, and certification metrics over OTLP
+(`hiveplane_runs_total`, `hiveplane_run_duration_seconds`,
+`hiveplane_failures_total`, `hiveplane_escalations_total`,
+`hiveplane_intervention_latency_seconds`, `hiveplane_budget_burn_usd`,
+`hiveplane_spend_usd_total`, `hiveplane_budget_exceeded_total`,
+`hiveplane_tool_calls_total`, `hiveplane_policy_decisions_total`,
+`hiveplane_certifications_total`, `hiveplane_certification_duration_seconds`,
+`hiveplane_regressions_caught_total`, `hiveplane_attestation_verifications_total`,
+`hiveplane_model_swap_blocks_total`). The HivePlane Overview dashboard graphs
+them; see the [telemetry design](design/telemetry-design.md#metrics) for the full
+list. Drift metrics are deferred to v0.2.0 with the drift detector.
+
+### Run execution story (M20)
+
+`GET /runs/{run_id}/story` returns a run's execution story — admission, state
+transitions, policy decisions, tool calls, model calls, sandbox events,
+deliveries, and approvals — with the run's `trace_id` linking to the full OTel
+trace. This backs the operator UI's run-detail page.
+
 ## Observability Contract
 
 Each registered workload declares an observability contract (`spec.observability.contract`): which signals it emits, spans it produces, and metrics it exposes. This makes fleet-level comparisons possible. The `standard` contract requires:

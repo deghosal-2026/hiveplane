@@ -1,7 +1,7 @@
 # D8: Telemetry Design
 
-> Status: implemented (M19, #48/#49) — traces and the local stack. Fleet and
-> certification metrics land in M20 (#50/#51).
+> Status: implemented (M19-M20, #48-#51) — traces, fleet/certification metrics,
+> the local stack, and trace-linked run stories. Drift detection remains v0.2.0.
 
 ## Implementation
 
@@ -30,6 +30,41 @@ where available:
 Adapters run entrypoints on background threads; `telemetry.propagate_context`
 copies the active context into the thread so `execution` (and its `tool_call`
 children) nest under the originating request span.
+
+### Metrics
+
+`src/hiveplane/metrics.py` defines the `FleetMetrics` sink (no-op by default).
+The lifespan installs an OTLP/HTTP meter provider pointed at
+`HIVEPLANE_OTEL__ENDPOINT` and the `OtelFleetMetrics` sink, which emits:
+
+| Metric | Type | Emitted by |
+|--------|------|------------|
+| `hiveplane_runs_total` | counter | `RunService.submit` / `transition` |
+| `hiveplane_run_duration_seconds` | histogram | `RunService.transition` (terminal) |
+| `hiveplane_failures_total` | counter | `RunService.transition` (failed) |
+| `hiveplane_escalations_total` | counter | `RunService.submit`, `ToolGateway` |
+| `hiveplane_intervention_latency_seconds` | histogram | `RunService.intervene` |
+| `hiveplane_budget_burn_usd` | gauge | `RunService.record_usage` |
+| `hiveplane_spend_usd_total` | counter | `BudgetService.record_usage` |
+| `hiveplane_budget_exceeded_total` | counter | `BudgetService.record_usage` |
+| `hiveplane_tool_calls_total` | counter | `ToolGateway.invoke` |
+| `hiveplane_policy_decisions_total` | counter | `PolicyEngine.evaluate` |
+| `hiveplane_certifications_total` | counter | `CertificationCoordinator` |
+| `hiveplane_certification_duration_seconds` | histogram | `CertificationCoordinator` |
+| `hiveplane_regressions_caught_total` | counter | `CertificationCoordinator` |
+| `hiveplane_attestation_verifications_total` | counter | `RegistryService` |
+| `hiveplane_model_swap_blocks_total` | counter | `AdmissionPipeline` |
+
+`hiveplane_drift_detections_total` and `hiveplane_false_quarantines_total` are
+deferred to v0.2.0 with the drift detector (per the PRD).
+
+### Trace-Linked Debug Context
+
+`GET /runs/{run_id}/story` returns a `RunStory`: the run's correlation and
+certification context plus an ordered list of `admission`, `state`,
+`policy_decision`, `tool_call`, `model_call`, `sandbox`, `operator_action`,
+`delivery`, and `approval` entries. `Run.trace_id` is captured from the active
+span when the run starts, linking the story to the full OTel trace.
 
 ## Problem
 

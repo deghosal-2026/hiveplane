@@ -484,16 +484,23 @@ def test_app_lifespan_installs_and_flushes_telemetry(
     from hiveplane.api.app import create_app
 
     provider = _FakeProvider()
+    meter_provider = _FakeProvider()
     installed: list[object] = []
 
     def _install(settings: object) -> _FakeProvider:
         installed.append(settings)
         return provider
 
+    def _install_metrics(settings: object) -> _FakeProvider:
+        installed.append(settings)
+        return meter_provider
+
     monkeypatch.setattr(telemetry, "configure_telemetry", _install)
+    monkeypatch.setattr(telemetry, "configure_metrics", _install_metrics)
 
     with TestClient(create_app()) as client:
         assert client.get("/healthz").status_code == 200
 
     assert installed
     assert provider.flushed is True
+    assert meter_provider.flushed is True

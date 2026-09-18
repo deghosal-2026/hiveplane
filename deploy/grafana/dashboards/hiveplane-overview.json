@@ -12,52 +12,133 @@
       "title": "Recent traces",
       "type": "traces",
       "datasource": { "type": "tempo", "uid": "tempo" },
-      "targets": [
-        { "refId": "A", "queryType": "traceql", "query": "{}" }
-      ],
-      "gridPos": { "h": 9, "w": 12, "x": 0, "y": 0 }
+      "targets": [{ "refId": "A", "queryType": "traceql", "query": "{}" }],
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 }
     },
     {
       "id": 2,
-      "title": "Span rate by service",
+      "title": "Runs by state",
+      "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "reqps" }, "overrides": [] },
+      "targets": [
+        { "refId": "A", "expr": "sum by (state) (rate(hiveplane_runs_total[5m]))" }
+      ],
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 }
+    },
+    {
+      "id": 3,
+      "title": "Failures by workload",
+      "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "reqps" }, "overrides": [] },
+      "targets": [
+        { "refId": "A", "expr": "sum by (workload) (rate(hiveplane_failures_total[5m]))" }
+      ],
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 }
+    },
+    {
+      "id": 4,
+      "title": "Escalations by rule",
       "type": "timeseries",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": { "defaults": { "unit": "reqps" }, "overrides": [] },
       "targets": [
         {
           "refId": "A",
-          "expr": "sum by (service_name) (rate(traces_spanmetrics_calls_total[5m]))"
+          "expr": "sum by (policy_rule) (rate(hiveplane_escalations_total[5m]))"
         }
       ],
-      "gridPos": { "h": 9, "w": 12, "x": 12, "y": 0 }
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 }
     },
     {
-      "id": 3,
-      "title": "Span latency p95",
+      "id": 5,
+      "title": "Budget burn by workload",
+      "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "currencyUSD" }, "overrides": [] },
+      "targets": [
+        { "refId": "A", "expr": "sum by (workload) (hiveplane_budget_burn_usd)" }
+      ],
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 }
+    },
+    {
+      "id": 6,
+      "title": "Spend by team (1h)",
+      "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "currencyUSD" }, "overrides": [] },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (team) (increase(hiveplane_spend_usd_total[1h]))"
+        }
+      ],
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 }
+    },
+    {
+      "id": 7,
+      "title": "Intervention latency p95",
       "type": "timeseries",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] },
       "targets": [
         {
           "refId": "A",
-          "expr": "histogram_quantile(0.95, sum by (le, service_name) (rate(traces_spanmetrics_latency_bucket[5m])))"
+          "expr": "histogram_quantile(0.95, sum by (le, workload) (rate(hiveplane_intervention_latency_seconds_bucket[5m])))"
         }
       ],
-      "gridPos": { "h": 9, "w": 12, "x": 0, "y": 9 }
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 24 }
     },
     {
-      "id": 4,
+      "id": 8,
+      "title": "Certification pass rate (certified)",
+      "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "percentunit" }, "overrides": [] },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(rate(hiveplane_certifications_total{status=\"certified\"}[1h])) / clamp_min(sum(rate(hiveplane_certifications_total[1h])), 1)"
+        }
+      ],
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 24 }
+    },
+    {
+      "id": 9,
+      "title": "Attestation verifications",
+      "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "reqps" }, "overrides": [] },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (result) (rate(hiveplane_attestation_verifications_total[5m]))"
+        }
+      ],
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 32 }
+    },
+    {
+      "id": 10,
+      "title": "Model-swap blocks",
+      "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] },
+      "targets": [
+        { "refId": "A", "expr": "sum(rate(hiveplane_model_swap_blocks_total[5m]))" }
+      ],
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 32 }
+    },
+    {
+      "id": 11,
       "title": "Spans received by collector",
       "type": "timeseries",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] },
       "targets": [
-        {
-          "refId": "A",
-          "expr": "sum(rate(otelcol_receiver_accepted_spans[5m]))"
-        }
+        { "refId": "A", "expr": "sum(rate(otelcol_receiver_accepted_spans[5m]))" }
       ],
-      "gridPos": { "h": 9, "w": 12, "x": 12, "y": 9 }
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 40 }
     }
   ]
 }

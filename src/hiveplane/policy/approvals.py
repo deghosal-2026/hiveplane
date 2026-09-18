@@ -67,10 +67,14 @@ class ApprovalService:
         return record
 
     def list(
-        self, *, status: ApprovalStatus | None = None, workload: str | None = None
+        self,
+        *,
+        status: ApprovalStatus | None = None,
+        workload: str | None = None,
+        run_id: str | None = None,
     ) -> list[ApprovalRecord]:
         """List approvals, optionally filtered."""
-        return self._store.list_approvals(status=status, workload=workload)
+        return self._store.list_approvals(status=status, workload=workload, run_id=run_id)
 
     def decide(
         self,

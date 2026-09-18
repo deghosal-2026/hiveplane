@@ -14,7 +14,7 @@ from pathlib import Path
 
 from opentelemetry.util.types import AttributeValue
 
-from hiveplane import telemetry
+from hiveplane import metrics, telemetry
 from hiveplane.certification.corpus import load_corpus
 from hiveplane.certification.diff import regression_diff
 from hiveplane.certification.errors import CertificationNotFoundError, CorpusError
@@ -125,6 +125,18 @@ class CertificationCoordinator:
             ),
         )
         self._store.add(certification_record)
+        status = certification_record.certification.status
+        metrics.get_metrics().record_certification(
+            workload=workload,
+            team=record.team,
+            status=status.value,
+            duration_seconds=(result.finished_at - result.started_at).total_seconds(),
+        )
+        if previous and status in (
+            CertificationStatus.UNCERTIFIED,
+            CertificationStatus.QUARANTINED,
+        ):
+            metrics.get_metrics().record_regression(workload=workload)
         return certification_record
 
     def _resolve_corpus_path(self, reference: str) -> Path:

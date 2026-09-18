@@ -16,7 +16,11 @@ class ApprovalStore(Protocol):
     def get(self, approval_id: str) -> ApprovalRecord | None: ...
 
     def list_approvals(
-        self, *, status: ApprovalStatus | None = None, workload: str | None = None
+        self,
+        *,
+        status: ApprovalStatus | None = None,
+        workload: str | None = None,
+        run_id: str | None = None,
     ) -> list[ApprovalRecord]: ...
 
 
@@ -39,7 +43,11 @@ class InMemoryApprovalStore:
             return record.model_copy(deep=True) if record is not None else None
 
     def list_approvals(
-        self, *, status: ApprovalStatus | None = None, workload: str | None = None
+        self,
+        *,
+        status: ApprovalStatus | None = None,
+        workload: str | None = None,
+        run_id: str | None = None,
     ) -> list[ApprovalRecord]:
         """List approvals, optionally filtered."""
         with self._lock:
@@ -48,5 +56,7 @@ class InMemoryApprovalStore:
             records = [record for record in records if record.status is status]
         if workload is not None:
             records = [record for record in records if record.workload == workload]
+        if run_id is not None:
+            records = [record for record in records if record.run_id == run_id]
         records.sort(key=lambda record: record.requested_at)
         return [record.model_copy(deep=True) for record in records]

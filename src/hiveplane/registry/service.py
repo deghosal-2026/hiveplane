@@ -8,6 +8,7 @@ from typing import Any, Literal, overload
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 
+from hiveplane import metrics
 from hiveplane.certification.models import (
     Attestation,
     CertificationEvent,
@@ -472,13 +473,23 @@ class RegistryService:
         if certification is None or certification.expires_at is None:
             return False
         if certification.expires_at <= self._now():
+            metrics.get_metrics().record_attestation_verification(
+                workload=record.name, result="failed"
+            )
             return False
         if self._attestation_public_key is None or not certification.attestation_id:
             return False
         attestation = self._store.get_attestation(certification.attestation_id)
         if attestation is None or attestation.workload_id != record.name:
+            metrics.get_metrics().record_attestation_verification(
+                workload=record.name, result="failed"
+            )
             return False
-        return verify_attestation(attestation, self._attestation_public_key)
+        verified = verify_attestation(attestation, self._attestation_public_key)
+        metrics.get_metrics().record_attestation_verification(
+            workload=record.name, result="verified" if verified else "failed"
+        )
+        return verified
 
     # ------------------------------------------------------------------ #
     # Attestations
@@ -498,7 +509,13 @@ class RegistryService:
         if self._attestation_public_key is None or not verify_attestation(
             attestation, self._attestation_public_key
         ):
+            metrics.get_metrics().record_attestation_verification(
+                workload=attestation.workload_id, result="failed"
+            )
             raise AttestationVerificationError(attestation_id)
+        metrics.get_metrics().record_attestation_verification(
+            workload=attestation.workload_id, result="verified"
+        )
         return attestation
 
     def list_attestations(self, name: str) -> list[Attestation]:

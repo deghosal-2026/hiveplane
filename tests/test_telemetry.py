@@ -8,6 +8,7 @@ from datetime import UTC, datetime
 import pytest
 from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
 
+from hiveplane import telemetry as telemetry_module
 from hiveplane.config import OtelSettings
 from hiveplane.core.run import AdmissionContext, Run, RunState
 from hiveplane.core.workload import AgentWorkload
@@ -178,3 +179,48 @@ def test_configure_telemetry_builds_otlp_exporter(
     finally:
         provider.shutdown()
         monkeypatch.setattr(telemetry, "_provider", None)
+
+
+def test_build_meter_provider_uses_service_name() -> None:
+    from opentelemetry.sdk.metrics.export import InMemoryMetricReader
+
+    reader = InMemoryMetricReader()
+    provider = telemetry_module.build_meter_provider(
+        OtelSettings(service_name="hp-test"), reader=reader
+    )
+    try:
+        assert provider.get_meter("hiveplane") is not None
+    finally:
+        provider.shutdown()
+
+
+def test_configure_metrics_installs_sink_once(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from opentelemetry.sdk.metrics.export import InMemoryMetricReader
+
+    from hiveplane import metrics
+
+    monkeypatch.setattr(telemetry_module, "_meter_provider", None)
+    monkeypatch.setattr(metrics, "_metrics", metrics.NullFleetMetrics())
+    first = telemetry_module.configure_metrics(
+        OtelSettings(), reader=InMemoryMetricReader()
+    )
+    second = telemetry_module.configure_metrics(
+        OtelSettings(), reader=InMemoryMetricReader()
+    )
+
+    assert first is second
+    assert isinstance(metrics.get_metrics(), metrics.OtelFleetMetrics)
+
+
+def test_current_trace_id_is_none_without_a_span(telemetry_spans: SpanRecorder) -> None:
+    assert telemetry_module.current_trace_id() is None
+
+
+def test_current_trace_id_within_a_span(telemetry_spans: SpanRecorder) -> None:
+    with span("request"):
+        trace_id = telemetry_module.current_trace_id()
+
+    assert trace_id is not None
+    assert len(trace_id) == 32

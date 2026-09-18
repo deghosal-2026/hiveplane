@@ -12,10 +12,15 @@ from collections.abc import Callable, Iterator, Mapping
 from contextlib import contextmanager
 from contextvars import copy_context
 
+from opentelemetry import metrics as otel_metrics
 from opentelemetry import trace
 from opentelemetry.context import Context
+from opentelemetry.exporter.otlp.proto.http.metric_exporter import OTLPMetricExporter
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
+from opentelemetry.metrics import Meter
 from opentelemetry.propagate import extract
+from opentelemetry.sdk.metrics import MeterProvider
+from opentelemetry.sdk.metrics.export import MetricReader, PeriodicExportingMetricReader
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor, SpanExporter
@@ -24,6 +29,7 @@ from opentelemetry.trace import Span, SpanKind, Tracer
 from opentelemetry.util.types import AttributeValue
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
+from hiveplane import metrics as hive_metrics
 from hiveplane.config import OtelSettings
 from hiveplane.core.run import Run
 from hiveplane.core.workload import AgentWorkload
@@ -39,11 +45,25 @@ CERTIFICATION_STATUS = "certification_status"
 MODEL_IDENTITY = "model_identity"
 
 _provider: TracerProvider | None = None
+_meter_provider: MeterProvider | None = None
 
 
 def get_tracer() -> Tracer:
     """Return the HivePlane tracer from the active (or no-op) provider."""
     return trace.get_tracer(TRACER_NAME)
+
+
+def get_meter() -> Meter:
+    """Return the HivePlane meter from the active (or no-op) provider."""
+    return otel_metrics.get_meter(TRACER_NAME)
+
+
+def current_trace_id() -> str | None:
+    """Return the active trace id as 32-hex, or None when no span is recording."""
+    span_context = trace.get_current_span().get_span_context()
+    if not span_context.is_valid:
+        return None
+    return format(span_context.trace_id, "032x")
 
 
 def run_attributes(
@@ -160,3 +180,28 @@ def configure_telemetry(
 def _build_exporter(settings: OtelSettings) -> SpanExporter:
     """Build the OTLP/HTTP trace exporter for the configured endpoint."""
     return OTLPSpanExporter(endpoint=f"{settings.endpoint.rstrip('/')}/v1/traces")
+
+
+def build_meter_provider(
+    settings: OtelSettings, *, reader: MetricReader | None = None
+) -> MeterProvider:
+    """Build a meter provider for the configured service."""
+    resource = Resource.create({"service.name": settings.service_name})
+    metric_reader = reader or PeriodicExportingMetricReader(
+        OTLPMetricExporter(endpoint=f"{settings.endpoint.rstrip('/')}/v1/metrics")
+    )
+    return MeterProvider(resource=resource, metric_readers=[metric_reader])
+
+
+def configure_metrics(
+    settings: OtelSettings, *, reader: MetricReader | None = None
+) -> MeterProvider:
+    """Install the process-wide meter provider and metrics sink, once."""
+    global _meter_provider
+    if _meter_provider is not None:
+        return _meter_provider
+    provider = build_meter_provider(settings, reader=reader)
+    otel_metrics.set_meter_provider(provider)
+    hive_metrics.set_metrics(hive_metrics.OtelFleetMetrics(get_meter()))
+    _meter_provider = provider
+    return provider

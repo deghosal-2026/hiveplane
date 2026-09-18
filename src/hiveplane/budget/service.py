@@ -5,8 +5,8 @@ from __future__ import annotations
 from collections.abc import Callable
 from datetime import UTC, datetime
 
+from hiveplane import metrics
 from hiveplane.budget.errors import MissingModelIdentityError
-from hiveplane.budget.metrics import BudgetMetrics, NullBudgetMetrics
 from hiveplane.budget.models import BudgetSnapshot, CostAttribution
 from hiveplane.budget.pricing import CostTable
 from hiveplane.budget.store import BudgetStore
@@ -23,12 +23,10 @@ class BudgetService:
         store: BudgetStore,
         pricing: CostTable,
         *,
-        metrics: BudgetMetrics | None = None,
         clock: Callable[[], datetime] | None = None,
     ) -> None:
         self._store = store
         self._pricing = pricing
-        self._metrics = metrics or NullBudgetMetrics()
         self._clock = clock or (lambda: datetime.now(UTC))
 
     def _today(self) -> str:
@@ -71,10 +69,11 @@ class BudgetService:
 
     def record_usage(self, workload: AgentWorkload, report: UsageReport) -> BudgetOutcome:
         """Price a usage event, accumulate spend, and return the run check."""
-        if report.model_identity is None:
+        model_identity = report.model_identity
+        if model_identity is None:
             raise MissingModelIdentityError()
         cost = self._pricing.price(
-            report.model_identity, report.input_tokens, report.output_tokens
+            model_identity, report.input_tokens, report.output_tokens
         )
         day = self._today()
         self._store.add_run_spend(report.run_id, cost)
@@ -86,7 +85,7 @@ class BudgetService:
                 run_id=report.run_id,
                 workload=workload.name,
                 team=workload.team,
-                model_identity=report.model_identity,
+                model_identity=model_identity,
                 input_tokens=report.input_tokens,
                 output_tokens=report.output_tokens,
                 tool_calls=report.tool_calls,
@@ -94,18 +93,27 @@ class BudgetService:
                 timestamp=report.timestamp,
             )
         )
-        self._metrics.record_spend(cost, workload.name, workload.team)
+        metrics.get_metrics().record_spend(
+            workload=workload.name,
+            team=workload.team,
+            model=model_identity,
+            cost_usd=cost,
+        )
 
         budget = workload.spec.budget
         run_spent = self._store.run_spend(report.run_id)
         if run_spent > budget.per_run_usd:
-            self._metrics.record_exceeded(BudgetLevel.RUN, workload.name)
+            metrics.get_metrics().record_budget_exceeded(
+                workload=workload.name, team=workload.team, level=BudgetLevel.RUN.value
+            )
             return BudgetOutcome(
                 check=self._exceeded(BudgetLevel.RUN, budget.per_run_usd), cost_usd=cost
             )
         day_spent = self._store.day_spend(workload.name, day)
         if day_spent > budget.per_day_usd:
-            self._metrics.record_exceeded(BudgetLevel.DAY, workload.name)
+            metrics.get_metrics().record_budget_exceeded(
+                workload=workload.name, team=workload.team, level=BudgetLevel.DAY.value
+            )
             return BudgetOutcome(
                 check=self._exceeded(BudgetLevel.DAY, budget.per_day_usd), cost_usd=cost
             )
@@ -113,7 +121,9 @@ class BudgetService:
         if team_limit is not None and workload.team is not None:
             team_spent = self._store.team_spend(workload.team, day)
             if team_spent > team_limit:
-                self._metrics.record_exceeded(BudgetLevel.TEAM, workload.name)
+                metrics.get_metrics().record_budget_exceeded(
+                    workload=workload.name, team=workload.team, level=BudgetLevel.TEAM.value
+                )
                 return BudgetOutcome(
                     check=self._exceeded(BudgetLevel.TEAM, team_limit), cost_usd=cost
                 )

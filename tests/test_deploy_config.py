@@ -64,3 +64,30 @@ def test_overview_dashboard_is_provisionable() -> None:
 
     assert dashboard["title"]
     assert len(dashboard["panels"]) >= 2
+
+
+def test_overview_dashboard_covers_fleet_and_certification_metrics() -> None:
+    dashboard = json.loads(
+        (_ROOT / "deploy/grafana/dashboards/hiveplane-overview.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    expressions = " ".join(
+        target["expr"]
+        for panel in dashboard["panels"]
+        for target in panel.get("targets", [])
+        if "expr" in target
+    )
+
+    for metric in (
+        "hiveplane_runs_total",
+        "hiveplane_failures_total",
+        "hiveplane_escalations_total",
+        "hiveplane_budget_burn_usd",
+        "hiveplane_spend_usd_total",
+        "hiveplane_intervention_latency_seconds_bucket",
+        "hiveplane_certifications_total",
+        "hiveplane_attestation_verifications_total",
+        "hiveplane_model_swap_blocks_total",
+    ):
+        assert metric in expressions, f"{metric} missing from dashboard"
