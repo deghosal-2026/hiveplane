@@ -11,6 +11,10 @@ scrape_configs:
     static_configs:
       - targets: ["otel-collector:8889"]
 
+  - job_name: otel-collector-internal
+    static_configs:
+      - targets: ["otel-collector:8888"]
+
   - job_name: tempo
     static_configs:
       - targets: ["tempo:3200"]

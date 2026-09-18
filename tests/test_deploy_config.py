@@ -32,13 +32,15 @@ def test_collector_exports_traces_to_tempo_and_metrics_to_prometheus() -> None:
     assert "otlp/tempo" in pipelines["traces"]["exporters"]
     assert "prometheus" in pipelines["metrics"]["exporters"]
     assert "health_check" in collector["service"]["extensions"]
+    telemetry = collector["service"]["telemetry"]
+    assert telemetry["metrics"]["address"].endswith(":8888")
 
 
 def test_prometheus_scrapes_the_collector_and_tempo() -> None:
     prometheus = _load("deploy/prometheus/prometheus.yml")
     jobs = {job["job_name"] for job in prometheus["scrape_configs"]}
 
-    assert {"otel-collector", "tempo"} <= jobs
+    assert {"otel-collector", "otel-collector-internal", "tempo"} <= jobs
 
 
 def test_grafana_provisions_dashboards_from_compose() -> None:
