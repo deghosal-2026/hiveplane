@@ -13,6 +13,7 @@ from contextlib import suppress
 from datetime import UTC, datetime
 from typing import Any, cast
 
+from hiveplane import telemetry
 from hiveplane.adapters.errors import (
     EntrypointLoadError,
     MissingAdapterDependencyError,
@@ -114,7 +115,11 @@ class LangGraphAdapter:
             self._sessions[context.run.id] = (context, ctx, control)
             self._usage[context.run.id] = None
             self._interrupted[context.run.id] = False
-        self._spawner(lambda: self._drive(graph, context, ctx, dict(context.run.task)))
+        self._spawner(
+            telemetry.propagate_context(
+                lambda: self._drive(graph, context, ctx, dict(context.run.task))
+            )
+        )
 
     def pause(self, run_id: str) -> bool:
         """Request a cooperative pause between supersteps."""
@@ -136,7 +141,9 @@ class LangGraphAdapter:
             with self._lock:
                 self._interrupted[run_id] = False
                 self._states[run_id] = RunState.RUNNING
-            self._spawner(lambda: self._drive(graph, context, ctx, command))
+            self._spawner(
+                telemetry.propagate_context(lambda: self._drive(graph, context, ctx, command))
+            )
         else:
             control.resume()
         return True
@@ -176,34 +183,42 @@ class LangGraphAdapter:
     ) -> None:
         run = context.run
         config = _configurable(run.id, ctx)
-        try:
-            for chunk in graph.stream(payload, config, stream_mode="values"):
-                if _INTERRUPT_KEY in chunk:
-                    self._paused(run.id)
-                    return
-                ctx.checkpoint()
-        except RunCancelledError:
-            return
-        except ToolCallEscalatedError:
-            self._reporter.record_event(
-                run.id, EventType.OPERATOR_ACTION, "adapter", detail="tool call escalated"
+        with telemetry.span("execution", run=run, workload=context.workload) as active:
+            try:
+                for chunk in graph.stream(payload, config, stream_mode="values"):
+                    if _INTERRUPT_KEY in chunk:
+                        active.set_attribute("outcome", "paused")
+                        self._paused(run.id)
+                        return
+                    ctx.checkpoint()
+            except RunCancelledError:
+                active.set_attribute("outcome", "cancelled")
+                return
+            except ToolCallEscalatedError:
+                active.set_attribute("outcome", "escalated")
+                self._reporter.record_event(
+                    run.id, EventType.OPERATOR_ACTION, "adapter", detail="tool call escalated"
+                )
+                return
+            except WorkerError as exc:
+                active.set_attribute("outcome", "failed")
+                self._fail(run.id, str(exc))
+                return
+            except Exception as exc:
+                active.set_attribute("outcome", "failed")
+                self._fail(run.id, f"{type(exc).__name__}: {exc}")
+                return
+            snapshot = graph.get_state(config)
+            if snapshot.next:
+                active.set_attribute("outcome", "paused")
+                self._paused(run.id)
+                return
+            active.set_attribute("outcome", "completed")
+            with self._lock:
+                self._states[run.id] = RunState.COMPLETED
+            self._reporter.transition(
+                run.id, RunState.COMPLETED, actor="adapter", result=snapshot.values
             )
-            return
-        except WorkerError as exc:
-            self._fail(run.id, str(exc))
-            return
-        except Exception as exc:
-            self._fail(run.id, f"{type(exc).__name__}: {exc}")
-            return
-        snapshot = graph.get_state(config)
-        if snapshot.next:
-            self._paused(run.id)
-            return
-        with self._lock:
-            self._states[run.id] = RunState.COMPLETED
-        self._reporter.transition(
-            run.id, RunState.COMPLETED, actor="adapter", result=snapshot.values
-        )
 
     def _paused(self, run_id: str) -> None:
         with self._lock:

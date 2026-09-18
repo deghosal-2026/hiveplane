@@ -10,8 +10,8 @@ Correlate traces, metrics, logs, and audit events by run; expose fleet, certific
 
 **Issues:** [#48](https://github.com/deghosal-2026/hiveplane/issues/48) · [#49](https://github.com/deghosal-2026/hiveplane/issues/49)
 
-- [ ] [#48](https://github.com/deghosal-2026/hiveplane/issues/48) — Instrument API and adapters with OpenTelemetry
-- [ ] [#49](https://github.com/deghosal-2026/hiveplane/issues/49) — OTel Collector wiring (Tempo + Prometheus)
+- [x] [#48](https://github.com/deghosal-2026/hiveplane/issues/48) — Instrument API and adapters with OpenTelemetry
+- [x] [#49](https://github.com/deghosal-2026/hiveplane/issues/49) — OTel Collector wiring (Tempo + Prometheus)
 
 **Done when:** one run produces a complete trace linked from API call to adapter execution; traces appear in Tempo and metrics in Prometheus/Grafana with no manual setup.
 

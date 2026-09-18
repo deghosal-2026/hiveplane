@@ -12,6 +12,9 @@ from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
 
+from opentelemetry.util.types import AttributeValue
+
+from hiveplane import telemetry
 from hiveplane.certification.corpus import load_corpus
 from hiveplane.certification.diff import regression_diff
 from hiveplane.certification.errors import CertificationNotFoundError, CorpusError
@@ -27,6 +30,7 @@ from hiveplane.certification.service import CertificationService
 from hiveplane.certification.store import CertificationStore
 from hiveplane.core.spec import canonical_model_identity
 from hiveplane.core.workload import AgentWorkload
+from hiveplane.registry.models import WorkloadRecord
 from hiveplane.registry.service import RegistryService
 
 
@@ -68,6 +72,33 @@ class CertificationCoordinator:
     ) -> CertificationRecord:
         """Run the workload's corpus, certify it, and store the record."""
         record = self._registry.get(workload)
+        attributes: dict[str, AttributeValue] = {
+            "workload": workload,
+            "target_context": target_context.value,
+        }
+        if record.team is not None:
+            attributes["team"] = record.team
+        with telemetry.span("certification", attributes=attributes) as active:
+            certification_record = self._run_certification(
+                record, workload, target_context=target_context, corpus_ref=corpus_ref
+            )
+            active.set_attribute(
+                "attestation_id", certification_record.attestation.attestation_id
+            )
+            active.set_attribute(
+                "benchmark_run_id", certification_record.benchmark_result.benchmark_run_id
+            )
+            return certification_record
+
+    def _run_certification(
+        self,
+        record: WorkloadRecord,
+        workload: str,
+        *,
+        target_context: TargetContext,
+        corpus_ref: str | None,
+    ) -> CertificationRecord:
+        """Execute the benchmark and persist the resulting certification record."""
         certification = record.manifest.spec.certification
         reference = corpus_ref or (
             certification.benchmark_corpus if certification is not None else None

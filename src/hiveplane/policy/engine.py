@@ -5,6 +5,9 @@ from __future__ import annotations
 from collections.abc import Callable
 from datetime import UTC, datetime
 
+from opentelemetry.util.types import AttributeValue
+
+from hiveplane import telemetry
 from hiveplane.certification.models import CertificationStatus
 from hiveplane.core.decision import (
     ActionClass,
@@ -46,6 +49,23 @@ def compute_blast_radius(context: PolicyContext) -> BlastRadius:
     return BlastRadius(score=min(100, sum(factors.values())), factors=factors)
 
 
+def _policy_attributes(context: PolicyContext) -> dict[str, AttributeValue]:
+    """Build the correlation attributes for a policy-decision span."""
+    attributes: dict[str, AttributeValue] = {
+        telemetry.RUN_ID: context.run_id,
+        telemetry.WORKLOAD: context.workload,
+        "environment": context.environment.value,
+        telemetry.CERTIFICATION_STATUS: context.certification_status.value,
+    }
+    if context.team is not None:
+        attributes[telemetry.TEAM] = context.team
+    if context.tool_id is not None:
+        attributes["tool_id"] = context.tool_id
+    if context.action_class is not None:
+        attributes["action_class"] = context.action_class.value
+    return attributes
+
+
 class PolicyEngine:
     """Evaluates policy for a run or tool call, with explainable decisions."""
 
@@ -56,6 +76,16 @@ class PolicyEngine:
         self._clock = clock or (lambda: datetime.now(UTC))
 
     def evaluate(self, context: PolicyContext) -> PolicyDecision:
+        """Return the policy decision for a context, as a ``policy_decision`` span."""
+        with telemetry.span(
+            "policy_decision", attributes=_policy_attributes(context)
+        ) as active:
+            decision = self._evaluate(context)
+            active.set_attribute("decision", decision.outcome.value)
+            active.set_attribute("rule", decision.rule)
+            return decision
+
+    def _evaluate(self, context: PolicyContext) -> PolicyDecision:
         """Return the policy decision for a context."""
         blast = compute_blast_radius(context)
         if context.certification_status is CertificationStatus.QUARANTINED:

@@ -6,6 +6,7 @@ from collections.abc import Callable
 from datetime import UTC, datetime
 from uuid import uuid4
 
+from hiveplane import telemetry
 from hiveplane.core.approval import ApprovalRecord, ApprovalStatus
 from hiveplane.core.decision import ActionClass
 from hiveplane.policy.errors import ApprovalAlreadyDecidedError, ApprovalNotFoundError
@@ -36,17 +37,27 @@ class ApprovalService:
         action_class: ActionClass | None = None,
     ) -> ApprovalRecord:
         """Create a pending approval request for a run."""
-        record = ApprovalRecord(
-            approval_id=self._id_factory(),
-            run_id=run_id,
-            workload=workload,
-            rule=rule,
-            reason=reason,
-            action_class=action_class,
-            requested_at=self._clock(),
-        )
-        self._store.save(record)
-        return record
+        with telemetry.span(
+            "approval",
+            attributes={
+                "run_id": run_id,
+                "workload": workload,
+                "rule": rule,
+                "operation": "request",
+            },
+        ) as active:
+            record = ApprovalRecord(
+                approval_id=self._id_factory(),
+                run_id=run_id,
+                workload=workload,
+                rule=rule,
+                reason=reason,
+                action_class=action_class,
+                requested_at=self._clock(),
+            )
+            self._store.save(record)
+            active.set_attribute("approval_id", record.approval_id)
+            return record
 
     def get(self, approval_id: str) -> ApprovalRecord:
         """Return an approval by id."""
@@ -73,15 +84,27 @@ class ApprovalService:
         if status is ApprovalStatus.PENDING:
             raise ValueError("decision status must be approved or denied")
         record = self.get(approval_id)
-        if record.status is not ApprovalStatus.PENDING:
-            raise ApprovalAlreadyDecidedError(approval_id)
-        decided = record.model_copy(
-            update={
-                "status": status,
-                "decided_at": self._clock(),
-                "decided_by": operator,
-                "decision_reason": reason,
-            }
-        )
-        self._store.save(decided)
-        return decided
+        with telemetry.span(
+            "approval",
+            attributes={
+                "run_id": record.run_id,
+                "workload": record.workload,
+                "rule": record.rule,
+                "operation": "decision",
+            },
+        ) as active:
+            if record.status is not ApprovalStatus.PENDING:
+                raise ApprovalAlreadyDecidedError(approval_id)
+            decided = record.model_copy(
+                update={
+                    "status": status,
+                    "decided_at": self._clock(),
+                    "decided_by": operator,
+                    "decision_reason": reason,
+                }
+            )
+            self._store.save(decided)
+            active.set_attribute("approval_id", decided.approval_id)
+            active.set_attribute("status", status.value)
+            active.set_attribute("operator", operator)
+            return decided

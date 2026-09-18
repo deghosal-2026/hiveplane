@@ -7,6 +7,7 @@ from collections.abc import Callable
 from contextlib import suppress
 from datetime import UTC, datetime
 
+from hiveplane import telemetry
 from hiveplane.adapters.errors import (
     RunCancelledError,
     ToolCallEscalatedError,
@@ -72,7 +73,9 @@ class RawWorkerAdapter:
             self._controls[context.run.id] = control
             self._tool_calls[context.run.id] = []
             self._usage[context.run.id] = None
-        self._spawner(lambda: self._execute(entry, context, control))
+        self._spawner(
+            telemetry.propagate_context(lambda: self._execute(entry, context, control))
+        )
 
     def pause(self, run_id: str) -> bool:
         """Request a cooperative pause."""
@@ -128,24 +131,30 @@ class RawWorkerAdapter:
             tool_calls=tool_calls,
             clock=self._clock,
         )
-        try:
-            result = entry(ctx.task, ctx)
-        except RunCancelledError:
-            return
-        except ToolCallEscalatedError:
-            self._reporter.record_event(
-                run.id, EventType.OPERATOR_ACTION, "adapter", detail="tool call escalated"
-            )
-            return
-        except WorkerError as exc:
-            self._fail(run.id, str(exc))
-            return
-        except Exception as exc:
-            self._fail(run.id, f"{type(exc).__name__}: {exc}")
-            return
-        self._reporter.transition(run.id, RunState.COMPLETED, actor="adapter", result=result)
-        with self._lock:
-            self._states[run.id] = RunState.COMPLETED
+        with telemetry.span("execution", run=run, workload=context.workload) as active:
+            try:
+                result = entry(ctx.task, ctx)
+            except RunCancelledError:
+                active.set_attribute("outcome", "cancelled")
+                return
+            except ToolCallEscalatedError:
+                active.set_attribute("outcome", "escalated")
+                self._reporter.record_event(
+                    run.id, EventType.OPERATOR_ACTION, "adapter", detail="tool call escalated"
+                )
+                return
+            except WorkerError as exc:
+                active.set_attribute("outcome", "failed")
+                self._fail(run.id, str(exc))
+                return
+            except Exception as exc:
+                active.set_attribute("outcome", "failed")
+                self._fail(run.id, f"{type(exc).__name__}: {exc}")
+                return
+            active.set_attribute("outcome", "completed")
+            self._reporter.transition(run.id, RunState.COMPLETED, actor="adapter", result=result)
+            with self._lock:
+                self._states[run.id] = RunState.COMPLETED
 
     def _fail(self, run_id: str, reason: str) -> None:
         with suppress(IllegalTransitionError):

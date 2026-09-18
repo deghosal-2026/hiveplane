@@ -6,8 +6,10 @@ from collections.abc import Callable
 from datetime import UTC, datetime
 from uuid import uuid4
 
+from opentelemetry.util.types import AttributeValue
 from pydantic import JsonValue
 
+from hiveplane import telemetry
 from hiveplane.core.event import EventType, RunEvent
 from hiveplane.core.run import AdmissionContext, Run, RunState, can_transition
 from hiveplane.core.usage import UsageReport
@@ -223,11 +225,18 @@ class RunService:
         if target is RunState.RUNNING and run.state is RunState.QUEUED:
             manifest = self._registry.get(run.workload_id).manifest
             if updated.sandbox and self._sandbox_runtime is not None:
-                instance = self._sandbox_runtime.provision(
-                    run_id=run_id,
-                    workload=run.workload_id,
-                    spec=manifest.spec.sandbox,
-                )
+                with telemetry.span(
+                    "sandbox",
+                    run=updated,
+                    workload=manifest,
+                    attributes={"operation": "provision"},
+                ) as active:
+                    instance = self._sandbox_runtime.provision(
+                        run_id=run_id,
+                        workload=run.workload_id,
+                        spec=manifest.spec.sandbox,
+                    )
+                    active.set_attribute("sandbox_id", instance.sandbox_id)
                 updated = updated.model_copy(update={"sandbox_id": instance.sandbox_id})
         self._store.save_run(updated)
         self._append_event(
@@ -254,7 +263,17 @@ class RunService:
             and updated.sandbox_id is not None
             and self._sandbox_runtime is not None
         ):
-            self._sandbox_runtime.destroy(updated.sandbox_id)
+            workload = self._registry.get(run.workload_id).manifest
+            with telemetry.span(
+                "sandbox",
+                run=updated,
+                workload=workload,
+                attributes={
+                    "operation": "destroy",
+                    "sandbox_id": updated.sandbox_id,
+                },
+            ):
+                self._sandbox_runtime.destroy(updated.sandbox_id)
             self._append_event(
                 run_id,
                 EventType.SANDBOX,
@@ -319,31 +338,46 @@ class RunService:
         unpriceable report cannot leave partial state behind.
         """
         run = self._require(run_id)
-        if run.state in _TERMINAL:
-            self._append_event(
-                run_id,
-                EventType.USAGE,
-                "adapter",
-                detail=f"late usage ignored (state={run.state.value})",
-            )
-            return run
         workload = self._registry.get(run.workload_id).manifest
-        if report.model_identity is None and run.model_identity is not None:
-            report = report.model_copy(update={"model_identity": run.model_identity})
-        cost = report.cost_usd
-        check = None
-        if self._budget is not None:
-            outcome = self._budget.record_usage(workload, report)
-            cost = outcome.cost_usd
-            check = outcome.check
-        if cost != report.cost_usd:
-            report = report.model_copy(update={"cost_usd": cost})
-        self._store.add_usage(report)
-        self._append_event(run_id, EventType.USAGE, "adapter", detail=str(cost))
-        updated = run.model_copy(
-            update={"cost_usd": run.cost_usd + cost, "updated_at": self._clock()}
-        )
-        self._store.save_run(updated)
-        if check is not None and not check.allowed:
-            return self.fail(run_id, actor="budget", reason=check.reason or "budget exceeded")
-        return updated
+        attributes: dict[str, AttributeValue] = {
+            telemetry.MODEL_IDENTITY: run.model_identity
+            or report.model_identity
+            or "unspecified",
+            "input_tokens": report.input_tokens,
+            "output_tokens": report.output_tokens,
+            "cost_usd": report.cost_usd,
+        }
+        with telemetry.span(
+            "model_call", run=run, workload=workload, attributes=attributes
+        ) as active:
+            if run.state in _TERMINAL:
+                self._append_event(
+                    run_id,
+                    EventType.USAGE,
+                    "adapter",
+                    detail=f"late usage ignored (state={run.state.value})",
+                )
+                active.set_attribute("outcome", "ignored")
+                return run
+            if report.model_identity is None and run.model_identity is not None:
+                report = report.model_copy(update={"model_identity": run.model_identity})
+            cost = report.cost_usd
+            check = None
+            if self._budget is not None:
+                outcome = self._budget.record_usage(workload, report)
+                cost = outcome.cost_usd
+                check = outcome.check
+            if cost != report.cost_usd:
+                report = report.model_copy(update={"cost_usd": cost})
+            self._store.add_usage(report)
+            self._append_event(run_id, EventType.USAGE, "adapter", detail=str(cost))
+            updated = run.model_copy(
+                update={"cost_usd": run.cost_usd + cost, "updated_at": self._clock()}
+            )
+            self._store.save_run(updated)
+            active.set_attribute("cost_usd", cost)
+            if check is not None and not check.allowed:
+                active.set_attribute("outcome", "budget_exceeded")
+                return self.fail(run_id, actor="budget", reason=check.reason or "budget exceeded")
+            active.set_attribute("outcome", "recorded")
+            return updated

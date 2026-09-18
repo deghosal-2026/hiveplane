@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from datetime import UTC, datetime
 
+from hiveplane import telemetry
 from hiveplane.core.decision import DecisionOutcome, PolicyContext
 from hiveplane.core.run import AdmissionContext, Run
 from hiveplane.core.workload import AgentWorkload
@@ -32,6 +33,13 @@ class AdmissionPipeline:
 
     def check(self, run: Run, workload: AgentWorkload) -> AdmissionResult:
         """Return the admission decision for a run against its workload."""
+        with telemetry.span("admission", run=run, workload=workload) as active:
+            result = self._check(run, workload)
+            active.set_attribute("outcome", result.outcome.value)
+            return result
+
+    def _check(self, run: Run, workload: AgentWorkload) -> AdmissionResult:
+        """Evaluate every admission gate for a run."""
         context = run.context
         if context is None:
             raise ValueError("run.context is required for admission")

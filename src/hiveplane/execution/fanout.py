@@ -10,6 +10,7 @@ from typing import Any, Protocol
 
 from pydantic import JsonValue
 
+from hiveplane import telemetry
 from hiveplane.core.fanout import FanOutDestination, FanOutType
 from hiveplane.core.run import Run, RunState
 from hiveplane.core.workload import AgentWorkload
@@ -113,7 +114,7 @@ class FanOutService:
         message = _message(run, workload)
         records: list[DeliveryRecord] = []
         for destination in _destinations(run, workload):
-            records.append(self._deliver(run, destination, message))
+            records.append(self._deliver(run, workload, destination, message))
         return records
 
     def notify_escalation(self, run: Run, workload: AgentWorkload) -> list[DeliveryRecord]:
@@ -123,10 +124,31 @@ class FanOutService:
         message = _message(run, workload)
         records: list[DeliveryRecord] = []
         for destination in workload.spec.fan_out.on_escalation:
-            records.append(self._deliver(run, destination, message))
+            records.append(self._deliver(run, workload, destination, message))
         return records
 
     def _deliver(
+        self,
+        run: Run,
+        workload: AgentWorkload,
+        destination: FanOutDestination,
+        message: dict[str, JsonValue],
+    ) -> DeliveryRecord:
+        with telemetry.span(
+            "fan_out",
+            run=run,
+            workload=workload,
+            attributes={
+                "destination_type": destination.type.value,
+                "target": _target(destination),
+            },
+        ) as active:
+            record = self._attempt(run, destination, message)
+            active.set_attribute("status", record.status.value)
+            active.set_attribute("attempts", record.attempts)
+            return record
+
+    def _attempt(
         self,
         run: Run,
         destination: FanOutDestination,

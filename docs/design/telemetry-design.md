@@ -1,6 +1,35 @@
 # D8: Telemetry Design
 
-> Status: draft
+> Status: implemented (M19, #48/#49) — traces and the local stack. Fleet and
+> certification metrics land in M20 (#50/#51).
+
+## Implementation
+
+`src/hiveplane/telemetry.py` owns the process-wide tracer provider and the span
+vocabulary. The FastAPI lifespan installs an OTLP/HTTP exporter pointed at
+`HIVEPLANE_OTEL__ENDPOINT` (the collector, `:4318`), and an ASGI middleware wraps
+every HTTP request in a `METHOD path` server span, extracting `traceparent` so
+distributed traces link.
+
+Spans emitted on the live path, each carrying `run_id`, `workload`, and `team`
+where available:
+
+| Span | Emitted by |
+|------|------------|
+| `METHOD path` (server) | `telemetry.TelemetryMiddleware` |
+| `admission` | `AdmissionPipeline.check` |
+| `execution` | `RawWorkerAdapter._execute` / `LangGraphAdapter._drive` |
+| `sandbox` | `RunService.transition` (provision/destroy) |
+| `tool_call` | `ToolGateway.invoke` |
+| `policy_decision` | `PolicyEngine.evaluate` |
+| `model_call` | `RunService.record_usage` |
+| `approval` | `ApprovalService.request` / `decide` |
+| `fan_out` | `FanOutService._deliver` |
+| `certification` | `CertificationCoordinator.certify` |
+
+Adapters run entrypoints on background threads; `telemetry.propagate_context`
+copies the active context into the thread so `execution` (and its `tool_call`
+children) nest under the originating request span.
 
 ## Problem
 

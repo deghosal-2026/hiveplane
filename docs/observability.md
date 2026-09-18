@@ -106,6 +106,28 @@ Cost showback is not an after-the-fact dashboard — it's computed from real-tim
 
 The reference stack uses the OpenTelemetry Collector, with Tempo for traces and Prometheus/Grafana for metrics. Logs are structured JSON, correlated by `run_id` and `workload_name`. Audit events are written to a tamper-evident append-only log in PostgreSQL.
 
+The control plane is instrumented with OpenTelemetry (M19). Every HTTP request
+opens a server span, and the run path emits `admission`, `execution`, `sandbox`,
+`tool_call`, `policy_decision`, `model_call`, `approval`, `fan_out`, and
+`certification` spans. Each carries `run_id`, `workload`, and `team`, so a run's
+execution story is one trace from the API call to adapter execution. Adapters run
+on background threads; span context is propagated across the thread hop.
+
+### Local stack
+
+`docker compose up` starts the collector, Tempo, Prometheus, and Grafana with
+healthchecks and provisioned datasources and dashboards:
+
+| Surface | URL |
+|---------|-----|
+| Grafana (HivePlane Overview dashboard) | http://localhost:3000 |
+| Tempo (trace search) | http://localhost:3200 |
+| Prometheus | http://localhost:9090 |
+| Collector health | http://localhost:13133 |
+
+Point the API at the collector with `HIVEPLANE_OTEL__ENDPOINT=http://localhost:4318`
+(Compose sets this automatically).
+
 ## Observability Contract
 
 Each registered workload declares an observability contract (`spec.observability.contract`): which signals it emits, spans it produces, and metrics it exposes. This makes fleet-level comparisons possible. The `standard` contract requires:

@@ -14,6 +14,7 @@ from hiveplane.config import get_settings
 from hiveplane.core.manifest import parse_manifest
 from hiveplane.core.workload import AgentWorkload
 from postgres import postgres_engine
+from telemetry import SpanRecorder
 
 
 @pytest.fixture(autouse=True)
@@ -79,3 +80,13 @@ def pg_engine() -> Iterator[Engine]:
         yield engine
     finally:
         engine.dispose()
+
+
+@pytest.fixture
+def telemetry_spans(monkeypatch: pytest.MonkeyPatch) -> SpanRecorder:
+    """Route HivePlane spans into an in-memory recorder for assertions."""
+    from hiveplane import telemetry
+
+    recorder = SpanRecorder()
+    monkeypatch.setattr(telemetry, "get_tracer", lambda: recorder.tracer)
+    return recorder

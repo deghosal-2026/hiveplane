@@ -7,13 +7,15 @@ endpoints arrive in later milestones.
 
 from __future__ import annotations
 
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 from typing import Any
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from hiveplane import __version__
+from hiveplane import __version__, telemetry
 from hiveplane.api.approvals import router as approvals_router
 from hiveplane.api.certifications import router as certifications_router
 from hiveplane.api.policy import router as policy_router
@@ -91,6 +93,14 @@ _ERROR_STATUS: tuple[tuple[type[Exception], int], ...] = (
 )
 
 
+@asynccontextmanager
+async def _lifespan(app: FastAPI) -> AsyncIterator[None]:
+    """Install the OpenTelemetry pipeline and flush spans on shutdown."""
+    provider = telemetry.configure_telemetry(get_settings().otel)
+    yield
+    provider.force_flush()
+
+
 def create_app(
     registry_service: RegistryService | None = None,
     run_service: RunService | None = None,
@@ -101,7 +111,9 @@ def create_app(
         title="HivePlane",
         version=__version__,
         summary="Control plane for production agent fleets.",
+        lifespan=_lifespan,
     )
+    app.add_middleware(telemetry.TelemetryMiddleware)
     private_key, public_key = generate_keypair()
     registry = registry_service or RegistryService(
         InMemoryRegistryStore(), attestation_public_key=public_key

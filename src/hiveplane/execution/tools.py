@@ -15,6 +15,7 @@ from typing import Protocol
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from hiveplane import telemetry
 from hiveplane.core.decision import (
     ActionClass,
     DataSensitivity,
@@ -111,9 +112,25 @@ class ToolGateway:
         self._clock = clock or (lambda: datetime.now(UTC))
 
     def invoke(self, run_id: str, request: ToolCallRequest) -> ToolCallResult:
-        """Evaluate and shape a tool call for a run, recording the decision."""
+        """Evaluate and shape a tool call for a run, as a ``tool_call`` span."""
         run = self._runs.get(run_id)
         workload = self._registry.get(run.workload_id).manifest
+        with telemetry.span(
+            "tool_call",
+            run=run,
+            workload=workload,
+            attributes={"tool_id": request.tool_id},
+        ) as active:
+            result = self._invoke(run_id, run, workload, request)
+            active.set_attribute("outcome", result.outcome.value)
+            if result.rule is not None:
+                active.set_attribute("rule", result.rule)
+            return result
+
+    def _invoke(
+        self, run_id: str, run: Run, workload: AgentWorkload, request: ToolCallRequest
+    ) -> ToolCallResult:
+        """Evaluate and shape a tool call, recording the decision."""
         spec = workload.spec
         tool_trust = request.tool_trust or _trust_for(spec.tools, request.tool_id)
         context = PolicyContext(
