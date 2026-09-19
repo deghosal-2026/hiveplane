@@ -27,3 +27,15 @@ def test_custom_table_overrides_defaults() -> None:
 
 def test_zero_tokens_cost_nothing() -> None:
     assert CostTable().price("openai/gpt-4o/2024-08-06", 0, 0) == 0.0
+
+
+def test_local_and_fake_models_price_at_zero() -> None:
+    table = CostTable()
+
+    assert table.price("local/qwen2.5/7b", input_tokens=1000, output_tokens=500) == 0.0
+    assert table.price("fake/echo/1", input_tokens=1000, output_tokens=500) == 0.0
+
+
+def test_unknown_non_local_model_still_fails_loudly() -> None:
+    with pytest.raises(UnknownModelPriceError):
+        CostTable().price("acme/mystery/1", input_tokens=1, output_tokens=1)

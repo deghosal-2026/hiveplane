@@ -143,3 +143,21 @@ def test_fanout_defaults() -> None:
     assert settings.fanout.timeout_s == 10.0
     assert settings.fanout.max_retries == 3
     assert settings.fanout.slack_webhook_url is None
+
+
+def test_model_defaults() -> None:
+    settings = Settings()
+
+    assert settings.model.provider == "fake"
+    assert settings.model.timeout_s == 60.0
+    assert settings.model.api_key is None
+
+
+def test_model_settings_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("HIVEPLANE_MODEL__PROVIDER", "local")
+    monkeypatch.setenv("HIVEPLANE_MODEL__BASE_URL", "http://ollama:11434/v1")
+
+    settings = Settings()
+
+    assert settings.model.provider == "local"
+    assert settings.model.base_url == "http://ollama:11434/v1"

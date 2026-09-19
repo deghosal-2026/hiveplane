@@ -149,6 +149,19 @@ class UiSettings(BaseModel):
     port: int = Field(default=8000, ge=1, le=65535)
 
 
+class ModelSettings(BaseModel):
+    """LLM provider selection and credentials (M23, #107)."""
+
+    provider: Literal["local", "cloud", "fake"] = "fake"
+    base_url: str | None = None
+    api_key: SecretStr | None = None
+    default_model: str | None = None
+    timeout_s: float = Field(default=60.0, gt=0)
+    max_retries: int = Field(default=2, ge=0)
+    replay_file: str | None = None
+    model_aliases: dict[str, str] = Field(default_factory=dict)
+
+
 class Settings(BaseSettings):
     """Root settings object; instantiate via :func:`get_settings`."""
 
@@ -171,6 +184,7 @@ class Settings(BaseSettings):
     execution: ExecutionSettings = Field(default_factory=ExecutionSettings)
     fanout: FanoutSettings = Field(default_factory=FanoutSettings)
     ui: UiSettings = Field(default_factory=UiSettings)
+    model: ModelSettings = Field(default_factory=ModelSettings)
 
 
 @lru_cache(maxsize=1)

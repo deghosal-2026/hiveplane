@@ -24,17 +24,28 @@ DEFAULT_PRICES: dict[str, ModelPrice] = {
     ),
 }
 
+#: Identities under these prefixes incur no cost (local and fake providers).
+ZERO_COST_PREFIXES: tuple[str, ...] = ("local/", "fake/")
+
 
 class CostTable:
     """Maps exact model identities to prices and prices token usage."""
 
-    def __init__(self, prices: dict[str, ModelPrice] | None = None) -> None:
+    def __init__(
+        self,
+        prices: dict[str, ModelPrice] | None = None,
+        *,
+        zero_cost_prefixes: tuple[str, ...] = ZERO_COST_PREFIXES,
+    ) -> None:
         self._prices = dict(DEFAULT_PRICES)
         if prices is not None:
             self._prices.update(prices)
+        self._zero_cost_prefixes = zero_cost_prefixes
 
     def price(self, model_identity: str, input_tokens: int, output_tokens: int) -> float:
         """Return the USD cost of token usage, raising for unknown models."""
+        if model_identity.startswith(self._zero_cost_prefixes):
+            return 0.0
         price = self._prices.get(model_identity)
         if price is None:
             raise UnknownModelPriceError(model_identity)
