@@ -141,6 +141,14 @@ class FanoutSettings(BaseModel):
     generic_webhook_url: str | None = None
 
 
+class UiSettings(BaseModel):
+    """Operator UI settings (M22)."""
+
+    api_url: str = "http://localhost:8000"
+    host: str = "0.0.0.0"
+    port: int = Field(default=8000, ge=1, le=65535)
+
+
 class Settings(BaseSettings):
     """Root settings object; instantiate via :func:`get_settings`."""
 
@@ -162,6 +170,7 @@ class Settings(BaseSettings):
     sandbox: SandboxSettings = Field(default_factory=SandboxSettings)
     execution: ExecutionSettings = Field(default_factory=ExecutionSettings)
     fanout: FanoutSettings = Field(default_factory=FanoutSettings)
+    ui: UiSettings = Field(default_factory=UiSettings)
 
 
 @lru_cache(maxsize=1)

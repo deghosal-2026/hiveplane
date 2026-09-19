@@ -66,6 +66,16 @@ def test_overview_dashboard_is_provisionable() -> None:
     assert len(dashboard["panels"]) >= 2
 
 
+def test_compose_defines_healthchecked_operator_ui() -> None:
+    services = _load("docker-compose.yml")["services"]
+    ui = services["ui"]
+
+    assert ui["environment"]["HIVEPLANE_UI__API_URL"] == "http://api:8000"
+    assert any(str(port).endswith(":8000") for port in ui["ports"])
+    assert ui.get("healthcheck") is not None
+    assert "api" in ui["depends_on"]
+
+
 def test_overview_dashboard_covers_fleet_and_certification_metrics() -> None:
     dashboard = json.loads(
         (_ROOT / "deploy/grafana/dashboards/hiveplane-overview.json").read_text(

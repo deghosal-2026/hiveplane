@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}HivePlane{% endblock %}</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #0f1116;
+        --panel: #171a21;
+        --border: #2a2f3a;
+        --text: #e6e9ef;
+        --muted: #9aa4b2;
+        --accent: #4f8cff;
+        --ok: #3fb950;
+        --warn: #d29922;
+        --bad: #f85149;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+      }
+      header {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        padding: 0.75rem 1.5rem;
+        border-bottom: 1px solid var(--border);
+        background: var(--panel);
+      }
+      header .brand { font-weight: 700; color: var(--text); text-decoration: none; }
+      nav { display: flex; gap: 1rem; }
+      nav a { color: var(--muted); text-decoration: none; }
+      nav a:hover { color: var(--accent); }
+      main { padding: 1.5rem; max-width: 1200px; margin: 0 auto; }
+      h1 { font-size: 1.4rem; margin: 0 0 1rem; }
+      h2 { font-size: 1.05rem; margin: 1.5rem 0 0.5rem; }
+      table { border-collapse: collapse; width: 100%; }
+      th, td { text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); }
+      th { color: var(--muted); font-weight: 600; }
+      a { color: var(--accent); }
+      .banner { padding: 0.6rem 1rem; border-radius: 6px; margin-bottom: 1rem; }
+      .banner.ok { background: rgba(63, 185, 80, 0.15); border: 1px solid var(--ok); }
+      .banner.error { background: rgba(248, 81, 73, 0.15); border: 1px solid var(--bad); }
+      .badge { padding: 0.1rem 0.5rem; border-radius: 999px; font-size: 0.8rem; border: 1px solid var(--border); }
+      .badge.certified { color: var(--ok); border-color: var(--ok); }
+      .badge.quarantined, .badge.failed, .badge.cancelled { color: var(--bad); border-color: var(--bad); }
+      .badge.provisional, .badge.paused, .badge.pending { color: var(--warn); border-color: var(--warn); }
+      .muted { color: var(--muted); }
+      form.inline { display: inline; }
+      button { background: var(--accent); border: 0; color: white; padding: 0.35rem 0.7rem; border-radius: 6px; cursor: pointer; }
+      button.danger { background: var(--bad); }
+      input, textarea { background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 0.35rem 0.5rem; }
+      .timeline { list-style: none; padding: 0; }
+      .timeline li { border-left: 2px solid var(--border); padding: 0.35rem 0 0.35rem 1rem; margin-left: 0.5rem; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+      .card { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
+      .card .value { font-size: 1.6rem; font-weight: 700; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="/">HivePlane</a>
+      <nav>
+        <a href="/">Fleet</a>
+        <a href="/approvals">Approvals</a>
+        <a href="/certifications">Certification</a>
+        <a href="/spend">Spend</a>
+      </nav>
+    </header>
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+  </body>
+</html>

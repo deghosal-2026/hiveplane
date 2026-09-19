@@ -154,6 +154,31 @@ services:
       retries: 10
     restart: unless-stopped
 
+  ui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["hiveplane-ui"]
+    environment:
+      HIVEPLANE_UI__API_URL: http://api:8000
+    ports:
+      - "${UI_PORT:-3001}:8000"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8000/healthz')",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
 volumes:
   postgres-data:
   redis-data:

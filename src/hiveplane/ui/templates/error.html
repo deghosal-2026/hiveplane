@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Unavailable · HivePlane{% endblock %}
+{% block content %}
+<h1>Control plane unavailable</h1>
+<p class="muted">
+  The operator UI could not reach the control-plane API (status {{ status_code }}).
+</p>
+<p class="banner error">{{ detail }}</p>
+<p class="muted">Check that the API is running and that <code>HIVEPLANE_UI__API_URL</code> is correct.</p>
+{% endblock %}
