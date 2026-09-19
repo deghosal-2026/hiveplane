@@ -50,6 +50,7 @@ class TaskExecution(BaseModel):
     tokens: int = Field(default=0, ge=0)
     trace_id: str | None = None
     network_used: bool = False
+    model_identity: str | None = None
 
 
 class TaskExecutor(Protocol):
@@ -155,6 +156,12 @@ class BenchmarkRunner:
         for task in corpus.tasks:
             execution = self._executor.execute(task)
             passed, reason = _enforce_bounds(task, execution)
+            if passed and not self._model_matches(execution):
+                passed = False
+                reason = (
+                    "model_identity: executed "
+                    f"{execution.model_identity!r} does not match pinned {self._model_identity!r}"
+                )
             if passed:
                 passed, reason = evaluate_check(task.check, execution)
             results.append(
@@ -182,6 +189,12 @@ class BenchmarkRunner:
             tasks=results,
             aggregate=_aggregate(results),
         )
+
+    def _model_matches(self, execution: TaskExecution) -> bool:
+        """Return True when the executed model matches the pinned identity."""
+        if execution.model_identity is None:
+            return True
+        return execution.model_identity == self._model_identity
 
     def _run_id(
         self, workload_id: str, manifest_version: int, corpus: BenchmarkCorpus

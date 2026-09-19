@@ -28,6 +28,18 @@ Corpora for `docs-agent` and `incident-agent` land with the field test (M23). Se
 [`docs/workloads/corpus-format.md`](../../docs/workloads/corpus-format.md) for the
 format and check types.
 
+## v0.1.0 scope
+
+The manifests are forward-compatible: some declared sections are parsed and
+validated but **not enforced until v0.2.0**.
+
+- `spec.triggers[]` — parsed, but trigger ingestion is not implemented in v0.1.0.
+- `spec.tools.mcp_servers[]` — parsed, but MCP transport is not implemented in
+  v0.1.0 (tool calls use the fixture tool executor, #116).
+- `spec.fan_out` — only the implemented transports `slack` and `webhook` are
+  used by the examples. `teams` and `jira` are valid manifest values but have no
+  transport yet; commented-out v0.2.0 examples are kept in `incident-agent.yaml`.
+
 ## Validate
 
 ```bash

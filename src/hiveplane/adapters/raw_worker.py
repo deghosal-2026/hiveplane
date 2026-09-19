@@ -25,6 +25,7 @@ from hiveplane.core.workload import AgentWorkload
 from hiveplane.execution.errors import IllegalTransitionError
 from hiveplane.execution.models import RunContext
 from hiveplane.execution.tools import ToolCallResult, ToolGateway
+from hiveplane.llm.provider import LLMProvider
 
 #: Runs a unit of work; the default spawns a daemon thread.
 Spawner = Callable[[Callable[[], None]], None]
@@ -45,12 +46,14 @@ class RawWorkerAdapter:
         *,
         clock: Callable[[], datetime] | None = None,
         spawner: Spawner | None = None,
+        provider: LLMProvider | None = None,
     ) -> None:
         self._reporter = reporter
         self._tools = tools
         self._loader = loader
         self._clock = clock or (lambda: datetime.now(UTC))
         self._spawner = spawner or _thread_spawner
+        self._provider = provider
         self._lock = threading.Lock()
         self._entries: dict[str, Entrypoint] = {}
         self._states: dict[str, RunState] = {}
@@ -130,6 +133,7 @@ class RawWorkerAdapter:
             control=control,
             tool_calls=tool_calls,
             clock=self._clock,
+            provider=self._provider,
         )
         with telemetry.span("execution", run=run, workload=context.workload) as active:
             try:

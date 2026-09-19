@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "query": "rate(http_requests_total{job=\"api\"}[5m])",
+  "result_type": "vector",
+  "result": [
+    {
+      "metric": {"job": "api", "instance": "api-1:8080"},
+      "value": [1758187500, "0.42"]
+    },
+    {
+      "metric": {"job": "api", "instance": "api-2:8080"},
+      "value": [1758187500, "0.38"]
+    }
+  ]
+}

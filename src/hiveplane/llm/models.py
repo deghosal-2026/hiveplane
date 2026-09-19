@@ -52,3 +52,14 @@ class CompletionResponse(BaseModel):
     model_identity: str = Field(min_length=1)
     usage: TokenUsage
     finish_reason: str = "stop"
+
+
+class CompletionResult(BaseModel):
+    """The agent-facing result of a governed model call (M23, #115)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    content: str
+    model_identity: str = Field(min_length=1)
+    usage: TokenUsage
+    finish_reason: str = "stop"

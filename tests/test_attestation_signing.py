@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+import stat
+from pathlib import Path
 from typing import Any
 
 from hiveplane.certification.models import Attestation
 from hiveplane.certification.signing import (
     generate_keypair,
+    load_or_generate_keypair,
     sign_attestation,
     verify_attestation,
 )
@@ -81,3 +84,30 @@ def test_signature_is_deterministic_for_same_payload() -> None:
     second = sign_attestation(_attestation(), private_key)
 
     assert first.signer.signature == second.signer.signature
+
+
+def test_persisted_keypair_verifies_after_reload(tmp_path: Path) -> None:
+    key_file = tmp_path / "keys" / "attestation.pem"
+    private_key, public_key = load_or_generate_keypair(key_file)
+    signed = sign_attestation(_attestation(), private_key)
+
+    _, reloaded_public = load_or_generate_keypair(key_file)
+
+    assert verify_attestation(signed, public_key) is True
+    assert verify_attestation(signed, reloaded_public) is True
+
+
+def test_persisted_keypair_is_reused_on_reload(tmp_path: Path) -> None:
+    key_file = tmp_path / "attestation.pem"
+    first, _ = load_or_generate_keypair(key_file)
+    second, _ = load_or_generate_keypair(key_file)
+
+    assert first.private_bytes_raw() == second.private_bytes_raw()
+
+
+def test_key_file_is_created_with_restrictive_permissions(tmp_path: Path) -> None:
+    key_file = tmp_path / "attestation.pem"
+
+    load_or_generate_keypair(key_file)
+
+    assert stat.S_IMODE(key_file.stat().st_mode) == 0o600

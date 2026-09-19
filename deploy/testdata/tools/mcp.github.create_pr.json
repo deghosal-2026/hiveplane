@@ -1,0 +1,14 @@
+{
+  "repository": "hiveplane/hiveplane",
+  "pull_request": {
+    "number": 415,
+    "title": "docs: document the certification CLI",
+    "state": "open",
+    "draft": true,
+    "head": "docs-agent/certify-cli",
+    "base": "main",
+    "author": "docs-agent",
+    "url": "https://api.github.com/repos/hiveplane/hiveplane/pulls/415",
+    "created_at": "2026-09-18T11:30:00Z"
+  }
+}

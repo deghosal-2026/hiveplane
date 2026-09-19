@@ -13,7 +13,9 @@ from datetime import datetime
 
 from pydantic import JsonValue
 
+from hiveplane import metrics, telemetry
 from hiveplane.adapters.errors import (
+    ModelIdentityMismatchError,
     RunCancelledError,
     RunTerminatedError,
     ToolCallBlockedError,
@@ -22,7 +24,9 @@ from hiveplane.adapters.errors import (
 )
 from hiveplane.adapters.reporter import RunReporter
 from hiveplane.core.decision import ActionClass, DataSensitivity
+from hiveplane.core.event import EventType
 from hiveplane.core.run import Run, RunState
+from hiveplane.core.spec import canonical_model_identity, validate_model_identity
 from hiveplane.core.usage import UsageReport
 from hiveplane.core.workload import AgentWorkload
 from hiveplane.execution.tools import (
@@ -31,8 +35,22 @@ from hiveplane.execution.tools import (
     ToolCallResult,
     ToolGateway,
 )
+from hiveplane.llm.models import (
+    CompletionRequest,
+    CompletionResult,
+    Message,
+    TokenUsage,
+)
+from hiveplane.llm.provider import LLMProvider
 
 _TERMINAL = (RunState.COMPLETED, RunState.FAILED, RunState.CANCELLED)
+
+
+def _default_provider() -> LLMProvider:
+    """Resolve the configured provider when the adapter injected none."""
+    from hiveplane.llm.factory import build_provider
+
+    return build_provider()
 
 
 class RunControl:
@@ -95,6 +113,7 @@ class WorkerContext:
         control: RunControl,
         tool_calls: list[ToolCallResult],
         clock: Callable[[], datetime],
+        provider: LLMProvider | None = None,
     ) -> None:
         self._run = run
         self._workload = workload
@@ -104,6 +123,7 @@ class WorkerContext:
         self._control = control
         self._tool_calls = tool_calls
         self._clock = clock
+        self._provider = provider
 
     @property
     def run_id(self) -> str:
@@ -158,6 +178,88 @@ class WorkerContext:
         if result.outcome is ToolCallOutcome.ESCALATED:
             raise ToolCallEscalatedError(result)
         return result
+
+    def complete(
+        self,
+        prompt: str | list[Message],
+        *,
+        temperature: float | None = None,
+        max_tokens: int | None = None,
+    ) -> CompletionResult:
+        """Invoke the bound model through the governed provider seam (M23, #115)."""
+        provider = self._provider or _default_provider()
+        messages = (
+            [Message(role="user", content=prompt)] if isinstance(prompt, str) else list(prompt)
+        )
+        bound = self._bound_model_identity()
+        if bound is None:
+            raise ValueError("no model identity is bound to this run or workload")
+        request = CompletionRequest(
+            messages=messages,
+            model=bound,
+            temperature=0.0 if temperature is None else temperature,
+            max_tokens=max_tokens,
+        )
+        self.checkpoint()
+        with telemetry.span(
+            "model_call",
+            run=self._run,
+            workload=self._workload,
+            attributes={"model_identity": bound},
+        ) as active:
+            response = provider.complete(request)
+            self.checkpoint()
+            try:
+                canonical = validate_model_identity(response.model_identity)
+            except ValueError:
+                self._record_identity_mismatch(bound, response.model_identity)
+                raise ModelIdentityMismatchError(bound, response.model_identity) from None
+            if canonical != bound:
+                self._record_identity_mismatch(bound, canonical)
+                raise ModelIdentityMismatchError(bound, canonical)
+            active.set_attribute("model_identity", canonical)
+            active.set_attribute("input_tokens", response.usage.input_tokens)
+            active.set_attribute("output_tokens", response.usage.output_tokens)
+            active.set_attribute("cost_usd", 0.0)
+            active.set_attribute("finish_reason", response.finish_reason)
+        report = UsageReport(
+            run_id=self._run.id,
+            input_tokens=response.usage.input_tokens,
+            output_tokens=response.usage.output_tokens,
+            tool_calls=0,
+            cost_usd=0.0,
+            timestamp=self._clock(),
+            model_identity=canonical,
+        )
+        updated = self._reporter.record_usage(self._run.id, report)
+        if updated.state in _TERMINAL:
+            raise RunTerminatedError(updated.state)
+        return CompletionResult(
+            content=response.content,
+            model_identity=canonical,
+            usage=TokenUsage(
+                input_tokens=response.usage.input_tokens,
+                output_tokens=response.usage.output_tokens,
+            ),
+            finish_reason=response.finish_reason,
+        )
+
+    def _bound_model_identity(self) -> str | None:
+        if self._run.model_identity is not None:
+            return self._run.model_identity
+        identity = self._workload.spec.model.identity
+        if identity is None:
+            return None
+        return canonical_model_identity(identity)
+
+    def _record_identity_mismatch(self, expected: str, actual: str) -> None:
+        metrics.get_metrics().record_model_swap_block(workload=self._workload.name)
+        self._reporter.record_event(
+            self._run.id,
+            EventType.POLICY_DECISION,
+            "adapter",
+            detail=f"security: model_identity_mismatch expected={expected!r} actual={actual!r}",
+        )
 
     def report_usage(
         self,

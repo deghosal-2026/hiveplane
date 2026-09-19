@@ -34,6 +34,7 @@ from hiveplane.core.workload import AgentWorkload
 from hiveplane.execution.errors import IllegalTransitionError
 from hiveplane.execution.models import RunContext
 from hiveplane.execution.tools import ToolCallResult, ToolGateway
+from hiveplane.llm.provider import LLMProvider
 
 _INTERRUPT_KEY = "__interrupt__"
 
@@ -70,6 +71,7 @@ class LangGraphAdapter:
         clock: Callable[[], datetime] | None = None,
         spawner: Spawner | None = None,
         command_factory: Callable[..., Any] | None = None,
+        provider: LLMProvider | None = None,
     ) -> None:
         self._reporter = reporter
         self._tools = tools
@@ -77,6 +79,7 @@ class LangGraphAdapter:
         self._clock = clock or (lambda: datetime.now(UTC))
         self._spawner = spawner or _thread_spawner
         self._command_factory: Callable[..., Any] = command_factory or _require_command
+        self._provider = provider
         self._lock = threading.Lock()
         self._graphs: dict[str, CompiledGraph] = {}
         self._sessions: dict[str, tuple[RunContext, WorkerContext, RunControl]] = {}
@@ -109,6 +112,7 @@ class LangGraphAdapter:
             control=control,
             tool_calls=[],
             clock=self._clock,
+            provider=self._provider,
         )
         with self._lock:
             self._states[context.run.id] = RunState.RUNNING

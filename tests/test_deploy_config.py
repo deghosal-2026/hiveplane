@@ -76,6 +76,46 @@ def test_compose_defines_healthchecked_operator_ui() -> None:
     assert "api" in ui["depends_on"]
 
 
+def test_dockerfile_copies_examples_and_installs_langgraph_extra() -> None:
+    dockerfile = (_ROOT / "Dockerfile").read_text(encoding="utf-8")
+
+    assert "COPY examples" in dockerfile, "image must copy examples/ for entrypoints"
+    assert "langgraph" in dockerfile, "image must install the langgraph extra"
+    assert "HIVEPLANE_EXECUTION__ENTRYPOINTS_ROOT" in dockerfile
+    assert "/app" in dockerfile
+
+
+def test_compose_api_selects_postgres_store_and_raw_worker_adapter() -> None:
+    services = _load("docker-compose.yml")["services"]
+    environment = services["api"]["environment"]
+
+    assert environment["HIVEPLANE_EXECUTION__ADAPTER"] == "raw-worker"
+    assert environment["HIVEPLANE_EXECUTION__STORE"] == "postgres"
+
+
+def test_compose_defines_llm_provider_profiles() -> None:
+    services = _load("docker-compose.yml")["services"]
+
+    assert "local" in services["ollama"]["profiles"]
+    assert any("11434" in str(port) for port in services["ollama"]["ports"])
+    assert "test" in services["webhook-sink"]["profiles"]
+
+
+def test_env_profiles_set_llm_provider_defaults() -> None:
+    ci = (_ROOT / ".env.ci").read_text(encoding="utf-8")
+    local = (_ROOT / ".env.local").read_text(encoding="utf-8")
+    cloud = (_ROOT / ".env.cloud").read_text(encoding="utf-8")
+
+    assert "HIVEPLANE_MODEL__PROVIDER=fake" in ci
+
+    assert "HIVEPLANE_MODEL__PROVIDER=local" in local
+    assert "HIVEPLANE_MODEL__BASE_URL=http://ollama:11434/v1" in local
+
+    assert "HIVEPLANE_MODEL__PROVIDER=cloud" in cloud
+    assert "HIVEPLANE_MODEL__BASE_URL=https://api.openai.com/v1" in cloud
+    assert "HIVEPLANE_MODEL__API_KEY=" in cloud
+
+
 def test_overview_dashboard_covers_fleet_and_certification_metrics() -> None:
     dashboard = json.loads(
         (_ROOT / "deploy/grafana/dashboards/hiveplane-overview.json").read_text(

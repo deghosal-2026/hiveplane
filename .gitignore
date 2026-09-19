@@ -87,6 +87,9 @@ instance/
 .env
 .env.*
 !.env.example
+!.env.ci
+!.env.local
+!.env.cloud
 *.pem
 *.key
 

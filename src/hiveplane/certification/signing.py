@@ -10,8 +10,11 @@ from __future__ import annotations
 import base64
 import binascii
 import json
+import os
+from pathlib import Path
 
 from cryptography.exceptions import InvalidSignature
+from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.ed25519 import (
     Ed25519PrivateKey,
     Ed25519PublicKey,
@@ -23,6 +26,33 @@ from hiveplane.certification.models import Attestation
 def generate_keypair() -> tuple[Ed25519PrivateKey, Ed25519PublicKey]:
     """Generate an Ed25519 signing key pair."""
     private_key = Ed25519PrivateKey.generate()
+    return private_key, private_key.public_key()
+
+
+def load_or_generate_keypair(
+    path: str | Path,
+) -> tuple[Ed25519PrivateKey, Ed25519PublicKey]:
+    """Load a PEM signing key from ``path``, generating it once if absent.
+
+    The generated private key is written with owner-only (``0600``) permissions
+    so that attestations remain verifiable across restarts (T9).
+    """
+    key_path = Path(path)
+    if key_path.exists():
+        private_key = serialization.load_pem_private_key(key_path.read_bytes(), password=None)
+        if not isinstance(private_key, Ed25519PrivateKey):
+            raise ValueError(f"signing key at {str(key_path)!r} is not an Ed25519 private key")
+        return private_key, private_key.public_key()
+    private_key = Ed25519PrivateKey.generate()
+    pem = private_key.private_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PrivateFormat.PKCS8,
+        encryption_algorithm=serialization.NoEncryption(),
+    )
+    key_path.parent.mkdir(parents=True, exist_ok=True)
+    descriptor = os.open(key_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(descriptor, "wb") as handle:
+        handle.write(pem)
     return private_key, private_key.public_key()
 
 

@@ -1,0 +1,41 @@
+{
+  "repository": "hiveplane/hiveplane",
+  "pull_requests": [
+    {
+      "number": 412,
+      "title": "Fix typo in README",
+      "author": "docs-bot",
+      "state": "open",
+      "draft": false,
+      "files": ["README.md", "docs/overview.md"],
+      "additions": 4,
+      "deletions": 3,
+      "labels": ["documentation"],
+      "updated_at": "2026-09-18T09:12:00Z"
+    },
+    {
+      "number": 413,
+      "title": "Change token validation in auth middleware",
+      "author": "avery",
+      "state": "open",
+      "draft": false,
+      "files": ["src/hiveplane/api/auth.py", "tests/test_auth.py"],
+      "additions": 60,
+      "deletions": 25,
+      "labels": ["security"],
+      "updated_at": "2026-09-18T10:04:00Z"
+    },
+    {
+      "number": 414,
+      "title": "Bump urllib3 from 2.2.1 to 2.2.2",
+      "author": "dependabot",
+      "state": "open",
+      "draft": false,
+      "files": ["pyproject.toml", "uv.lock"],
+      "additions": 6,
+      "deletions": 6,
+      "labels": ["dependencies"],
+      "updated_at": "2026-09-18T10:31:00Z"
+    }
+  ]
+}

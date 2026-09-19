@@ -64,6 +64,37 @@ def test_every_example_covers_the_required_blocks() -> None:
         assert spec.fan_out is not None, name
 
 
+IMPLEMENTED_FAN_OUT_TYPES = {"slack", "webhook"}
+
+_DEFERRED_ANNOTATION = "v0.2.0"
+
+
+@pytest.mark.parametrize("name", sorted(EXPECTED))
+def test_example_fan_out_uses_only_implemented_transports(name: str) -> None:
+    workload = load_manifest(EXAMPLES_DIR / f"{name}.yaml")
+    fan_out = workload.spec.fan_out
+
+    assert fan_out is not None
+    destinations = [*fan_out.on_completed, *fan_out.on_failed, *fan_out.on_escalation]
+    for destination in destinations:
+        assert destination.type.value in IMPLEMENTED_FAN_OUT_TYPES, (
+            f"{name} uses unimplemented fan-out transport {destination.type.value!r}"
+        )
+
+
+@pytest.mark.parametrize("name", sorted(EXPECTED))
+def test_inert_sections_are_annotated_as_deferred(name: str) -> None:
+    text = (EXAMPLES_DIR / f"{name}.yaml").read_text(encoding="utf-8")
+
+    for section in ("triggers:", "mcp_servers:"):
+        lines = text.splitlines()
+        index = next(i for i, line in enumerate(lines) if line.strip() == section)
+        preceding = "\n".join(lines[max(0, index - 3) : index])
+        assert _DEFERRED_ANNOTATION in preceding, (
+            f"{name}: {section} must be annotated as deferred until v0.2.0"
+        )
+
+
 def test_demo_workload_links_to_the_seeded_corpus() -> None:
     workload = load_manifest(EXAMPLES_DIR / "repo-agent.yaml")
 

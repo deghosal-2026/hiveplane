@@ -161,3 +161,23 @@ def test_model_settings_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
 
     assert settings.model.provider == "local"
     assert settings.model.base_url == "http://ollama:11434/v1"
+
+
+def test_signing_key_file_defaults_to_none() -> None:
+    settings = Settings()
+
+    assert settings.certification.signing_key_file is None
+
+
+def test_signing_key_file_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("HIVEPLANE_CERTIFICATION__SIGNING_KEY_FILE", "/keys/cert.pem")
+
+    settings = Settings()
+
+    assert settings.certification.signing_key_file == "/keys/cert.pem"
+
+
+def test_adapter_executor_is_valid() -> None:
+    settings = Settings(certification=CertificationSettings(executor="adapter"))
+
+    assert settings.certification.executor == "adapter"

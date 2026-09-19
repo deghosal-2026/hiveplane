@@ -92,7 +92,8 @@ class CertificationSettings(BaseModel):
     drift_threshold_pass_rate: float = Field(default=0.10, ge=0.0, le=1.0)
     max_new_failures: int = Field(default=2, ge=0)
     corpora_dir: str = "examples"
-    executor: Literal["none", "reference"] = "none"
+    executor: Literal["none", "reference", "adapter"] = "none"
+    signing_key_file: str | None = None
 
     @model_validator(mode="after")
     def _production_not_weaker_than_staging(self) -> CertificationSettings:

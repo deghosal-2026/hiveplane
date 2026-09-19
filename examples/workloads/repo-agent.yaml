@@ -38,6 +38,7 @@ spec:
         trust_level: read_only
     deny:
       - mcp.github.delete_repo
+    # NOTE: parsed for forward-compatibility; MCP transport is not enforced until v0.2.0 (#116).
     mcp_servers:
       - name: github-tools
         endpoint: http://mcp-fabric/github
@@ -51,6 +52,7 @@ spec:
       - production_write
     contact: "#platform-oncall"
     auto_escalate_after: 300s
+  # NOTE: parsed for forward-compatibility; trigger ingestion is not implemented until v0.2.0.
   triggers:
     - type: github_pr
       events: [opened, synchronize]

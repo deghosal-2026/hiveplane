@@ -69,6 +69,7 @@ class CertificationCoordinator:
         *,
         target_context: TargetContext,
         corpus_ref: str | None = None,
+        model_identity: str | None = None,
     ) -> CertificationRecord:
         """Run the workload's corpus, certify it, and store the record."""
         record = self._registry.get(workload)
@@ -80,7 +81,11 @@ class CertificationCoordinator:
             attributes["team"] = record.team
         with telemetry.span("certification", attributes=attributes) as active:
             certification_record = self._run_certification(
-                record, workload, target_context=target_context, corpus_ref=corpus_ref
+                record,
+                workload,
+                target_context=target_context,
+                corpus_ref=corpus_ref,
+                model_identity=model_identity,
             )
             active.set_attribute(
                 "attestation_id", certification_record.attestation.attestation_id
@@ -97,6 +102,7 @@ class CertificationCoordinator:
         *,
         target_context: TargetContext,
         corpus_ref: str | None,
+        model_identity: str | None = None,
     ) -> CertificationRecord:
         """Execute the benchmark and persist the resulting certification record."""
         certification = record.manifest.spec.certification
@@ -108,7 +114,7 @@ class CertificationCoordinator:
         corpus = load_corpus(self._resolve_corpus_path(reference))
         runner = BenchmarkRunner(
             self._executor,
-            model_identity=_model_identity(record.manifest),
+            model_identity=model_identity or _model_identity(record.manifest),
             benchmark_version=self._benchmark_version,
             environment=self._environment,
             clock=self._clock,

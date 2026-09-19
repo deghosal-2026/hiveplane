@@ -1,0 +1,13 @@
+{
+  "status": "success",
+  "incident": {
+    "id": "PDR-7781",
+    "title": "Elevated API latency",
+    "service": "api",
+    "urgency": "high",
+    "status": "acknowledged",
+    "acknowledged_by": "incident-agent",
+    "acknowledged_at": "2026-09-18T11:22:03Z",
+    "escalation_policy": "platform-primary"
+  }
+}

@@ -37,6 +37,7 @@ spec:
         require_approval: true
     deny:
       - github.delete_repo
+    # NOTE: parsed for forward-compatibility; MCP transport is not enforced until v0.2.0 (#116).
     mcp_servers:
       - name: monitoring-tools
         endpoint: http://mcp-fabric/monitoring
@@ -54,6 +55,7 @@ spec:
       - destructive
     contact: "#platform-oncall"
     auto_escalate_after: 300s
+  # NOTE: parsed for forward-compatibility; trigger ingestion is not implemented until v0.2.0.
   triggers:
     - type: alert
       source: pagerduty
@@ -88,12 +90,18 @@ spec:
       - type: webhook
         url: https://hooks.example.com/hiveplane
     on_escalation:
-      - type: teams
-        channel: "Platform Escalations"
+      - type: slack
+        channel: "#platform-escalations"
+      # v0.2.0 (not implemented in v0.1.0 — requires a Microsoft Teams transport):
+      # - type: teams
+      #   channel: "Platform Escalations"
     on_failed:
-      - type: jira
-        project: PLAT
-        issue_type: Incident
+      - type: webhook
+        url: https://hooks.example.com/hiveplane/failed
+      # v0.2.0 (not implemented in v0.1.0 — requires a Jira transport):
+      # - type: jira
+      #   project: PLAT
+      #   issue_type: Incident
     always_include: [trace_link, attestation_link]
   health:
     readiness_probe:

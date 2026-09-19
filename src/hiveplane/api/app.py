@@ -7,9 +7,11 @@ endpoints arrive in later milestones.
 
 from __future__ import annotations
 
+import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
-from typing import Any
+from importlib import import_module
+from typing import Any, cast
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 from fastapi import FastAPI, Request
@@ -25,7 +27,7 @@ from hiveplane.api.spend import router as spend_router
 from hiveplane.budget.errors import MissingModelIdentityError, UnknownModelPriceError
 from hiveplane.budget.pricing import CostTable
 from hiveplane.budget.service import BudgetService
-from hiveplane.budget.store import InMemoryBudgetStore
+from hiveplane.budget.store import build_budget_store
 from hiveplane.certification.engine import CertificationEngine
 from hiveplane.certification.errors import (
     CertificationNotFoundError,
@@ -33,12 +35,16 @@ from hiveplane.certification.errors import (
     ExecutorNotConfiguredError,
 )
 from hiveplane.certification.models import CertificationPolicy, Environment, Thresholds
-from hiveplane.certification.runner import ReferenceExecutor, UnconfiguredTaskExecutor
+from hiveplane.certification.runner import (
+    ReferenceExecutor,
+    TaskExecutor,
+    UnconfiguredTaskExecutor,
+)
 from hiveplane.certification.service import CertificationService
-from hiveplane.certification.signing import generate_keypair
-from hiveplane.certification.store import InMemoryCertificationStore
+from hiveplane.certification.signing import generate_keypair, load_or_generate_keypair
+from hiveplane.certification.store import build_certification_store
 from hiveplane.certification.workflow import CertificationCoordinator
-from hiveplane.config import get_settings
+from hiveplane.config import Settings, get_settings
 from hiveplane.core.manifest import manifest_json_schema
 from hiveplane.execution.errors import (
     IllegalTransitionError,
@@ -48,6 +54,7 @@ from hiveplane.execution.errors import (
 )
 from hiveplane.execution.service import RunService
 from hiveplane.execution.wiring import attach_raw_worker, build_run_service, build_tool_gateway
+from hiveplane.persistence.migrate import run_migrations
 from hiveplane.policy.approvals import ApprovalService
 from hiveplane.policy.engine import PolicyEngine
 from hiveplane.policy.errors import (
@@ -57,7 +64,7 @@ from hiveplane.policy.errors import (
     PolicyPackNotFoundError,
 )
 from hiveplane.policy.packs import InMemoryPolicyPackStore
-from hiveplane.policy.store import InMemoryApprovalStore
+from hiveplane.policy.store import build_approval_store
 from hiveplane.registry.errors import (
     AdmissionRefusedError,
     AttestationAlreadyExistsError,
@@ -72,8 +79,10 @@ from hiveplane.registry.errors import (
     WorkloadNotFoundError,
 )
 from hiveplane.registry.service import RegistryService
-from hiveplane.registry.store import InMemoryRegistryStore
+from hiveplane.registry.store import build_registry_store
 from hiveplane.sandbox.manager import InMemorySandboxManager
+
+_LOGGER = logging.getLogger(__name__)
 
 #: Registry errors mapped to HTTP status codes.
 _ERROR_STATUS: tuple[tuple[type[Exception], int], ...] = (
@@ -96,9 +105,12 @@ _ERROR_STATUS: tuple[tuple[type[Exception], int], ...] = (
 
 @asynccontextmanager
 async def _lifespan(app: FastAPI) -> AsyncIterator[None]:
-    """Install the OpenTelemetry pipeline and flush signals on shutdown."""
-    provider = telemetry.configure_telemetry(get_settings().otel)
-    meter_provider = telemetry.configure_metrics(get_settings().otel)
+    """Migrate the system of record, then install the OpenTelemetry pipeline."""
+    settings = get_settings()
+    if settings.execution.store == "postgres":
+        run_migrations(settings)
+    provider = telemetry.configure_telemetry(settings.otel)
+    meter_provider = telemetry.configure_metrics(settings.otel)
     yield
     provider.force_flush()
     meter_provider.force_flush()
@@ -117,15 +129,21 @@ def create_app(
         lifespan=_lifespan,
     )
     app.add_middleware(telemetry.TelemetryMiddleware)
-    private_key, public_key = generate_keypair()
+    settings = get_settings()
+    if settings.certification.signing_key_file:
+        private_key, public_key = load_or_generate_keypair(
+            settings.certification.signing_key_file
+        )
+    else:
+        private_key, public_key = generate_keypair()
     registry = registry_service or RegistryService(
-        InMemoryRegistryStore(), attestation_public_key=public_key
+        build_registry_store(settings), attestation_public_key=public_key
     )
     app.state.registry_service = registry
     policy_pack_store = InMemoryPolicyPackStore()
     policy_engine = PolicyEngine(policy_pack_store)
-    approval_service = ApprovalService(InMemoryApprovalStore())
-    budget_store = InMemoryBudgetStore()
+    approval_service = ApprovalService(build_approval_store(settings))
+    budget_store = build_budget_store(settings)
     budget_service = BudgetService(budget_store, CostTable())
     sandbox_manager = InMemorySandboxManager()
     app.state.policy_pack_store = policy_pack_store
@@ -142,11 +160,13 @@ def create_app(
     )
     app.state.adapter = (
         attach_raw_worker(app.state.run_service, app.state.tool_gateway)
-        if get_settings().execution.adapter == "raw-worker"
+        if settings.execution.adapter == "raw-worker"
         else None
     )
     if certification_coordinator is None and registry_service is None:
-        certification_coordinator = _build_certification_coordinator(registry, private_key)
+        certification_coordinator = _build_certification_coordinator(
+            registry, private_key, app.state.run_service, settings
+        )
     app.state.certification_coordinator = certification_coordinator
 
     @app.get("/healthz", tags=["health"])
@@ -215,10 +235,12 @@ def create_app(
 
 
 def _build_certification_coordinator(
-    registry: RegistryService, private_key: Ed25519PrivateKey
+    registry: RegistryService,
+    private_key: Ed25519PrivateKey,
+    run_service: RunService,
+    settings: Settings,
 ) -> CertificationCoordinator:
     """Build the default certification coordinator from settings."""
-    settings = get_settings()
     cert = settings.certification
     policy = CertificationPolicy(
         staging=Thresholds(**cert.staging.model_dump()),
@@ -236,17 +258,41 @@ def _build_certification_coordinator(
         private_key=private_key,
         environment=environment,
     )
-    executor: ReferenceExecutor | UnconfiguredTaskExecutor = (
-        ReferenceExecutor() if cert.executor == "reference" else UnconfiguredTaskExecutor()
-    )
     return CertificationCoordinator(
         registry,
         service,
-        InMemoryCertificationStore(),
-        executor=executor,
+        build_certification_store(settings),
+        executor=_select_task_executor(settings, run_service, registry),
         corpora_dir=cert.corpora_dir,
         environment=environment,
     )
+
+
+def _select_task_executor(
+    settings: Settings, run_service: RunService, registry: RegistryService
+) -> TaskExecutor:
+    """Choose the certification task executor (adapter factory when available)."""
+    if settings.certification.executor == "reference":
+        return ReferenceExecutor()
+    if settings.certification.executor == "adapter":
+        factory = _adapter_executor_factory()
+        if factory is not None:
+            return cast("TaskExecutor", factory(settings, run_service, registry))
+        _LOGGER.warning(
+            "certification executor 'adapter' is configured but "
+            "hiveplane.certification.executor.build_task_executor is unavailable; "
+            "falling back to the unconfigured executor"
+        )
+    return UnconfiguredTaskExecutor()
+
+
+def _adapter_executor_factory() -> Any | None:
+    """Return the adapter executor factory if the optional module is present."""
+    try:
+        module = import_module("hiveplane.certification.executor")
+    except ImportError:
+        return None
+    return getattr(module, "build_task_executor", None)
 
 
 app = create_app()

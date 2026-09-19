@@ -78,3 +78,14 @@ class RunCancelledError(WorkerError):
     def __init__(self, state: RunState = RunState.CANCELLED) -> None:
         super().__init__(f"run is {state.value}")
         self.state = state
+
+
+class ModelIdentityMismatchError(WorkerError):
+    """Raised when inference reports a model other than the bound identity (T11)."""
+
+    def __init__(self, expected: str, actual: str) -> None:
+        super().__init__(
+            f"model identity mismatch: expected {expected!r}, provider reported {actual!r}"
+        )
+        self.expected = expected
+        self.actual = actual

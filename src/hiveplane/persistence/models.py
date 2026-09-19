@@ -258,3 +258,32 @@ class CostAttributionRow(Base):
     period: Mapped[str] = mapped_column(String(32))
     total_spend_usd: Mapped[float] = mapped_column(Float)
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class BudgetRunSpendRow(Base):
+    """Durable per-run spend total for budget enforcement (#128)."""
+
+    __tablename__ = "budget_run_spend"
+
+    run_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    amount_usd: Mapped[float] = mapped_column(Float)
+
+
+class BudgetDaySpendRow(Base):
+    """Durable per-workload, per-day spend total for budget enforcement (#128)."""
+
+    __tablename__ = "budget_day_spend"
+
+    workload: Mapped[str] = mapped_column(String(253), primary_key=True)
+    day: Mapped[str] = mapped_column(String(32), primary_key=True)
+    amount_usd: Mapped[float] = mapped_column(Float)
+
+
+class BudgetTeamSpendRow(Base):
+    """Durable per-team, per-day spend total for budget enforcement (#128)."""
+
+    __tablename__ = "budget_team_spend"
+
+    team: Mapped[str] = mapped_column(String(253), primary_key=True)
+    day: Mapped[str] = mapped_column(String(32), primary_key=True)
+    amount_usd: Mapped[float] = mapped_column(Float)

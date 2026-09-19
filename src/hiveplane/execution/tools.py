@@ -30,6 +30,7 @@ from hiveplane.core.tools import ToolsSpec, ToolTrustLevel
 from hiveplane.core.workload import AgentWorkload
 from hiveplane.execution.gates import ApprovalRequests, PolicyGate
 from hiveplane.execution.models import InterventionAction
+from hiveplane.execution.tool_executor import ToolExecutor
 from hiveplane.registry.service import RegistryService
 from hiveplane.sandbox.egress import EgressGuard
 from hiveplane.sandbox.errors import EgressDeniedError
@@ -102,6 +103,7 @@ class ToolGateway:
         *,
         shaping: ShapingPipeline | None = None,
         approvals: ApprovalRequests | None = None,
+        executor: ToolExecutor | None = None,
         clock: Callable[[], datetime] | None = None,
     ) -> None:
         self._registry = registry
@@ -109,6 +111,7 @@ class ToolGateway:
         self._runs = runs
         self._shaping = shaping
         self._approvals = approvals
+        self._executor = executor
         self._clock = clock or (lambda: datetime.now(UTC))
 
     def invoke(self, run_id: str, request: ToolCallRequest) -> ToolCallResult:
@@ -178,7 +181,8 @@ class ToolGateway:
         egress = self._check_egress(run_id, workload, request)
         if egress is not None:
             return egress
-        shaped = self._shape(workload, request)
+        output = self._resolve_output(request)
+        shaped = self._shape(workload, output)
         if (
             shaped is not None
             and shaped.injection is not None
@@ -243,13 +247,21 @@ class ToolGateway:
             )
         return None
 
-    def _shape(self, workload: AgentWorkload, request: ToolCallRequest) -> ShapedOutput | None:
-        if request.output is None or self._shaping is None:
+    def _resolve_output(self, request: ToolCallRequest) -> str | None:
+        """Return caller-provided output, else execute the tool via the executor."""
+        if request.output is not None:
+            return request.output
+        if self._executor is None:
+            return None
+        return self._executor.execute(request.tool_id)
+
+    def _shape(self, workload: AgentWorkload, output: str | None) -> ShapedOutput | None:
+        if output is None or self._shaping is None:
             return None
         spec = workload.spec.output_shaping
         if spec is None:
             return None
-        return self._shaping.apply(request.output, spec)
+        return self._shaping.apply(output, spec)
 
     @staticmethod
     def _result(
