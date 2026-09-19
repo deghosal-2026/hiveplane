@@ -36,14 +36,9 @@ Design docs for HivePlane — organized by subsystem and PRD.
 | D14 | [cost-service-design.md](cost-service-design.md) | Cost attribution, cost-per-completed-task, waste detection, ROI flags, showback views |
 | D15 | [result-fanout-design.md](result-fanout-design.md) | Fan-out to Slack/Teams/Jira/PR/webhook, message format, delivery guarantees |
 | D16 | [agent-health-design.md](agent-health-design.md) | Health signals, rolling-window health calculation, fleet aggregation, drift → quarantine |
-
-## Planned (M23)
-
-| D# | Document | Topic | Issue |
-|----|----------|-------|-------|
-| D17 | llm-provider-design.md | LLM provider seam (local/cloud/fake), agent invocation, runtime model identity | #104 |
-| D18 | durable-resume-design.md | Startup recovery and restart-resume for paused/running runs | #106 |
-| D19 | benchmark-execution-design.md | Adapter-backed certification: execute the real agent against the corpus | #105 |
+| D17 | [llm-provider-design.md](llm-provider-design.md) | LLM provider seam (local/cloud/fake), agent invocation, runtime model identity |
+| D18 | [durable-resume-design.md](durable-resume-design.md) | Startup recovery and restart-resume for paused/running runs |
+| D19 | [benchmark-execution-design.md](benchmark-execution-design.md) | Adapter-backed certification: execute the real agent against the corpus |
 
 ## Cross-Cutting
 
