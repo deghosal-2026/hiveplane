@@ -93,6 +93,7 @@ instance/
 # Docker / local state
 docker-compose.override.yml
 data/
+.hiveplane/
 *.pid
 
 # Editor / OS
