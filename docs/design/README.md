@@ -37,6 +37,14 @@ Design docs for HivePlane — organized by subsystem and PRD.
 | D15 | [result-fanout-design.md](result-fanout-design.md) | Fan-out to Slack/Teams/Jira/PR/webhook, message format, delivery guarantees |
 | D16 | [agent-health-design.md](agent-health-design.md) | Health signals, rolling-window health calculation, fleet aggregation, drift → quarantine |
 
+## Planned (M23)
+
+| D# | Document | Topic | Issue |
+|----|----------|-------|-------|
+| D17 | llm-provider-design.md | LLM provider seam (local/cloud/fake), agent invocation, runtime model identity | #104 |
+| D18 | durable-resume-design.md | Startup recovery and restart-resume for paused/running runs | #106 |
+| D19 | benchmark-execution-design.md | Adapter-backed certification: execute the real agent against the corpus | #105 |
+
 ## Cross-Cutting
 
 - [Execution Path Design](execution-path-design.md) — implementation blueprint for the run lifecycle, policy, budget, sandbox, shaping, and adapters

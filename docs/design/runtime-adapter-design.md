@@ -1,6 +1,27 @@
 # D6: Runtime Adapter Design
 
-> Status: draft
+> Status: draft (v0.1.0 contract implemented for raw-worker + LangGraph; LLM seam, tool
+> execution, and sandbox enforcement are pending — see Implementation Status below)
+
+## Implementation Status (v0.1.0)
+
+The adapter contract below is the target. Current code does **not** satisfy all of it:
+
+| Contract area | Current state | Tracked by |
+|---------------|---------------|------------|
+| Lifecycle (register/submit/pause/resume/cancel/status) | Implemented (`RawWorkerAdapter`, `LangGraphAdapter`) | — |
+| Tool-call routing through policy boundary | Implemented (`ToolGateway`) | — |
+| **Tool execution** | **Not implemented** — `ToolGateway.invoke()` shapes a caller-provided `output`; the agent fabricates tool results | #116 |
+| **LLM invocation seam** | **Not implemented** — `WorkerContext` has no way to call a model | #115 |
+| **Model-identity verification from real inference** | **Not implemented** — identity is self-reported at submission | #115 |
+| **Sandbox execution (caps, egress, FS isolation)** | **Not implemented** — the adapter runs the entrypoint on an in-process daemon thread; `InMemorySandboxManager` records bookkeeping only | #110 |
+| **Durable resume** | **Not implemented** — in-flight state lives in memory and is lost on restart | #111 |
+| Output shaping | Implemented (pipeline runs on tool output) | — |
+| Injection scanning | Implemented | — |
+
+The sandbox and model-identity sections below describe the **target** contract, not the
+current implementation. Container/cgroup isolation is deferred beyond v0.1.0; v0.1.0 targets
+process-level enforcement (POSIX rlimits + wall-clock watchdog), which is not yet wired in.
 
 ## Problem
 
@@ -70,13 +91,18 @@ sandbox:
 
 ### Sandbox Guarantees
 
-| Guarantee | How |
-|-----------|-----|
-| Resource isolation | OS-level cgroups or container isolation |
-| Network restriction | Egress firewall / network policy |
-| Filesystem isolation | Separate mount namespace; no shared volumes |
-| No control-plane access | Sandbox runs in a separate process/container; no shared credentials |
-| Tool-call routing | All tool calls go through the policy boundary, even from the sandbox |
+The guarantees below are the **target** for the container backend. The v0.1.0 local backend is
+process-level (POSIX `RLIMIT_AS`/`RLIMIT_CPU` + wall-clock watchdog + tool-call-boundary egress
+guard) and is not yet wired into the adapter path (#110). Network-namespace/filesystem isolation
+is deferred to the container backend.
+
+| Guarantee | Target (container backend) | v0.1.0 (process backend) |
+|-----------|----------------------------|--------------------------|
+| Resource isolation | OS-level cgroups or container isolation | POSIX rlimits (memory/CPU) + wall-clock watchdog (pending #110) |
+| Network restriction | Egress firewall / network policy | Egress guard at the tool-call boundary only (no network namespace) |
+| Filesystem isolation | Separate mount namespace; no shared volumes | Ephemeral working directory (no mount namespace) |
+| No control-plane access | Sandbox runs in a separate process/container; no shared credentials | Subprocess shares the control-plane process environment (gap) |
+| Tool-call routing | All tool calls go through the policy boundary, even from the sandbox | Implemented |
 
 ## Tool-Output Shaping Layer
 
@@ -139,22 +165,73 @@ model_identity:
 
 The identity is checked at run start and is immutable for the duration of the run. If a router strategy is used (`spec.model.strategy: router`), the adapter must report which model was actually used for each call, and each call's model is checked against the attestation.
 
+## LLM Provider Seam
+
+Agents must not call model providers directly. Every model call routes through the
+control-plane boundary so it can be governed, metered, traced, and identity-checked.
+
+- `WorkerContext.complete(prompt, **options) -> CompletionResult` is the agent-facing seam.
+- The seam delegates to the configured **LLM provider** (local Ollama/OMLX-style
+  OpenAI-compatible endpoint, cloud OpenAI, or a deterministic fake/replay provider for CI).
+  Provider selection and credentials come from `HIVEPLANE_MODEL__*`; the manifest supplies
+  the model identity and strategy.
+- On each call the seam:
+  1. emits a `model_call` telemetry span (prompt/response truncated, model, tokens, cost, latency);
+  2. reports real usage (input/output tokens, cost) from the provider response — agents no
+     longer hardcode `report_usage()`;
+  3. captures the **runtime model identity** reported by the provider and checks it against the
+     attestation binding (T11). For `router` strategies, each call's model is checked;
+  4. honors cooperative pause/cancel checkpoints.
+- `CompletionResult` carries: `content`, `model_identity`, `usage`, `finish_reason`.
+
+See [D17: LLM Provider Design](llm-provider-design.md) (#104).
+
+## Agent Contract Seams
+
+An agent entrypoint is `run(task, ctx) -> result` and must satisfy the minimum contract:
+
+| Capability | Contract |
+|------------|----------|
+| Model calls | via `ctx.complete()` only; no direct provider/SDK calls |
+| Tool calls | via `ctx.tool_call(tool_id)` only; the agent does not supply tool output (#116) |
+| Usage | reported automatically by the seams; explicit `report_usage()` is for non-model usage |
+| Pause/cancel | call `ctx.checkpoint()` at safe points; long model calls are interruptible |
+| Structured result | return a JSON-serializable result matching the task's expected fields |
+| Determinism | support the fake provider for reproducible CI and benchmark runs |
+
+## Durable Resume
+
+`pause(run_id)` must persist enough in-flight state for `resume(run_id)` to continue after a
+control-plane restart (the current contract assumes in-memory retention — see #111):
+
+- run state, current step, and accumulated tool/usage records live in the durable run store;
+- LangGraph runs persist their graph checkpoint (a durable checkpointer replaces `InMemorySaver`);
+- on boot, recovery re-attaches an executor to `paused`/`running` runs and rehydrates context;
+- a run whose worker process died is reconciled to a defined terminal or resumable state.
+
+See [D18: Durable Resume Design](durable-resume-design.md) (#106).
+
 ## Rules
 
 - adapters report state transitions; they do not decide policy
 - adapters route tool calls through the policy boundary (including from the sandbox)
-- adapters report usage for budget accounting
+- adapters route **model calls** through the provider seam; agents never call providers directly
+- adapters execute tool calls and return real data; agents never supply tool output
+- adapters report usage for budget accounting; model usage is captured from provider responses
 - adapters apply tool-output shaping before returning outputs to the agent context
 - adapters scan tool outputs for injection if `injection_scan` is enabled
-- adapters verify model identity at run start; mismatches block the run
-- adapters may implement pause cooperatively, but must report honest state
+- adapters capture runtime model identity from actual inference; mismatches block the run
+- adapters may implement pause cooperatively, but must report honest state and persist it durably
 - adapters must support sandbox execution when the manifest requires it
 - adapters must tear down sandbox contexts on terminal transition
 
 ## Reference Adapters (v0.1.0)
 
-- **raw-worker** — a plain Python worker; the reference implementation. Supports sandbox execution, output shaping, and model-identity verification.
-- **langgraph** — a compiled graph example. Wraps LangGraph's execution model behind the adapter contract.
+- **raw-worker** — a plain Python worker; the reference implementation. Lifecycle, tool-call
+  routing, and output shaping are implemented. LLM invocation (#115), tool execution (#116),
+  sandbox enforcement (#110), and durable resume (#111) are pending.
+- **langgraph** — a compiled graph example. Wraps LangGraph's execution model behind the adapter
+  contract; currently uses `InMemorySaver` (durable checkpointer pending #122).
 
 ## Conformance Suite
 
@@ -186,6 +263,18 @@ Every adapter must pass the following conformance tests:
 ### Policy Routing
 14. Verify all tool calls (including from sandbox) are routed through the policy boundary
 15. Verify adapter does not bypass policy for any tool call
+
+### LLM & Tool Seams
+16. Verify an agent's model call routes through `ctx.complete()` (no direct provider access)
+17. Verify usage/cost is reported from the provider response, not agent-supplied values
+18. Verify runtime model identity is captured from inference and mismatch blocks the run
+19. Verify tool calls execute and return real (fixture-backed) data, not agent-fabricated output
+
+### Approval Re-dispatch
+20. Verify an escalated tool call is re-dispatched and executes after approval (#129)
+
+### Durable Resume
+21. Verify a paused run resumes with context intact after a control-plane restart (#111)
 
 ## Open Questions
 

@@ -408,15 +408,26 @@ each one only depends on seams already defined.
 
 ## Deferred
 
-- **PostgreSQL persistence** — `RunStore`/`BudgetStore` swap in a Postgres
-  implementation; the JSON-file store remains the local/offline default.
-- **Container sandbox backend** — Docker/gVisor with real network namespaces;
-  `ProcessSandbox` remains the local backend behind the same interface.
+- **PostgreSQL wiring for all stores** — `RunStore`/`BudgetStore`/registry/certification/approval
+  stores must use Postgres when configured; today `create_app` hardcodes in-memory stores for
+  everything except the run store (#118, #126, #128). The JSON-file store remains the
+  local/offline default.
+- **Auto-migration** — schema migrations must run on startup so a fresh stack works on first
+  boot (#118).
+- **Container sandbox backend** — Docker/gVisor with real network namespaces. v0.1.0 targets a
+  process-level backend (POSIX rlimits + wall-clock watchdog); that is not yet wired into the
+  adapter path (#110).
+- **LLM provider seam + agent contract seams** — no provider exists today; `WorkerContext` has no
+  model-invocation method and the tool boundary does not execute tools (#104, #107, #115, #116).
+  Required before any execution-path item can be exercised end-to-end.
+- **Durable resume** — pause/resume across process restarts; current pause/resume is in-memory
+  only (#106, #111).
+- **Approval re-dispatch** — escalated tool calls are not re-dispatched after approval (#129).
 - **Trigger ingestion / auto-start** — `trigger_origin` is accepted and persisted,
   but webhook/alert/PR/cron ingestion and dedup are a separate effort.
-- **Certification pipeline** — the certification gate reads registry status
-  only; the benchmark runner, engine, and attestation issuance are a separate
-  effort.
+- **Certification benchmark execution** — the gate, engine, and attestations ship in v0.1.0, but
+  the benchmark does not yet execute the real agent (the `ReferenceExecutor` is a stand-in) —
+  #105, #117, #109.
 - **Telemetry exporters, CLI, operator UI, agent health** — separate efforts.
 
 ## See Also

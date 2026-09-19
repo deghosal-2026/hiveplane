@@ -1,6 +1,28 @@
 # D10: Certification Pipeline Design
 
-> Status: draft
+> Status: partial (v0.1.0). Corpus loader/validator, engine, signed attestations, store, diff,
+> and API/CLI are implemented. **The benchmark does not yet execute the real agent**: the
+> `ReferenceExecutor` returns the task's own expected value as the output, so every check passes
+> by definition. Real execution is tracked by #105/#117/#109.
+
+## Implementation Status (v0.1.0)
+
+| Area | Current state | Tracked by |
+|------|---------------|------------|
+| Corpus load/validate, deterministic checks (`exact_match`, `action_audit`) | Implemented | — |
+| Certification engine, thresholds, statuses | Implemented | — |
+| Signed attestations (Ed25519) | Implemented, but signing key is **ephemeral** | #125 |
+| Certification/attestation persistence | In-memory | #126 |
+| **Real benchmark execution** | **Not implemented** — `ReferenceExecutor` is a tautology; it returns the check's expected value | #105, #117, #109 |
+| Sandbox-hosted benchmark execution | Not implemented (in-process / reference only) | #105 |
+| LLM-backed checks (`rubric`) and `schema_match`/`custom` | Not implemented | deferred beyond v0.1.0 |
+| Model pinning from the CLI | Not implemented — `certify` has no `--model-identity` | #127 |
+
+### Prerequisites for real certification
+
+Real certification depends on the LLM provider seam (#104/#107/#115), the tool execution layer
+(#116), a durable signing keypair (#125), durable certification storage (#126), and the
+`AdapterTaskExecutor` bridge (#117). None are present today.
 
 ## Problem
 
@@ -43,6 +65,12 @@ The certification pipeline is four cooperating services plus an API surface:
 ### Purpose
 
 Execute a workload against its benchmark corpus in a controlled, reproducible environment. Each task in the corpus has a known expected outcome and a deterministic pass/fail check. Benchmark runs are isolated from production — they execute in the sandbox (D11) with a fixed model, fixed inputs, and no network side effects unless explicitly allowed by the corpus spec.
+
+> **Current gap:** benchmark tasks are not executed through the runtime adapter. The
+> `ReferenceExecutor` returns the task's declared expected value, so checks are self-satisfying.
+> The `AdapterTaskExecutor` bridge (#117) submits each task as a real run through
+> `RawWorkerAdapter.submit()` (adapter → sandbox → policy) and returns the agent's actual result.
+> Until then, certification proves a corpus is satisfiable, not that an agent is good.
 
 ### Benchmark Corpus
 
@@ -105,14 +133,14 @@ corpus:
 | `exact_match` | Output field matches expected value exactly | Fully deterministic |
 | `action_audit` | Required actions present, forbidden actions absent in tool-call audit | Fully deterministic |
 | `schema_match` | Output conforms to a JSON schema | Fully deterministic |
-| `rubric` | Structured rubric scored by a secondary evaluator model | Deterministic given fixed evaluator model + temperature 0 |
+| `rubric` | Structured rubric scored by a secondary evaluator model | Deterministic given fixed evaluator model + temperature 0. **Not in v0.1.0** — requires the LLM provider seam (#104) |
 | `custom` | A Python callable that receives the run trace and returns pass/fail | Deterministic given fixed inputs |
 
 ### Runner Execution Model
 
-1. **Provision sandbox** — create an isolated execution context (D11) with the corpus-specified resource caps, network egress allowlist, and no shared filesystem with the control plane.
-2. **Pin environment** — fix the model (by ID, not alias), fix the inputs (from corpus fixtures), disable any source of nondeterminism (temperature = 0 where applicable, no real-time clock dependencies, no external API calls unless `allow_network: true`).
-3. **Execute each task** — submit the task through the normal execution path (adapter → sandbox → policy). The benchmark runner does not bypass policy; it runs under a benchmark-specific policy pack that mirrors production constraints.
+1. **Provision sandbox** — create an isolated execution context (D11) with the corpus-specified resource caps, network egress allowlist, and no shared filesystem with the control plane. *v0.1.0 uses process-level caps; see D11.*
+2. **Pin environment** — fix the model (by ID, not alias), fix the inputs (from corpus fixtures), disable any source of nondeterminism (temperature = 0 where applicable, no real-time clock dependencies, no external API calls unless `allow_network: true`). *Requires the LLM provider seam and `--model-identity` on `certify` (#107, #115, #127).*
+3. **Execute each task** — submit the task through the normal execution path (adapter → sandbox → policy) via the `AdapterTaskExecutor` bridge (#117). The benchmark runner does not bypass policy; it runs under a benchmark-specific policy pack that mirrors production constraints.
 4. **Collect results** — for each task, record: pass/fail, latency, token usage, tool calls, trace ID, and any policy decisions.
 5. **Emit benchmark result** — a structured object with per-task results and aggregate metrics.
 
@@ -126,6 +154,7 @@ corpus:
 | Temperature | 0 (or corpus-specified fixed value) |
 | Tool outputs | Mocked or sandboxed; no real side effects |
 | Time | Injected fixed timestamps where the agent uses clock data |
+| Attestation signer | **Persistent** keypair (file/KMS), not ephemeral — otherwise signatures do not verify after restart (#125) |
 
 If a task cannot be made deterministic (e.g., requires live data), it is excluded from the certification corpus and used only for manual smoke testing.
 

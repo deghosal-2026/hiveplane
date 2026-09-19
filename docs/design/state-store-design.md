@@ -1,7 +1,10 @@
 # D7: State Store Design
 
-> Status: implemented (M18) — full schema + migrations; runs and audit are live on PostgreSQL,
-> the other entities are schema-only until their stores land.
+> Status: partial. The schema and migrations exist (M18), and `PostgresRunStore` /
+> `PostgresAuditLog` are implemented. However the app factory (`create_app`) still hardcodes
+> in-memory stores for registry, policy packs, approvals, budget, and certifications, and
+> migrations do not run on startup — so a fresh `docker compose up` is not durable. PostgreSQL
+> wiring and auto-migration are tracked by #118, #125, #126, #128.
 
 ## Problem
 
@@ -35,6 +38,7 @@ See [PRD 02: Architecture](../prd/02-architecture.md) § State Store and [PRD 05
 | `cost_attributions` | Period, team, workload, total spend, completed tasks, failed tasks, escalated tasks, cost per completed task, waste, ROI flag | Cost showback records (PRD 05: cost & ROI) |
 | `fan_out_deliveries` | Delivery ID, run ID, terminal state, destination type (`slack`/`teams`/`jira`/`github_pr_comment`/`webhook`), destination ref, message payload, delivery status, attempted at, delivered at, retry count | Result fan-out delivery records (PRD 05: result delivery) |
 | `health_signals` | Signal ID, workload, readiness status, recent failure rate, SLO status (availability, quality, error budget remaining), drift indicator, last updated | Agent health model (PRD 05: observability & health) |
+| `llm_provider_configs` | Config ID, provider (`ollama`/`openai`/`fake`), base URL, credential ref, default model identity, timeout, created at | LLM provider seam configuration (#107) |
 
 ## Entity Relationships
 
@@ -58,7 +62,8 @@ audit_log (standalone, references runs, workloads, operators)
 - event logs are append-only
 - audit records are tamper-evident (chained hash or append-only with checksums)
 - attestations are immutable — once written, never mutated; new certifications create new attestation records
-- attestation signatures are verified on every read (T9)
+- attestation signatures are verified on every read (T9) — requires a **persistent signing keypair** (see below)
+- escalated tool calls awaiting re-dispatch are persisted so approval survives a restart (#129)
 - queries by run, workload, owner/team, certification status, and time window
 - fan-out delivery status is recorded but does not block terminal state
 - health signals are updated on every run terminal transition and on readiness probe results
@@ -67,7 +72,25 @@ audit_log (standalone, references runs, workloads, operators)
 
 ## Technology
 
-PostgreSQL as the system of record. Exact schema lands with the v0.1.0 WBS (Part 1 and Part 3).
+PostgreSQL as the system of record. The schema exists (M18); the app factory must be wired to
+use it and migrations must run on startup (#118).
+
+## Migration Strategy
+
+- Migrations are Alembic-managed (`alembic upgrade head`).
+- The control plane runs migrations on startup (lifespan hook or container entrypoint) so a
+  fresh `docker compose up` yields a working schema with no manual step (#118).
+- `hiveplane init` bootstraps a fresh project against an already-migrated database.
+- Migrations are idempotent and safe to re-run.
+
+## Signing Keypair Management
+
+- The attestation signing key is **persistent** — loaded from a configured file
+  (`HIVEPLANE_CERTIFICATION__SIGNING_KEY_FILE`) or KMS, generated once if absent (#125).
+- An ephemeral per-boot keypair is a defect: it invalidates all prior attestations on restart,
+  breaking T9 and "attestation verified on read".
+- Key rotation is explicit and audited; rotated keys must still verify historical attestations
+  (retain public keys by attestation `signer`).
 
 ### Indexing Strategy
 

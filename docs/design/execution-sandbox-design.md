@@ -1,6 +1,22 @@
 # D11: Execution Sandbox Design
 
-> Status: draft
+> Status: draft. The design targets container/cgroup isolation. **v0.1.0 ships process-level
+> enforcement only, and it is not yet wired into the adapter path** — the runtime adapter runs
+> the agent entrypoint on an in-process daemon thread, and `InMemorySandboxManager` records
+> bookkeeping and a `sandbox_id` without applying caps. Tracked by #110.
+
+## Implementation Status (v0.1.0)
+
+| Capability | Current state | Tracked by |
+|------------|---------------|------------|
+| Sandbox manager bookkeeping (provision/destroy/status/reap) | Implemented (`InMemorySandboxManager`) | — |
+| Process-level caps (`RLIMIT_AS`, `RLIMIT_CPU`, wall-clock watchdog, ephemeral workdir) | Code exists (`sandbox/manager.py`) but is **not in the adapter path** | #110 |
+| Adapter runs inside sandbox | **No** — runs in-process on a daemon thread | #110 |
+| Container/cgroup isolation, network namespaces | Deferred beyond v0.1.0 | — |
+| Egress enforcement | Tool-call-boundary string check only (`EgressGuard`); no network namespace | #110 |
+| Sandbox survival across restart / interaction with durable resume | Unspecified | #111 |
+
+The container-oriented sections below are the target design. Read them with the caveat above.
 
 ## Problem
 
