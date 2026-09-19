@@ -58,6 +58,42 @@ Every command talks to the control-plane API and accepts `--api-url`
 | `hiveplane tools list [--trust-level ...] [--mcp-server ...]` | List registered MCP tools |
 | `hiveplane tools add --file <tool>` | Register an MCP tool |
 
+## Operator UI
+
+The operator UI is a server-rendered web app that reads the same HTTP API as the
+CLI. It gives you fleet health at a glance and lets you act, not just look.
+
+```bash
+# Local (after `docker compose up -d`), or run it directly:
+docker compose up -d ui
+# -> http://localhost:3001
+
+# Or run the UI server yourself against a control plane:
+HIVEPLANE_UI__API_URL=http://localhost:8000 hiveplane-ui
+```
+
+The base URL is configured with `HIVEPLANE_UI__API_URL` (default
+`http://localhost:8000`). The UI is itself an HTTP client of the API; if the API
+is unreachable it renders a controlled "control plane unavailable" page.
+
+| Screen | What it shows | Actions |
+|--------|---------------|---------|
+| **Fleet** (`/`) | Per workload: owner, team, certification status, run state counts, recent failures, last run, budget burn; fleet totals | Follow run links into run detail |
+| **Run detail** (`/runs/{id}`) | State timeline, tool/model calls, cost, sandbox, trace link, approvals | Pause, resume, stop |
+| **Approvals** (`/approvals`) | Pending escalations and resolved history | Approve, deny (operator + reason) |
+| **Certification** (`/certifications`) | Status counts, pass-rate trend, last certified, quarantine history, attestation links | — |
+| **Spend** (`/spend`) | Attributed spend by workload and by team | — |
+
+### Running the UI browser tests
+
+```bash
+make test-e2e   # installs Chromium, runs tests/e2e
+```
+
+These Playwright tests start a real control plane and UI in-process, seed a
+scenario, and drive Chromium through every screen and action. They are marked
+`e2e`, so `make test` (and the coverage gate) excludes them.
+
 ## Core Concepts
 
 | Concept | Meaning |

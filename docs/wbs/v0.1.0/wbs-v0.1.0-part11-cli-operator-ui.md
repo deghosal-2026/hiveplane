@@ -23,21 +23,21 @@ Give operators one surface to see the fleet, inspect a run, certify agents, act 
 
 Acceptance issues (what "done" means):
 
-- [ ] [#54](https://github.com/deghosal-2026/hiveplane/issues/54) — Fleet list and run detail screens
-- [ ] [#55](https://github.com/deghosal-2026/hiveplane/issues/55) — Approval queue, certification dashboard, and spend view
+- [x] [#54](https://github.com/deghosal-2026/hiveplane/issues/54) — Fleet list and run detail screens
+- [x] [#55](https://github.com/deghosal-2026/hiveplane/issues/55) — Approval queue, certification dashboard, and spend view
 
 Work items (build order):
 
-- [ ] [#82](https://github.com/deghosal-2026/hiveplane/issues/82) — Spend read API (`GET /spend`)
-- [ ] [#83](https://github.com/deghosal-2026/hiveplane/issues/83) — Operator UI foundation (package, config, entrypoint, compose)
-- [ ] [#84](https://github.com/deghosal-2026/hiveplane/issues/84) — Operator UI control-plane HTTP client
-- [ ] [#85](https://github.com/deghosal-2026/hiveplane/issues/85) — Operator UI view models
-- [ ] [#86](https://github.com/deghosal-2026/hiveplane/issues/86) — Fleet and run detail screens (delivers #54)
-- [ ] [#87](https://github.com/deghosal-2026/hiveplane/issues/87) — Approval queue, certification dashboard, and spend screens (delivers #55)
-- [ ] [#88](https://github.com/deghosal-2026/hiveplane/issues/88) — Operator UI docs and M22 exit gate
-- [ ] [#89](https://github.com/deghosal-2026/hiveplane/issues/89) — API test cases for the operator-UI surface
-- [ ] [#90](https://github.com/deghosal-2026/hiveplane/issues/90) — UI test cases (client, views, routes)
-- [ ] [#91](https://github.com/deghosal-2026/hiveplane/issues/91) — Operator UI end-to-end tests with Playwright
+- [x] [#82](https://github.com/deghosal-2026/hiveplane/issues/82) — Spend read API (`GET /spend`)
+- [x] [#83](https://github.com/deghosal-2026/hiveplane/issues/83) — Operator UI foundation (package, config, entrypoint, compose)
+- [x] [#84](https://github.com/deghosal-2026/hiveplane/issues/84) — Operator UI control-plane HTTP client
+- [x] [#85](https://github.com/deghosal-2026/hiveplane/issues/85) — Operator UI view models
+- [x] [#86](https://github.com/deghosal-2026/hiveplane/issues/86) — Fleet and run detail screens (delivers #54)
+- [x] [#87](https://github.com/deghosal-2026/hiveplane/issues/87) — Approval queue, certification dashboard, and spend screens (delivers #55)
+- [x] [#88](https://github.com/deghosal-2026/hiveplane/issues/88) — Operator UI docs and M22 exit gate
+- [x] [#89](https://github.com/deghosal-2026/hiveplane/issues/89) — API test cases for the operator-UI surface
+- [x] [#90](https://github.com/deghosal-2026/hiveplane/issues/90) — UI test cases (client, views, routes)
+- [x] [#91](https://github.com/deghosal-2026/hiveplane/issues/91) — Operator UI end-to-end tests with Playwright
 
 **Done when:** the fleet is readable at a glance; run detail renders the execution story; approvals are resolvable from the UI; the certification dashboard and spend view render real data.
 
@@ -49,14 +49,14 @@ Work items (build order):
 
 ## Exit Gate (M21, M22)
 
-- [ ] All tests in the system pass: `pytest`
-- [ ] Code coverage total > 95%
-- [ ] Ruff clean
-- [ ] Mypy strict clean
-- [ ] Update all relevant docs affected by this milestone
-- [ ] Verify all issues in this milestone are done
-- [ ] Close all completed issues
-- [ ] Commit and push changes
+- [x] All tests in the system pass: `pytest`
+- [x] Code coverage total > 95%
+- [x] Ruff clean
+- [x] Mypy strict clean
+- [x] Update all relevant docs affected by this milestone
+- [x] Verify all issues in this milestone are done
+- [x] Close all completed issues
+- [x] Commit and push changes
 
 ## See Also
 

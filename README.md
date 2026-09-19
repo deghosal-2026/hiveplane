@@ -165,7 +165,7 @@ The end state is not "more agents." It is "agents that are operable like a platf
 - Queue/signaling: `Redis` or `NATS`
 - Runtime examples: `LangGraph`, raw Python workers
 - Telemetry: `OpenTelemetry Collector`, `Tempo`, `Prometheus`, `Grafana`
-- UI: `React`
+- UI: server-rendered `FastAPI` + `Jinja2` (Python); a React SPA is planned (see [Operator UI design](docs/design/operator-ui-design.md))
 - Packaging: `Docker Compose` first, `k3d` second
 
 ### Why This Stack
@@ -337,9 +337,10 @@ make cov     # pytest with coverage report (> 95% required)
 make lint    # ruff
 make type    # mypy (strict)
 make check   # lint + type + cov
+make test-e2e  # operator UI browser tests (Playwright, Chromium)
 ```
 
-CI (`.github/workflows/ci.yml`) runs the same gates on Python 3.12 and 3.13 and fails the build below 95% coverage.
+CI (`.github/workflows/ci.yml`) runs the same gates on Python 3.12 and 3.13, fails the build below 95% coverage, and runs the operator UI browser tests in a separate job.
 
 ### Local stack
 
@@ -349,7 +350,7 @@ docker compose ps
 docker compose down
 ```
 
-Services: API (`:8000`), PostgreSQL (`:5432`), Redis (`:6379`), OpenTelemetry Collector (`:4317` gRPC / `:4318` HTTP), Tempo (`:3200`), Prometheus (`:9090`), Grafana (`:3000`). Every service has a healthcheck.
+Services: API (`:8000`), Operator UI (`:3001`), PostgreSQL (`:5432`), Redis (`:6379`), OpenTelemetry Collector (`:4317` gRPC / `:4318` HTTP), Tempo (`:3200`), Prometheus (`:9090`), Grafana (`:3000`). Every service has a healthcheck.
 
 ### Configuration
 

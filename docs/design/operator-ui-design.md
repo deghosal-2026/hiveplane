@@ -168,6 +168,12 @@ The run detail page shows the full execution story (PRD 05: observability & heal
 
 ## Stack
 
+> v0.1.0 ships a **server-rendered Python UI** (FastAPI + Jinja2) that is an HTTP
+> client of the control plane, to stay inside the repository's pytest/ruff/mypy
+> gates without a Node toolchain. A React SPA remains the target and can replace
+> the templates behind the same API. See
+> [M22 Operator UI implementation](operator-ui-implementation.md).
+
 React, backed by the Execution API, Registry Service, and telemetry pipeline.
 
 ## Open Questions
