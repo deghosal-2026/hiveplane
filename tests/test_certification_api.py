@@ -230,3 +230,35 @@ def test_reference_executor_opt_in_allows_certification(
     )
 
     assert response.status_code == 201
+
+
+def test_start_certification_forwards_model_identity() -> None:
+    from hiveplane.api.certifications import (
+        CertificationRequest,
+        start_certification,
+    )
+
+    captured: dict[str, Any] = {}
+    sentinel = object()
+
+    class _FakeCoordinator:
+        def certify(
+            self,
+            workload: str,
+            *,
+            target_context: Any,
+            corpus_ref: Any,
+            model_identity: str | None = None,
+        ) -> Any:
+            captured["workload"] = workload
+            captured["model_identity"] = model_identity
+            return sentinel
+
+    request = CertificationRequest(
+        workload="repo-agent", model_identity="openai/gpt-4o/2024-08-06"
+    )
+    result = start_certification(request, _FakeCoordinator())  # type: ignore[arg-type]
+
+    assert result is sentinel
+    assert captured["workload"] == "repo-agent"
+    assert captured["model_identity"] == "openai/gpt-4o/2024-08-06"

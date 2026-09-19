@@ -193,12 +193,18 @@ def certify(
     corpus: Annotated[
         str | None, typer.Option("--corpus", help="Override the benchmark corpus reference.")
     ] = None,
+    model_identity: Annotated[
+        str | None,
+        typer.Option("--model-identity", help="Model identity to pin the benchmark to."),
+    ] = None,
     api_url: ApiUrl = "http://localhost:8000",
 ) -> None:
     """Run a workload's benchmark corpus and certify the result."""
     payload: dict[str, Any] = {"workload": workload, "target_context": context}
     if corpus is not None:
         payload["corpus"] = corpus
+    if model_identity is not None:
+        payload["model_identity"] = model_identity
     status_code, body = _request("POST", f"{api_url.rstrip('/')}/certifications", payload)
     if status_code >= 400 or status_code == 0:
         typer.secho(

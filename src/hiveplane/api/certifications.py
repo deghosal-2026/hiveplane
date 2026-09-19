@@ -29,6 +29,7 @@ class CertificationRequest(BaseModel):
     workload: str
     target_context: TargetContext = TargetContext.STAGING
     corpus: str | None = None
+    model_identity: str | None = None
 
 
 @router.post(
@@ -44,6 +45,7 @@ def start_certification(
         payload.workload,
         target_context=payload.target_context,
         corpus_ref=payload.corpus,
+        model_identity=payload.model_identity,
     )
 
 

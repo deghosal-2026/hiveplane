@@ -207,6 +207,39 @@ def test_certify_reports_failure(monkeypatch: Any) -> None:
     assert "422" in result.output
 
 
+def test_certify_pins_model_identity(monkeypatch: Any) -> None:
+    captured: dict[str, Any] = {}
+
+    def fake_request(
+        method: str, url: str, payload: dict[str, Any] | None = None
+    ) -> tuple[int, str]:
+        captured["payload"] = payload
+        return (
+            201,
+            json.dumps(
+                {
+                    "certification": {"status": "certified"},
+                    "attestation": {"attestation_id": "att-2"},
+                }
+            ),
+        )
+
+    monkeypatch.setattr("hiveplane.cli._request", fake_request)
+
+    result = runner.invoke(
+        app,
+        [
+            "certify",
+            "repo-agent",
+            "--model-identity",
+            "openai/gpt-4o/2024-08-06",
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert captured["payload"]["model_identity"] == "openai/gpt-4o/2024-08-06"
+
+
 def test_certs_list(monkeypatch: Any) -> None:
     def fake_request(
         method: str, url: str, payload: dict[str, Any] | None = None
@@ -672,6 +705,18 @@ def test_init_scaffolds_working_project() -> None:
     assert corpus.tasks
     assert (project / "README.md").exists()
     assert "init" in result.output.lower() or "next" in result.output.lower()
+
+
+def test_init_scaffolds_resolvable_entrypoint() -> None:
+    from hiveplane.adapters.loader import EntrypointLoader
+
+    result = runner.invoke(app, ["init", "myproject"])
+    assert result.exit_code == 0, result.output
+
+    manifest = load_manifest(Path("myproject") / "workloads" / "hello-agent.yaml")
+    entry = EntrypointLoader(root=".").load(manifest.spec.runtime.entrypoint)
+
+    assert callable(entry)
 
 
 def test_init_refuses_to_overwrite_existing_files() -> None:
