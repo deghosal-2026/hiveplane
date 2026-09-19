@@ -161,6 +161,16 @@ def test_server_error_raises_control_plane_error() -> None:
     assert excinfo.value.status_code == 500
 
 
+def test_error_detail_from_non_dict_json_body() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(422, json=["bad", "request"])
+
+    with pytest.raises(ControlPlaneError) as excinfo:
+        _client(handler).list_workloads()
+
+    assert excinfo.value.detail == "['bad', 'request']"
+
+
 def test_transport_error_maps_to_control_plane_error() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
         raise httpx.ConnectError("connection refused")

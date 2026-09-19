@@ -143,6 +143,18 @@ def test_run_detail_unknown_run_renders_404() -> None:
     assert "No run" in response.text
 
 
+def test_run_detail_control_plane_outage_renders_502() -> None:
+    fake = _story_fake()
+    fake.errors["get_story"] = ControlPlaneError(503, "control plane down")
+
+    response = TestClient(create_ui_app(client=fake), raise_server_exceptions=False).get(
+        "/runs/r1"
+    )
+
+    assert response.status_code == 502
+    assert "control plane down" in response.text
+
+
 @pytest.mark.parametrize("action", ["pause", "resume", "stop"])
 def test_run_intervention_calls_client_and_redirects(action: str) -> None:
     fake = _story_fake()
