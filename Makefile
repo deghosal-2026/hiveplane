@@ -1,9 +1,10 @@
-.PHONY: help install test cov lint type check fmt clean
+.PHONY: help install test test-e2e cov lint type check fmt clean
 
 help:
 	@echo "HivePlane developer targets:"
 	@echo "  make install  Install package with dev extras (editable)"
 	@echo "  make test     Run the test suite"
+	@echo "  make test-e2e Run operator UI browser tests (Playwright)"
 	@echo "  make cov      Run tests with coverage report"
 	@echo "  make lint     Run ruff"
 	@echo "  make type     Run mypy (strict)"
@@ -16,6 +17,10 @@ install:
 
 test:
 	python -m pytest
+
+test-e2e:
+	python -m playwright install chromium
+	python -m pytest tests/e2e -m e2e
 
 cov:
 	python -m pytest --cov=src/hiveplane --cov-report=term-missing

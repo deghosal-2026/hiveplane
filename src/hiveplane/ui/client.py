@@ -75,6 +75,10 @@ class HttpControlPlaneClient:
         self.base_url = base_url.rstrip("/")
         self._client = client or httpx.Client(timeout=timeout)
 
+    def close(self) -> None:
+        """Close the underlying HTTP connection pool."""
+        self._client.close()
+
     def _request(
         self,
         method: str,
