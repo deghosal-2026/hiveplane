@@ -32,3 +32,33 @@ class BudgetSnapshot(BaseModel):
     run_usd: float = Field(ge=0.0)
     day_usd: float = Field(ge=0.0)
     team_usd: float = Field(ge=0.0)
+
+
+class SpendByWorkload(BaseModel):
+    """Attributed spend rolled up for a workload."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    workload: str
+    team: str | None = None
+    total_usd: float = Field(ge=0.0)
+    run_count: int = Field(ge=0)
+
+
+class SpendByTeam(BaseModel):
+    """Attributed spend rolled up for a team."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    team: str
+    total_usd: float = Field(ge=0.0)
+    run_count: int = Field(ge=0)
+
+
+class SpendSummary(BaseModel):
+    """Attributed spend for the fleet, by workload and by team."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    by_workload: list[SpendByWorkload] = Field(default_factory=list)
+    by_team: list[SpendByTeam] = Field(default_factory=list)

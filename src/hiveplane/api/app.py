@@ -21,6 +21,7 @@ from hiveplane.api.certifications import router as certifications_router
 from hiveplane.api.policy import router as policy_router
 from hiveplane.api.registry import router as registry_router
 from hiveplane.api.runs import router as runs_router
+from hiveplane.api.spend import router as spend_router
 from hiveplane.budget.errors import MissingModelIdentityError, UnknownModelPriceError
 from hiveplane.budget.pricing import CostTable
 from hiveplane.budget.service import BudgetService
@@ -124,11 +125,13 @@ def create_app(
     policy_pack_store = InMemoryPolicyPackStore()
     policy_engine = PolicyEngine(policy_pack_store)
     approval_service = ApprovalService(InMemoryApprovalStore())
-    budget_service = BudgetService(InMemoryBudgetStore(), CostTable())
+    budget_store = InMemoryBudgetStore()
+    budget_service = BudgetService(budget_store, CostTable())
     sandbox_manager = InMemorySandboxManager()
     app.state.policy_pack_store = policy_pack_store
     app.state.policy_engine = policy_engine
     app.state.approval_service = approval_service
+    app.state.budget_store = budget_store
     app.state.budget_service = budget_service
     app.state.sandbox_manager = sandbox_manager
     app.state.run_service = run_service or build_run_service(
@@ -207,6 +210,7 @@ def create_app(
     app.include_router(policy_router)
     app.include_router(approvals_router)
     app.include_router(certifications_router)
+    app.include_router(spend_router)
     return app
 
 

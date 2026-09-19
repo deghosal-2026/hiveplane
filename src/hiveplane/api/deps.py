@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from fastapi import Request
 
+from hiveplane.budget.store import BudgetStore
 from hiveplane.certification.workflow import CertificationCoordinator
 from hiveplane.execution.service import RunService
 from hiveplane.execution.tools import ToolGateway
@@ -41,6 +42,12 @@ def get_approval_service(request: Request) -> ApprovalService:
     """Return the approval service bound to the application state."""
     service: ApprovalService = request.app.state.approval_service
     return service
+
+
+def get_budget_store(request: Request) -> BudgetStore:
+    """Return the budget store bound to the application state."""
+    store: BudgetStore = request.app.state.budget_store
+    return store
 
 
 def get_certification_coordinator(request: Request) -> CertificationCoordinator:
