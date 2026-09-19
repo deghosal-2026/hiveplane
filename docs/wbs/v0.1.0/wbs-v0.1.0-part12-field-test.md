@@ -1,6 +1,6 @@
 # WBS v0.1.0 — Part 12: Field Test
 
-**Milestone:** M23 · **Issues:** #56-#59, #92-#133 (37 open) · **Phases:** P0-P4
+**Milestone:** M23 · **Issues:** #56-#59, #92-#133 (23 open) · **Phases:** P0-P4
 
 ## Goal
 
@@ -31,30 +31,32 @@ Run three real, LLM-backed agents through the certified control loop and produce
 
 ### P1 — LLM & Agent Enablement
 
-**Issues:** [#107](https://github.com/deghosal-2026/hiveplane/issues/107) · [#115](https://github.com/deghosal-2026/hiveplane/issues/115) · [#116](https://github.com/deghosal-2026/hiveplane/issues/116) · [#108](https://github.com/deghosal-2026/hiveplane/issues/108) · [#112](https://github.com/deghosal-2026/hiveplane/issues/112) · [#113](https://github.com/deghosal-2026/hiveplane/issues/113)
+**Issues:** [#107](https://github.com/deghosal-2026/hiveplane/issues/107) · [#115](https://github.com/deghosal-2026/hiveplane/issues/115) · [#116](https://github.com/deghosal-2026/hiveplane/issues/116) · [#117](https://github.com/deghosal-2026/hiveplane/issues/117) · [#108](https://github.com/deghosal-2026/hiveplane/issues/108) · [#112](https://github.com/deghosal-2026/hiveplane/issues/112) · [#113](https://github.com/deghosal-2026/hiveplane/issues/113) · [#118](https://github.com/deghosal-2026/hiveplane/issues/118) · [#119](https://github.com/deghosal-2026/hiveplane/issues/119) · [#120](https://github.com/deghosal-2026/hiveplane/issues/120) · [#125](https://github.com/deghosal-2026/hiveplane/issues/125) · [#126](https://github.com/deghosal-2026/hiveplane/issues/126) · [#127](https://github.com/deghosal-2026/hiveplane/issues/127) · [#128](https://github.com/deghosal-2026/hiveplane/issues/128)
 
-- [ ] #107 — Implement LLM provider integration (local + cloud + fake for CI)
-- [ ] #115 — LLM seam in WorkerContext (agent contract change: `ctx.complete()` routes through boundary, auto-reports usage, verifies model identity, emits model-call spans)
-- [ ] #116 — Tool execution layer (mock dispatcher with fixtures: agents get real tool data instead of fabricating outputs)
-- [ ] #108 — Real LLM-backed example agents (repo-agent, docs-agent, incident-agent — incl. the missing `examples/incident_agent.py`)
-- [ ] #112 — Container image & compose readiness for agent runs (examples in image, langgraph extra, postgres run store)
-- [ ] #113 — Align example manifests with v0.1.0 scope (teams/jira fan-out → slack/webhook; annotate inert triggers/mcp_servers)
-- [ ] #118 — Wire app factory to persistence layer + auto-migration + compose adapter env (critical: control plane doesn't work in Docker today)
-- [ ] #119 — Fix `hiveplane init` scaffolding (working entrypoint + agent + corpus)
-- [ ] #120 — Environment config profiles (CI fake / local Ollama / cloud OpenAI)
-- [ ] #125 — Persist attestation signing keypair across restarts (critical: all attestations break on restart)
-- [ ] #126 — Persist certification store (attestations + cert records) (critical: certified workloads become uncertified on restart)
-- [ ] #127 — CLI certify must accept and pin model_identity (critical: model pinning impossible from CLI)
-- [ ] #128 — Persist budget store (per-day aggregate enforcement across restarts) (critical: daily budget resets on restart)
+- [x] #107 — Implement LLM provider integration (local + cloud + fake for CI)
+- [x] #115 — LLM seam in WorkerContext (agent contract change: `ctx.complete()` routes through boundary, auto-reports usage, verifies model identity, emits model-call spans)
+- [x] #116 — Tool execution layer (mock dispatcher with fixtures: agents get real tool data instead of fabricating outputs)
+- [x] #117 — AdapterTaskExecutor bridge (connect certification `TaskExecutor` to `RawTaskExecutor` — corpus tasks run as real agent runs)
+- [x] #108 — Real LLM-backed example agents (repo-agent, docs-agent, incident-agent — incl. the missing `examples/incident_agent.py`)
+- [x] #112 — Container image & compose readiness for agent runs (examples in image, langgraph extra, postgres run store)
+- [x] #113 — Align example manifests with v0.1.0 scope (teams/jira fan-out → slack/webhook; annotate inert triggers/mcp_servers)
+- [x] #118 — Wire app factory to persistence layer + auto-migration (critical: control plane didn't work in Docker before)
+- [x] #119 — Fix `hiveplane init` scaffolding (working entrypoint + agent + corpus)
+- [x] #120 — Environment config profiles (CI fake / local Ollama / cloud OpenAI)
+- [x] #125 — Persist attestation signing keypair across restarts (critical: all attestations break on restart)
+- [x] #126 — Persist certification store (attestations + cert records) (critical: certified workloads become uncertified on restart)
+- [x] #127 — CLI certify must accept and pin model_identity (critical: model pinning impossible from CLI)
+- [x] #128 — Persist budget store (per-day aggregate enforcement across restarts) (critical: daily budget resets on restart)
+
+**Status:** Complete. Commits `c69de85` (#107), `026d9d1` (#108/#112/#113/#115/#116/#117/#118/#120/#125/#126/#128), `f27d014` (#119/#127). All P1 issues closed.
 
 **Exit:** all three workloads register, load in the built image, and run end-to-end against local + fake providers; agents call the LLM through the boundary, get real tool data, and report real usage and model identity.
 
 ### P2 — Control-Loop Hardening
 
-**Issues:** [#98](https://github.com/deghosal-2026/hiveplane/issues/98) · [#117](https://github.com/deghosal-2026/hiveplane/issues/117) · [#109](https://github.com/deghosal-2026/hiveplane/issues/109) · [#110](https://github.com/deghosal-2026/hiveplane/issues/110) · [#111](https://github.com/deghosal-2026/hiveplane/issues/111)
+**Issues:** [#98](https://github.com/deghosal-2026/hiveplane/issues/98) · [#109](https://github.com/deghosal-2026/hiveplane/issues/109) · [#110](https://github.com/deghosal-2026/hiveplane/issues/110) · [#111](https://github.com/deghosal-2026/hiveplane/issues/111) · [#122](https://github.com/deghosal-2026/hiveplane/issues/122) · [#123](https://github.com/deghosal-2026/hiveplane/issues/123) · [#124](https://github.com/deghosal-2026/hiveplane/issues/124) · [#129](https://github.com/deghosal-2026/hiveplane/issues/129) · [#130](https://github.com/deghosal-2026/hiveplane/issues/130) · [#131](https://github.com/deghosal-2026/hiveplane/issues/131)
 
 - [ ] #98 — Field test corpus (docs-agent + incident-agent corpora; ≥5 deterministic tasks each; negative tasks)
-- [ ] #117 — AdapterTaskExecutor bridge (connect certification `TaskExecutor` to `RawWorkerAdapter.submit()` — corpus tasks run as real agent runs)
 - [ ] #109 — Adapter-backed benchmark certification (execute real agents against corpora; `EXECUTOR=adapter`; depends on #117)
 - [ ] #110 — Wire sandbox resource caps into the adapter execution path (RLIMIT_AS/CPU + wall-clock watchdog)
 - [ ] #111 — Implement startup recovery & durable resume (S8 unblocked)
