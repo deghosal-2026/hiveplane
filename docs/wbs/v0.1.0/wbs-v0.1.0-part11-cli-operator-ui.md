@@ -10,8 +10,8 @@ Give operators one surface to see the fleet, inspect a run, certify agents, act 
 
 **Issues:** [#52](https://github.com/deghosal-2026/hiveplane/issues/52) · [#53](https://github.com/deghosal-2026/hiveplane/issues/53)
 
-- [ ] [#52](https://github.com/deghosal-2026/hiveplane/issues/52) — Core CLI commands (register, submit, runs, approvals)
-- [ ] [#53](https://github.com/deghosal-2026/hiveplane/issues/53) — Certification, trigger, and tools CLI + `init`
+- [x] [#52](https://github.com/deghosal-2026/hiveplane/issues/52) — Core CLI commands (register, submit, runs, approvals)
+- [x] [#53](https://github.com/deghosal-2026/hiveplane/issues/53) — Certification, trigger, and tools CLI + `init`
 
 **Done when:** the full loop is driveable from the CLI; `hiveplane init` produces a working project with example workloads and a sample corpus; certify works end-to-end from the CLI.
 

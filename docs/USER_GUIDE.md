@@ -17,21 +17,46 @@ HivePlane is a control plane for operating a fleet of AI agents as first-class w
 # 1. Start the local control plane
 docker compose up -d
 
-# 2. Register an agent workload
+# 2. Scaffold a project (optional): workloads, sample corpus, README
+hiveplane init myproject
+
+# 3. Register an agent workload
 hiveplane register examples/workloads/example-agent.yaml
 
-# 3. Submit a task
-hiveplane submit --agent example-agent --task "summarize open PRs"
+# 4. Submit a task (task payload is a JSON object)
+hiveplane submit --agent example-agent --task '{"repo": "hiveplane"}'
 
-# 4. Inspect the run
+# 5. Inspect the run
 hiveplane runs list
 hiveplane runs show <run-id>
 
-# 5. Intervene
+# 6. Intervene
 hiveplane runs pause <run-id>
 hiveplane runs resume <run-id>
 hiveplane runs stop <run-id>
 ```
+
+## Operator CLI
+
+Every command talks to the control-plane API and accepts `--api-url`
+(default `http://localhost:8000`). Documents passed to `--file` may be YAML or JSON.
+
+| Command | Purpose |
+|---------|---------|
+| `hiveplane init [DIR] [--force]` | Scaffold a project with a sample workload, corpus, and README |
+| `hiveplane validate <manifest>` | Validate a manifest against the strict schema |
+| `hiveplane register <manifest> [--dry-run]` | Register a workload, or preview enforcement |
+| `hiveplane certify <workload> [--context staging\|production] [--corpus ...]` | Run the corpus and certify |
+| `hiveplane certs list\|show\|compare` | Inspect, show, and diff certifications |
+| `hiveplane submit --agent <name> [--task JSON] [--caller ...] [--context ...] [--model-identity ...]` | Submit a run |
+| `hiveplane runs list [--workload ...] [--state ...]` | List runs |
+| `hiveplane runs show\|pause\|resume\|stop <run-id>` | Inspect and intervene on a run |
+| `hiveplane approvals list [--status ...] [--workload ...]` | List approval requests |
+| `hiveplane approvals approve\|deny <id> --operator <name> [--reason ...]` | Resolve an approval |
+| `hiveplane triggers list --workload <name>` | List a workload's trigger rules |
+| `hiveplane triggers add --workload <name> --file <rule>` | Add a trigger rule |
+| `hiveplane tools list [--trust-level ...] [--mcp-server ...]` | List registered MCP tools |
+| `hiveplane tools add --file <tool>` | Register an MCP tool |
 
 ## Core Concepts
 

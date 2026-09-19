@@ -10,8 +10,12 @@ from typing import Annotated, Any
 from urllib.parse import urlencode
 
 import typer
+import yaml
+from pydantic import ValidationError
 
 from hiveplane.core.manifest import ManifestError, load_manifest
+from hiveplane.core.triggers import TriggerRule
+from hiveplane.registry.models import ToolRegistration
 from hiveplane.registry.service import RegistryService
 from hiveplane.registry.store import InMemoryRegistryStore
 
@@ -21,7 +25,15 @@ app = typer.Typer(
     no_args_is_help=True,
 )
 certs_app = typer.Typer(help="Inspect and compare certifications.", no_args_is_help=True)
+runs_app = typer.Typer(help="Inspect and intervene on runs.", no_args_is_help=True)
+approvals_app = typer.Typer(help="Review and resolve approvals.", no_args_is_help=True)
+triggers_app = typer.Typer(help="Inspect and add workload triggers.", no_args_is_help=True)
+tools_app = typer.Typer(help="Inspect and register MCP tools.", no_args_is_help=True)
 app.add_typer(certs_app, name="certs")
+app.add_typer(runs_app, name="runs")
+app.add_typer(approvals_app, name="approvals")
+app.add_typer(triggers_app, name="triggers")
+app.add_typer(tools_app, name="tools")
 
 ManifestArg = Annotated[
     Path,
@@ -76,6 +88,25 @@ def _post_workload(api_url: str, payload: dict[str, Any]) -> tuple[int, str]:
     return _request("POST", f"{api_url.rstrip('/')}/workloads", payload)
 
 
+def _load_document(path: Path) -> dict[str, Any]:
+    """Load a YAML or JSON document that must contain a mapping."""
+    try:
+        document = yaml.safe_load(path.read_text())
+    except (OSError, yaml.YAMLError) as exc:
+        typer.secho(f"could not read {path}: {exc}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=1) from exc
+    if not isinstance(document, dict):
+        typer.secho(f"{path}: expected a mapping document", fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=1)
+    return document
+
+
+def _fail(action: str, status_code: int, body: str) -> None:
+    """Report a failed control-plane call and exit non-zero."""
+    typer.secho(f"{action} failed ({status_code}): {body}", fg=typer.colors.RED, err=True)
+    raise typer.Exit(code=1)
+
+
 @app.command()
 def register(
     manifest: ManifestArg,
@@ -110,6 +141,47 @@ def register(
 
 
 ApiUrl = Annotated[str, typer.Option("--api-url", help="Base URL of the control-plane API.")]
+
+
+@app.command()
+def submit(
+    agent: Annotated[str, typer.Option("--agent", help="Workload name to run.")],
+    task: Annotated[
+        str, typer.Option("--task", help="JSON object with the task payload.")
+    ] = "{}",
+    caller: Annotated[str, typer.Option("--caller", help="Who is submitting the run.")] = "cli",
+    context: Annotated[
+        str,
+        typer.Option("--context", help="Target context: sandbox, staging, or production."),
+    ] = "sandbox",
+    model_identity: Annotated[
+        str | None, typer.Option("--model-identity", help="Model identity to pin the run to.")
+    ] = None,
+    api_url: ApiUrl = "http://localhost:8000",
+) -> None:
+    """Submit a run for admission and print its id and state."""
+    try:
+        task_payload = json.loads(task)
+    except json.JSONDecodeError as exc:
+        typer.secho(f"invalid --task JSON: {exc}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=1) from exc
+    if not isinstance(task_payload, dict):
+        typer.secho("invalid --task: expected a JSON object", fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=1)
+
+    payload: dict[str, Any] = {
+        "workload": agent,
+        "caller": caller,
+        "context": context,
+        "task": task_payload,
+    }
+    if model_identity is not None:
+        payload["model_identity"] = model_identity
+    status_code, body = _request("POST", f"{api_url.rstrip('/')}/runs", payload)
+    if status_code >= 400 or status_code == 0:
+        _fail("submission", status_code, body)
+    data = json.loads(body)
+    typer.secho(f"OK: submitted {data['id']} ({data['state']})", fg=typer.colors.GREEN)
 
 
 @app.command()
@@ -213,6 +285,332 @@ def certs_compare(
         typer.secho(f"  regressed: {item['task_id']}", fg=typer.colors.RED)
     for item in diff["improved"]:
         typer.secho(f"  improved: {item['task_id']}", fg=typer.colors.GREEN)
+
+
+# --------------------------------------------------------------------------- #
+# Runs
+# --------------------------------------------------------------------------- #
+@runs_app.command("list")
+def runs_list(
+    workload: Annotated[str | None, typer.Option("--workload", help="Filter by workload.")] = None,
+    state: Annotated[str | None, typer.Option("--state", help="Filter by run state.")] = None,
+    api_url: ApiUrl = "http://localhost:8000",
+) -> None:
+    """List runs, optionally filtered by workload and state."""
+    query = urlencode(
+        {k: v for k, v in {"workload": workload, "state": state}.items() if v}
+    )
+    url = f"{api_url.rstrip('/')}/runs"
+    if query:
+        url = f"{url}?{query}"
+    status_code, body = _request("GET", url)
+    if status_code >= 400 or status_code == 0:
+        _fail("list runs", status_code, body)
+    for run in json.loads(body):
+        typer.echo(f"{run['id']}  {run['workload_id']}  {run['state']}")
+
+
+@runs_app.command("show")
+def runs_show(
+    run_id: Annotated[str, typer.Argument(help="Run id.")],
+    api_url: ApiUrl = "http://localhost:8000",
+) -> None:
+    """Show a run in full, as JSON."""
+    status_code, body = _request("GET", f"{api_url.rstrip('/')}/runs/{run_id}")
+    if status_code >= 400 or status_code == 0:
+        _fail("show run", status_code, body)
+    typer.echo(json.dumps(json.loads(body), indent=2))
+
+
+def _intervene(action: str, run_id: str, api_url: str) -> None:
+    """Send an intervention to a run and print the resulting state."""
+    status_code, body = _request(
+        "POST", f"{api_url.rstrip('/')}/runs/{run_id}/{action}"
+    )
+    if status_code >= 400 or status_code == 0:
+        _fail(f"{action} run", status_code, body)
+    data = json.loads(body)
+    typer.secho(f"OK: {run_id} -> {data['state']}", fg=typer.colors.GREEN)
+
+
+@runs_app.command("pause")
+def runs_pause(
+    run_id: Annotated[str, typer.Argument(help="Run id.")],
+    api_url: ApiUrl = "http://localhost:8000",
+) -> None:
+    """Pause a running run."""
+    _intervene("pause", run_id, api_url)
+
+
+@runs_app.command("resume")
+def runs_resume(
+    run_id: Annotated[str, typer.Argument(help="Run id.")],
+    api_url: ApiUrl = "http://localhost:8000",
+) -> None:
+    """Resume a paused run."""
+    _intervene("resume", run_id, api_url)
+
+
+@runs_app.command("stop")
+def runs_stop(
+    run_id: Annotated[str, typer.Argument(help="Run id.")],
+    api_url: ApiUrl = "http://localhost:8000",
+) -> None:
+    """Stop a run."""
+    _intervene("stop", run_id, api_url)
+
+
+# --------------------------------------------------------------------------- #
+# Approvals
+# --------------------------------------------------------------------------- #
+@approvals_app.command("list")
+def approvals_list(
+    status: Annotated[str | None, typer.Option("--status", help="Filter by status.")] = None,
+    workload: Annotated[str | None, typer.Option("--workload", help="Filter by workload.")] = None,
+    api_url: ApiUrl = "http://localhost:8000",
+) -> None:
+    """List approval requests, optionally filtered."""
+    query = urlencode(
+        {k: v for k, v in {"status": status, "workload": workload}.items() if v}
+    )
+    url = f"{api_url.rstrip('/')}/approvals"
+    if query:
+        url = f"{url}?{query}"
+    status_code, body = _request("GET", url)
+    if status_code >= 400 or status_code == 0:
+        _fail("list approvals", status_code, body)
+    for approval in json.loads(body):
+        typer.echo(
+            f"{approval['approval_id']}  {approval['run_id']}  "
+            f"{approval.get('workload') or ''}  {approval['status']}"
+        )
+
+
+def _decide(
+    decision: str, approval_id: str, operator: str, reason: str | None, api_url: str
+) -> None:
+    """Approve or deny an approval and print the resulting status."""
+    payload: dict[str, Any] = {"operator": operator}
+    if reason is not None:
+        payload["reason"] = reason
+    status_code, body = _request(
+        "POST", f"{api_url.rstrip('/')}/approvals/{approval_id}/{decision}", payload
+    )
+    if status_code >= 400 or status_code == 0:
+        _fail(f"{decision} approval", status_code, body)
+    data = json.loads(body)
+    typer.secho(f"OK: {approval_id} -> {data['status']}", fg=typer.colors.GREEN)
+
+
+@approvals_app.command("approve")
+def approvals_approve(
+    approval_id: Annotated[str, typer.Argument(help="Approval id.")],
+    operator: Annotated[str, typer.Option("--operator", help="Operator resolving the approval.")],
+    reason: Annotated[str | None, typer.Option("--reason", help="Decision rationale.")] = None,
+    api_url: ApiUrl = "http://localhost:8000",
+) -> None:
+    """Approve a request and let the run continue."""
+    _decide("approve", approval_id, operator, reason, api_url)
+
+
+@approvals_app.command("deny")
+def approvals_deny(
+    approval_id: Annotated[str, typer.Argument(help="Approval id.")],
+    operator: Annotated[str, typer.Option("--operator", help="Operator resolving the approval.")],
+    reason: Annotated[str | None, typer.Option("--reason", help="Decision rationale.")] = None,
+    api_url: ApiUrl = "http://localhost:8000",
+) -> None:
+    """Deny a request and fail the run."""
+    _decide("deny", approval_id, operator, reason, api_url)
+
+
+# --------------------------------------------------------------------------- #
+# Triggers
+# --------------------------------------------------------------------------- #
+@triggers_app.command("list")
+def triggers_list(
+    workload: Annotated[str, typer.Option("--workload", help="Workload name.")],
+    api_url: ApiUrl = "http://localhost:8000",
+) -> None:
+    """List trigger rules stored for a workload."""
+    url = f"{api_url.rstrip('/')}/workloads/{workload}/triggers"
+    status_code, body = _request("GET", url)
+    if status_code >= 400 or status_code == 0:
+        _fail("list triggers", status_code, body)
+    for record in json.loads(body):
+        typer.echo(f"{record['trigger_id']}  {record['rule']['type']}")
+
+
+@triggers_app.command("add")
+def triggers_add(
+    workload: Annotated[str, typer.Option("--workload", help="Workload name.")],
+    file: Annotated[
+        Path,
+        typer.Option(
+            "--file", exists=True, dir_okay=False, readable=True, help="Trigger YAML/JSON."
+        ),
+    ],
+    api_url: ApiUrl = "http://localhost:8000",
+) -> None:
+    """Add a trigger rule to a workload from a YAML or JSON document."""
+    try:
+        rule = TriggerRule.model_validate(_load_document(file))
+    except ValidationError as exc:
+        typer.secho(f"invalid trigger: {exc}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=1) from exc
+    url = f"{api_url.rstrip('/')}/workloads/{workload}/triggers"
+    payload = rule.model_dump(mode="json", exclude_none=True)
+    status_code, body = _request("POST", url, payload)
+    if status_code >= 400 or status_code == 0:
+        _fail("add trigger", status_code, body)
+    data = json.loads(body)
+    typer.secho(f"OK: added trigger {data['trigger_id']}", fg=typer.colors.GREEN)
+
+
+# --------------------------------------------------------------------------- #
+# Tools
+# --------------------------------------------------------------------------- #
+@tools_app.command("list")
+def tools_list(
+    trust_level: Annotated[
+        str | None, typer.Option("--trust-level", help="Filter by trust level.")
+    ] = None,
+    mcp_server: Annotated[
+        str | None, typer.Option("--mcp-server", help="Filter by MCP server.")
+    ] = None,
+    api_url: ApiUrl = "http://localhost:8000",
+) -> None:
+    """List registered MCP tools."""
+    query = urlencode(
+        {k: v for k, v in {"trust_level": trust_level, "mcp_server": mcp_server}.items() if v}
+    )
+    url = f"{api_url.rstrip('/')}/tools"
+    if query:
+        url = f"{url}?{query}"
+    status_code, body = _request("GET", url)
+    if status_code >= 400 or status_code == 0:
+        _fail("list tools", status_code, body)
+    for tool in json.loads(body):
+        typer.echo(f"{tool['tool_id']}  {tool['trust_level']}  {tool['name']}")
+
+
+@tools_app.command("add")
+def tools_add(
+    file: Annotated[
+        Path,
+        typer.Option(
+            "--file", exists=True, dir_okay=False, readable=True, help="Tool YAML/JSON."
+        ),
+    ],
+    api_url: ApiUrl = "http://localhost:8000",
+) -> None:
+    """Register an MCP tool from a YAML or JSON document."""
+    try:
+        registration = ToolRegistration.model_validate(_load_document(file))
+    except ValidationError as exc:
+        typer.secho(f"invalid tool: {exc}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=1) from exc
+    status_code, body = _request(
+        "POST", f"{api_url.rstrip('/')}/tools", registration.model_dump(mode="json")
+    )
+    if status_code >= 400 or status_code == 0:
+        _fail("add tool", status_code, body)
+    data = json.loads(body)
+    typer.secho(f"OK: registered {data['tool_id']}", fg=typer.colors.GREEN)
+
+
+# --------------------------------------------------------------------------- #
+# Project scaffolding
+# --------------------------------------------------------------------------- #
+_INIT_MANIFEST = """\
+apiVersion: hiveplane/v1
+kind: AgentWorkload
+metadata:
+  name: hello-agent
+  owner: platform-team
+  team: platform
+  description: Sample workload created by `hiveplane init`.
+spec:
+  runtime:
+    adapter: raw-worker
+    entrypoint: examples.worker:run
+  model:
+    strategy: tiered
+    identity:
+      provider: openai
+      family: gpt-4o
+      version: "2024-08-06"
+  certification:
+    benchmark_corpus: corpora/hello-agent/v1
+    staging_threshold: 0.80
+    production_threshold: 0.90
+    status: uncertified
+  budget:
+    per_run_usd: 0.50
+    per_day_usd: 5.00
+"""
+
+_INIT_CORPUS = """\
+id: hello-agent-corpus
+version: 1
+tasks:
+  - id: task-001
+    name: greet the world
+    input:
+      name: world
+    expected:
+      outcome: "greeting: hello, world"
+      required_fields: [greeting]
+    check:
+      type: exact_match
+      field: greeting
+      value: "hello, world"
+    critical: false
+"""
+
+_INIT_README = """\
+# HivePlane project
+
+Scaffolded by `hiveplane init`.
+
+- `workloads/hello-agent.yaml` — a sample AgentWorkload manifest.
+- `corpora/hello-agent/v1/corpus.yaml` — its sample benchmark corpus.
+
+## Next steps
+
+1. Validate the manifest: `hiveplane validate workloads/hello-agent.yaml`
+2. Start the control plane: `docker compose up -d`
+3. Register the workload: `hiveplane register workloads/hello-agent.yaml`
+4. Certify it: `hiveplane certify hello-agent --context staging`
+5. Submit a run: `hiveplane submit --agent hello-agent --task '{{"name": "world"}}'`
+"""
+
+
+@app.command()
+def init(
+    directory: Annotated[Path, typer.Argument(help="Destination directory.")] = Path(),
+    force: Annotated[
+        bool, typer.Option("--force", help="Overwrite existing files.")
+    ] = False,
+) -> None:
+    """Scaffold a working project with a sample workload and corpus."""
+    files = {
+        directory / "workloads" / "hello-agent.yaml": _INIT_MANIFEST,
+        directory / "corpora" / "hello-agent" / "v1" / "corpus.yaml": _INIT_CORPUS,
+        directory / "README.md": _INIT_README,
+    }
+    existing = [path for path in files if path.exists()]
+    if existing and not force:
+        for path in existing:
+            typer.secho(f"exists: {path}", fg=typer.colors.RED, err=True)
+        typer.secho("refusing to overwrite; re-run with --force", fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=1)
+
+    for path, content in files.items():
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(content)
+        typer.secho(f"created {path}", fg=typer.colors.GREEN)
+    typer.echo(f"Next: register {directory / 'workloads' / 'hello-agent.yaml'} and certify it.")
 
 
 def main() -> None:
