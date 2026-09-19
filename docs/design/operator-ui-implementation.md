@@ -184,6 +184,9 @@ New tests (all part of the existing `pytest`/coverage/mypy gates):
 
 - `tests/test_spend_api.py` — `/spend` aggregation: by workload, by team, team-less
   attribution, empty store, multiple runs.
+- `tests/test_ui_contract_api.py` — consolidated API contract suite for the endpoints the UI
+  consumes (workloads, runs + story, interventions, approvals + decisions, certifications),
+  so UI breakage is caught at the API layer.
 - `tests/test_ui_client.py` — `HttpControlPlaneClient` against `httpx.MockTransport`:
   success parsing, each resource, and `ControlPlaneError` on 4xx/5xx.
 - `tests/test_ui_views.py` — pure view-model builders: state counts, failures, trends,
@@ -191,6 +194,12 @@ New tests (all part of the existing `pytest`/coverage/mypy gates):
 - `tests/test_ui_app.py` — route rendering and actions via `starlette.testclient.TestClient`
   with a fake in-memory `ControlPlaneClient`: each screen renders, approve/deny and
   pause/resume/stop issue the right client calls, error paths render banners/pages.
+
+End-to-end browser tests (`tests/e2e/test_ui_e2e.py`) use **pytest-playwright** (Python, no
+Node toolchain) against the real control plane and UI server started in-process on ephemeral
+ports. E2E tests carry the `e2e` marker: plain `pytest` runs the unit suite only;
+`make test-e2e` (and CI) run the browser flows — fleet list, run detail + interventions,
+approval approve/deny, certification dashboard, spend view, 404 and 502 pages.
 
 Exit gate for M22 (from the WBS):
 

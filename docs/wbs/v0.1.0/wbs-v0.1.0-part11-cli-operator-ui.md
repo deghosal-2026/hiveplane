@@ -17,7 +17,7 @@ Give operators one surface to see the fleet, inspect a run, certify agents, act 
 
 ## M22 — Operator UI
 
-**Issues:** [#54](https://github.com/deghosal-2026/hiveplane/issues/54) · [#55](https://github.com/deghosal-2026/hiveplane/issues/55) · work items [#82-#88](https://github.com/deghosal-2026/hiveplane/issues?q=milestone%3AM22)
+**Issues:** [#54](https://github.com/deghosal-2026/hiveplane/issues/54) · [#55](https://github.com/deghosal-2026/hiveplane/issues/55) · work items [#82-#91](https://github.com/deghosal-2026/hiveplane/issues?q=milestone%3AM22)
 
 **Implementation design:** [Operator UI implementation](../../design/operator-ui-implementation.md)
 
@@ -35,6 +35,9 @@ Work items (build order):
 - [ ] [#86](https://github.com/deghosal-2026/hiveplane/issues/86) — Fleet and run detail screens (delivers #54)
 - [ ] [#87](https://github.com/deghosal-2026/hiveplane/issues/87) — Approval queue, certification dashboard, and spend screens (delivers #55)
 - [ ] [#88](https://github.com/deghosal-2026/hiveplane/issues/88) — Operator UI docs and M22 exit gate
+- [ ] [#89](https://github.com/deghosal-2026/hiveplane/issues/89) — API test cases for the operator-UI surface
+- [ ] [#90](https://github.com/deghosal-2026/hiveplane/issues/90) — UI test cases (client, views, routes)
+- [ ] [#91](https://github.com/deghosal-2026/hiveplane/issues/91) — Operator UI end-to-end tests with Playwright
 
 **Done when:** the fleet is readable at a glance; run detail renders the execution story; approvals are resolvable from the UI; the certification dashboard and spend view render real data.
 
