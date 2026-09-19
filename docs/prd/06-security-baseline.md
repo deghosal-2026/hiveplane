@@ -16,9 +16,9 @@ HivePlane concentrates authority: it decides which agents may call which tools, 
 | T6 | Secret leakage in telemetry/logs | Redaction before persistence; secrets never in run payloads |
 | T7 | Operator action repudiation | Every intervention is attributed and auditable |
 | T8 | **Uncertified agent reaches production** | Registry enforces certification status at admission; production contexts require `certified` status; the gate is in the control plane, not in the agent |
-| T9 | **Certification forgery** | Attestations are signed (key-paired); verification on read; immutable storage |
-| T10 | **Benchmark poisoning** — a crafted corpus makes a bad agent pass | Benchmark corpus is reviewed and versioned; corpus changes require approval; production threshold is separate from staging threshold |
-| T11 | **Model swap attack** — agent certified on model A, runs on model B | Certification binds to model identity; runtime model is checked against attestation; mismatch blocks the run |
+| T9 | **Certification forgery** | Attestations are signed (key-paired) with a **persistent** signing key; verification on read; immutable storage. An ephemeral per-boot keypair would invalidate all prior attestations on restart |
+| T10 | **Benchmark poisoning** — a crafted corpus makes a bad agent pass | Benchmark corpus is reviewed and versioned; corpus changes require approval; production threshold is separate from staging threshold; the benchmark executes the real agent, so a passing check reflects real behavior |
+| T11 | **Model swap attack** — agent certified on model A, runs on model B | Certification binds to model identity; the **runtime model is reported by the provider from actual inference** and checked against the attestation; mismatch blocks the run and records a security event. Self-reported caller identity is not trusted |
 | T12 | **Drift evasion** — agent decays slowly enough to avoid detection | Drift detector runs on a schedule AND on trigger (spike in failures escalates an immediate re-cert) |
 | T13 | **Sandbox escape** — destructive run breaks out of isolation | Sandbox is a separate execution context with resource caps; network egress restricted; no shared filesystem with the control plane |
 | T14 | **Prompt injection via tool output** — a malicious tool response hijacks the agent | Tool-output shaping layer inspects and bounds outputs; injection scanner at the boundary; suspicious patterns escalate for approval |
@@ -31,8 +31,10 @@ HivePlane concentrates authority: it decides which agents may call which tools, 
 - no secrets in logs, traces, or audit events
 - least-privilege credentials for adapters and the state store
 - **production admission requires valid, unexpired certification**
-- **attestations are signed and verified on every read**
-- **certification binds to model identity; model swap blocks the run**
+- **attestations are signed and verified on every read, using a persistent signing keypair**
+- **certification binds to model identity; the runtime model is reported from actual inference and a mismatch blocks the run**
+- **all model calls route through the control-plane boundary; agents cannot call providers directly**
+- **all tool calls execute through the boundary; agents cannot fabricate tool outputs**
 - **sandbox network egress restricted; no shared filesystem with control plane**
 - **tool outputs scanned for injection before reaching agent context**
 

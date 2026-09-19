@@ -2,7 +2,7 @@
 
 ## TLDR
 
-v0.1.0 proves the control loop with certification, safe execution, and tool-output governance. v0.2.0 makes the fleet self-operating (triggers, policy packs, eval gates, write-back, cost showback, drift detection). v0.3.0 adds reliability and defense. v0.4.0 scales to multi-tenancy and clusters.
+v0.1.0 proves the control loop with real LLM-backed agents, certification, safe execution, and tool-output governance. v0.2.0 makes the fleet self-operating (triggers, policy packs, eval gates, write-back, cost showback, drift detection). v0.3.0 adds reliability and defense. v0.4.0 scales to multi-tenancy and clusters.
 
 Features are grouped by theme. The **certification pipeline** is the thesis — it is what makes HivePlane different from every competitor.
 
@@ -57,6 +57,14 @@ This is the SWE-bench layer. Agents earn the right to operate in production by p
 - budget enforcement per run and per day, evaluated at admission and on each usage event
 - secrets redacted from logs, traces, and audit events
 
+## Theme: LLM Provider & Agent Contract
+
+- **LLM provider seam** — a provider abstraction for model invocation: local (Ollama/OMLX-style OpenAI-compatible endpoint), cloud (OpenAI), and a deterministic fake/replay provider for CI; selected by configuration, never hardcoded
+- **agent invocation contract** — `WorkerContext.complete()` routes model calls through the control-plane boundary: real token usage and cost are reported from the provider response, model-call spans are emitted, and cooperative pause/cancel is honored
+- **tool execution layer** — the tool-call boundary executes tools (fixture-backed for v0.1.0; MCP transport in v0.2.0) so agents receive real data instead of fabricating tool outputs
+- **runtime model identity** — the model actually used is reported by the provider and checked against the certification binding (T11), not self-reported by the caller
+- **durable execution** — paused runs and LangGraph checkpoints survive a control-plane restart
+
 ## Theme: Tools & MCP
 
 - **MCP tool registry** — onboard tools via the MCP layer (built on mcp-fabric); each tool gets a trust level and a stable tool ID
@@ -107,14 +115,22 @@ This is the SWE-bench layer. Agents earn the right to operate in production by p
 **The thesis ships here.** An agent is registered, certified against a benchmark, and only then allowed to run.
 
 - registry, manifest validation, versioning, `--dry-run`
+- **LLM provider seam** — local (Ollama/OMLX), cloud (OpenAI), and fake/replay provider for CI (new)
+- **agent invocation + tool execution seams** — `WorkerContext.complete()` calls the model through the boundary; tools execute and return real (fixture-backed) data (new)
 - **benchmark runner + certification engine + signed attestation** (new)
+- **adapter-backed certification** — the benchmark executes the real agent entrypoint against the corpus (new)
+- **durable signing keypair** — attestations remain verifiable across restarts (new)
 - **certification status enforced at admission** (new)
 - task submission, run state machine, pause/resume/cancel, durable state
+- **durable resume** — a paused run survives a control-plane restart (new)
 - budget enforcement per run/day
 - deny-by-default policy + approvals + audit
+- **approval re-dispatch** — an escalated tool call executes after human approval (new)
 - execution isolation + resource/output caps (new)
 - tool-output shaping (new)
 - raw-worker + LangGraph adapters, adapter conformance suite
+- **PostgreSQL-backed stores** — registry, budget, certifications, attestations, and approvals, not just run state (new)
+- **auto-migration** — schema migrations run on startup so a fresh stack is functional on first boot (new)
 - OTel traces/metrics/logs, trace-linked debug context, fleet metrics
 - CLI + minimal UI (fleet list, run detail, approval queue, **certification dashboard**, spend view)
 - `hiveplane init` + seeded demo + Docker Compose
@@ -152,6 +168,7 @@ This is the SWE-bench layer. Agents earn the right to operate in production by p
 ## In Scope (Overall)
 
 - fleet registry and workload model
+- **LLM provider seam and agent invocation/tool execution contract**
 - **certification pipeline (benchmark, attestation, promotion gate, drift detection)**
 - run lifecycle management, including triggers and scheduled modes
 - budget enforcement and cost showback
@@ -163,7 +180,7 @@ This is the SWE-bench layer. Agents earn the right to operate in production by p
 ## Out of Scope (Initial Versions)
 
 - building a new agent framework
-- replacing model providers
+- **building or training models** — HivePlane integrates with existing providers (OpenAI-compatible local and cloud endpoints); it does not replace them
 - generalized workflow authoring UI
 - full enterprise IAM complexity
 - autonomous self-healing logic for every failure mode

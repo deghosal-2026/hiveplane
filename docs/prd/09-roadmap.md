@@ -20,14 +20,20 @@ Four versions take HivePlane from a certified control loop to a self-operating, 
 ### Ships
 
 - registry, manifest validation, versioning, `--dry-run`
+- **LLM provider seam** (local Ollama/OMLX + cloud OpenAI + fake for CI) and **agent invocation/tool execution seams**
 - **benchmark runner + certification engine + signed attestation**
+- **adapter-backed certification** — the benchmark runs the real agent entrypoint
+- **durable signing keypair** — attestations verify across restarts
 - **certification status enforced at admission** (uncertified → refused)
 - task submission, run state machine, pause/resume/cancel, durable state
+- **durable resume** — a paused run survives a control-plane restart
 - budget enforcement per run/day
 - deny-by-default policy + approvals + audit
+- **approval re-dispatch** — an escalated tool call executes after approval
 - execution isolation + resource/output caps
 - tool-output shaping
 - raw-worker + LangGraph adapters, conformance suite
+- **PostgreSQL-backed stores** (registry, budget, certifications, attestations, approvals) + **auto-migration on startup**
 - OTel traces/metrics/logs, trace-linked debug context
 - CLI + minimal UI (fleet list, run detail, approval queue, certification dashboard, spend view)
 - `hiveplane init` + seeded demo + Docker Compose
@@ -35,11 +41,14 @@ Four versions take HivePlane from a certified control loop to a self-operating, 
 ### Done When
 
 - Three real agents registered
-- At least one certified for production via benchmark
+- At least one certified for production via benchmark, with the real agent executing in the benchmark
 - An uncertified agent is refused admission to production
+- A real model call flows through the control plane (local or cloud)
 - Operators can inspect and stop any run from one surface
 - Budget enforcement blocks an over-budget run
-- Attestation is signed and verified on read
+- Attestation is signed and verified on read, and still verifies after a restart
+- A paused run survives a restart and resumes
+- Docker Compose starts a functional stack with one command (auto-migration included)
 
 ## v0.2.0 — Self-Operating Fleet
 

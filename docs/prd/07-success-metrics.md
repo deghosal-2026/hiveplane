@@ -15,7 +15,9 @@ Product metrics measure operability and trust. Certification metrics measure whe
 | Drift detections (auto-quarantine) | Proves drift detection works | ≥ 1 seeded |
 | False quarantine rate | Drift detector isn't over-triggering | 0 in field test |
 | Attestation verification on every production admission | Integrity guarantee | 100% |
+| Attestation signing keypair persists across restarts | Integrity guarantee survives a process restart | 100% (file-backed key) |
 | Model-swap blocks | Model binding works | ≥ 1 seeded |
+| Certification executes the real agent entrypoint | The benchmark is real, not theater | 3/3 workloads |
 
 ## Product Metrics
 
@@ -28,6 +30,9 @@ Product metrics measure operability and trust. Certification metrics measure whe
 | Triggers firing correctly | Event-driven operation works | ≥ 1 alert-triggered run |
 | Tool-output shaping prevents context overflow | Output governance works | ≥ 1 shaped run |
 | Result fan-out delivered | Delivery works | ≥ 1 fanned-out result |
+| LLM provider seam exercised end-to-end | Real model calls flow through the boundary | ≥ 1 real model call |
+| Agents receive real tool data | Agents reason over executed tool results, not fabricated outputs | 100% of tool calls |
+| Durable resume | A paused run survives a process restart | pass |
 
 ## OSS Metrics
 
@@ -50,6 +55,13 @@ Product metrics measure operability and trust. Certification metrics measure whe
 - [ ] Tool-output shaping demonstrably truncates a large payload
 - [ ] Audit trail complete for every run in the field test
 - [ ] **Attestation is signed and verified on read**
+- [ ] **Attestation signing key persists across restarts (prior attestations still verify)**
+- [ ] **A real model call flows through `WorkerContext.complete()` (local or cloud provider)**
+- [ ] **Agents receive real (fixture-backed) tool data, not fabricated outputs**
+- [ ] **Certification executes the real agent entrypoint against the corpus**
+- [ ] **A paused run survives a process restart and resumes correctly**
+- [ ] **A fresh database migrates automatically on startup**
+- [ ] **An escalated tool call is re-dispatched after approval**
 - [ ] Docker Compose stack starts with one command
 - [ ] `hiveplane init` scaffolds a working project in < 5 minutes
 
