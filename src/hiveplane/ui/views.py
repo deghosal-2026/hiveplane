@@ -172,6 +172,7 @@ class CertTrendPoint(BaseModel):
     timestamp: str
     pass_rate: float | None = None
     status: str
+    attestation_id: str | None = None
 
 
 class LastCertified(BaseModel):
@@ -227,6 +228,7 @@ def build_cert_dashboard(records: list[dict[str, Any]]) -> CertDashboardView:
                 timestamp=timestamp,
                 pass_rate=summary.get("pass_rate"),
                 status=status,
+                attestation_id=certification.get("attestation_id"),
             )
         )
         if workload not in latest or timestamp > latest[workload][0]:

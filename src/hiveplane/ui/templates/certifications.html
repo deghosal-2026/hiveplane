@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Certification · HivePlane{% endblock %}
+{% block content %}
+<h1>Certification dashboard</h1>
+<div class="grid">
+  <div class="card">
+    <div class="muted">Certified</div>
+    <div class="value">{{ view.status_counts.get("certified", 0) }}</div>
+  </div>
+  <div class="card">
+    <div class="muted">Provisional</div>
+    <div class="value">{{ view.status_counts.get("provisional", 0) }}</div>
+  </div>
+  <div class="card">
+    <div class="muted">Uncertified</div>
+    <div class="value">{{ view.status_counts.get("uncertified", 0) }}</div>
+  </div>
+  <div class="card">
+    <div class="muted">Quarantined</div>
+    <div class="value">{{ view.status_counts.get("quarantined", 0) }}</div>
+  </div>
+</div>
+
+<h2>Pass-rate trend</h2>
+{% if view.trends %}
+<table>
+  <thead>
+    <tr>
+      <th>Workload</th>
+      <th>When</th>
+      <th>Pass rate</th>
+      <th>Status</th>
+      <th>Attestation</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for point in view.trends %}
+    <tr>
+      <td>{{ point.workload }}</td>
+      <td class="muted">{{ point.timestamp }}</td>
+      <td>
+        {% if point.pass_rate is not none %}{{ "%.0f%%"|format(point.pass_rate * 100) }}{% else %}—{% endif %}
+      </td>
+      <td><span class="badge {{ point.status }}">{{ point.status }}</span></td>
+      <td class="muted">{{ point.attestation_id or "—" }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">No certifications recorded.</p>
+{% endif %}
+
+<h2>Last certified</h2>
+{% if view.last_certified %}
+<table>
+  <thead>
+    <tr>
+      <th>Workload</th>
+      <th>Last certification</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in view.last_certified %}
+    <tr>
+      <td>{{ row.workload }}</td>
+      <td class="muted">{{ row.timestamp }}</td>
+      <td><span class="badge {{ row.status }}">{{ row.status }}</span></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">No certifications recorded.</p>
+{% endif %}
+
+<h2>Quarantine history</h2>
+{% if view.quarantine_history %}
+<table>
+  <thead>
+    <tr>
+      <th>Workload</th>
+      <th>When</th>
+      <th>Record</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for entry in view.quarantine_history %}
+    <tr>
+      <td>{{ entry.workload }}</td>
+      <td class="muted">{{ entry.timestamp }}</td>
+      <td>{{ entry.record_id }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">No quarantine events recorded.</p>
+{% endif %}
+{% endblock %}

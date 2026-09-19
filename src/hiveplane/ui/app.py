@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
+from typing import Annotated, Any
 from urllib.parse import quote, urlencode
 
 import uvicorn
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
@@ -18,7 +18,7 @@ from hiveplane.ui.client import (
     ControlPlaneError,
     HttpControlPlaneClient,
 )
-from hiveplane.ui.views import build_fleet, build_run_detail
+from hiveplane.ui.views import build_cert_dashboard, build_fleet, build_run_detail, build_spend
 
 _TEMPLATES_DIR = Path(__file__).resolve().parent / "templates"
 
@@ -37,6 +37,24 @@ def _intervene(request: Request, action: str, run_id: str) -> RedirectResponse:
     except ControlPlaneError as exc:
         return _redirect(run_id, error=exc.detail)
     return _redirect(run_id, ok=f"{action} requested")
+
+
+def _decide(
+    request: Request,
+    decision: str,
+    approval_id: str,
+    operator: str,
+    reason: str | None,
+) -> RedirectResponse:
+    """Resolve an approval through the client, flashing success or failure."""
+    client = request.app.state.control_plane
+    try:
+        getattr(client, decision)(approval_id, operator, reason)
+    except ControlPlaneError as exc:
+        return RedirectResponse(f"/approvals?error={quote(exc.detail)}", status_code=303)
+    return RedirectResponse(
+        f"/approvals?ok={quote(f'{decision}d {approval_id}')}", status_code=303
+    )
 
 
 def create_ui_app(client: ControlPlaneClient | None = None) -> FastAPI:
@@ -103,6 +121,57 @@ def create_ui_app(client: ControlPlaneClient | None = None) -> FastAPI:
     def stop_run(request: Request, run_id: str) -> RedirectResponse:
         """Stop a run."""
         return _intervene(request, "stop", run_id)
+
+    @app.get("/approvals", response_class=HTMLResponse)
+    def approvals(request: Request) -> HTMLResponse:
+        """Approval queue: resolve escalations raised by policy."""
+        records: list[dict[str, Any]] = request.app.state.control_plane.list_approvals()
+        pending = [record for record in records if record.get("status") == "pending"]
+        resolved = [record for record in records if record.get("status") != "pending"]
+        return templates.TemplateResponse(
+            request,
+            "approvals.html",
+            {
+                "pending": pending,
+                "resolved": resolved,
+                "ok": request.query_params.get("ok"),
+                "error": request.query_params.get("error"),
+            },
+        )
+
+    @app.post("/approvals/{approval_id}/approve")
+    def approve_approval(
+        request: Request,
+        approval_id: str,
+        operator: Annotated[str, Form(min_length=1)],
+        reason: Annotated[str | None, Form()] = None,
+    ) -> RedirectResponse:
+        """Approve a request and resume the paused run."""
+        return _decide(request, "approve", approval_id, operator, reason)
+
+    @app.post("/approvals/{approval_id}/deny")
+    def deny_approval(
+        request: Request,
+        approval_id: str,
+        operator: Annotated[str, Form(min_length=1)],
+        reason: Annotated[str | None, Form()] = None,
+    ) -> RedirectResponse:
+        """Deny a request and fail the paused run."""
+        return _decide(request, "deny", approval_id, operator, reason)
+
+    @app.get("/certifications", response_class=HTMLResponse)
+    def certifications(request: Request) -> HTMLResponse:
+        """Certification dashboard: status, trends, and quarantine history."""
+        view = build_cert_dashboard(
+            request.app.state.control_plane.list_certifications()
+        )
+        return templates.TemplateResponse(request, "certifications.html", {"view": view})
+
+    @app.get("/spend", response_class=HTMLResponse)
+    def spend(request: Request) -> HTMLResponse:
+        """Spend view: attributed cost by workload and team."""
+        view = build_spend(request.app.state.control_plane.get_spend())
+        return templates.TemplateResponse(request, "spend.html", {"view": view})
 
     @app.exception_handler(ControlPlaneError)
     async def _control_plane_error(

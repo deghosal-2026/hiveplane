@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Approvals · HivePlane{% endblock %}
+{% block content %}
+{% if ok %}<p class="banner ok">{{ ok }}</p>{% endif %}
+{% if error %}<p class="banner error">{{ error }}</p>{% endif %}
+<h1>Approval queue</h1>
+
+<h2>Pending</h2>
+{% if pending %}
+<table>
+  <thead>
+    <tr>
+      <th>Approval</th>
+      <th>Run</th>
+      <th>Workload</th>
+      <th>Rule</th>
+      <th>Reason</th>
+      <th>Requested</th>
+      <th>Decision</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for approval in pending %}
+    <tr>
+      <td>{{ approval.approval_id }}</td>
+      <td><a href="/runs/{{ approval.run_id }}">{{ approval.run_id }}</a></td>
+      <td>{{ approval.workload }}</td>
+      <td>{{ approval.rule }}</td>
+      <td>{{ approval.reason }}</td>
+      <td class="muted">{{ approval.requested_at }}</td>
+      <td>
+        <form class="inline" method="post" action="/approvals/{{ approval.approval_id }}/approve">
+          <input name="operator" placeholder="operator" required />
+          <input name="reason" placeholder="reason" />
+          <button type="submit">Approve</button>
+        </form>
+        <form class="inline" method="post" action="/approvals/{{ approval.approval_id }}/deny">
+          <input name="operator" placeholder="operator" required />
+          <input name="reason" placeholder="reason" />
+          <button class="danger" type="submit">Deny</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">No pending approvals.</p>
+{% endif %}
+
+<h2>Resolved</h2>
+{% if resolved %}
+<table>
+  <thead>
+    <tr>
+      <th>Approval</th>
+      <th>Run</th>
+      <th>Workload</th>
+      <th>Status</th>
+      <th>Decided by</th>
+      <th>Decision reason</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for approval in resolved %}
+    <tr>
+      <td>{{ approval.approval_id }}</td>
+      <td><a href="/runs/{{ approval.run_id }}">{{ approval.run_id }}</a></td>
+      <td>{{ approval.workload }}</td>
+      <td><span class="badge {{ approval.status }}">{{ approval.status }}</span></td>
+      <td>{{ approval.decided_by or "—" }}</td>
+      <td>{{ approval.decision_reason or "—" }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">No resolved approvals.</p>
+{% endif %}
+{% endblock %}

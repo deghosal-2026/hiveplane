@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Spend · HivePlane{% endblock %}
+{% block content %}
+<h1>Spend</h1>
+<div class="grid">
+  <div class="card">
+    <div class="muted">Total attributed spend</div>
+    <div class="value">${{ "%.2f"|format(view.total_usd) }}</div>
+  </div>
+</div>
+
+<h2>By workload</h2>
+{% if view.by_workload %}
+<table>
+  <thead>
+    <tr>
+      <th>Workload</th>
+      <th>Team</th>
+      <th>Total</th>
+      <th>Runs</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in view.by_workload %}
+    <tr>
+      <td>{{ row.workload }}</td>
+      <td>{{ row.team or "—" }}</td>
+      <td>${{ "%.2f"|format(row.total_usd) }}</td>
+      <td>{{ row.run_count }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">No spend recorded.</p>
+{% endif %}
+
+<h2>By team</h2>
+{% if view.by_team %}
+<table>
+  <thead>
+    <tr>
+      <th>Team</th>
+      <th>Total</th>
+      <th>Runs</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in view.by_team %}
+    <tr>
+      <td>{{ row.team }}</td>
+      <td>${{ "%.2f"|format(row.total_usd) }}</td>
+      <td>{{ row.run_count }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">No spend recorded.</p>
+{% endif %}
+{% endblock %}

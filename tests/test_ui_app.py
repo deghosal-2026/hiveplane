@@ -163,3 +163,159 @@ def test_failed_intervention_redirects_with_error_banner() -> None:
 
     assert response.status_code == 200
     assert "run is not paused" in response.text
+
+
+# --------------------------------------------------------------------------- #
+# Approval queue (#87, #55)
+# --------------------------------------------------------------------------- #
+def _approvals_fake() -> FakeControlPlaneClient:
+    fake = FakeControlPlaneClient()
+    fake.approvals = [
+        {
+            "approval_id": "a1",
+            "run_id": "r1",
+            "workload": "agent-a",
+            "rule": "destructive-tool",
+            "reason": "delete requested",
+            "action_class": "destructive",
+            "requested_at": "2026-09-19T11:00:00Z",
+            "status": "pending",
+        },
+        {
+            "approval_id": "a2",
+            "run_id": "r2",
+            "workload": "agent-b",
+            "rule": "budget",
+            "reason": "over budget",
+            "action_class": "spend",
+            "requested_at": "2026-09-19T10:00:00Z",
+            "status": "approved",
+            "decided_by": "alice",
+            "decision_reason": "lgtm",
+        },
+    ]
+    return fake
+
+
+def test_approvals_renders_pending_and_resolved() -> None:
+    response = _app(_approvals_fake()).get("/approvals")
+
+    assert response.status_code == 200
+    assert "a1" in response.text
+    assert "destructive-tool" in response.text
+    assert "a2" in response.text
+    assert "alice" in response.text
+    assert 'href="/runs/r1"' in response.text
+
+
+def test_approve_posts_operator_and_reason() -> None:
+    fake = _approvals_fake()
+
+    response = _app(fake).post(
+        "/approvals/a1/approve", data={"operator": "alice", "reason": "lgtm"}
+    )
+
+    assert response.status_code == 303
+    assert response.headers["location"].startswith("/approvals")
+    assert ("approve", ("a1", "alice", "lgtm")) in fake.calls
+
+
+def test_deny_posts_operator_and_reason() -> None:
+    fake = _approvals_fake()
+
+    response = _app(fake).post(
+        "/approvals/a1/deny", data={"operator": "bob", "reason": "too risky"}
+    )
+
+    assert response.status_code == 303
+    assert ("deny", ("a1", "bob", "too risky")) in fake.calls
+
+
+def test_failed_decision_redirects_with_error_banner() -> None:
+    fake = _approvals_fake()
+    fake.errors["approve"] = ControlPlaneError(409, "approval already decided")
+
+    client = TestClient(create_ui_app(client=fake), follow_redirects=True)
+    response = client.post("/approvals/a1/approve", data={"operator": "alice"})
+
+    assert response.status_code == 200
+    assert "approval already decided" in response.text
+
+
+# --------------------------------------------------------------------------- #
+# Certification dashboard (#87, #55)
+# --------------------------------------------------------------------------- #
+def _certs_fake() -> FakeControlPlaneClient:
+    fake = FakeControlPlaneClient()
+    fake.certifications = [
+        {
+            "record_id": "c1",
+            "certification": {
+                "certification_id": "c1",
+                "workload_id": "agent-a",
+                "status": "certified",
+                "target_context": "staging",
+                "timestamp": "2026-09-19T10:00:00Z",
+                "attestation_id": "att-1",
+                "eval_summary": {"pass_rate": 0.9},
+            },
+            "attestation": {"attestation_id": "att-1"},
+        },
+        {
+            "record_id": "c2",
+            "certification": {
+                "certification_id": "c2",
+                "workload_id": "agent-a",
+                "status": "quarantined",
+                "target_context": "staging",
+                "timestamp": "2026-09-19T11:00:00Z",
+                "attestation_id": "att-2",
+                "eval_summary": {"pass_rate": 0.5},
+            },
+            "attestation": {"attestation_id": "att-2"},
+        },
+    ]
+    return fake
+
+
+def test_certification_dashboard_renders_counts_trends_quarantine() -> None:
+    response = _app(_certs_fake()).get("/certifications")
+
+    assert response.status_code == 200
+    assert "agent-a" in response.text
+    assert "quarantined" in response.text
+    assert "att-2" in response.text
+
+
+def test_certification_dashboard_empty_state() -> None:
+    response = _app(FakeControlPlaneClient()).get("/certifications")
+
+    assert response.status_code == 200
+    assert "No certifications" in response.text
+
+
+# --------------------------------------------------------------------------- #
+# Spend (#87, #55)
+# --------------------------------------------------------------------------- #
+def test_spend_renders_workload_and_team_tables() -> None:
+    fake = FakeControlPlaneClient()
+    fake.spend = {
+        "by_workload": [
+            {"workload": "agent-a", "team": "platform", "total_usd": 2.5, "run_count": 3}
+        ],
+        "by_team": [{"team": "platform", "total_usd": 2.5, "run_count": 3}],
+    }
+
+    response = _app(fake).get("/spend")
+
+    assert response.status_code == 200
+    assert "agent-a" in response.text
+    assert "platform" in response.text
+    assert "2.50" in response.text
+
+
+def test_spend_empty_state() -> None:
+    response = _app(FakeControlPlaneClient()).get("/spend")
+
+    assert response.status_code == 200
+    assert "No spend" in response.text
