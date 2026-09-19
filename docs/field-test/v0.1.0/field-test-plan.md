@@ -1,6 +1,21 @@
 # HivePlane v0.1.0 — Field Test Plan
 
-> Status: plan — to be executed in M18.
+> Status: plan — to be executed in M23 (re-planned into phases P0-P4).
+
+## Prerequisites (M23)
+
+The original plan assumed the WBS shipped LLM integration, real agent execution in certification,
+sandbox enforcement, and durable resume. It did not. Before this plan can execute, M23 must land:
+
+- **LLM provider seam** (#104/#107/#115) and **real agents** (#108) — otherwise runs are stubs.
+- **Tool execution** (#116) — otherwise agents fabricate tool output.
+- **Adapter-backed certification** (#105/#117/#109) — otherwise the benchmark is theater.
+- **Persistence wiring + auto-migration** (#118/#125/#126/#128) — otherwise state is lost on restart.
+- **Sandbox caps** (#110) and **durable resume** (#111) — for S6 and S8.
+- **Corpora** for all three workloads (#98) and **container readiness** (#112).
+
+The [Docker test plan](docker-test-plan.md) validates the same stack at the container layer and
+produces the screenshots referenced here.
 
 ## Objective
 
@@ -110,7 +125,48 @@ All v0.1.0 release gates from [PRD 07](../../prd/07-success-metrics.md):
 
 ## LLM Configuration
 
-Both local (OMLX-style OpenAI-compatible endpoint) and cloud providers should be exercised for at least one workload each. The `model.identity` in each manifest must match the provider actually used — the model-swap defense will block mismatches.
+The field test exercises a **hybrid** provider strategy. The model actually used is reported by
+the provider and checked against the certification binding (T11); a mismatch blocks the run.
+
+| Environment | Provider | Endpoint | Secrets | Determinism |
+|-------------|----------|----------|---------|-------------|
+| CI / nightly | `fake` (replay) | in-process | none | fully deterministic |
+| Local field test | `local` (Ollama/OMLX) | `ollama:11434/v1` | none | temperature 0 |
+| Cloud validation (optional) | `cloud` (OpenAI) | `api.openai.com` | `OPENAI_API_KEY` | temperature 0 |
+
+- At least one workload must run on **local** and at least one on **cloud** (when a key is
+  available); all three must run on **fake** for repeatable CI.
+- `spec.model.identity` in each manifest must match the provider actually used.
+- Local/fake models are priced at zero in the budget table; cloud models use real prices.
+
+See [D17: LLM Provider Design](../../design/llm-provider-design.md) (#104).
+
+## Scenario Map (S1-S9)
+
+| # | Scenario | Phase | Prereqs |
+|---|----------|-------|---------|
+| S1 | Certify all three agents via benchmark | 2 | #109, #117, #98, #107/#115 |
+| S2 | Uncertified agent attempts production | 2 | admission gate (exists) |
+| S3 | Model-swap (cert on A, run on B) | 2 | #104/#107, #127 |
+| S4 | Seeded manifest change regresses | 2 | promotion gate (exists) |
+| S5 | Over-budget run | 4 | budget service + #107 pricing |
+| S6 | Destructive tool call | 4 | #110, #116, #129 |
+| S7 | Large tool output | 4 | shaping (exists) + #116 |
+| S8 | Pause → restart → resume | 5 | #111, #118 |
+| S9 | Result fan-out | 5 | fan-out (exists) + #93 webhook sink |
+
+## Repeatability Procedure
+
+1. `docker compose --profile <ci|local|cloud> up -d` (one command).
+2. Seed fixtures and register workloads (setup script, #99).
+3. Certify all three (Phase 2).
+4. Run scenarios S1-S9, capturing evidence per scenario.
+5. Capture screenshots into `screenshots/<scenario-id>/` (docker-test-plan §8).
+6. Restart mid-scenario for S8; verify persistence and attestation verification.
+7. Write results into [FIELD_TEST_REPORT.md](FIELD_TEST_REPORT.md).
+
+Anyone can rerun by following the directory; the nightly simulator + CI harness (#59) keep the
+evidence fresh.
 
 ## Reporting
 

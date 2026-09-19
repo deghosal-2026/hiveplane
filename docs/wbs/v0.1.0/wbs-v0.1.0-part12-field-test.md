@@ -1,6 +1,6 @@
 # WBS v0.1.0 — Part 12: Field Test
 
-**Milestone:** M23 · **Issues:** #56-#59, #92-#133 (38 open) · **Phases:** P0-P4
+**Milestone:** M23 · **Issues:** #56-#59, #92-#133 (45 open) · **Phases:** P0-P4
 
 ## Goal
 

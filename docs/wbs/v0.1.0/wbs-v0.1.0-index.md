@@ -4,11 +4,11 @@
 
 **Timeline:** 4-6 weeks
 
-**Total scope:** 24 milestones · 101 tracked issues
+**Total scope:** 24 milestones · 112 tracked issues
 
 > **Milestone exit gate:** Every milestone must pass the [exit gate](#milestone-exit-gate) before the next begins.
 > **Issue tracking:** All work is tracked on GitHub. Milestones M1-M24 mirror the parts below; issues carry the `[0.1.0]` prefix and are grouped by milestone.
-> **Progress:** Parts 1-11 complete and M22 complete (M1-M22, #2-#55, #82-#91) — 64/101 issues closed. M23 re-planned into phases P0-P4 (38 open issues incl. LLM integration, agent contract seams, persistence wiring, durability, and PRD/design doc updates — scope missed by the original WBS). M23-M24 remain.
+> **Progress:** Parts 1-11 complete and M22 complete (M1-M22, #2-#55, #82-#91) — 65/112 issues closed. M23 re-planned into phases P0-P4 (45 open issues incl. LLM integration, agent contract seams, persistence wiring, durability, and PRD/design doc updates — scope missed by the original WBS). M23-M24 remain.
 
 ---
 
@@ -29,7 +29,7 @@
 | [11](wbs-v0.1.0-part11-cli-operator-ui.md) | CLI & Operator UI | M21-M22 | [#52-#55](https://github.com/deghosal-2026/hiveplane/issues), [#82-#91](https://github.com/deghosal-2026/hiveplane/issues) |
 | [12](wbs-v0.1.0-part12-field-test.md) | Field Test | M23 | [#56-#59, #92-#133](https://github.com/deghosal-2026/hiveplane/issues) |
 | [13](wbs-v0.1.0-part13-release-readiness.md) | Release Readiness | M24 | [#60-#61](https://github.com/deghosal-2026/hiveplane/issues) |
-| **Total** | | **M1-M24** | **101 issues** |
+| **Total** | | **M1-M24** | **112 issues** |
 
 ---
 
