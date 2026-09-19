@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Fleet · HivePlane{% endblock %}
+{% block content %}
+<h1>Fleet</h1>
+<div class="grid">
+  <div class="card">
+    <div class="muted">Workloads</div>
+    <div class="value">{{ view.total_workloads }}</div>
+  </div>
+  <div class="card">
+    <div class="muted">Certified</div>
+    <div class="value">{{ view.status_counts.get("certified", 0) }}</div>
+  </div>
+  <div class="card">
+    <div class="muted">Provisional</div>
+    <div class="value">{{ view.status_counts.get("provisional", 0) }}</div>
+  </div>
+  <div class="card">
+    <div class="muted">Quarantined</div>
+    <div class="value">{{ view.status_counts.get("quarantined", 0) }}</div>
+  </div>
+  <div class="card">
+    <div class="muted">Total spend</div>
+    <div class="value">${{ "%.2f"|format(view.total_spend_usd) }}</div>
+  </div>
+</div>
+
+<h2>Workloads</h2>
+{% if view.workloads %}
+<table>
+  <thead>
+    <tr>
+      <th>Workload</th>
+      <th>Owner</th>
+      <th>Team</th>
+      <th>Certification</th>
+      <th>Runs</th>
+      <th>Failures</th>
+      <th>Last run</th>
+      <th>Burn</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for workload in view.workloads %}
+    <tr>
+      <td><strong>{{ workload.name }}</strong></td>
+      <td>{{ workload.owner }}</td>
+      <td>{{ workload.team or "—" }}</td>
+      <td><span class="badge {{ workload.certification_status }}">{{ workload.certification_status }}</span></td>
+      <td class="muted">
+        {% for state, count in workload.state_counts.items() %}{{ state }}:{{ count }}{% if not loop.last %} · {% endif %}{% endfor %}
+      </td>
+      <td>{{ workload.recent_failures }}</td>
+      <td class="muted">{{ workload.last_run_at or "—" }}</td>
+      <td>${{ "%.2f"|format(workload.budget_burn_usd) }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">No workloads registered yet.</p>
+{% endif %}
+
+<h2>Recent runs</h2>
+{% if recent_runs %}
+<table>
+  <thead>
+    <tr>
+      <th>Run</th>
+      <th>Workload</th>
+      <th>State</th>
+      <th>Updated</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for run in recent_runs %}
+    <tr>
+      <td><a href="/runs/{{ run.id }}">{{ run.id }}</a></td>
+      <td>{{ run.workload_id }}</td>
+      <td><span class="badge {{ run.state }}">{{ run.state }}</span></td>
+      <td class="muted">{{ run.updated_at }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">No runs recorded yet.</p>
+{% endif %}
+{% endblock %}

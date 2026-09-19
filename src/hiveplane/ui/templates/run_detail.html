@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}{{ view.run_id }} · HivePlane{% endblock %}
+{% block content %}
+{% if ok %}<p class="banner ok">{{ ok }}</p>{% endif %}
+{% if error %}<p class="banner error">{{ error }}</p>{% endif %}
+
+<h1>Run {{ view.run_id }}</h1>
+<div class="grid">
+  <div class="card">
+    <div class="muted">Workload</div>
+    <div>{{ view.workload }}</div>
+  </div>
+  <div class="card">
+    <div class="muted">State</div>
+    <div><span class="badge {{ view.state }}">{{ view.state }}</span></div>
+  </div>
+  <div class="card">
+    <div class="muted">Context</div>
+    <div>{{ view.context or "—" }}</div>
+  </div>
+  <div class="card">
+    <div class="muted">Model identity</div>
+    <div>{{ view.model_identity or "—" }}</div>
+  </div>
+  <div class="card">
+    <div class="muted">Cost</div>
+    <div>${{ "%.4f"|format(view.cost_usd) }}</div>
+  </div>
+  <div class="card">
+    <div class="muted">Sandbox</div>
+    <div>{{ "yes" if view.sandbox else "no" }}{% if view.sandbox_id %} ({{ view.sandbox_id }}){% endif %}</div>
+  </div>
+  <div class="card">
+    <div class="muted">Certification</div>
+    <div><span class="badge {{ view.certification_status }}">{{ view.certification_status }}</span></div>
+  </div>
+  <div class="card">
+    <div class="muted">Trace</div>
+    <div>{{ view.trace_id or "—" }}</div>
+  </div>
+</div>
+
+<h2>Intervene</h2>
+{% if view.state in ("queued", "running") %}
+<form class="inline" method="post" action="/runs/{{ view.run_id }}/pause">
+  <button type="submit">Pause</button>
+</form>
+{% endif %}
+{% if view.state == "paused" %}
+<form class="inline" method="post" action="/runs/{{ view.run_id }}/resume">
+  <button type="submit">Resume</button>
+</form>
+{% endif %}
+{% if view.state not in ("completed", "failed", "cancelled") %}
+<form class="inline" method="post" action="/runs/{{ view.run_id }}/stop">
+  <button class="danger" type="submit">Stop</button>
+</form>
+{% endif %}
+
+<h2>Execution story</h2>
+{% if view.entries %}
+<ul class="timeline">
+  {% for entry in view.entries %}
+  <li>
+    <strong>{{ entry.kind }}</strong>
+    — {{ entry.summary }}
+    <span class="muted">{{ entry.timestamp }}</span>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p class="muted">No events recorded for this run.</p>
+{% endif %}
+{% endblock %}
