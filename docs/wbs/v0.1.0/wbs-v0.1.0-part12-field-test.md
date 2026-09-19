@@ -1,6 +1,6 @@
 # WBS v0.1.0 — Part 12: Field Test
 
-**Milestone:** M23 · **Issues:** #56-#59, #92-#133 (45 open) · **Phases:** P0-P4
+**Milestone:** M23 · **Issues:** #56-#59, #92-#133 (37 open) · **Phases:** P0-P4
 
 ## Goal
 
@@ -16,16 +16,18 @@ Run three real, LLM-backed agents through the certified control loop and produce
 
 **Issues:** [#132](https://github.com/deghosal-2026/hiveplane/issues/132) · [#133](https://github.com/deghosal-2026/hiveplane/issues/133) · [#104](https://github.com/deghosal-2026/hiveplane/issues/104) · [#105](https://github.com/deghosal-2026/hiveplane/issues/105) · [#106](https://github.com/deghosal-2026/hiveplane/issues/106) · [#92](https://github.com/deghosal-2026/hiveplane/issues/92) · [#97](https://github.com/deghosal-2026/hiveplane/issues/97) · [#114](https://github.com/deghosal-2026/hiveplane/issues/114)
 
-- [ ] #132 — **Update PRD for new v0.1.0 scope** (LLM, agent seams, persistence, durability, auto-migration, approval re-dispatch — add to features, success-metrics, roadmap, security-baseline)
-- [ ] #133 — **Update existing design docs for new functionalities + fix inaccuracies** (runtime-adapter, certification-pipeline, execution-sandbox, execution-path, state-store, result-fanout — add Implementation Status / Prerequisites blocks; document new seams; fix false claims)
-- [ ] #104 — Design: LLM provider integration & model-identity enforcement (local Ollama/OMLX + cloud OpenAI + fake for CI; runtime model identity; pricing; telemetry)
-- [ ] #105 — Design: certification must execute the real agent (adapter-backed benchmark executor)
-- [ ] #106 — Design: durable runs — startup recovery & restart-resume
-- [ ] #92 — Docker test plan (image build, per-layer test matrix, dummy data, LLM strategy)
-- [ ] #97 — Field test plan (phases → S1-S9/A1-A20, LLM matrix, repeatability)
-- [ ] #114 — Update WBS index + field-test docs for added scope
+- [x] #132 — **Update PRD for new v0.1.0 scope** (LLM, agent seams, persistence, durability, auto-migration, approval re-dispatch — add to features, success-metrics, roadmap, security-baseline)
+- [x] #133 — **Update existing design docs for new functionalities + fix inaccuracies** (runtime-adapter, certification-pipeline, execution-sandbox, execution-path, state-store, result-fanout — add Implementation Status / Prerequisites blocks; document new seams; fix false claims)
+- [x] #104 — Design: LLM provider integration & model-identity enforcement (local Ollama/OMLX + cloud OpenAI + fake for CI; runtime model identity; pricing; telemetry)
+- [x] #105 — Design: certification must execute the real agent (adapter-backed benchmark executor)
+- [x] #106 — Design: durable runs — startup recovery & restart-resume
+- [x] #92 — Docker test plan (image build, per-layer test matrix, dummy data, LLM strategy)
+- [x] #97 — Field test plan (phases → S1-S9/A1-A20, LLM matrix, repeatability)
+- [x] #114 — Update WBS index + field-test docs for added scope
 
-**Exit:** PRD and design docs accurately document the new v0.1.0 scope; designs approved and reviewed against PRD T11/DD-10; both test plans committed; WBS self-consistent. **#132 and #133 are the first items to complete — they unblock all implementation.**
+**Status:** Complete. Commits `a1322f5` (#132), `144c1ae` (#133), `bdac16e` (#104/#105/#106), `b77445d` (#92/#97/#114). All P0 issues closed.
+
+**Exit:** PRD and design docs accurately document the new v0.1.0 scope; designs approved and reviewed against PRD T11/DD-10; both test plans committed; WBS self-consistent.
 
 ### P1 — LLM & Agent Enablement
 

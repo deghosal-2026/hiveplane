@@ -8,7 +8,7 @@
 
 > **Milestone exit gate:** Every milestone must pass the [exit gate](#milestone-exit-gate) before the next begins.
 > **Issue tracking:** All work is tracked on GitHub. Milestones M1-M24 mirror the parts below; issues carry the `[0.1.0]` prefix and are grouped by milestone.
-> **Progress:** Parts 1-11 complete and M22 complete (M1-M22, #2-#55, #82-#91) — 65/112 issues closed. M23 re-planned into phases P0-P4 (45 open issues incl. LLM integration, agent contract seams, persistence wiring, durability, and PRD/design doc updates — scope missed by the original WBS). M23-M24 remain.
+> **Progress:** Parts 1-11 complete and M22 complete (M1-M22, #2-#55, #82-#91) — 73/112 issues closed. M23 re-planned into phases P0-P4; **P0 (Design & Planning) complete** — 37 open issues remain (P1-P4). M23-M24 remain.
 
 ---
 
