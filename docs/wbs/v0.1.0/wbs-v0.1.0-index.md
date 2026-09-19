@@ -4,11 +4,11 @@
 
 **Timeline:** 4-6 weeks
 
-**Total scope:** 24 milestones · 60 tracked issues
+**Total scope:** 24 milestones · 67 tracked issues
 
 > **Milestone exit gate:** Every milestone must pass the [exit gate](#milestone-exit-gate) before the next begins.
 > **Issue tracking:** All work is tracked on GitHub. Milestones M1-M24 mirror the parts below; issues carry the `[0.1.0]` prefix and are grouped by milestone.
-> **Progress:** Parts 1-10 complete and M21 complete (M1-M21, #2-#53) — 52/60 issues closed. M22-M24 remain.
+> **Progress:** Parts 1-10 complete and M21 complete (M1-M21, #2-#53) — 52/67 issues closed. M22-M24 remain.
 
 ---
 
@@ -26,10 +26,10 @@
 | [8](wbs-v0.1.0-part8-adapters.md) | Runtime Adapters & Conformance | M16-M17 | [#42-#45](https://github.com/deghosal-2026/hiveplane/issues) |
 | [9](wbs-v0.1.0-part9-state-store.md) | State Store & Persistence | M18 | [#46-#47](https://github.com/deghosal-2026/hiveplane/issues) |
 | [10](wbs-v0.1.0-part10-telemetry.md) | Telemetry & Observability | M19-M20 | [#48-#51](https://github.com/deghosal-2026/hiveplane/issues) |
-| [11](wbs-v0.1.0-part11-cli-operator-ui.md) | CLI & Operator UI | M21-M22 | [#52-#55](https://github.com/deghosal-2026/hiveplane/issues) |
+| [11](wbs-v0.1.0-part11-cli-operator-ui.md) | CLI & Operator UI | M21-M22 | [#52-#55](https://github.com/deghosal-2026/hiveplane/issues), [#82-#88](https://github.com/deghosal-2026/hiveplane/issues) |
 | [12](wbs-v0.1.0-part12-field-test.md) | Field Test | M23 | [#56-#59](https://github.com/deghosal-2026/hiveplane/issues) |
 | [13](wbs-v0.1.0-part13-release-readiness.md) | Release Readiness | M24 | [#60-#61](https://github.com/deghosal-2026/hiveplane/issues) |
-| **Total** | | **M1-M24** | **60 issues** |
+| **Total** | | **M1-M24** | **67 issues** |
 
 ---
 

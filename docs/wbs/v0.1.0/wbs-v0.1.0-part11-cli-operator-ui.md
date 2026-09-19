@@ -17,10 +17,24 @@ Give operators one surface to see the fleet, inspect a run, certify agents, act 
 
 ## M22 — Operator UI
 
-**Issues:** [#54](https://github.com/deghosal-2026/hiveplane/issues/54) · [#55](https://github.com/deghosal-2026/hiveplane/issues/55)
+**Issues:** [#54](https://github.com/deghosal-2026/hiveplane/issues/54) · [#55](https://github.com/deghosal-2026/hiveplane/issues/55) · work items [#82-#88](https://github.com/deghosal-2026/hiveplane/issues?q=milestone%3AM22)
+
+**Implementation design:** [Operator UI implementation](../../design/operator-ui-implementation.md)
+
+Acceptance issues (what "done" means):
 
 - [ ] [#54](https://github.com/deghosal-2026/hiveplane/issues/54) — Fleet list and run detail screens
 - [ ] [#55](https://github.com/deghosal-2026/hiveplane/issues/55) — Approval queue, certification dashboard, and spend view
+
+Work items (build order):
+
+- [ ] [#82](https://github.com/deghosal-2026/hiveplane/issues/82) — Spend read API (`GET /spend`)
+- [ ] [#83](https://github.com/deghosal-2026/hiveplane/issues/83) — Operator UI foundation (package, config, entrypoint, compose)
+- [ ] [#84](https://github.com/deghosal-2026/hiveplane/issues/84) — Operator UI control-plane HTTP client
+- [ ] [#85](https://github.com/deghosal-2026/hiveplane/issues/85) — Operator UI view models
+- [ ] [#86](https://github.com/deghosal-2026/hiveplane/issues/86) — Fleet and run detail screens (delivers #54)
+- [ ] [#87](https://github.com/deghosal-2026/hiveplane/issues/87) — Approval queue, certification dashboard, and spend screens (delivers #55)
+- [ ] [#88](https://github.com/deghosal-2026/hiveplane/issues/88) — Operator UI docs and M22 exit gate
 
 **Done when:** the fleet is readable at a glance; run detail renders the execution story; approvals are resolvable from the UI; the certification dashboard and spend view render real data.
 
