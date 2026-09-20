@@ -59,6 +59,7 @@ from hiveplane.execution.wiring import (
     build_run_service,
     build_tool_gateway,
 )
+from hiveplane.llm.factory import build_provider
 from hiveplane.persistence.migrate import run_migrations
 from hiveplane.policy.approvals import ApprovalService
 from hiveplane.policy.engine import PolicyEngine
@@ -163,10 +164,22 @@ def create_app(
     app.state.tool_gateway = build_tool_gateway(
         registry, policy_engine, app.state.run_service, approval_service
     )
+    provider = build_provider(settings)
+    app.state.provider = provider
+    if settings.model.provider == "fake" and settings.environment != "local":
+        _LOGGER.warning(
+            "model.provider is 'fake' in the %s environment: model calls return "
+            "replayed or echoed content, not real inference",
+            settings.environment,
+        )
     if settings.execution.adapter == "raw-worker":
-        app.state.adapter = attach_raw_worker(app.state.run_service, app.state.tool_gateway)
+        app.state.adapter = attach_raw_worker(
+            app.state.run_service, app.state.tool_gateway, provider=provider
+        )
     elif settings.execution.adapter == "langgraph":
-        app.state.adapter = attach_langgraph(app.state.run_service, app.state.tool_gateway)
+        app.state.adapter = attach_langgraph(
+            app.state.run_service, app.state.tool_gateway, provider=provider
+        )
     else:
         app.state.adapter = None
     if certification_coordinator is None and registry_service is None:

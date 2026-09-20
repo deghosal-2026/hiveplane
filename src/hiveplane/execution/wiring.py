@@ -25,6 +25,7 @@ from hiveplane.execution.service import RunService
 from hiveplane.execution.store import InMemoryRunStore, JsonFileRunStore, RunStore
 from hiveplane.execution.tool_executor import FixtureToolExecutor
 from hiveplane.execution.tools import ToolGateway
+from hiveplane.llm.provider import LLMProvider
 from hiveplane.persistence.audit import AuditLog, InMemoryAuditLog
 from hiveplane.persistence.base import create_engine_from_settings
 from hiveplane.persistence.postgres_audit import PostgresAuditLog
@@ -126,6 +127,7 @@ def attach_raw_worker(
     *,
     root: str | Path | None = None,
     spawner: Spawner | None = None,
+    provider: LLMProvider | None = None,
 ) -> RawWorkerAdapter:
     """Build the raw-worker adapter and bind it as the run service's executor."""
     settings = get_settings()
@@ -134,6 +136,7 @@ def attach_raw_worker(
         tool_gateway,
         EntrypointLoader(root=root or settings.execution.entrypoints_root),
         spawner=spawner,
+        provider=provider,
     )
     run_service.attach_executor(AdapterRunExecutor(adapter))
     return adapter
@@ -145,6 +148,7 @@ def attach_langgraph(
     *,
     root: str | Path | None = None,
     spawner: Spawner | None = None,
+    provider: LLMProvider | None = None,
 ) -> LangGraphAdapter:
     """Build the LangGraph adapter and bind it as the run service's executor (M23, #135)."""
     settings = get_settings()
@@ -153,6 +157,7 @@ def attach_langgraph(
         tool_gateway,
         EntrypointLoader(root=root or settings.execution.entrypoints_root),
         spawner=spawner,
+        provider=provider,
     )
     run_service.attach_executor(AdapterRunExecutor(adapter))
     return adapter
