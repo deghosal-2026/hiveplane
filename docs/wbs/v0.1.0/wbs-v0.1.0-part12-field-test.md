@@ -1,6 +1,6 @@
 # WBS v0.1.0 — Part 12: Field Test
 
-**Milestone:** M23 · **Issues:** #56-#59, #92-#133 (23 open) · **Phases:** P0-P4
+**Milestone:** M23 · **Issues:** #56-#59, #92-#144 (33 open; P0-P1 + #98 closed) · **Phases:** P0-P4
 
 ## Goal
 
@@ -54,14 +54,26 @@ Run three real, LLM-backed agents through the certified control loop and produce
 
 ### P2 — Control-Loop Hardening
 
-**Issues:** [#98](https://github.com/deghosal-2026/hiveplane/issues/98) · [#109](https://github.com/deghosal-2026/hiveplane/issues/109) · [#110](https://github.com/deghosal-2026/hiveplane/issues/110) · [#111](https://github.com/deghosal-2026/hiveplane/issues/111) · [#122](https://github.com/deghosal-2026/hiveplane/issues/122) · [#123](https://github.com/deghosal-2026/hiveplane/issues/123) · [#124](https://github.com/deghosal-2026/hiveplane/issues/124) · [#129](https://github.com/deghosal-2026/hiveplane/issues/129) · [#130](https://github.com/deghosal-2026/hiveplane/issues/130) · [#131](https://github.com/deghosal-2026/hiveplane/issues/131)
+**Issues:** [#98](https://github.com/deghosal-2026/hiveplane/issues/98) · [#109](https://github.com/deghosal-2026/hiveplane/issues/109) · [#110](https://github.com/deghosal-2026/hiveplane/issues/110) · [#111](https://github.com/deghosal-2026/hiveplane/issues/111) · [#122](https://github.com/deghosal-2026/hiveplane/issues/122) · [#123](https://github.com/deghosal-2026/hiveplane/issues/123) · [#124](https://github.com/deghosal-2026/hiveplane/issues/124) · [#129](https://github.com/deghosal-2026/hiveplane/issues/129) · [#130](https://github.com/deghosal-2026/hiveplane/issues/130) · [#131](https://github.com/deghosal-2026/hiveplane/issues/131) · [#134](https://github.com/deghosal-2026/hiveplane/issues/134) · [#135](https://github.com/deghosal-2026/hiveplane/issues/135) · [#136](https://github.com/deghosal-2026/hiveplane/issues/136) · [#137](https://github.com/deghosal-2026/hiveplane/issues/137) · [#138](https://github.com/deghosal-2026/hiveplane/issues/138) · [#139](https://github.com/deghosal-2026/hiveplane/issues/139) · [#140](https://github.com/deghosal-2026/hiveplane/issues/140) · [#141](https://github.com/deghosal-2026/hiveplane/issues/141) · [#142](https://github.com/deghosal-2026/hiveplane/issues/142) · [#144](https://github.com/deghosal-2026/hiveplane/issues/144)
+
+> **Real-LLM field-test audit (2026-09-20).** A design-vs-code audit of the LLM provider, adapters, wiring, and certification path found that the three example agents and the provider classes exist but have never run end-to-end through the real app path with a real or replay provider. The audit opened #134–#144 for the untracked gaps: the `FixtureToolExecutor` and `LangGraphAdapter` are not wired into production (`#134`, `#135`); the provider is not constructed at startup (`#136`); the `FakeProvider` keys replay on the last user message only, so it cannot vary output per corpus task and blocks deterministic CI certification (`#137`); `model_aliases` is unconfigured so every real-LLM call raises `ModelIdentityMismatchError` (`#138`); model-call cost is hardcoded to `0.0` so budget-by-USD cannot trip on model spend (`#139`); the corpora don't match real agent behavior — incident-agent can't complete a positive task and negative tasks require unimplemented actions (`#140`); `max_retries` and `default_model` are dead settings (`#141`, `#142`); and the adapter/certification executor default to "off" silently (`#144`). `#143` (P3) covers the missing `deploy/testdata` copy in the Docker image. These precede #109: real certification is impossible until the agents can actually run.
 
 - [x] #98 — Field test corpus (docs-agent + incident-agent corpora; ≥5 deterministic tasks each; negative tasks)
-- [ ] #109 — Adapter-backed benchmark certification (execute real agents against corpora; `EXECUTOR=adapter`; depends on #117)
+- [ ] #123 — Corpus-fixture coupling spec (ensure certification is meaningful; decides the #137 replay-keying scheme and the #140 corpus/agent reconciliation)
+- [ ] #134 — Wire `FixtureToolExecutor` into the production `ToolGateway` (agents get real tool data)
+- [ ] #135 — Wire `LangGraphAdapter` into the app (`attach_langgraph` + settings selector; docs-agent can run)
+- [ ] #136 — Wire the configured LLM provider into the adapters at startup (fail fast on misconfig)
+- [ ] #137 — Fix `FakeProvider` replay keying (full request, not last user message) and ship replay fixtures (blocks #109)
+- [ ] #138 — Configure `model_aliases` so real-LLM calls don't raise `ModelIdentityMismatchError`
+- [ ] #139 — Price model calls through `CostTable` (`cost_usd` is hardcoded to 0.0)
+- [ ] #140 — Reconcile corpora with real agent behavior (incident-agent can't complete; negative tasks require unimplemented actions)
+- [ ] #141 — Implement LLM provider retry/timeout from `ModelSettings` (`max_retries` is a dead setting)
+- [ ] #142 — Use `ModelSettings.default_model` as fallback when no model identity is bound
+- [ ] #144 — Fail fast on disabled adapter/certification executor instead of silently no-op'ing
+- [ ] #109 — Adapter-backed benchmark certification (execute real agents against corpora; `EXECUTOR=adapter`; depends on #117, #134, #137, #140)
 - [ ] #110 — Wire sandbox resource caps into the adapter execution path (RLIMIT_AS/CPU + wall-clock watchdog)
 - [ ] #111 — Implement startup recovery & durable resume (S8 unblocked)
 - [ ] #122 — Durable LangGraph checkpoint (replace InMemorySaver)
-- [ ] #123 — Corpus-fixture coupling spec (ensure certification is meaningful)
 - [ ] #124 — Trace story renders model-call spans
 - [ ] #129 — Approval flow must re-dispatch the escalated tool call on resume
 - [ ] #130 — Real readiness probe (/readyz checks stores, migrations, adapter)
@@ -71,9 +83,10 @@ Run three real, LLM-backed agents through the certified control loop and produce
 
 ### P3 — Docker Test Track
 
-**Issues:** [#93](https://github.com/deghosal-2026/hiveplane/issues/93) · [#94](https://github.com/deghosal-2026/hiveplane/issues/94) · [#95](https://github.com/deghosal-2026/hiveplane/issues/95) · [#96](https://github.com/deghosal-2026/hiveplane/issues/96) · [#59](https://github.com/deghosal-2026/hiveplane/issues/59)
+**Issues:** [#93](https://github.com/deghosal-2026/hiveplane/issues/93) · [#94](https://github.com/deghosal-2026/hiveplane/issues/94) · [#95](https://github.com/deghosal-2026/hiveplane/issues/95) · [#96](https://github.com/deghosal-2026/hiveplane/issues/96) · [#59](https://github.com/deghosal-2026/hiveplane/issues/59) · [#143](https://github.com/deghosal-2026/hiveplane/issues/143)
 
 - [ ] #93 — Docker test cases, dummy data, and setup (layered `tests/docker/`, `deploy/testdata/`, Ollama + fake-webhook compose profile)
+- [ ] #143 — Copy `deploy/testdata` into the Docker image (fixtures + replay files missing in container)
 - [ ] #94 — Docker test execution (one-command runner, structured results, CI exit codes)
 - [ ] #95 — Scenario screenshots for user guide (`docs/field-test/v0.1.0/screenshots/<scenario-id>/<step>-<name>.png`, regenerable)
 - [ ] #96 — Docker test results summary (`DOCKER_TEST_REPORT.md`)
@@ -131,6 +144,7 @@ P0 (Design & Planning)
 - #106 → #111 (durable design → recovery)
 - #112, #113 run in parallel with the LLM track
 - #92/#97 (plans) are written in P0 and executed in P3/P4
+- **Real-LLM audit chain (2026-09-20):** #123 (coupling spec) decides the #137 replay-keying scheme and the #140 corpus/agent reconciliation → #134 (wire fixtures) + #135 (wire LangGraph) + #136 (wire provider) + #138 (aliases) + #139 (pricing) + #141/#142 (provider robustness) + #144 (fail-fast defaults) precede #109 — real certification is impossible until the agents can actually run end-to-end. #143 (P3) ships the fixtures into the image.
 
 ---
 
