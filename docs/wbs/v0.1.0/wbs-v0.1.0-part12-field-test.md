@@ -56,7 +56,7 @@ Run three real, LLM-backed agents through the certified control loop and produce
 
 **Issues:** [#98](https://github.com/deghosal-2026/hiveplane/issues/98) · [#109](https://github.com/deghosal-2026/hiveplane/issues/109) · [#110](https://github.com/deghosal-2026/hiveplane/issues/110) · [#111](https://github.com/deghosal-2026/hiveplane/issues/111) · [#122](https://github.com/deghosal-2026/hiveplane/issues/122) · [#123](https://github.com/deghosal-2026/hiveplane/issues/123) · [#124](https://github.com/deghosal-2026/hiveplane/issues/124) · [#129](https://github.com/deghosal-2026/hiveplane/issues/129) · [#130](https://github.com/deghosal-2026/hiveplane/issues/130) · [#131](https://github.com/deghosal-2026/hiveplane/issues/131)
 
-- [ ] #98 — Field test corpus (docs-agent + incident-agent corpora; ≥5 deterministic tasks each; negative tasks)
+- [x] #98 — Field test corpus (docs-agent + incident-agent corpora; ≥5 deterministic tasks each; negative tasks)
 - [ ] #109 — Adapter-backed benchmark certification (execute real agents against corpora; `EXECUTOR=adapter`; depends on #117)
 - [ ] #110 — Wire sandbox resource caps into the adapter execution path (RLIMIT_AS/CPU + wall-clock watchdog)
 - [ ] #111 — Implement startup recovery & durable resume (S8 unblocked)

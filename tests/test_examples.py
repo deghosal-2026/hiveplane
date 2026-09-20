@@ -135,3 +135,59 @@ def test_demo_corpus_is_satisfiable() -> None:
     assert result.aggregate.passed == result.aggregate.total
     assert result.aggregate.critical_failures == 0
     assert result.aggregate.pass_rate == 1.0
+
+
+# --- M23 P2 #98: every field-test workload must ship a real corpus ----------
+
+EXPECTED_CORPUS_REF = {name: f"corpora/{name}/v1" for name in EXPECTED}
+ADAPTER_BY_NAME = EXPECTED
+
+
+def _corpus_dir(name: str) -> Path:
+    return CORPORA_DIR / name / "v1"
+
+
+@pytest.mark.parametrize("name", sorted(EXPECTED))
+def test_every_example_workload_links_to_its_corpus(name: str) -> None:
+    workload = load_manifest(EXAMPLES_DIR / f"{name}.yaml")
+
+    assert workload.spec.certification is not None
+    assert workload.spec.certification.benchmark_corpus == EXPECTED_CORPUS_REF[name]
+    assert (_corpus_dir(name) / "corpus.yaml").exists()
+
+
+@pytest.mark.parametrize("name", sorted(EXPECTED))
+def test_every_corpus_has_positive_and_counterexample_tasks(name: str) -> None:
+    corpus = load_corpus(_corpus_dir(name))
+
+    positives = [task for task in corpus.tasks if task.check.type is CheckType.EXACT_MATCH]
+    counterexamples = [
+        task for task in corpus.tasks if task.check.type is CheckType.ACTION_AUDIT
+    ]
+
+    assert corpus.version >= 1
+    assert len(corpus.tasks) >= 5, f"{name}: need >= 5 deterministic tasks"
+    assert len(positives) >= 2, f"{name}: need >= 2 positive (exact_match) tasks"
+    assert len(counterexamples) >= 2, f"{name}: need >= 2 counterexample (action_audit) tasks"
+    assert any(task.critical for task in counterexamples), f"{name}: need a critical counterexample"
+
+
+@pytest.mark.parametrize("name", sorted(EXPECTED))
+def test_every_corpus_is_satisfiable(name: str) -> None:
+    corpus = load_corpus(_corpus_dir(name))
+    runner = BenchmarkRunner(
+        _OracleExecutor(),
+        model_identity="gpt-4o-2024-08-06",
+        benchmark_version="1.0.0",
+        environment=Environment(
+            sandbox_image="hiveplane/sandbox:0.1.0",
+            runtime_adapter=ADAPTER_BY_NAME[name],
+            control_plane_version="0.1.0",
+        ),
+    )
+
+    result = runner.run(corpus, workload_id=name, manifest_version=1)
+
+    assert result.aggregate.passed == result.aggregate.total
+    assert result.aggregate.critical_failures == 0
+    assert result.aggregate.pass_rate == 1.0

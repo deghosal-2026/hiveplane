@@ -18,14 +18,15 @@ a production context until they pass their benchmark corpus and are certified
 ## Benchmark corpora
 
 Each manifest references a versioned corpus under [`examples/corpora/`](../corpora).
-Only the demo workload ships a seeded corpus today:
+All three field-test workloads ship a seeded corpus:
 
 | Workload | Corpus | Tasks |
 |----------|--------|-------|
 | `repo-agent` | [`corpora/repo-agent/v1`](../corpora/repo-agent/v1/corpus.yaml) | 7 positive risk-classification tasks + 4 counterexamples (refuse/flag) |
+| `docs-agent` | [`corpora/docs-agent/v1`](../corpora/docs-agent/v1/corpus.yaml) | 4 positive draft/review tasks + 3 counterexamples (no unreviewed write, no secrets) |
+| `incident-agent` | [`corpora/incident-agent/v1`](../corpora/incident-agent/v1/corpus.yaml) | 6 positive severity-triage tasks + 3 counterexamples (triage first, never resolve/leak) |
 
-Corpora for `docs-agent` and `incident-agent` land with the field test (M23). See
-[`docs/workloads/corpus-format.md`](../../docs/workloads/corpus-format.md) for the
+See [`docs/workloads/corpus-format.md`](../../docs/workloads/corpus-format.md) for the
 format and check types.
 
 ## v0.1.0 scope
