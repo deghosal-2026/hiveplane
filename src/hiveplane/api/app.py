@@ -172,6 +172,13 @@ def create_app(
             "replayed or echoed content, not real inference",
             settings.environment,
         )
+    if settings.model.provider in ("local", "cloud") and not settings.model.model_aliases:
+        _LOGGER.warning(
+            "model.provider is %r with empty model_aliases: server-reported model "
+            "names must map to the bound canonical identity or every model call "
+            "raises ModelIdentityMismatchError",
+            settings.model.provider,
+        )
     if settings.execution.adapter == "raw-worker":
         app.state.adapter = attach_raw_worker(
             app.state.run_service, app.state.tool_gateway, provider=provider

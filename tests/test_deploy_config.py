@@ -110,10 +110,24 @@ def test_env_profiles_set_llm_provider_defaults() -> None:
 
     assert "HIVEPLANE_MODEL__PROVIDER=local" in local
     assert "HIVEPLANE_MODEL__BASE_URL=http://ollama:11434/v1" in local
+    assert (
+        '{"qwen2.5:7b": "local/qwen2.5/7b"}' in local
+    ), "local profile must alias the served Ollama tag to the canonical identity"
+    assert "HIVEPLANE_MODEL__DEFAULT_MODEL=local/qwen2.5/7b" in local
 
     assert "HIVEPLANE_MODEL__PROVIDER=cloud" in cloud
     assert "HIVEPLANE_MODEL__BASE_URL=https://api.openai.com/v1" in cloud
     assert "HIVEPLANE_MODEL__API_KEY=" in cloud
+    assert (
+        '{"gpt-4o-2024-08-06": "openai/gpt-4o/2024-08-06"}' in cloud
+    ), "cloud profile must alias the served model name to the canonical identity"
+
+
+def test_compose_maps_model_alias_env_to_the_api_container() -> None:
+    services = _load("docker-compose.yml")["services"]
+    environment = services["api"]["environment"]
+
+    assert "HIVEPLANE_MODEL__MODEL_ALIASES" in environment
 
 
 def test_overview_dashboard_covers_fleet_and_certification_metrics() -> None:

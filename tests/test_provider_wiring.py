@@ -82,6 +82,37 @@ def test_local_provider_without_base_url_fails_fast(
         create_app()
 
 
+def test_real_provider_without_aliases_warns_at_startup(
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    monkeypatch.setenv("HIVEPLANE_MODEL__PROVIDER", "cloud")
+    monkeypatch.setenv("HIVEPLANE_MODEL__API_KEY", "sk-test")
+    monkeypatch.delenv("HIVEPLANE_MODEL__MODEL_ALIASES", raising=False)
+
+    with caplog.at_level("WARNING", logger="hiveplane.api.app"):
+        create_app()
+
+    assert any("model_aliases" in record.message for record in caplog.records)
+
+
+def test_real_provider_with_aliases_does_not_warn(
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    monkeypatch.setenv("HIVEPLANE_MODEL__PROVIDER", "cloud")
+    monkeypatch.setenv("HIVEPLANE_MODEL__API_KEY", "sk-test")
+    monkeypatch.setenv(
+        "HIVEPLANE_MODEL__MODEL_ALIASES",
+        '{"gpt-4o-2024-08-06": "openai/gpt-4o/2024-08-06"}',
+    )
+
+    with caplog.at_level("WARNING", logger="hiveplane.api.app"):
+        create_app()
+
+    assert not any("model_aliases" in record.message for record in caplog.records)
+
+
 def test_raw_worker_adapter_receives_the_startup_provider(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

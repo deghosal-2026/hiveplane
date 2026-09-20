@@ -11,7 +11,7 @@ from __future__ import annotations
 from functools import lru_cache
 from typing import Literal
 
-from pydantic import BaseModel, Field, SecretStr, model_validator
+from pydantic import BaseModel, Field, SecretStr, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from hiveplane.execution.tool_executor import DEFAULT_TOOL_FIXTURES
@@ -164,6 +164,14 @@ class ModelSettings(BaseModel):
     max_retries: int = Field(default=2, ge=0)
     replay_file: str | None = None
     model_aliases: dict[str, str] = Field(default_factory=dict)
+
+    @field_validator("model_aliases", mode="before")
+    @classmethod
+    def _empty_aliases_become_empty_map(cls, value: object) -> object:
+        """Treat an unset env var as no aliases (compose maps it unconditionally)."""
+        if value == "":
+            return {}
+        return value
 
 
 class Settings(BaseSettings):

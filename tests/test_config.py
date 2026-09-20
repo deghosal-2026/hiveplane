@@ -163,6 +163,32 @@ def test_model_settings_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
     assert settings.model.base_url == "http://ollama:11434/v1"
 
 
+def test_model_aliases_parse_from_env_json(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv(
+        "HIVEPLANE_MODEL__MODEL_ALIASES",
+        '{"gpt-4o-2024-08-06": "openai/gpt-4o/2024-08-06"}',
+    )
+
+    settings = Settings()
+
+    assert settings.model.model_aliases == {
+        "gpt-4o-2024-08-06": "openai/gpt-4o/2024-08-06"
+    }
+
+
+def test_model_aliases_tolerate_an_empty_env_value(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Compose maps the alias var unconditionally; empty must not crash startup."""
+    monkeypatch.setenv("HIVEPLANE_MODEL__MODEL_ALIASES", "")
+
+    settings = Settings()
+
+    assert settings.model.model_aliases == {}
+
+
 def test_signing_key_file_defaults_to_none() -> None:
     settings = Settings()
 

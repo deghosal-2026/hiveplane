@@ -64,7 +64,7 @@ Run three real, LLM-backed agents through the certified control loop and produce
 - [x] #135 — Wire `LangGraphAdapter` into the app (`attach_langgraph` + settings selector; docs-agent can run)
 - [x] #136 — Wire the configured LLM provider into the adapters at startup (fail fast on misconfig)
 - [x] #137 — Fix `FakeProvider` replay keying (full request, not last user message) and ship replay fixtures (blocks #109)
-- [ ] #138 — Configure `model_aliases` so real-LLM calls don't raise `ModelIdentityMismatchError`
+- [x] #138 — Configure `model_aliases` so real-LLM calls don't raise `ModelIdentityMismatchError`
 - [ ] #139 — Price model calls through `CostTable` (`cost_usd` is hardcoded to 0.0)
 - [ ] #140 — Reconcile corpora with real agent behavior (incident-agent can't complete; negative tasks require unimplemented actions)
 - [ ] #141 — Implement LLM provider retry/timeout from `ModelSettings` (`max_retries` is a dead setting)

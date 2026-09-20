@@ -137,6 +137,12 @@ the provider and checked against the certification binding (T11); a mismatch blo
 - At least one workload must run on **local** and at least one on **cloud** (when a key is
   available); all three must run on **fake** for repeatable CI.
 - `spec.model.identity` in each manifest must match the provider actually used.
+- **Model aliases are required for real providers**: the server-reported model name must map to
+  the canonical identity the run is bound to via `HIVEPLANE_MODEL__MODEL_ALIASES` (cloud:
+  `gpt-4o-2024-08-06` → `openai/gpt-4o/2024-08-06`; local: the served Ollama tag → the local
+  canonical identity, e.g. `qwen2.5:7b` → `local/qwen2.5/7b`, and certify with
+  `--model-identity local/qwen2.5/7b`). Without a matching alias every model call raises
+  `ModelIdentityMismatchError` — the T11 model-swap defense firing on legitimate calls.
 - Local/fake models are priced at zero in the budget table; cloud models use real prices.
 
 See [D17: LLM Provider Design](../../design/llm-provider-design.md) (#104).
