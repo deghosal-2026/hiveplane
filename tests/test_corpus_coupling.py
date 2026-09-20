@@ -117,7 +117,7 @@ def test_correct_agent_passes_every_corpus() -> None:
     for workload in ("repo-agent", "docs-agent", "incident-agent"):
         corpus = load_corpus(_corpus_dir(workload))
         outputs: dict[str, Any] = {
-            task.check.field: task.check.value
+            task.check.field or "": task.check.value
             for task in corpus.tasks
             if task.check.type is CheckType.EXACT_MATCH
         }
