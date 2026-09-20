@@ -1,0 +1,12 @@
+version: 1
+mode: advisory
+detection: marker
+rules:
+  - name: hallucinated-api
+    severity: criticalz
+    enabled: true
+    description: Invalid severity value
+  - name: hallucinated-api
+    severity: medium
+    enabled: true
+    description: Duplicate rule name

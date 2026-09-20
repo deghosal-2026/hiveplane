@@ -1,0 +1,27 @@
+# Field Test Agents — round-robin across frameworks
+# Format: slug|repo_url|commit_sha|adapter|setup_cmd
+#
+# Round 1 — one from each framework (8 agents)
+lg-azure|https://github.com/Azure-Samples/python-ai-agent-frameworks-demos.git|TODO|langgraph|none
+pai-azure|https://github.com/Azure-Samples/python-ai-agent-frameworks-demos.git|TODO|pydantic-ai|none
+crew-quickstarts|https://github.com/crewAIInc/crewAI-quickstarts.git|TODO|crewai|none
+oa-azure|https://github.com/Azure-Samples/python-ai-agent-frameworks-demos.git|TODO|openai-agents|none
+sm-qs|https://github.com/ababdotai/awesome-agent-quickstart.git|TODO|smolagents|none
+ag-azure|https://github.com/Azure-Samples/python-ai-agent-frameworks-demos.git|TODO|autogen|none
+li-azure|https://github.com/Azure-Samples/python-ai-agent-frameworks-demos.git|TODO|llamaindex|none
+adk-qs|https://github.com/ababdotai/awesome-agent-quickstart.git|TODO|adk|none
+#
+# Round 2 — second from each (8 agents)
+lg-official|https://github.com/langchain-ai/langgraph.git|TODO|langgraph|none
+pai-official|https://github.com/pydantic/pydantic-ai.git|TODO|pydantic-ai|none
+crew-examples|https://github.com/crewAIInc/crewAI-examples.git|TODO|crewai|none
+oa-official|https://github.com/openai/openai-agents-python.git|TODO|openai-agents|none
+sm-smolcc|https://github.com/aniemerg/smolcc.git|TODO|smolagents|none
+ag-official|https://github.com/ag2ai/ag2.git|TODO|autogen|none
+li-official|https://github.com/run-llama/llama_index.git|TODO|llamaindex|none
+adk-sokart|https://github.com/sokart/adk-walkthrough.git|TODO|adk|none
+#
+# Round 3 — remaining (3 agents)
+crew-qs|https://github.com/ababdotai/awesome-agent-quickstart.git|TODO|crewai|none
+sm-deepsearch|https://github.com/lwyBZss8924d/DeepSearchAgents.git|TODO|smolagents|none
+adk-official|https://github.com/google/adk-python.git|TODO|adk|none

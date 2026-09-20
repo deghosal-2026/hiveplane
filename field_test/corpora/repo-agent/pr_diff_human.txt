@@ -1,0 +1,39 @@
+diff --git a/src/api.py b/src/api.py
+index abc123..def456 100644
+--- a/src/api.py
++++ b/src/api.py
+@@ -10,6 +10,12 @@ def get_user_data(user_id):
+     response = requests.get(f"/users/{user_id}")
+     if response.status_code == 200:
+         return response.json()
++    logger.error("Failed to fetch user data", extra={"user_id": user_id})
+     return None
+
++def process_batch(items):
++    results = []
++    for item in items:
++        try:
++            result = transform_item(item)
++            results.append(result)
++        except ValueError as e:
++            logger.warning(f"Skipping invalid item: {e}")
++    return results
+diff --git a/src/utils.py b/src/utils.py
+index ghi789..jkl012 100644
+--- a/src/utils.py
++++ b/src/utils.py
+@@ -5,6 +5,13 @@
+ import os
+
++API_KEY = os.environ.get("API_KEY")
++if not API_KEY:
++    raise RuntimeError("API_KEY environment variable is required")
++
+ def format_output(data):
+-    result = json.dumps(data, indent=2)
++    try:
++        result = json.dumps(data, indent=2)
++    except TypeError as e:
++        logger.error(f"Failed to serialize data: {e}")
++        result = str(data)
+     return result

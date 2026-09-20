@@ -1,0 +1,335 @@
+[
+  {
+    "sha": "5a07c5e265e419b19d58c1339168cc200bdca1cd",
+    "node_id": "C_kwDOAGhaidoAKDVhMDdjNWUyNjVlNDE5YjE5ZDU4YzEzMzkxNjhjYzIwMGJkY2ExY2Q",
+    "commit": {
+      "author": {
+        "name": "bwplotka",
+        "email": "bwplotka@gmail.com",
+        "date": "2026-05-28T14:16:44Z"
+      },
+      "committer": {
+        "name": "bwplotka",
+        "email": "bwplotka@gmail.com",
+        "date": "2026-05-28T14:16:44Z"
+      },
+      "message": "release: cut 3.12.0\n\nSigned-off-by: bwplotka <bwplotka@gmail.com>",
+      "tree": {
+        "sha": "7d699a4f21d4fb89680a59ac85d9e47b680011a0",
+        "url": "https://api.github.com/repos/prometheus/prometheus/git/trees/7d699a4f21d4fb89680a59ac85d9e47b680011a0"
+      },
+      "url": "https://api.github.com/repos/prometheus/prometheus/git/commits/5a07c5e265e419b19d58c1339168cc200bdca1cd",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/prometheus/prometheus/commits/5a07c5e265e419b19d58c1339168cc200bdca1cd",
+    "html_url": "https://github.com/prometheus/prometheus/commit/5a07c5e265e419b19d58c1339168cc200bdca1cd",
+    "comments_url": "https://api.github.com/repos/prometheus/prometheus/commits/5a07c5e265e419b19d58c1339168cc200bdca1cd/comments",
+    "author": {
+      "login": "bwplotka",
+      "id": 6950331,
+      "node_id": "MDQ6VXNlcjY5NTAzMzE=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6950331?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/bwplotka",
+      "html_url": "https://github.com/bwplotka",
+      "followers_url": "https://api.github.com/users/bwplotka/followers",
+      "following_url": "https://api.github.com/users/bwplotka/following{/other_user}",
+      "gists_url": "https://api.github.com/users/bwplotka/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/bwplotka/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/bwplotka/subscriptions",
+      "organizations_url": "https://api.github.com/users/bwplotka/orgs",
+      "repos_url": "https://api.github.com/users/bwplotka/repos",
+      "events_url": "https://api.github.com/users/bwplotka/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/bwplotka/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "bwplotka",
+      "id": 6950331,
+      "node_id": "MDQ6VXNlcjY5NTAzMzE=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6950331?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/bwplotka",
+      "html_url": "https://github.com/bwplotka",
+      "followers_url": "https://api.github.com/users/bwplotka/followers",
+      "following_url": "https://api.github.com/users/bwplotka/following{/other_user}",
+      "gists_url": "https://api.github.com/users/bwplotka/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/bwplotka/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/bwplotka/subscriptions",
+      "organizations_url": "https://api.github.com/users/bwplotka/orgs",
+      "repos_url": "https://api.github.com/users/bwplotka/repos",
+      "events_url": "https://api.github.com/users/bwplotka/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/bwplotka/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "36cf4a8ab0db6fc53ca7bec6addf74d345374a13",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/36cf4a8ab0db6fc53ca7bec6addf74d345374a13",
+        "html_url": "https://github.com/prometheus/prometheus/commit/36cf4a8ab0db6fc53ca7bec6addf74d345374a13"
+      }
+    ]
+  },
+  {
+    "sha": "65f818aced8b57724c96c42eb776ce2ce08b80cc",
+    "node_id": "C_kwDOAGhaidoAKDY1ZjgxOGFjZWQ4YjU3NzI0Yzk2YzQyZWI3NzZjZTJjZTA4YjgwY2M",
+    "commit": {
+      "author": {
+        "name": "bwplotka",
+        "email": "bwplotka@gmail.com",
+        "date": "2026-05-28T14:17:15Z"
+      },
+      "committer": {
+        "name": "bwplotka",
+        "email": "bwplotka@gmail.com",
+        "date": "2026-05-28T14:19:59Z"
+      },
+      "message": "bump UI version\n\nSigned-off-by: bwplotka <bwplotka@gmail.com>",
+      "tree": {
+        "sha": "0f184a81594a768f214a9235a504ab3788a4655f",
+        "url": "https://api.github.com/repos/prometheus/prometheus/git/trees/0f184a81594a768f214a9235a504ab3788a4655f"
+      },
+      "url": "https://api.github.com/repos/prometheus/prometheus/git/commits/65f818aced8b57724c96c42eb776ce2ce08b80cc",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/prometheus/prometheus/commits/65f818aced8b57724c96c42eb776ce2ce08b80cc",
+    "html_url": "https://github.com/prometheus/prometheus/commit/65f818aced8b57724c96c42eb776ce2ce08b80cc",
+    "comments_url": "https://api.github.com/repos/prometheus/prometheus/commits/65f818aced8b57724c96c42eb776ce2ce08b80cc/comments",
+    "author": {
+      "login": "bwplotka",
+      "id": 6950331,
+      "node_id": "MDQ6VXNlcjY5NTAzMzE=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6950331?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/bwplotka",
+      "html_url": "https://github.com/bwplotka",
+      "followers_url": "https://api.github.com/users/bwplotka/followers",
+      "following_url": "https://api.github.com/users/bwplotka/following{/other_user}",
+      "gists_url": "https://api.github.com/users/bwplotka/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/bwplotka/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/bwplotka/subscriptions",
+      "organizations_url": "https://api.github.com/users/bwplotka/orgs",
+      "repos_url": "https://api.github.com/users/bwplotka/repos",
+      "events_url": "https://api.github.com/users/bwplotka/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/bwplotka/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "bwplotka",
+      "id": 6950331,
+      "node_id": "MDQ6VXNlcjY5NTAzMzE=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6950331?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/bwplotka",
+      "html_url": "https://github.com/bwplotka",
+      "followers_url": "https://api.github.com/users/bwplotka/followers",
+      "following_url": "https://api.github.com/users/bwplotka/following{/other_user}",
+      "gists_url": "https://api.github.com/users/bwplotka/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/bwplotka/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/bwplotka/subscriptions",
+      "organizations_url": "https://api.github.com/users/bwplotka/orgs",
+      "repos_url": "https://api.github.com/users/bwplotka/repos",
+      "events_url": "https://api.github.com/users/bwplotka/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/bwplotka/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "5a07c5e265e419b19d58c1339168cc200bdca1cd",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/5a07c5e265e419b19d58c1339168cc200bdca1cd",
+        "html_url": "https://github.com/prometheus/prometheus/commit/5a07c5e265e419b19d58c1339168cc200bdca1cd"
+      }
+    ]
+  },
+  {
+    "sha": "4158cac050cbb0f8149e10246463ac9aaf785ee9",
+    "node_id": "C_kwDOAGhaidoAKDQxNThjYWMwNTBjYmIwZjgxNDllMTAyNDY0NjNhYzlhYWY3ODVlZTk",
+    "commit": {
+      "author": {
+        "name": "bwplotka",
+        "email": "bwplotka@gmail.com",
+        "date": "2026-05-28T14:43:06Z"
+      },
+      "committer": {
+        "name": "bwplotka",
+        "email": "bwplotka@gmail.com",
+        "date": "2026-05-28T14:58:39Z"
+      },
+      "message": "upgade Go modules\n\nSigned-off-by: bwplotka <bwplotka@gmail.com>",
+      "tree": {
+        "sha": "6d09c791814f440086529766365336f45ec5c88e",
+        "url": "https://api.github.com/repos/prometheus/prometheus/git/trees/6d09c791814f440086529766365336f45ec5c88e"
+      },
+      "url": "https://api.github.com/repos/prometheus/prometheus/git/commits/4158cac050cbb0f8149e10246463ac9aaf785ee9",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/prometheus/prometheus/commits/4158cac050cbb0f8149e10246463ac9aaf785ee9",
+    "html_url": "https://github.com/prometheus/prometheus/commit/4158cac050cbb0f8149e10246463ac9aaf785ee9",
+    "comments_url": "https://api.github.com/repos/prometheus/prometheus/commits/4158cac050cbb0f8149e10246463ac9aaf785ee9/comments",
+    "author": {
+      "login": "bwplotka",
+      "id": 6950331,
+      "node_id": "MDQ6VXNlcjY5NTAzMzE=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6950331?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/bwplotka",
+      "html_url": "https://github.com/bwplotka",
+      "followers_url": "https://api.github.com/users/bwplotka/followers",
+      "following_url": "https://api.github.com/users/bwplotka/following{/other_user}",
+      "gists_url": "https://api.github.com/users/bwplotka/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/bwplotka/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/bwplotka/subscriptions",
+      "organizations_url": "https://api.github.com/users/bwplotka/orgs",
+      "repos_url": "https://api.github.com/users/bwplotka/repos",
+      "events_url": "https://api.github.com/users/bwplotka/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/bwplotka/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "bwplotka",
+      "id": 6950331,
+      "node_id": "MDQ6VXNlcjY5NTAzMzE=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6950331?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/bwplotka",
+      "html_url": "https://github.com/bwplotka",
+      "followers_url": "https://api.github.com/users/bwplotka/followers",
+      "following_url": "https://api.github.com/users/bwplotka/following{/other_user}",
+      "gists_url": "https://api.github.com/users/bwplotka/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/bwplotka/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/bwplotka/subscriptions",
+      "organizations_url": "https://api.github.com/users/bwplotka/orgs",
+      "repos_url": "https://api.github.com/users/bwplotka/repos",
+      "events_url": "https://api.github.com/users/bwplotka/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/bwplotka/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "65f818aced8b57724c96c42eb776ce2ce08b80cc",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/65f818aced8b57724c96c42eb776ce2ce08b80cc",
+        "html_url": "https://github.com/prometheus/prometheus/commit/65f818aced8b57724c96c42eb776ce2ce08b80cc"
+      }
+    ]
+  },
+  {
+    "sha": "9f27dffc1f93ca23287972f632025879f2d1c658",
+    "node_id": "C_kwDOAGhaidoAKDlmMjdkZmZjMWY5M2NhMjMyODc5NzJmNjMyMDI1ODc5ZjJkMWM2NTg",
+    "commit": {
+      "author": {
+        "name": "Bartlomiej Plotka",
+        "email": "bwplotka@gmail.com",
+        "date": "2026-05-28T15:31:32Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-05-28T15:31:32Z"
+      },
+      "message": "Merge pull request #18812 from prometheus/cut-312\n\nchore: Cut 3.12.0",
+      "tree": {
+        "sha": "6d09c791814f440086529766365336f45ec5c88e",
+        "url": "https://api.github.com/repos/prometheus/prometheus/git/trees/6d09c791814f440086529766365336f45ec5c88e"
+      },
+      "url": "https://api.github.com/repos/prometheus/prometheus/git/commits/9f27dffc1f93ca23287972f632025879f2d1c658",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqGF/UCRC1aQ7uu5UhlAAAEf8QAE3yaQxCdEJkQqwtFLJ/WrDA\nIbD/HhYLeuDX5zGCzCHcnp2QoYCD4qdVIx4WYdSNRmAurFrnvw8iZ21bhXNK3qyl\ntKgxSQbf1qBVAlQDwe9MpGKuBK20FgoC2hnawvfxFUlacF3SSKsVzLlVwpJ9f44k\nLDoDEo1PrhPwGjLyzO3ad0PGiCLKNcrMLy5H3K0w876Neyni8JK5Rmxs1LuqCv/j\nSD7P4h9nugkU+dn/Uxv7T6QFx5xbh8IMMSXhPQ/794moSYue893QJVb/bFLYOGoE\n0BsZIbD9j52pDKV/l4szPw+K8xPcNl5Eqwt8RVuDvup5tO3YMU87rajecTCLNe2P\nRG3bKoqAW7Bl+soDNvJppOZP9j5xT9WrZzelb7uGIbz1+OY4vUviMu2NmGvFJFho\nUoBHdh0+P4MIXC06i3pxot9cPechvJDW64j2qGlk0Zp8bYuxFlGCTiB2z69p1/fU\ndVuNN0TqJ8pxXowzG1ccIc8BUf4WtnmkOUcdPMUpHOZt0h/vl5eRgJqdxpVMM9t0\n14uR+ykWt0tEj31dGZ2q1kSOxoj2qK28EDAt127B+FzMG0Zrf3h6LHOwrH9M9Bsj\nO3/BP4zORXaYHtpgvvt8+X/TeZnnAQwzsOfHcFHkphAn4JMDgF/iAJn/ISsRNCPH\nrvJjQdmPPrslHI4oS79b\n=vNxZ\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 6d09c791814f440086529766365336f45ec5c88e\nparent 36cf4a8ab0db6fc53ca7bec6addf74d345374a13\nparent 4158cac050cbb0f8149e10246463ac9aaf785ee9\nauthor Bartlomiej Plotka <bwplotka@gmail.com> 1779982292 +0200\ncommitter GitHub <noreply@github.com> 1779982292 +0200\n\nMerge pull request #18812 from prometheus/cut-312\n\nchore: Cut 3.12.0",
+        "verified_at": "2026-05-28T15:31:33Z"
+      }
+    },
+    "url": "https://api.github.com/repos/prometheus/prometheus/commits/9f27dffc1f93ca23287972f632025879f2d1c658",
+    "html_url": "https://github.com/prometheus/prometheus/commit/9f27dffc1f93ca23287972f632025879f2d1c658",
+    "comments_url": "https://api.github.com/repos/prometheus/prometheus/commits/9f27dffc1f93ca23287972f632025879f2d1c658/comments",
+    "author": {
+      "login": "bwplotka",
+      "id": 6950331,
+      "node_id": "MDQ6VXNlcjY5NTAzMzE=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6950331?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/bwplotka",
+      "html_url": "https://github.com/bwplotka",
+      "followers_url": "https://api.github.com/users/bwplotka/followers",
+      "following_url": "https://api.github.com/users/bwplotka/following{/other_user}",
+      "gists_url": "https://api.github.com/users/bwplotka/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/bwplotka/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/bwplotka/subscriptions",
+      "organizations_url": "https://api.github.com/users/bwplotka/orgs",
+      "repos_url": "https://api.github.com/users/bwplotka/repos",
+      "events_url": "https://api.github.com/users/bwplotka/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/bwplotka/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "36cf4a8ab0db6fc53ca7bec6addf74d345374a13",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/36cf4a8ab0db6fc53ca7bec6addf74d345374a13",
+        "html_url": "https://github.com/prometheus/prometheus/commit/36cf4a8ab0db6fc53ca7bec6addf74d345374a13"
+      },
+      {
+        "sha": "4158cac050cbb0f8149e10246463ac9aaf785ee9",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/4158cac050cbb0f8149e10246463ac9aaf785ee9",
+        "html_url": "https://github.com/prometheus/prometheus/commit/4158cac050cbb0f8149e10246463ac9aaf785ee9"
+      }
+    ]
+  }
+]

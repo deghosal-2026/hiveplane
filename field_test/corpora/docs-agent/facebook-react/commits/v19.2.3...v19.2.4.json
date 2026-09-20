@@ -1,0 +1,166 @@
+[
+  {
+    "sha": "63d61c755795eb32e7cc0241d94abbf41cdef8c9",
+    "node_id": "C_kwDOAJy2KtoAKDYzZDYxYzc1NTc5NWViMzJlN2NjMDI0MWQ5NGFiYmY0MWNkZWY4Yzk",
+    "commit": {
+      "author": {
+        "name": "Sebastian Markbage",
+        "email": "sebastian@calyptus.eu",
+        "date": "2026-01-26T15:34:54Z"
+      },
+      "committer": {
+        "name": "Hendrik Liebau",
+        "email": "mail@hendrik-liebau.de",
+        "date": "2026-01-26T15:36:27Z"
+      },
+      "message": "Add more DoS mitigations to React Flight Reply, and harden React Flight\n\nCo-authored-by: Josh Story <josh.c.story@gmail.com>\nCo-authored-by: Janka Uryga <lolzatu2@gmail.com>\nCo-authored-by: Hendrik Liebau <mail@hendrik-liebau.de>",
+      "tree": {
+        "sha": "7a7378222b2ce8a5c6bf1f6203f33c6fdeb8288d",
+        "url": "https://api.github.com/repos/react/react/git/trees/7a7378222b2ce8a5c6bf1f6203f33c6fdeb8288d"
+      },
+      "url": "https://api.github.com/repos/react/react/git/commits/63d61c755795eb32e7cc0241d94abbf41cdef8c9",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\niQGzBAABCAAdFiEEhvPAIlv/s9hmAjo3FcHWrAy3X/YFAml3igcACgkQFcHWrAy3\nX/YzGAv+OB87iI4Y27xFL27C/g9pGzYLpeSzEgFyBZ2tE+peAsRLjjRkmLnIHBQa\nuRuwVE2Uw5diGiayonHilSafThZ8q/YJJjo/8M7GyMh9zOLLv7UmyZaUre7kB4Hk\naiRcyZISS2BpGvl/xNU0JHuYEviyentpqBGpRT3MiiTz9XLajP7rfIy/88grUPAh\nbPiJw4+K3gHbhTsFdDD3AJtrNksV/jSS5SrYtTuIvXruGlmHGLZeH5e3jzYuidNR\ndhF/GVRUGluOPVn/l1yjMzON7NXjXETfXYc4xNUBA2iVElYDmC2EQt1N+ZULe5M9\nvaaw4aZw30c07mlK8C+3yEx4ctiLdJUyNRfYi/jmSYUznlJQjQrOnHcjEvdEwxkc\n1DgQnPT528DxUEBoWTSHAuRBRQe+w+NRbLFWgvs4vI7PFsJRLBW0Xg7pj0iMx1yw\nYQfIjygUcrad7AH+cosPsXMTaD7jN9XorqViFLfpY8Ktmri9vR4ixD3gXbyv+UPI\nLoM6rUk0\n=D1DM\n-----END PGP SIGNATURE-----",
+        "payload": "tree 7a7378222b2ce8a5c6bf1f6203f33c6fdeb8288d\nparent 612e371fb215498edde4c853bd1e0c8e9203808f\nauthor Sebastian Markbage <sebastian@calyptus.eu> 1769441694 +0100\ncommitter Hendrik Liebau <mail@hendrik-liebau.de> 1769441787 +0100\n\nAdd more DoS mitigations to React Flight Reply, and harden React Flight\n\nCo-authored-by: Josh Story <josh.c.story@gmail.com>\nCo-authored-by: Janka Uryga <lolzatu2@gmail.com>\nCo-authored-by: Hendrik Liebau <mail@hendrik-liebau.de>\n",
+        "verified_at": "2026-01-26T18:27:50Z"
+      }
+    },
+    "url": "https://api.github.com/repos/react/react/commits/63d61c755795eb32e7cc0241d94abbf41cdef8c9",
+    "html_url": "https://github.com/react/react/commit/63d61c755795eb32e7cc0241d94abbf41cdef8c9",
+    "comments_url": "https://api.github.com/repos/react/react/commits/63d61c755795eb32e7cc0241d94abbf41cdef8c9/comments",
+    "author": {
+      "login": "sebmarkbage",
+      "id": 63648,
+      "node_id": "MDQ6VXNlcjYzNjQ4",
+      "avatar_url": "https://avatars.githubusercontent.com/u/63648?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/sebmarkbage",
+      "html_url": "https://github.com/sebmarkbage",
+      "followers_url": "https://api.github.com/users/sebmarkbage/followers",
+      "following_url": "https://api.github.com/users/sebmarkbage/following{/other_user}",
+      "gists_url": "https://api.github.com/users/sebmarkbage/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/sebmarkbage/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/sebmarkbage/subscriptions",
+      "organizations_url": "https://api.github.com/users/sebmarkbage/orgs",
+      "repos_url": "https://api.github.com/users/sebmarkbage/repos",
+      "events_url": "https://api.github.com/users/sebmarkbage/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/sebmarkbage/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "unstubbable",
+      "id": 761683,
+      "node_id": "MDQ6VXNlcjc2MTY4Mw==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/761683?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/unstubbable",
+      "html_url": "https://github.com/unstubbable",
+      "followers_url": "https://api.github.com/users/unstubbable/followers",
+      "following_url": "https://api.github.com/users/unstubbable/following{/other_user}",
+      "gists_url": "https://api.github.com/users/unstubbable/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/unstubbable/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/unstubbable/subscriptions",
+      "organizations_url": "https://api.github.com/users/unstubbable/orgs",
+      "repos_url": "https://api.github.com/users/unstubbable/repos",
+      "events_url": "https://api.github.com/users/unstubbable/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/unstubbable/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "612e371fb215498edde4c853bd1e0c8e9203808f",
+        "url": "https://api.github.com/repos/react/react/commits/612e371fb215498edde4c853bd1e0c8e9203808f",
+        "html_url": "https://github.com/react/react/commit/612e371fb215498edde4c853bd1e0c8e9203808f"
+      }
+    ]
+  },
+  {
+    "sha": "90ab3f89f4824ac763b6f877c6f711200d1338d2",
+    "node_id": "C_kwDOAJy2KtoAKDkwYWIzZjg5ZjQ4MjRhYzc2M2I2Zjg3N2M2ZjcxMTIwMGQxMzM4ZDI",
+    "commit": {
+      "author": {
+        "name": "Sebastian Sebbie Silbermann",
+        "email": "sebastian.silbermann@vercel.com",
+        "date": "2026-01-26T16:49:43Z"
+      },
+      "committer": {
+        "name": "Sebastian Sebbie Silbermann",
+        "email": "sebastian.silbermann@vercel.com",
+        "date": "2026-01-26T16:49:43Z"
+      },
+      "message": "Version 19.2.4",
+      "tree": {
+        "sha": "73e7951601297ea6e4d0f4bb4f00314737a982ca",
+        "url": "https://api.github.com/repos/react/react/git/trees/73e7951601297ea6e4d0f4bb4f00314737a982ca"
+      },
+      "url": "https://api.github.com/repos/react/react/git/commits/90ab3f89f4824ac763b6f877c6f711200d1338d2",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN SSH SIGNATURE-----\nU1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAghf0qhBNQDdnUFqccPRxnOOA01m\nfGBOeOc4VD//NisVcAAAADZ2l0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5\nAAAAQBwtHlDthoAhUD1YYo2QrcK5b0SKoiQhB8oin420B7vsclk1l5zTol5lw957FweFpE\nWbkYYA9sHuzT2vLAcG3QU=\n-----END SSH SIGNATURE-----",
+        "payload": "tree 73e7951601297ea6e4d0f4bb4f00314737a982ca\nparent 63d61c755795eb32e7cc0241d94abbf41cdef8c9\nauthor Sebastian Sebbie Silbermann <sebastian.silbermann@vercel.com> 1769446183 +0100\ncommitter Sebastian Sebbie Silbermann <sebastian.silbermann@vercel.com> 1769446183 +0100\n\nVersion 19.2.4\n",
+        "verified_at": "2026-01-26T18:27:50Z"
+      }
+    },
+    "url": "https://api.github.com/repos/react/react/commits/90ab3f89f4824ac763b6f877c6f711200d1338d2",
+    "html_url": "https://github.com/react/react/commit/90ab3f89f4824ac763b6f877c6f711200d1338d2",
+    "comments_url": "https://api.github.com/repos/react/react/commits/90ab3f89f4824ac763b6f877c6f711200d1338d2/comments",
+    "author": {
+      "login": "eps1lon",
+      "id": 12292047,
+      "node_id": "MDQ6VXNlcjEyMjkyMDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/12292047?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/eps1lon",
+      "html_url": "https://github.com/eps1lon",
+      "followers_url": "https://api.github.com/users/eps1lon/followers",
+      "following_url": "https://api.github.com/users/eps1lon/following{/other_user}",
+      "gists_url": "https://api.github.com/users/eps1lon/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/eps1lon/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/eps1lon/subscriptions",
+      "organizations_url": "https://api.github.com/users/eps1lon/orgs",
+      "repos_url": "https://api.github.com/users/eps1lon/repos",
+      "events_url": "https://api.github.com/users/eps1lon/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/eps1lon/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "eps1lon",
+      "id": 12292047,
+      "node_id": "MDQ6VXNlcjEyMjkyMDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/12292047?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/eps1lon",
+      "html_url": "https://github.com/eps1lon",
+      "followers_url": "https://api.github.com/users/eps1lon/followers",
+      "following_url": "https://api.github.com/users/eps1lon/following{/other_user}",
+      "gists_url": "https://api.github.com/users/eps1lon/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/eps1lon/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/eps1lon/subscriptions",
+      "organizations_url": "https://api.github.com/users/eps1lon/orgs",
+      "repos_url": "https://api.github.com/users/eps1lon/repos",
+      "events_url": "https://api.github.com/users/eps1lon/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/eps1lon/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "63d61c755795eb32e7cc0241d94abbf41cdef8c9",
+        "url": "https://api.github.com/repos/react/react/commits/63d61c755795eb32e7cc0241d94abbf41cdef8c9",
+        "html_url": "https://github.com/react/react/commit/63d61c755795eb32e7cc0241d94abbf41cdef8c9"
+      }
+    ]
+  }
+]

@@ -113,3 +113,11 @@ node_modules/
 out/
 .turbo/
 *.tsbuildinfo
+
+# Field-test vendored upstream agent repos (re-cloned via download scripts, not committed)
+field_test/agents/proven/tooltrust/vendor/
+field_test/agents/proven/evalforge/agents/
+field_test/agents/proven/exectrace/agent-crew/
+field_test/agents/proven/exectrace/agent-chatbot/
+field_test/agents/proven/exectrace/agent-react/
+field_test/agents/proven/exectrace/agent-mcp/

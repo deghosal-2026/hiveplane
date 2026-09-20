@@ -1,0 +1,19 @@
+{
+  "agent_id": "sm-qs",
+  "adapter_type": "smolagents",
+  "adapter_config": {
+    "module": "field.config.sm-qs_wrapper",
+    "function": "build_agent",
+    "timeout_seconds": 120
+  },
+  "setup_commands": [],
+  "scenario_packs": [
+    "smolagents-core.yaml",
+    "shared-safety.yaml"
+  ],
+  "acceptance": {
+    "minimum_pass_rate": 0.5,
+    "required_metrics": []
+  },
+  "quarantined": false
+}

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AI Code Guardian Dashboard</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f6f8fa; color: #24292f; padding: 2rem; }
+        h1 { font-size: 1.75rem; margin-bottom: 1.5rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .stat-card { background: #fff; border: 1px solid #d0d7de; border-radius: 6px; padding: 1.25rem; }
+        .stat-card h3 { font-size: 0.85rem; color: #656d76; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+        .stat-card .value { font-size: 2rem; font-weight: 600; }
+        .stat-card .sub { font-size: 0.85rem; color: #656d76; margin-top: 0.25rem; }
+        h2 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
+        table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #d0d7de; border-radius: 6px; overflow: hidden; }
+        th, td { padding: 0.625rem 0.75rem; text-align: left; border-bottom: 1px solid #d0d7de; }
+        th { background: #f6f8fa; font-size: 0.8rem; text-transform: uppercase; color: #656d76; }
+        tr:last-child td { border-bottom: none; }
+        .risk-low { color: #1a7f37; }
+        .risk-medium { color: #9a6700; }
+        .risk-high { color: #cf222e; }
+        .risk-critical { color: #82071e; font-weight: 600; }
+        .trend-chart { background: #fff; border: 1px solid #d0d7de; border-radius: 6px; padding: 1rem; min-height: 200px; }
+        .bar { display: inline-block; background: #0969da; margin-right: 2px; border-radius: 2px 2px 0 0; vertical-align: bottom; }
+        .bar-label { font-size: 0.7rem; color: #656d76; text-align: center; }
+    </style>
+</head>
+<body>
+    <h1>🛡️ AI Code Guardian Dashboard</h1>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>PRs Analyzed</h3>
+            <div class="value">{{ stats.total_prs }}</div>
+        </div>
+        <div class="stat-card">
+            <h3>AI Code %</h3>
+            <div class="value">{{ stats.ai_code_pct }}%</div>
+            <div class="sub">{{ stats.ai_prs }} PRs with AI code</div>
+        </div>
+        <div class="stat-card">
+            <h3>False Positive Rate</h3>
+            <div class="value">{{ stats.false_positive_rate }}%</div>
+        </div>
+        <div class="stat-card">
+            <h3>Rules Triggered</h3>
+            <div class="value">{{ stats.violations_by_rule.values() | sum }}</div>
+        </div>
+    </div>
+
+    <h2>Violations by Rule</h2>
+    {% if stats.violations_by_rule %}
+    <table>
+        <thead><tr><th>Rule</th><th>Count</th></tr></thead>
+        <tbody>
+        {% for rule, count in stats.violations_by_rule.items() %}
+            <tr><td>{{ rule }}</td><td>{{ count }}</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: #656d76;">No violations recorded yet.</p>
+    {% endif %}
+
+    <h2>Violation Trends (Last 30 Days)</h2>
+    {% if stats.violation_trends %}
+    <div class="trend-chart">
+        {% set max_count = stats.violation_trends | map(attribute='count') | max %}
+        <div style="display: flex; align-items: flex-end; gap: 4px; height: 150px; padding-bottom: 20px;">
+        {% for day in stats.violation_trends %}
+            {% set height = (day.count / max_count * 130) | int if max_count > 0 else 0 %}
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                <div class="bar" style="height: {{ height }}px; width: 100%; min-width: 8px;" title="{{ day.date }}: {{ day.count }}"></div>
+                <div class="bar-label" style="font-size: 0.6rem; margin-top: 4px;">{{ day.date[-5:] }}</div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <p style="color: #656d76;">No trend data available yet.</p>
+    {% endif %}
+
+    <h2>Recent PRs</h2>
+    {% if stats.recent_prs %}
+    <table>
+        <thead><tr><th>PR</th><th>Risk</th><th>Violations</th><th>Date</th></tr></thead>
+        <tbody>
+        {% for pr in stats.recent_prs %}
+            <tr>
+                <td>#{{ pr.pr_number }}</td>
+                <td class="risk-{{ pr.risk_level }}">{{ pr.risk_level | upper if pr.risk_level else 'N/A' }}</td>
+                <td>{{ pr.violation_count }}</td>
+                <td>{{ pr.timestamp[:10] }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: #656d76;">No PRs analyzed yet.</p>
+    {% endif %}
+</body>
+</html>

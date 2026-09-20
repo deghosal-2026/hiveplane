@@ -1,0 +1,16 @@
+version: 1
+mode: advisory
+detection: marker
+rules:
+  - name: hallucinated-api
+    severity: critical
+    enabled: true
+    description: Detects non-existent API calls
+  - name: missing-error-handling
+    severity: high
+    enabled: true
+    description: Detects bare except blocks and missing error handling
+  - name: hardcoded-secrets
+    severity: critical
+    enabled: true
+    description: Detects hardcoded API keys and tokens

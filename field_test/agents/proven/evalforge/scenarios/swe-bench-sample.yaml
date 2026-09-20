@@ -1,0 +1,131 @@
+pack:
+  name: swe-bench-sample
+  version: 1.0.0
+  description: Auto-generated from benchmark tasks (3 scenarios)
+  trust: external
+  infra_tags: []
+scenarios:
+- id: django__django-1000
+  title: '[swe-bench] django__django-1000'
+  goal: 'Repository: django/django'
+  input: 'Repository: django/django
+
+    Base commit: abc123def
+
+
+    Fix admin page crash when deleting a user with related objects. The delete confirmation
+    view raises a TypeError when the related object list is empty.'
+  context: {}
+  allowed_tools:
+  - name: read_file
+    description: Read file contents from the repository
+  - name: write_file
+    description: Write or modify a file in the repository
+  - name: execute_command
+    description: Execute a shell command
+  disallowed_tools: []
+  expected:
+    type: exact
+    value: "--- a/django/contrib/admin/views.py\n+++ b/django/contrib/admin/views.py\n\
+      @@ -45,6 +45,8 @@\n+        if not self.related_objects:\n+            return\
+      \ []\n         return self.related_objects.all()"
+  metrics:
+    output_correctness:
+      weight: 0.4
+      threshold: 0.5
+    tool_correctness:
+      weight: 0.3
+      threshold: 0.5
+    task_completion:
+      weight: 0.3
+      threshold: 0.7
+  tags:
+  - swe-bench
+  difficulty: medium
+  budget:
+    max_steps: 20
+    max_tokens: 8192
+- id: sympy__sympy-2000
+  title: '[swe-bench] sympy__sympy-2000'
+  goal: 'Repository: sympy/sympy'
+  input: 'Repository: sympy/sympy
+
+    Base commit: def456ghi
+
+
+    Simplify should handle rational exponents correctly when the base is negative.
+    Currently (-x)**(2/3) returns an unsimplified expression.'
+  context: {}
+  allowed_tools:
+  - name: read_file
+    description: Read file contents from the repository
+  - name: write_file
+    description: Write or modify a file in the repository
+  - name: execute_command
+    description: Execute a shell command
+  disallowed_tools: []
+  expected:
+    type: exact
+    value: "--- a/sympy/core/power.py\n+++ b/sympy/core/power.py\n@@ -120,7 +120,7\
+      \ @@\n-        if self.base.is_negative and self.exp.is_Rational:\n+       \
+      \ if self.base.is_negative and self.exp.is_Rational and self.exp.q == 2:\n \
+      \            return self.base**self.exp"
+  metrics:
+    output_correctness:
+      weight: 0.4
+      threshold: 0.5
+    tool_correctness:
+      weight: 0.3
+      threshold: 0.5
+    task_completion:
+      weight: 0.3
+      threshold: 0.7
+  tags:
+  - swe-bench
+  difficulty: medium
+  budget:
+    max_steps: 20
+    max_tokens: 8192
+- id: pytest__pytest-3000
+  title: '[swe-bench] pytest__pytest-3000'
+  goal: 'Repository: pytest-dev/pytest'
+  input: 'Repository: pytest-dev/pytest
+
+    Base commit: ghi789jkl
+
+
+    Fixture teardown errors are silently swallowed when the fixture is parametrized.
+    The error should be reported instead of ignored.'
+  context: {}
+  allowed_tools:
+  - name: read_file
+    description: Read file contents from the repository
+  - name: write_file
+    description: Write or modify a file in the repository
+  - name: execute_command
+    description: Execute a shell command
+  disallowed_tools: []
+  expected:
+    type: exact
+    value: "--- a/src/_pytest/fixtures.py\n+++ b/src/_pytest/fixtures.py\n@@ -890,6\
+      \ +890,8 @@\n+        errors = []\n         for fixture in self._fixtures:\n\
+      \             try:\n                 fixture.teardown()\n             except\
+      \ Exception:\n+                errors.append(traceback.format_exc())\n+    \
+      \    if errors:\n+            raise ExceptionGroup('Fixture teardown errors',\
+      \ errors)"
+  metrics:
+    output_correctness:
+      weight: 0.4
+      threshold: 0.5
+    tool_correctness:
+      weight: 0.3
+      threshold: 0.5
+    task_completion:
+      weight: 0.3
+      threshold: 0.7
+  tags:
+  - swe-bench
+  difficulty: medium
+  budget:
+    max_steps: 20
+    max_tokens: 8192

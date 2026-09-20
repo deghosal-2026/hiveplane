@@ -1,0 +1,102 @@
+{
+  "questions": [
+    {
+      "id": "k8s-001",
+      "question": "Why is my pod stuck in Pending state and how do I debug it?",
+      "answer": "A pod stuck in Pending means the scheduler cannot place it on a node. Common causes include insufficient cluster resources (CPU, memory, ephemeral storage), unschedulable nodes (node selector/affinity/toleration mismatches), or PersistentVolumeClaim issues. Check scheduler events with `kubectl describe pod` and examine node resources with `kubectl describe node`.",
+      "source_file": "corpus/kubernetes/debug-pods.md",
+      "source_lines": "11-19"
+    },
+    {
+      "id": "k8s-002",
+      "question": "How do I get detailed information about a running pod?",
+      "answer": "Use `kubectl describe pod <pod-name>` to get comprehensive details including state, conditions, events, container statuses, and resource allocations. For logs, use `kubectl logs <pod-name>`. For multi-container pods, specify `-c <container-name>`. Stream logs with `-f` and include timestamps with `--timestamps`.",
+      "source_file": "corpus/kubernetes/debug-running-pod.md",
+      "source_lines": "3-25"
+    },
+    {
+      "id": "k8s-003",
+      "question": "My Kubernetes Service has no endpoints, what should I check?",
+      "answer": "A Service without endpoints cannot route traffic to pods, most often caused by label selector mismatches. Check the Service selector with `kubectl describe service <service-name>` and compare against pod labels with `kubectl get pods --show-labels`. Verify endpoints with `kubectl get endpoints <service-name>`. If empty, ensure pods exist matching the label selector, pods are in Running state, and the Service's targetPort matches the pod's containerPort.",
+      "source_file": "corpus/kubernetes/debug-service.md",
+      "source_lines": "3-30"
+    },
+    {
+      "id": "sre-001",
+      "question": "What are the guidelines for a sustainable on-call rotation?",
+      "answer": "Google's guidelines for sustainable on-call: maximum 25% of time on-call to prevent burnout, minimum 8 engineers for a 24/7 rotation to keep per-person burden reasonable, and shifts limited to 12-24 hours to prevent fatigue. Teams typically run primary (first responder) and secondary (backup) rotations simultaneously.",
+      "source_file": "corpus/google-sre/being-on-call.md",
+      "source_lines": "14-29"
+    },
+    {
+      "id": "sre-002",
+      "question": "What is the hypothetico-deductive method in troubleshooting?",
+      "answer": "The hypothetico-deductive method is a structured troubleshooting approach based on the scientific method: form a hypothesis about the cause, design a test to validate or invalidate it, run the test, and repeat until the root cause is found. This prevents jumping to conclusions and ensures progress is measurable.",
+      "source_file": "corpus/google-sre/effective-troubleshooting.md",
+      "source_lines": "5-14"
+    },
+    {
+      "id": "sre-003",
+      "question": "What should I do first when an emergency strikes?",
+      "answer": "The most important rule is: don't panic. Panic impairs judgment — take a breath, assess the situation, and act deliberately. If you feel overloaded, escalate immediately and pull in more people. No one expects a single person to handle a major incident alone.",
+      "source_file": "corpus/google-sre/emergency-response.md",
+      "source_lines": "5-11"
+    },
+    {
+      "id": "sre-004",
+      "question": "What are the key roles in incident management?",
+      "answer": "Google uses the Incident Command System (ICS) with four key roles: Incident Commander (IC) coordinates the response and delegates tasks but does not debug; Operations Lead focuses on technical response; Communication Lead handles status updates and stakeholder communication; Planning Lead tracks resources and anticipates future needs. The IC orchestrates while others execute.",
+      "source_file": "corpus/google-sre/managing-incidents.md",
+      "source_lines": "15-28"
+    },
+    {
+      "id": "sre-005",
+      "question": "What makes a postmortem blameless?",
+      "answer": "A blameless postmortem focuses on systematic causes, not individual mistakes. Root causes are found in processes, tooling, design decisions, and organizational factors. 'Human error' is never a root cause — it is a symptom of deeper systemic issues. The question is not 'who made the mistake' but 'why were the conditions such that a mistake was possible?'",
+      "source_file": "corpus/google-sre/postmortem-culture.md",
+      "source_lines": "15-21"
+    },
+    {
+      "id": "grafana-001",
+      "question": "What is Grafana OnCall and what does it do?",
+      "answer": "Grafana OnCall OSS is a tool for automated alert routing and escalation to ensure swift resolution and service reliability. It automatically routes alerts to designated on-call teams and ChatOps channels according to predefined escalation policies, schedules, and notification preferences. It allows customizing notification settings per user across SMS, mobile apps, or ChatOps platforms.",
+      "source_file": "corpus/grafana/overview.md",
+      "source_lines": "8-20"
+    },
+    {
+      "id": "grafana-002",
+      "question": "How do I set up Grafana OnCall locally?",
+      "answer": "Grafana OnCall offers three environments: Hobby playground environment for local usage (README.md), Development environment for contributors (development README.md), and Production environment for reliable installation using Helm. The hobby playground is the recommended starting point for local evaluation.",
+      "source_file": "corpus/grafana/set-up.md",
+      "source_lines": "12-18"
+    },
+    {
+      "id": "grafana-003",
+      "question": "How does the Grafana OnCall integration alert flow work?",
+      "answer": "The alert flow begins when an alert is received at a unique integration URL. Grafana OnCall applies a routing template to assign the alert to the correct escalation chain. Alerts are then grouped, appearance templates format them, and they are published to ChatOps. Escalation chains process the alert through defined steps until acknowledged or resolved.",
+      "source_file": "corpus/grafana/integrations.md",
+      "source_lines": "14-22"
+    },
+    {
+      "id": "grafana-004",
+      "question": "How do I create an escalation chain in Grafana OnCall?",
+      "answer": "Navigate to the Escalation Chains page, click New escalation chain, enter a unique name and assign it to a team, then click Add escalation step to define steps (e.g., notifying users, waiting, escalating). The name must be unique across the organization. Linked integrations and routes are shown in the right panel.",
+      "source_file": "corpus/grafana/escalation-chains.md",
+      "source_lines": "57-68"
+    },
+    {
+      "id": "grafana-005",
+      "question": "What types of templates does Grafana OnCall support?",
+      "answer": "Grafana OnCall supports four template types: Routing templates determine how alerts are routed to escalation chains based on alert content; Appearance templates control how alerts render in notifications; Behavioral templates define alert behavior; Integration templates apply per-integration defaults for alert rendering and behavior.",
+      "source_file": "corpus/grafana/jinja2-templating.md",
+      "source_lines": "70-116"
+    },
+    {
+      "id": "grafana-006",
+      "question": "How do I list alert groups via the Grafana OnCall API?",
+      "answer": "Use GET {{API_URL}}/api/v1/alert_groups/ to list alert groups. The response is paginated. Filter parameters include id, route_id, integration_id, label (key:value format), team_id, started_at (ISO 8601 range), and state (new, acknowledged, resolved, silenced).",
+      "source_file": "corpus/grafana/alert-groups-api.md",
+      "source_lines": "10-97"
+    }
+  ]
+}

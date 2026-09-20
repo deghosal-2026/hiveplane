@@ -1,0 +1,166 @@
+[
+  {
+    "sha": "9680978328e98e81ed3344fd7082902383f2854d",
+    "node_id": "C_kwDOBC3CitoAKDk2ODA5NzgzMjhlOThlODFlZDMzNDRmZDcwODI5MDIzODNmMjg1NGQ",
+    "commit": {
+      "author": {
+        "name": "Sebastian \"Sebbie\" Silbermann",
+        "email": "sebastian.silbermann@vercel.com",
+        "date": "2026-06-09T20:41:51Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-09T20:41:51Z"
+      },
+      "message": "[cd] Ensure wasm binaries get tagged properly (#94621)",
+      "tree": {
+        "sha": "754c56bc2a5ef25519db08315d60e84829681c31",
+        "url": "https://api.github.com/repos/vercel/next.js/git/trees/754c56bc2a5ef25519db08315d60e84829681c31"
+      },
+      "url": "https://api.github.com/repos/vercel/next.js/git/commits/9680978328e98e81ed3344fd7082902383f2854d",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqKHqPCRC1aQ7uu5UhlAAAfi8QAAbH4YLfwbgT+B0Hy0qTr7MA\nTB5ERHGaN0CmmiNZqXspM1Vt7ix0Kf9mcS8fWnklr2Obz5cMlS+986h1YfnlAkyG\naYzOFZpIDMmVkL8fBV+RHtrx88lDSFfl+hOGSFTF9S8LDwlKNSgAikP2E7VMAf4c\nqNyYgVxSK1J2rITtyTx2m0RkNbSLSFwgDmm9z/1l0qXN6haJfh5t9uXmsYNT3G2h\n/fEYqthMxzHuUPcKY/6IEK6zmKBvvtTeSjVsFhe/03rCRNZ+HRzazv2h3X788xZG\nTkclzf+6tbk+prQXSi5j864RjHNW6kI5sTUKRLzCluu6a6RK2ooSG3LZDDXAf7ER\nrXMExgpJ1W8TtTn+SxXOI8/FS+rxSLY5VUC5qYVTjNNnt2FusHhU0BjhCmbspdmo\nxO0yO1RxJ9KVf90DD/R9tRdgiKH4vb9wvBcptoqUlzdYNIbL3czeuYbnEsodoVWt\nI2lMPtUttnExf5YXaiVfmlz/44MDilj1u0PsNoHvQMDSlnk7ypqEPy7b9SaBHm/b\n56KfpqwidhmVnnEDFs5/p0JzDN3UuK37apvMVUIMZQCrzLhpVydb/P2mVNtmSsTD\neO+hkZKuIP9I8ISozuydgARX1eV+D69ab1qgZ7YJbGrbAuvsd9WU63cRWXzRcW70\nLzpBUVYs3G+NKM6h1YVd\n=64zh\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 754c56bc2a5ef25519db08315d60e84829681c31\nparent 0630b70f3c5be7f4228c98c40828bc71bfc4ab26\nauthor Sebastian \"Sebbie\" Silbermann <sebastian.silbermann@vercel.com> 1781037711 +0200\ncommitter GitHub <noreply@github.com> 1781037711 +0200\n\n[cd] Ensure wasm binaries get tagged properly (#94621)",
+        "verified_at": "2026-06-09T20:41:52Z"
+      }
+    },
+    "url": "https://api.github.com/repos/vercel/next.js/commits/9680978328e98e81ed3344fd7082902383f2854d",
+    "html_url": "https://github.com/vercel/next.js/commit/9680978328e98e81ed3344fd7082902383f2854d",
+    "comments_url": "https://api.github.com/repos/vercel/next.js/commits/9680978328e98e81ed3344fd7082902383f2854d/comments",
+    "author": {
+      "login": "eps1lon",
+      "id": 12292047,
+      "node_id": "MDQ6VXNlcjEyMjkyMDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/12292047?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/eps1lon",
+      "html_url": "https://github.com/eps1lon",
+      "followers_url": "https://api.github.com/users/eps1lon/followers",
+      "following_url": "https://api.github.com/users/eps1lon/following{/other_user}",
+      "gists_url": "https://api.github.com/users/eps1lon/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/eps1lon/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/eps1lon/subscriptions",
+      "organizations_url": "https://api.github.com/users/eps1lon/orgs",
+      "repos_url": "https://api.github.com/users/eps1lon/repos",
+      "events_url": "https://api.github.com/users/eps1lon/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/eps1lon/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "0630b70f3c5be7f4228c98c40828bc71bfc4ab26",
+        "url": "https://api.github.com/repos/vercel/next.js/commits/0630b70f3c5be7f4228c98c40828bc71bfc4ab26",
+        "html_url": "https://github.com/vercel/next.js/commit/0630b70f3c5be7f4228c98c40828bc71bfc4ab26"
+      }
+    ]
+  },
+  {
+    "sha": "e54d183b2315d4bd52574623155fe7b9b393541e",
+    "node_id": "C_kwDOBC3CitoAKGU1NGQxODNiMjMxNWQ0YmQ1MjU3NDYyMzE1NWZlN2I5YjM5MzU0MWU",
+    "commit": {
+      "author": {
+        "name": "next-js-bot[bot]",
+        "email": "279046576+next-js-bot[bot]@users.noreply.github.com",
+        "date": "2026-06-09T20:43:50Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-09T20:43:50Z"
+      },
+      "message": "v16.3.0-preview.2",
+      "tree": {
+        "sha": "a5b24908ae5b2eb82ea42c29ac96d9d12620a5fa",
+        "url": "https://api.github.com/repos/vercel/next.js/git/trees/a5b24908ae5b2eb82ea42c29ac96d9d12620a5fa"
+      },
+      "url": "https://api.github.com/repos/vercel/next.js/git/commits/e54d183b2315d4bd52574623155fe7b9b393541e",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqKHsHCRC1aQ7uu5UhlAAAmUMQAJh/xg/2OGA3l/kdLHWGDhR+\nw83OZd7Obp3cu6ZV80NbOX5x5NbUucrOE90ZEnV3+J7Dxh1lrvpqf9cOX6maVvsO\nbn4Ddfoat/dsSVtn284g6J5PwgixjQkiQiJMruqkwqL2WNXYslSEm/zRfSfCG2wp\nwRPg/l4f3ikJklIvuG0Y4RYlHD1hFVL/Dct+hXRs/kSA4ZVKaz9YS1nWocMmIQ80\nXaGWXnUTxscRq+ae7/Xqj78NxJMMn3IMxseMluEtdXVLWmvu01PN2UaMzova9vJc\nk7caZ/lpdwazvepDF/PzlCty8w8Mhm/Zmda3irarmiNc11TS7n6kDowTeTKHkvxK\nh62uT+hgKtu70jk4f97mIgWae0RYv7cQ/QEeOJukUz4L2iSCGiJ7j61rjk8MUG4R\nEQANFRYVIXG25ri60d+F4mP2HXuqM82R4xJJHJon1KZZlNlvAq3l04dvLUrU3SlQ\nyxwDReh13M+lNS6HT39cpxaY1pJfDhbIRQ5EiKHyTIZTZCEKJDhnbaJTojnaGQ3J\n1xsEcWooKXFrCjvQ0ktJt/VlpJL5U4aWiR7V/w6glSP82vokn2WbVtDoJBT6FFdW\ndm2muNwy27db4WMSoQRJPad2VL/QB6wVK1IKJZ1axUwY9QuJcQxyVQinWTrO+M/a\n01FJjp0lmw4cT1d+gUva\n=vdUL\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree a5b24908ae5b2eb82ea42c29ac96d9d12620a5fa\nparent 9680978328e98e81ed3344fd7082902383f2854d\nauthor next-js-bot[bot] <279046576+next-js-bot[bot]@users.noreply.github.com> 1781037830 +0000\ncommitter GitHub <noreply@github.com> 1781037830 +0000\n\nv16.3.0-preview.2",
+        "verified_at": "2026-06-09T20:43:51Z"
+      }
+    },
+    "url": "https://api.github.com/repos/vercel/next.js/commits/e54d183b2315d4bd52574623155fe7b9b393541e",
+    "html_url": "https://github.com/vercel/next.js/commit/e54d183b2315d4bd52574623155fe7b9b393541e",
+    "comments_url": "https://api.github.com/repos/vercel/next.js/commits/e54d183b2315d4bd52574623155fe7b9b393541e/comments",
+    "author": {
+      "login": "next-js-bot[bot]",
+      "id": 279046576,
+      "node_id": "BOT_kgDOEKHpsA",
+      "avatar_url": "https://avatars.githubusercontent.com/in/3491438?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/next-js-bot%5Bbot%5D",
+      "html_url": "https://github.com/apps/next-js-bot",
+      "followers_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "9680978328e98e81ed3344fd7082902383f2854d",
+        "url": "https://api.github.com/repos/vercel/next.js/commits/9680978328e98e81ed3344fd7082902383f2854d",
+        "html_url": "https://github.com/vercel/next.js/commit/9680978328e98e81ed3344fd7082902383f2854d"
+      }
+    ]
+  }
+]

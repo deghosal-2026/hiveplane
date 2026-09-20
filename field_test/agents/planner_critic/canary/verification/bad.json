@@ -1,0 +1,25 @@
+{
+  "id": "plan-1",
+  "goal_id": "goal-1",
+  "plan_schema_version": "0.1.0",
+  "version": 1,
+  "parent_version": null,
+  "created_at": "2026-01-01T00:00:00Z",
+  "tasks": [
+    {
+      "id": "t1",
+      "description": "task t1",
+      "action": "do",
+      "target": "t1",
+      "parallel_group": null,
+      "preconditions": [],
+      "verification": null,
+      "rollback": null,
+      "risk_class": "critical",
+      "blast_radius": "medium",
+      "satisfies": null
+    }
+  ],
+  "dependencies": [],
+  "branches": []
+}

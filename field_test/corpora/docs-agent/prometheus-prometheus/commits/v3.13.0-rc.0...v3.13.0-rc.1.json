@@ -1,0 +1,668 @@
+[
+  {
+    "sha": "2fe27be7ac98f19cbf7778f5aa7200847d17614f",
+    "node_id": "C_kwDOAGhaidoAKDJmZTI3YmU3YWM5OGYxOWNiZjc3NzhmNWFhNzIwMDg0N2QxNzYxNGY",
+    "commit": {
+      "author": {
+        "name": "George Krajcsovits",
+        "email": "krajorama@users.noreply.github.com",
+        "date": "2026-06-22T08:22:15Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-22T08:22:15Z"
+      },
+      "message": "ui: fix check-package version read under pnpm (#18976)\n\ncheckPackage read each workspace package's version via `pnpm run env | grep\nnpm_package_version`, an npm-ism. pnpm has no built-in `env` script, so it\nfails with ERR_PNPM_NO_SCRIPT and returns an empty string, making\n`ui_release.sh --check-package` report a false version mismatch for every\npackage.\n\nRead the version with `pnpm pkg get version` instead. Leftover from the\nnpm-to-pnpm migration (#18797).\n\nSigned-off-by: Gy\u00f6rgy Krajcsovits <gyorgy.krajcsovits@grafana.com>\nCo-authored-by: Claude Opus 4.8 <noreply@anthropic.com>",
+      "tree": {
+        "sha": "a070c3b32bc285c8c2f1eb74b9cf18f2c5f73817",
+        "url": "https://api.github.com/repos/prometheus/prometheus/git/trees/a070c3b32bc285c8c2f1eb74b9cf18f2c5f73817"
+      },
+      "url": "https://api.github.com/repos/prometheus/prometheus/git/commits/2fe27be7ac98f19cbf7778f5aa7200847d17614f",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqOPC3CRC1aQ7uu5UhlAAAFBIQADNzJ1O+CX5LsTADwwHHd9mr\nPG+i60oFbaoH57tHPOaD8qgNfr/R/20DH0fNAqJhDN6yNcoD59zFAwhudEDW4clD\nBFWW8fZki2BnXRgKC6Q9lad1YRI0UwKBtobVnUlYV3AooLW4fJ4umSi7NVvMAkRx\nMhpxNQo5QWzmfEpTses6fiPsCjwId7gnj1hLzI+oOxyuVaQ4PUq8n5iRnDaChhjY\n8/EGjXPJnM7os/v41A6nraps6H5gu33lxZgBxcDPR+K09vXt0iPZZG8l4FBmeZIU\nfiVMKeR4g8XqCrKF1iqpK/kEkLPIsoZTVbL/pShT1a8mFf8aA3Qsmbr/mgtGiDRs\nf9iLcJmM6nOswVahOrKMGNzbDneNKFGIZCICYibooUOD/VsDtYR7ocUJfXUuGCD0\nJM1LQ0EBRnJ6dC3xhdaodMg2AXXeCsolyNRii/nO5bOuOGksoGX/8M+N61JRYUjB\nYobMjU2bsIGiKZeCpWdIxuHXnzGZW58dSn4jQ3pV1whDzC/jEYob6ba36MOvFbcF\nclRK6YS30UrL9XqoFwGVvVR7QWYTc1iAxrFZJeKGQEV6IZYYNv7Sqwpup2sggyNw\nwdAggWyEMiYBCuW8WWuZXIQeGpCc66kID2SRl66jf3IeLOJ8703FDtvw5KQNWogj\nFlA2Pw56K0Qd7GHEfTOc\n=OHHX\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree a070c3b32bc285c8c2f1eb74b9cf18f2c5f73817\nparent f1216448fdd9a34a4ab036fce5f91a1d923c9da6\nauthor George Krajcsovits <krajorama@users.noreply.github.com> 1782116535 +0200\ncommitter GitHub <noreply@github.com> 1782116535 +0200\n\nui: fix check-package version read under pnpm (#18976)\n\ncheckPackage read each workspace package's version via `pnpm run env | grep\nnpm_package_version`, an npm-ism. pnpm has no built-in `env` script, so it\nfails with ERR_PNPM_NO_SCRIPT and returns an empty string, making\n`ui_release.sh --check-package` report a false version mismatch for every\npackage.\n\nRead the version with `pnpm pkg get version` instead. Leftover from the\nnpm-to-pnpm migration (#18797).\n\nSigned-off-by: Gy\u00f6rgy Krajcsovits <gyorgy.krajcsovits@grafana.com>\nCo-authored-by: Claude Opus 4.8 <noreply@anthropic.com>",
+        "verified_at": "2026-06-22T08:22:16Z"
+      }
+    },
+    "url": "https://api.github.com/repos/prometheus/prometheus/commits/2fe27be7ac98f19cbf7778f5aa7200847d17614f",
+    "html_url": "https://github.com/prometheus/prometheus/commit/2fe27be7ac98f19cbf7778f5aa7200847d17614f",
+    "comments_url": "https://api.github.com/repos/prometheus/prometheus/commits/2fe27be7ac98f19cbf7778f5aa7200847d17614f/comments",
+    "author": {
+      "login": "krajorama",
+      "id": 13435893,
+      "node_id": "MDQ6VXNlcjEzNDM1ODkz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/13435893?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/krajorama",
+      "html_url": "https://github.com/krajorama",
+      "followers_url": "https://api.github.com/users/krajorama/followers",
+      "following_url": "https://api.github.com/users/krajorama/following{/other_user}",
+      "gists_url": "https://api.github.com/users/krajorama/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/krajorama/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/krajorama/subscriptions",
+      "organizations_url": "https://api.github.com/users/krajorama/orgs",
+      "repos_url": "https://api.github.com/users/krajorama/repos",
+      "events_url": "https://api.github.com/users/krajorama/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/krajorama/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "f1216448fdd9a34a4ab036fce5f91a1d923c9da6",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/f1216448fdd9a34a4ab036fce5f91a1d923c9da6",
+        "html_url": "https://github.com/prometheus/prometheus/commit/f1216448fdd9a34a4ab036fce5f91a1d923c9da6"
+      }
+    ]
+  },
+  {
+    "sha": "3c3c4426ca350e3c3f33db8a22d2defdd60dd6c3",
+    "node_id": "C_kwDOAGhaidoAKDNjM2M0NDI2Y2EzNTBlM2MzZjMzZGI4YTIyZDJkZWZkZDYwZGQ2YzM",
+    "commit": {
+      "author": {
+        "name": "George Krajcsovits",
+        "email": "krajorama@users.noreply.github.com",
+        "date": "2026-06-22T09:00:26Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-22T09:00:26Z"
+      },
+      "message": "build: include react-app dependency licenses in npm_licenses tarball (#18993)\n\nSince the npm-to-pnpm migration (#18797), react-app is a separate pnpm project\nwith its own web/ui/react-app/node_modules, while `npm_licenses` only scanned the\nworkspace's web/ui/node_modules. The old react-app UI is still embedded in the\nbinary (served via --enable-feature=old-ui), so its dependencies (bootstrap,\njquery, reactstrap, moment, etc.) are distributed but their licenses were dropped\nfrom npm_licenses.tar.bz2.\n\nScan react-app's node_modules too. ui-install already installs it, so the path\nexists at build time. The tarball grows from ~626 to ~1992 license files.\n\nSigned-off-by: Gy\u00f6rgy Krajcsovits <gyorgy.krajcsovits@grafana.com>\nCo-authored-by: Claude Opus 4.8 <noreply@anthropic.com>",
+      "tree": {
+        "sha": "a9063a9c75e4532f174660a7da1253ff87a4469f",
+        "url": "https://api.github.com/repos/prometheus/prometheus/git/trees/a9063a9c75e4532f174660a7da1253ff87a4469f"
+      },
+      "url": "https://api.github.com/repos/prometheus/prometheus/git/commits/3c3c4426ca350e3c3f33db8a22d2defdd60dd6c3",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqOPmqCRC1aQ7uu5UhlAAAnRoQAI+CpBlZ/AsOQnYJsjrsDuMx\ntDp1E/5XqLrPIN1CFYlZZbdeHXB/exeY6z4lZOUSAh6f4Gykbt1AmRyQQ7UxYB4L\neohY2oBW4jn5ROPD2MIScrQdc5dGgo/JkdG0nNRzFvnh30mg3QoGCHNjWT8HB0DC\nlvk+13u1vnYwW9DvfW4CheYc27fs+9zVE87HO2y2YgyLowMh8PrmqIrZKTUwNJLP\nLF2EM0tEXWVbNjFB8zDCdUDYL87RMa3Q+aCrIv88Jzq9N6+ZP/0ShD/LLBsGsjd1\n3Smx4cVjDBvb/HOBeP4SiuFvuDCHDpGNj9MxvpVpKGXU2oS0epdGF7az98LdADSf\nxhlzBecB8CQHoBjoNnzcRHMjdA1UHkN7j0YAqrAlJ1ozvlPppoe/Njd0hRLEvY4K\nDIYOqG/AgP1vVQndmBbMDk3QUsKtlFpG4aTnrjAPWE5oqsT7QA/jnWnrgU+CbmOy\ngUxQP73jr1YTWVO4KsYFeqaBNy7hhmDpqVopsf6fi9t/bwFOO2Y6PDedBTMhK2UM\nSpt/0yTFVMe0oTYujmDP+NN3OLbAPBkcMZp4Q8tUtKiHOFbaEljaRHIRfk0LD4wP\ntTBZ4CbutQGj2mQ2wjr8A9A2jhVcj3CiVp3Cg8uPqTJv14Ys3OHgju14S11Qj2xk\nA7b04wTaQCM07KbwttZP\n=VJ04\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree a9063a9c75e4532f174660a7da1253ff87a4469f\nparent 2fe27be7ac98f19cbf7778f5aa7200847d17614f\nauthor George Krajcsovits <krajorama@users.noreply.github.com> 1782118826 +0200\ncommitter GitHub <noreply@github.com> 1782118826 +0000\n\nbuild: include react-app dependency licenses in npm_licenses tarball (#18993)\n\nSince the npm-to-pnpm migration (#18797), react-app is a separate pnpm project\nwith its own web/ui/react-app/node_modules, while `npm_licenses` only scanned the\nworkspace's web/ui/node_modules. The old react-app UI is still embedded in the\nbinary (served via --enable-feature=old-ui), so its dependencies (bootstrap,\njquery, reactstrap, moment, etc.) are distributed but their licenses were dropped\nfrom npm_licenses.tar.bz2.\n\nScan react-app's node_modules too. ui-install already installs it, so the path\nexists at build time. The tarball grows from ~626 to ~1992 license files.\n\nSigned-off-by: Gy\u00f6rgy Krajcsovits <gyorgy.krajcsovits@grafana.com>\nCo-authored-by: Claude Opus 4.8 <noreply@anthropic.com>",
+        "verified_at": "2026-06-22T09:00:26Z"
+      }
+    },
+    "url": "https://api.github.com/repos/prometheus/prometheus/commits/3c3c4426ca350e3c3f33db8a22d2defdd60dd6c3",
+    "html_url": "https://github.com/prometheus/prometheus/commit/3c3c4426ca350e3c3f33db8a22d2defdd60dd6c3",
+    "comments_url": "https://api.github.com/repos/prometheus/prometheus/commits/3c3c4426ca350e3c3f33db8a22d2defdd60dd6c3/comments",
+    "author": {
+      "login": "krajorama",
+      "id": 13435893,
+      "node_id": "MDQ6VXNlcjEzNDM1ODkz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/13435893?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/krajorama",
+      "html_url": "https://github.com/krajorama",
+      "followers_url": "https://api.github.com/users/krajorama/followers",
+      "following_url": "https://api.github.com/users/krajorama/following{/other_user}",
+      "gists_url": "https://api.github.com/users/krajorama/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/krajorama/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/krajorama/subscriptions",
+      "organizations_url": "https://api.github.com/users/krajorama/orgs",
+      "repos_url": "https://api.github.com/users/krajorama/repos",
+      "events_url": "https://api.github.com/users/krajorama/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/krajorama/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "2fe27be7ac98f19cbf7778f5aa7200847d17614f",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/2fe27be7ac98f19cbf7778f5aa7200847d17614f",
+        "html_url": "https://github.com/prometheus/prometheus/commit/2fe27be7ac98f19cbf7778f5aa7200847d17614f"
+      }
+    ]
+  },
+  {
+    "sha": "84a7c1950ccd6d74e94a2c04ca55c11f6ed825b2",
+    "node_id": "C_kwDOAGhaidoAKDg0YTdjMTk1MGNjZDZkNzRlOTRhMmMwNGNhNTVjMTFmNmVkODI1YjI",
+    "commit": {
+      "author": {
+        "name": "Julien Pivotto",
+        "email": "291750+roidelapluie@users.noreply.github.com",
+        "date": "2026-06-22T10:03:54Z"
+      },
+      "committer": {
+        "name": "Julien Pivotto",
+        "email": "291750+roidelapluie@users.noreply.github.com",
+        "date": "2026-06-22T10:31:27Z"
+      },
+      "message": "build: embed bundled web UI licenses instead of shipping a tarball\n\nThe mantine-ui Vite build now generates a third-party-licenses.txt via\nrollup-plugin-license, collecting the notices of every npm package bundled\ninto the UI. The file is embedded in the binary and served at\n/assets/third-party-licenses.txt.\n\nThis replaces the npm_licenses.tar.bz2 archive, which was built by sweeping\nnode_modules for license* files and shipped as a separate file in release\ntarballs and Docker images.\n\nSigned-off-by: Julien Pivotto <291750+roidelapluie@users.noreply.github.com>",
+      "tree": {
+        "sha": "b9e4268807ec134e63623f8447c48eef0d6a3aef",
+        "url": "https://api.github.com/repos/prometheus/prometheus/git/trees/b9e4268807ec134e63623f8447c48eef0d6a3aef"
+      },
+      "url": "https://api.github.com/repos/prometheus/prometheus/git/commits/84a7c1950ccd6d74e94a2c04ca55c11f6ed825b2",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/prometheus/prometheus/commits/84a7c1950ccd6d74e94a2c04ca55c11f6ed825b2",
+    "html_url": "https://github.com/prometheus/prometheus/commit/84a7c1950ccd6d74e94a2c04ca55c11f6ed825b2",
+    "comments_url": "https://api.github.com/repos/prometheus/prometheus/commits/84a7c1950ccd6d74e94a2c04ca55c11f6ed825b2/comments",
+    "author": {
+      "login": "roidelapluie",
+      "id": 291750,
+      "node_id": "MDQ6VXNlcjI5MTc1MA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/291750?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/roidelapluie",
+      "html_url": "https://github.com/roidelapluie",
+      "followers_url": "https://api.github.com/users/roidelapluie/followers",
+      "following_url": "https://api.github.com/users/roidelapluie/following{/other_user}",
+      "gists_url": "https://api.github.com/users/roidelapluie/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/roidelapluie/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/roidelapluie/subscriptions",
+      "organizations_url": "https://api.github.com/users/roidelapluie/orgs",
+      "repos_url": "https://api.github.com/users/roidelapluie/repos",
+      "events_url": "https://api.github.com/users/roidelapluie/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/roidelapluie/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "roidelapluie",
+      "id": 291750,
+      "node_id": "MDQ6VXNlcjI5MTc1MA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/291750?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/roidelapluie",
+      "html_url": "https://github.com/roidelapluie",
+      "followers_url": "https://api.github.com/users/roidelapluie/followers",
+      "following_url": "https://api.github.com/users/roidelapluie/following{/other_user}",
+      "gists_url": "https://api.github.com/users/roidelapluie/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/roidelapluie/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/roidelapluie/subscriptions",
+      "organizations_url": "https://api.github.com/users/roidelapluie/orgs",
+      "repos_url": "https://api.github.com/users/roidelapluie/repos",
+      "events_url": "https://api.github.com/users/roidelapluie/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/roidelapluie/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "3c3c4426ca350e3c3f33db8a22d2defdd60dd6c3",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/3c3c4426ca350e3c3f33db8a22d2defdd60dd6c3",
+        "html_url": "https://github.com/prometheus/prometheus/commit/3c3c4426ca350e3c3f33db8a22d2defdd60dd6c3"
+      }
+    ]
+  },
+  {
+    "sha": "60b92cb2e1c1a42a2f473cc0f264c132bf0f0a9c",
+    "node_id": "C_kwDOAGhaidoAKDYwYjkyY2IyZTFjMWE0MmEyZjQ3M2NjMGYyNjRjMTMyYmYwZjBhOWM",
+    "commit": {
+      "author": {
+        "name": "Julien",
+        "email": "291750+roidelapluie@users.noreply.github.com",
+        "date": "2026-06-22T11:14:34Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-22T11:14:34Z"
+      },
+      "message": "ci: bump pnpm/action-setup to v6.0.9 (#18998)\n\nv4.3.0 predates the npm + lockfile bootstrap rewrite (v5/v6) and its\nfollow-up fixes. v6.0.9 pulls in the self-update, standalone, and PATH\nfixes and bumps the bootstrap pnpm to 11.7.0.\n\nSigned-off-by: Julien Pivotto <291750+roidelapluie@users.noreply.github.com>",
+      "tree": {
+        "sha": "602aef9b2498cbb7bc9bdff88b3af168be3c92bc",
+        "url": "https://api.github.com/repos/prometheus/prometheus/git/trees/602aef9b2498cbb7bc9bdff88b3af168be3c92bc"
+      },
+      "url": "https://api.github.com/repos/prometheus/prometheus/git/commits/60b92cb2e1c1a42a2f473cc0f264c132bf0f0a9c",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqORkaCRC1aQ7uu5UhlAAAycUQAIPDOyVI9HCVnYL7lG8WNtqp\ns83FhBFVcEO4Sy/MCfI9IKDGWEF0ZfjaozQrfmp4Ce1R/S4K0dTyckbI5afYvqeg\n3d1MAI/M7/nzDa0bSonx5HNcP1onacrutirQ2zssLQJ1QuPhkMQY9B9Igo0PLRhp\n04cAi593tBLBrUS9UtmNtWj50pfQyJ2tuRWbYuTDEAt84Io7rpB3KTF6XJjgJP0K\nMd66IAp8BQKQU+5guauAT4yTt4MxaiqHK68Lz4PiSVKFZCsqsLRG4n96ox0Qu+6J\nDADMiqeMJHeJhK6C6DO1748FNF7+zP3k9EfEel3LqDGFtdTCAmWrkQmHVN1+jChg\nzE8ZJN+bYVFtmcmL78fQ1Y1VjSJTLvQxovNGfNdWbBBICE47EjBB4f4UO7Dr1j/J\ntW5Kk2D+tkBbmNweMVlYSd4Gms26Om9guPxZsv+Q6DwgGFkL6bKyN+m/uza6+me/\n4LJ8Jjxze15stPfR+6gDyHgkf8W86bItXJp5OfsEbZOwTimrLK9Riz+k5ujN9nIJ\nOGcB3PpHRdKWaU03is+7xUCL6G/6VFFcogUgZuoUpZJDJnNP5V+yZtEGlWUSvRVk\n/vAiW2P7HqkVCfoiVN3sUBSIbWCsIn1iyGonrzL8Scf2+hSIDynw3dEB7OAkVgLm\nUIIYNwb2d5qDG9hLdg7n\n=dLzn\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 602aef9b2498cbb7bc9bdff88b3af168be3c92bc\nparent 3c3c4426ca350e3c3f33db8a22d2defdd60dd6c3\nauthor Julien <291750+roidelapluie@users.noreply.github.com> 1782126874 +0200\ncommitter GitHub <noreply@github.com> 1782126874 +0200\n\nci: bump pnpm/action-setup to v6.0.9 (#18998)\n\nv4.3.0 predates the npm + lockfile bootstrap rewrite (v5/v6) and its\nfollow-up fixes. v6.0.9 pulls in the self-update, standalone, and PATH\nfixes and bumps the bootstrap pnpm to 11.7.0.\n\nSigned-off-by: Julien Pivotto <291750+roidelapluie@users.noreply.github.com>",
+        "verified_at": "2026-06-22T11:14:35Z"
+      }
+    },
+    "url": "https://api.github.com/repos/prometheus/prometheus/commits/60b92cb2e1c1a42a2f473cc0f264c132bf0f0a9c",
+    "html_url": "https://github.com/prometheus/prometheus/commit/60b92cb2e1c1a42a2f473cc0f264c132bf0f0a9c",
+    "comments_url": "https://api.github.com/repos/prometheus/prometheus/commits/60b92cb2e1c1a42a2f473cc0f264c132bf0f0a9c/comments",
+    "author": {
+      "login": "roidelapluie",
+      "id": 291750,
+      "node_id": "MDQ6VXNlcjI5MTc1MA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/291750?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/roidelapluie",
+      "html_url": "https://github.com/roidelapluie",
+      "followers_url": "https://api.github.com/users/roidelapluie/followers",
+      "following_url": "https://api.github.com/users/roidelapluie/following{/other_user}",
+      "gists_url": "https://api.github.com/users/roidelapluie/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/roidelapluie/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/roidelapluie/subscriptions",
+      "organizations_url": "https://api.github.com/users/roidelapluie/orgs",
+      "repos_url": "https://api.github.com/users/roidelapluie/repos",
+      "events_url": "https://api.github.com/users/roidelapluie/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/roidelapluie/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "3c3c4426ca350e3c3f33db8a22d2defdd60dd6c3",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/3c3c4426ca350e3c3f33db8a22d2defdd60dd6c3",
+        "html_url": "https://github.com/prometheus/prometheus/commit/3c3c4426ca350e3c3f33db8a22d2defdd60dd6c3"
+      }
+    ]
+  },
+  {
+    "sha": "ecd61e8075a43ed87a0793403ec97064b132c6f3",
+    "node_id": "C_kwDOAGhaidoAKGVjZDYxZTgwNzVhNDNlZDg3YTA3OTM0MDNlYzk3MDY0YjEzMmM2ZjM",
+    "commit": {
+      "author": {
+        "name": "Julien",
+        "email": "291750+roidelapluie@users.noreply.github.com",
+        "date": "2026-06-22T11:17:49Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-22T11:17:49Z"
+      },
+      "message": "Merge pull request #18997 from roidelapluie/roidelapluie/embed-npm-licenses\n\nbuild: embed bundled web UI licenses instead of shipping a tarball",
+      "tree": {
+        "sha": "1e4ddd781963a667dfe7f1357b5ac0d7bdccd0ab",
+        "url": "https://api.github.com/repos/prometheus/prometheus/git/trees/1e4ddd781963a667dfe7f1357b5ac0d7bdccd0ab"
+      },
+      "url": "https://api.github.com/repos/prometheus/prometheus/git/commits/ecd61e8075a43ed87a0793403ec97064b132c6f3",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqORndCRC1aQ7uu5UhlAAADmUQAD9L4TnzYkoZnOvBmEjWcl19\nMWkEaYBn75JPDgtkorREB3avnD86Yr1uNY+TFuV6ZAiI7lIbWDtr3+UeBvhXeUY/\nviwSCfnC34rAnO+8r8ARFHJA1WxKeIpkms/NpcwTpzUuYTX4nZSxjblKYO5fROCa\nnEHJo7BJeEXbfDtFCswO5vCBLV9fG1vmJXeEgJQH6Qdk4yXuEy8jIw4tApbej5P+\nSl+EvJoK1lqfiaZjc1uZQiZwU3wLN4IL9ni0uss4GSi6rI0snkBXhH5TqKV0p024\nnEMV8ScBE0FzozOsAPTmgI1SPiNW/nPW0f+Ffsk+PmZ7F/eQT+s4Tjpy5yhT5qN2\nNlMdq+kf+yUJD2zYc6hHElGFPyFRy+FaD62neiX96yv9ln+CFWt7dvWXn9uExpnB\nUiVqt1b4MCKX9WcrEgbduh20vF5sKsv124ypT5ls63dOx1YrSM0cNb1csO/g2Kmv\nfGso8vG6mSavqmIG2FQma67quaYLl9uNkSdffOOf4HbHS9bC9WGGVV/bKrMecOMH\nDioNpCldJfJvsQOWoFcT7N/V5IwwEWh0xJprPGaaMC3S+mfTxugHRc1g0yKte8hD\ndNpT4HrcA6gJ61pUG4QjWMUjXYu97E97vx7emBlJ4O1uZ2HaMt7t62rMEElqJ7Zv\nJLOpeJ/d7ag6QTQqI225\n=+roK\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 1e4ddd781963a667dfe7f1357b5ac0d7bdccd0ab\nparent 60b92cb2e1c1a42a2f473cc0f264c132bf0f0a9c\nparent 84a7c1950ccd6d74e94a2c04ca55c11f6ed825b2\nauthor Julien <291750+roidelapluie@users.noreply.github.com> 1782127069 +0200\ncommitter GitHub <noreply@github.com> 1782127069 +0200\n\nMerge pull request #18997 from roidelapluie/roidelapluie/embed-npm-licenses\n\nbuild: embed bundled web UI licenses instead of shipping a tarball",
+        "verified_at": "2026-06-22T11:17:50Z"
+      }
+    },
+    "url": "https://api.github.com/repos/prometheus/prometheus/commits/ecd61e8075a43ed87a0793403ec97064b132c6f3",
+    "html_url": "https://github.com/prometheus/prometheus/commit/ecd61e8075a43ed87a0793403ec97064b132c6f3",
+    "comments_url": "https://api.github.com/repos/prometheus/prometheus/commits/ecd61e8075a43ed87a0793403ec97064b132c6f3/comments",
+    "author": {
+      "login": "roidelapluie",
+      "id": 291750,
+      "node_id": "MDQ6VXNlcjI5MTc1MA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/291750?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/roidelapluie",
+      "html_url": "https://github.com/roidelapluie",
+      "followers_url": "https://api.github.com/users/roidelapluie/followers",
+      "following_url": "https://api.github.com/users/roidelapluie/following{/other_user}",
+      "gists_url": "https://api.github.com/users/roidelapluie/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/roidelapluie/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/roidelapluie/subscriptions",
+      "organizations_url": "https://api.github.com/users/roidelapluie/orgs",
+      "repos_url": "https://api.github.com/users/roidelapluie/repos",
+      "events_url": "https://api.github.com/users/roidelapluie/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/roidelapluie/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "60b92cb2e1c1a42a2f473cc0f264c132bf0f0a9c",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/60b92cb2e1c1a42a2f473cc0f264c132bf0f0a9c",
+        "html_url": "https://github.com/prometheus/prometheus/commit/60b92cb2e1c1a42a2f473cc0f264c132bf0f0a9c"
+      },
+      {
+        "sha": "84a7c1950ccd6d74e94a2c04ca55c11f6ed825b2",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/84a7c1950ccd6d74e94a2c04ca55c11f6ed825b2",
+        "html_url": "https://github.com/prometheus/prometheus/commit/84a7c1950ccd6d74e94a2c04ca55c11f6ed825b2"
+      }
+    ]
+  },
+  {
+    "sha": "300f9d8c2889fe2b03675d2eff4a4fdaa87d0af8",
+    "node_id": "C_kwDOAGhaidoAKDMwMGY5ZDhjMjg4OWZlMmIwMzY3NWQyZWZmNGE0ZmRhYTg3ZDBhZjg",
+    "commit": {
+      "author": {
+        "name": "Julien Pivotto",
+        "email": "291750+roidelapluie@users.noreply.github.com",
+        "date": "2026-06-22T08:50:33Z"
+      },
+      "committer": {
+        "name": "Julien Pivotto",
+        "email": "291750+roidelapluie@users.noreply.github.com",
+        "date": "2026-06-22T12:09:24Z"
+      },
+      "message": "ci: reuse pre-built UI assets in build_all crossbuild\n\ntest_ui already builds and saves the web UI tarball. Restore it in\nbuild_all, extract it, and pass it to the crossbuild containers via promu's\nnew --env flag (PREBUILT_ASSETS_STATIC_DIR), so make build skips rebuilding\nthe UI in every crossbuild thread.\n\nBump promu to 0.20.0 for the crossbuild --env flag.\n\nSigned-off-by: Julien Pivotto <291750+roidelapluie@users.noreply.github.com>",
+      "tree": {
+        "sha": "bf352fb41644be60fd0bc930e2becab13de753a2",
+        "url": "https://api.github.com/repos/prometheus/prometheus/git/trees/bf352fb41644be60fd0bc930e2becab13de753a2"
+      },
+      "url": "https://api.github.com/repos/prometheus/prometheus/git/commits/300f9d8c2889fe2b03675d2eff4a4fdaa87d0af8",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/prometheus/prometheus/commits/300f9d8c2889fe2b03675d2eff4a4fdaa87d0af8",
+    "html_url": "https://github.com/prometheus/prometheus/commit/300f9d8c2889fe2b03675d2eff4a4fdaa87d0af8",
+    "comments_url": "https://api.github.com/repos/prometheus/prometheus/commits/300f9d8c2889fe2b03675d2eff4a4fdaa87d0af8/comments",
+    "author": {
+      "login": "roidelapluie",
+      "id": 291750,
+      "node_id": "MDQ6VXNlcjI5MTc1MA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/291750?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/roidelapluie",
+      "html_url": "https://github.com/roidelapluie",
+      "followers_url": "https://api.github.com/users/roidelapluie/followers",
+      "following_url": "https://api.github.com/users/roidelapluie/following{/other_user}",
+      "gists_url": "https://api.github.com/users/roidelapluie/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/roidelapluie/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/roidelapluie/subscriptions",
+      "organizations_url": "https://api.github.com/users/roidelapluie/orgs",
+      "repos_url": "https://api.github.com/users/roidelapluie/repos",
+      "events_url": "https://api.github.com/users/roidelapluie/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/roidelapluie/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "roidelapluie",
+      "id": 291750,
+      "node_id": "MDQ6VXNlcjI5MTc1MA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/291750?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/roidelapluie",
+      "html_url": "https://github.com/roidelapluie",
+      "followers_url": "https://api.github.com/users/roidelapluie/followers",
+      "following_url": "https://api.github.com/users/roidelapluie/following{/other_user}",
+      "gists_url": "https://api.github.com/users/roidelapluie/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/roidelapluie/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/roidelapluie/subscriptions",
+      "organizations_url": "https://api.github.com/users/roidelapluie/orgs",
+      "repos_url": "https://api.github.com/users/roidelapluie/repos",
+      "events_url": "https://api.github.com/users/roidelapluie/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/roidelapluie/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "3c3c4426ca350e3c3f33db8a22d2defdd60dd6c3",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/3c3c4426ca350e3c3f33db8a22d2defdd60dd6c3",
+        "html_url": "https://github.com/prometheus/prometheus/commit/3c3c4426ca350e3c3f33db8a22d2defdd60dd6c3"
+      }
+    ]
+  },
+  {
+    "sha": "0efc62677dad8c01c8563453f34be0a05b0d7aec",
+    "node_id": "C_kwDOAGhaidoAKDBlZmM2MjY3N2RhZDhjMDFjODU2MzQ1M2YzNGJlMGEwNWIwZDdhZWM",
+    "commit": {
+      "author": {
+        "name": "Julien",
+        "email": "291750+roidelapluie@users.noreply.github.com",
+        "date": "2026-06-22T12:33:48Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-22T12:33:48Z"
+      },
+      "message": "Merge pull request #18995 from roidelapluie/roidelapluie/build-reuse-ui-assets\n\nci: reuse pre-built UI assets in build_all crossbuild",
+      "tree": {
+        "sha": "a41507045f2e358759ec97ca1eb900d096ed08c7",
+        "url": "https://api.github.com/repos/prometheus/prometheus/git/trees/a41507045f2e358759ec97ca1eb900d096ed08c7"
+      },
+      "url": "https://api.github.com/repos/prometheus/prometheus/git/commits/0efc62677dad8c01c8563453f34be0a05b0d7aec",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqOSusCRC1aQ7uu5UhlAAASZsQALGkR7Uz3NILQmnDu8sMrCvi\n+VmOoo9vuov6M+AGLpVGwA4LLcdGeSYqCazCChB82vfGqN3N0dOTDe0jN1lnwzbg\n48+0f0ShfJkUDkwXqGQFmjyWB/9WmIXKOeQBY9yO5jZ2XzCOQZRk2Jj8gZemRvlR\nRgnJriFt/V17+ypb/8v8cmOJX2oP/1NcZUu8zt/LBX3ioKlgkLKfcUgIWnXcIlyf\n+aXllUtnlnRJnCOVS0eRtve/Yi6RdmLVC2g7dh6sRalwzaG9FI0NMRV7c45CniMU\nwuM5H1bDqtiWz/iKKrSDNX+VX4ImxAiJ+6nHnf9wcw5n/toujhhl7fDyz7WkhvU5\n7hhjf0KkwZMb+JAxCDAfJJr3McBUegPcKjDuDWHtSHeaoXh2Qw85AyT+BdIGr/of\noGoyDXR9Zs7OuoAWI3SuiVDwyzwSxWPoNV4mudqKJ+KzubsbPT5rR8eqtgJMwL47\nBw1R+v3STG5iGE2criw+YK5RHbSoEbeBG7ZCB/km3ghXWVAvhctqLQ1B/DZGcudy\nvq9HeaYwqjdTA7RT6IlLGt9MMks4TKta2bboV2t7He+NxtR8Fjf0kAHPktwEBJ3j\n1fi5Qol5kym3tTLAsvmyUm6q01Ik+af/a8vk7Za5X86Ghewgn9EReAyyUb09Tc0t\ngwb3yvWtJFxI/lP9Qh7h\n=HwqM\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree a41507045f2e358759ec97ca1eb900d096ed08c7\nparent ecd61e8075a43ed87a0793403ec97064b132c6f3\nparent 300f9d8c2889fe2b03675d2eff4a4fdaa87d0af8\nauthor Julien <291750+roidelapluie@users.noreply.github.com> 1782131628 +0200\ncommitter GitHub <noreply@github.com> 1782131628 +0200\n\nMerge pull request #18995 from roidelapluie/roidelapluie/build-reuse-ui-assets\n\nci: reuse pre-built UI assets in build_all crossbuild",
+        "verified_at": "2026-06-22T12:33:49Z"
+      }
+    },
+    "url": "https://api.github.com/repos/prometheus/prometheus/commits/0efc62677dad8c01c8563453f34be0a05b0d7aec",
+    "html_url": "https://github.com/prometheus/prometheus/commit/0efc62677dad8c01c8563453f34be0a05b0d7aec",
+    "comments_url": "https://api.github.com/repos/prometheus/prometheus/commits/0efc62677dad8c01c8563453f34be0a05b0d7aec/comments",
+    "author": {
+      "login": "roidelapluie",
+      "id": 291750,
+      "node_id": "MDQ6VXNlcjI5MTc1MA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/291750?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/roidelapluie",
+      "html_url": "https://github.com/roidelapluie",
+      "followers_url": "https://api.github.com/users/roidelapluie/followers",
+      "following_url": "https://api.github.com/users/roidelapluie/following{/other_user}",
+      "gists_url": "https://api.github.com/users/roidelapluie/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/roidelapluie/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/roidelapluie/subscriptions",
+      "organizations_url": "https://api.github.com/users/roidelapluie/orgs",
+      "repos_url": "https://api.github.com/users/roidelapluie/repos",
+      "events_url": "https://api.github.com/users/roidelapluie/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/roidelapluie/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "ecd61e8075a43ed87a0793403ec97064b132c6f3",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/ecd61e8075a43ed87a0793403ec97064b132c6f3",
+        "html_url": "https://github.com/prometheus/prometheus/commit/ecd61e8075a43ed87a0793403ec97064b132c6f3"
+      },
+      {
+        "sha": "300f9d8c2889fe2b03675d2eff4a4fdaa87d0af8",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/300f9d8c2889fe2b03675d2eff4a4fdaa87d0af8",
+        "html_url": "https://github.com/prometheus/prometheus/commit/300f9d8c2889fe2b03675d2eff4a4fdaa87d0af8"
+      }
+    ]
+  },
+  {
+    "sha": "bd96185f372a3fd8badb27697cc6409fda1af2a6",
+    "node_id": "C_kwDOAGhaidoAKGJkOTYxODVmMzcyYTNmZDhiYWRiMjc2OTdjYzY0MDlmZGExYWYyYTY",
+    "commit": {
+      "author": {
+        "name": "George Krajcsovits",
+        "email": "krajorama@users.noreply.github.com",
+        "date": "2026-06-22T14:44:30Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-22T14:44:30Z"
+      },
+      "message": "chore: prepare 3.13.0-rc.1 release (#19001)\n\nBump VERSION to 3.13.0-rc.1 and add the 3.13.0-rc.1 CHANGELOG section.\n\nSigned-off-by: Gy\u00f6rgy Krajcsovits <gyorgy.krajcsovits@grafana.com>\nCo-authored-by: Claude Opus 4.8 <noreply@anthropic.com>",
+      "tree": {
+        "sha": "b7ec1fa99bc1cfe903d9360d23148173be50e3aa",
+        "url": "https://api.github.com/repos/prometheus/prometheus/git/trees/b7ec1fa99bc1cfe903d9360d23148173be50e3aa"
+      },
+      "url": "https://api.github.com/repos/prometheus/prometheus/git/commits/bd96185f372a3fd8badb27697cc6409fda1af2a6",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqOUpOCRC1aQ7uu5UhlAAARs8QAJLTpAB5vDkmAyj/empP9bMn\nIXFP0hRZkEzGegnUN+80wFomvS3pvRZxJG0TBeF9ZlbLy1ccv9lvKjiQ2wc6dlG5\npJu8VNkbvOKfgjGOMor7BrPYPd1bWFM96HGg3EmAIueQ2vtL82QnMD8D+hgg8dFX\n+CZqKP38bbJnCv32R1Evn9Fq61E0v6rGbGwkSPdHNaT0Cw1HoJGzU0/VPNBvK+gI\ndyg4rsVRnaOcAvhdKwLoZQlvd3JRfJcEf38LflhayESzbdlAyoH0kM/9vDZWG3NZ\nTKpZyLxOMedEVU+wN73tzXh9LWs43P5v8CtPayRH1AE8FAkwdpbSsdkfxE+1YN69\n0NLofawurtYl40Ji+2mfMccZGuOMLW/PwbabzMfKRKifKdptQR3Ol93YFm2tIVOO\nB8ATlhCEVCOxDK5JY9LQvsMMPObKKc3wM1y6toybg2mPXZjR7ZVXbCicUql28lig\n7+4peYcu5QoMyJ9RSVfbAR0vcd13z1suap0Y1r/KcfdSBQQIuKj6YsmA4yBqp1/W\nuTulSZ1dOaloC3HVrK/XDjiAlQ8Q0ha4DG2WZKEgzZk75lIvomT+pUKypvMQ6Dv/\nrQ0FnVgOl8lOiFQc64GcXbVbCm5cmbo+YgWGEzZTf7IqDy2o+3eFSN/Rq/p/F0T1\nQ8DrO0kILJQOgHi5cYF0\n=Kj2y\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree b7ec1fa99bc1cfe903d9360d23148173be50e3aa\nparent 0efc62677dad8c01c8563453f34be0a05b0d7aec\nauthor George Krajcsovits <krajorama@users.noreply.github.com> 1782139470 +0200\ncommitter GitHub <noreply@github.com> 1782139470 +0200\n\nchore: prepare 3.13.0-rc.1 release (#19001)\n\nBump VERSION to 3.13.0-rc.1 and add the 3.13.0-rc.1 CHANGELOG section.\n\nSigned-off-by: Gy\u00f6rgy Krajcsovits <gyorgy.krajcsovits@grafana.com>\nCo-authored-by: Claude Opus 4.8 <noreply@anthropic.com>",
+        "verified_at": "2026-06-22T14:44:30Z"
+      }
+    },
+    "url": "https://api.github.com/repos/prometheus/prometheus/commits/bd96185f372a3fd8badb27697cc6409fda1af2a6",
+    "html_url": "https://github.com/prometheus/prometheus/commit/bd96185f372a3fd8badb27697cc6409fda1af2a6",
+    "comments_url": "https://api.github.com/repos/prometheus/prometheus/commits/bd96185f372a3fd8badb27697cc6409fda1af2a6/comments",
+    "author": {
+      "login": "krajorama",
+      "id": 13435893,
+      "node_id": "MDQ6VXNlcjEzNDM1ODkz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/13435893?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/krajorama",
+      "html_url": "https://github.com/krajorama",
+      "followers_url": "https://api.github.com/users/krajorama/followers",
+      "following_url": "https://api.github.com/users/krajorama/following{/other_user}",
+      "gists_url": "https://api.github.com/users/krajorama/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/krajorama/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/krajorama/subscriptions",
+      "organizations_url": "https://api.github.com/users/krajorama/orgs",
+      "repos_url": "https://api.github.com/users/krajorama/repos",
+      "events_url": "https://api.github.com/users/krajorama/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/krajorama/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "0efc62677dad8c01c8563453f34be0a05b0d7aec",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/0efc62677dad8c01c8563453f34be0a05b0d7aec",
+        "html_url": "https://github.com/prometheus/prometheus/commit/0efc62677dad8c01c8563453f34be0a05b0d7aec"
+      }
+    ]
+  }
+]

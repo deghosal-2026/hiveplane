@@ -1,0 +1,55 @@
+{
+  "id": "plan-1",
+  "goal_id": "goal-1",
+  "plan_schema_version": "0.1.0",
+  "version": 1,
+  "parent_version": null,
+  "created_at": "2026-01-01T00:00:00Z",
+  "tasks": [
+    {
+      "id": "deploy",
+      "description": "task deploy",
+      "action": "do",
+      "target": "deploy",
+      "parallel_group": null,
+      "preconditions": [],
+      "verification": {
+        "what": "status",
+        "how": "assert",
+        "expected": "ok"
+      },
+      "rollback": {
+        "trigger": "on_failure",
+        "action": "restore",
+        "safety_guard": "",
+        "restores_state": null,
+        "restoration_evidence": null
+      },
+      "risk_class": "high",
+      "blast_radius": "high",
+      "satisfies": null
+    },
+    {
+      "id": "consume",
+      "description": "task consume",
+      "action": "do",
+      "target": "consume",
+      "parallel_group": null,
+      "preconditions": [],
+      "verification": null,
+      "rollback": null,
+      "risk_class": "medium",
+      "blast_radius": "medium",
+      "satisfies": null
+    }
+  ],
+  "dependencies": [
+    {
+      "from_task": "deploy",
+      "to_task": "consume",
+      "kind": "hard",
+      "reason": "test"
+    }
+  ],
+  "branches": []
+}

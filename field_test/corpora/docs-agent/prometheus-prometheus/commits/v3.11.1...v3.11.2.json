@@ -1,0 +1,842 @@
+[
+  {
+    "sha": "1e73d2fcded13042b75842a6af47c969f7f52909",
+    "node_id": "C_kwDOAGhaidoAKDFlNzNkMmZjZGVkMTMwNDJiNzU4NDJhNmFmNDdjOTY5ZjdmNTI5MDk",
+    "commit": {
+      "author": {
+        "name": "Julien Pivotto",
+        "email": "291750+roidelapluie@users.noreply.github.com",
+        "date": "2026-04-09T13:58:10Z"
+      },
+      "committer": {
+        "name": "Julien Pivotto",
+        "email": "291750+roidelapluie@users.noreply.github.com",
+        "date": "2026-04-09T14:03:16Z"
+      },
+      "message": "discovery/consul: add health_filter for Health API filtering\n\nThe filter field was documented as targeting the Catalog API but since\nPR #17349 it was also passed to the Health API. This broke existing\nconfigs using Catalog-only fields like ServiceTags, which the Health API\nrejects (it uses Service.Tags instead).\n\nIntroduce a separate health_filter field that is passed exclusively to\nthe Health API, while filter remains catalog-only. Update the docs to\nexplain the two-phase discovery (Catalog for service listing, Health for\ninstances) and the field name differences between the two APIs.\n\nFixes #18479\n\nSigned-off-by: Julien Pivotto <291750+roidelapluie@users.noreply.github.com>",
+      "tree": {
+        "sha": "60dbc959220e00e0737105594803be15c3ea3c11",
+        "url": "https://api.github.com/repos/prometheus/prometheus/git/trees/60dbc959220e00e0737105594803be15c3ea3c11"
+      },
+      "url": "https://api.github.com/repos/prometheus/prometheus/git/commits/1e73d2fcded13042b75842a6af47c969f7f52909",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/prometheus/prometheus/commits/1e73d2fcded13042b75842a6af47c969f7f52909",
+    "html_url": "https://github.com/prometheus/prometheus/commit/1e73d2fcded13042b75842a6af47c969f7f52909",
+    "comments_url": "https://api.github.com/repos/prometheus/prometheus/commits/1e73d2fcded13042b75842a6af47c969f7f52909/comments",
+    "author": {
+      "login": "roidelapluie",
+      "id": 291750,
+      "node_id": "MDQ6VXNlcjI5MTc1MA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/291750?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/roidelapluie",
+      "html_url": "https://github.com/roidelapluie",
+      "followers_url": "https://api.github.com/users/roidelapluie/followers",
+      "following_url": "https://api.github.com/users/roidelapluie/following{/other_user}",
+      "gists_url": "https://api.github.com/users/roidelapluie/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/roidelapluie/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/roidelapluie/subscriptions",
+      "organizations_url": "https://api.github.com/users/roidelapluie/orgs",
+      "repos_url": "https://api.github.com/users/roidelapluie/repos",
+      "events_url": "https://api.github.com/users/roidelapluie/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/roidelapluie/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "roidelapluie",
+      "id": 291750,
+      "node_id": "MDQ6VXNlcjI5MTc1MA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/291750?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/roidelapluie",
+      "html_url": "https://github.com/roidelapluie",
+      "followers_url": "https://api.github.com/users/roidelapluie/followers",
+      "following_url": "https://api.github.com/users/roidelapluie/following{/other_user}",
+      "gists_url": "https://api.github.com/users/roidelapluie/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/roidelapluie/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/roidelapluie/subscriptions",
+      "organizations_url": "https://api.github.com/users/roidelapluie/orgs",
+      "repos_url": "https://api.github.com/users/roidelapluie/repos",
+      "events_url": "https://api.github.com/users/roidelapluie/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/roidelapluie/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "1bd2f3a9fdedf52e6f613449cc4c50e86ca24676",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/1bd2f3a9fdedf52e6f613449cc4c50e86ca24676",
+        "html_url": "https://github.com/prometheus/prometheus/commit/1bd2f3a9fdedf52e6f613449cc4c50e86ca24676"
+      }
+    ]
+  },
+  {
+    "sha": "4cc50803ff1b494403a81c8ea5f566685f12de5b",
+    "node_id": "C_kwDOAGhaidoAKDRjYzUwODAzZmYxYjQ5NDQwM2E4MWM4ZWE1ZjU2NjY4NWYxMmRlNWI",
+    "commit": {
+      "author": {
+        "name": "Julien Pivotto",
+        "email": "291750+roidelapluie@users.noreply.github.com",
+        "date": "2026-04-10T08:26:40Z"
+      },
+      "committer": {
+        "name": "Julien Pivotto",
+        "email": "291750+roidelapluie@users.noreply.github.com",
+        "date": "2026-04-10T08:26:40Z"
+      },
+      "message": "discovery/consul: fix catalog watch trigger and improve filter tests\n\nWhen health_filter is set without explicit services, the catalog needs\nto be watched to enumerate services. Add watchedFilter to the condition\nthat triggers catalog watching.\n\nImprove the filter test suite:\n- Replace defer with t.Cleanup for stub servers.\n- Rewrite TestFilterOption to assert that the catalog receives the filter\n  and the health endpoint does not.\n- Rewrite TestHealthFilterOption to assert that health_filter is routed\n  correctly to the health endpoint only.\n- Add TestBothFiltersOption to verify both filters are routed to their\n  respective endpoints when both are configured.\n\nSigned-off-by: Julien Pivotto <291750+roidelapluie@users.noreply.github.com>",
+      "tree": {
+        "sha": "84f03ec40f86080c74b2a7ac8129d4dd2f66b066",
+        "url": "https://api.github.com/repos/prometheus/prometheus/git/trees/84f03ec40f86080c74b2a7ac8129d4dd2f66b066"
+      },
+      "url": "https://api.github.com/repos/prometheus/prometheus/git/commits/4cc50803ff1b494403a81c8ea5f566685f12de5b",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/prometheus/prometheus/commits/4cc50803ff1b494403a81c8ea5f566685f12de5b",
+    "html_url": "https://github.com/prometheus/prometheus/commit/4cc50803ff1b494403a81c8ea5f566685f12de5b",
+    "comments_url": "https://api.github.com/repos/prometheus/prometheus/commits/4cc50803ff1b494403a81c8ea5f566685f12de5b/comments",
+    "author": {
+      "login": "roidelapluie",
+      "id": 291750,
+      "node_id": "MDQ6VXNlcjI5MTc1MA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/291750?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/roidelapluie",
+      "html_url": "https://github.com/roidelapluie",
+      "followers_url": "https://api.github.com/users/roidelapluie/followers",
+      "following_url": "https://api.github.com/users/roidelapluie/following{/other_user}",
+      "gists_url": "https://api.github.com/users/roidelapluie/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/roidelapluie/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/roidelapluie/subscriptions",
+      "organizations_url": "https://api.github.com/users/roidelapluie/orgs",
+      "repos_url": "https://api.github.com/users/roidelapluie/repos",
+      "events_url": "https://api.github.com/users/roidelapluie/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/roidelapluie/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "roidelapluie",
+      "id": 291750,
+      "node_id": "MDQ6VXNlcjI5MTc1MA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/291750?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/roidelapluie",
+      "html_url": "https://github.com/roidelapluie",
+      "followers_url": "https://api.github.com/users/roidelapluie/followers",
+      "following_url": "https://api.github.com/users/roidelapluie/following{/other_user}",
+      "gists_url": "https://api.github.com/users/roidelapluie/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/roidelapluie/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/roidelapluie/subscriptions",
+      "organizations_url": "https://api.github.com/users/roidelapluie/orgs",
+      "repos_url": "https://api.github.com/users/roidelapluie/repos",
+      "events_url": "https://api.github.com/users/roidelapluie/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/roidelapluie/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "1e73d2fcded13042b75842a6af47c969f7f52909",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/1e73d2fcded13042b75842a6af47c969f7f52909",
+        "html_url": "https://github.com/prometheus/prometheus/commit/1e73d2fcded13042b75842a6af47c969f7f52909"
+      }
+    ]
+  },
+  {
+    "sha": "fddbccf79bc81a870dd455dfd1c8368d31b93a4b",
+    "node_id": "C_kwDOAGhaidoAKGZkZGJjY2Y3OWJjODFhODcwZGQ0NTVkZmQxYzgzNjhkMzFiOTNhNGI",
+    "commit": {
+      "author": {
+        "name": "Julius Volz",
+        "email": "julius.volz@gmail.com",
+        "date": "2026-04-04T09:54:22Z"
+      },
+      "committer": {
+        "name": "Julien Pivotto",
+        "email": "291750+roidelapluie@users.noreply.github.com",
+        "date": "2026-04-10T09:25:03Z"
+      },
+      "message": "UI: Fix stored XSS via unescaped metric names and labels\n\nMetric names, label names, and label values containing HTML/JavaScript were\ninserted into `innerHTML` without escaping in several UI code paths, enabling\nstored XSS attacks via crafted metrics. This mostly becomes exploitable in\nPrometheus 3.x, since it defaults to allowing any UTF-8 characters in metric\nand label names.\n\nApply `escapeHTML()` to all user-controlled values before innerHTML\ninsertion in:\n\n* Mantine UI chart tooltip\n* Old React UI chart tooltip\n* Old React UI metrics explorer fuzzy search\n* Old React UI heatmap tooltip\n\nSee https://github.com/prometheus/prometheus/security/advisories/GHSA-vffh-x6r8-xx99\n\nSigned-off-by: Julius Volz <julius.volz@gmail.com>",
+      "tree": {
+        "sha": "29a81f07fc6de311f6440f259e50c30a998cf903",
+        "url": "https://api.github.com/repos/prometheus/prometheus/git/trees/29a81f07fc6de311f6440f259e50c30a998cf903"
+      },
+      "url": "https://api.github.com/repos/prometheus/prometheus/git/commits/fddbccf79bc81a870dd455dfd1c8368d31b93a4b",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/prometheus/prometheus/commits/fddbccf79bc81a870dd455dfd1c8368d31b93a4b",
+    "html_url": "https://github.com/prometheus/prometheus/commit/fddbccf79bc81a870dd455dfd1c8368d31b93a4b",
+    "comments_url": "https://api.github.com/repos/prometheus/prometheus/commits/fddbccf79bc81a870dd455dfd1c8368d31b93a4b/comments",
+    "author": {
+      "login": "juliusv",
+      "id": 538008,
+      "node_id": "MDQ6VXNlcjUzODAwOA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/538008?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/juliusv",
+      "html_url": "https://github.com/juliusv",
+      "followers_url": "https://api.github.com/users/juliusv/followers",
+      "following_url": "https://api.github.com/users/juliusv/following{/other_user}",
+      "gists_url": "https://api.github.com/users/juliusv/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/juliusv/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/juliusv/subscriptions",
+      "organizations_url": "https://api.github.com/users/juliusv/orgs",
+      "repos_url": "https://api.github.com/users/juliusv/repos",
+      "events_url": "https://api.github.com/users/juliusv/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/juliusv/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "roidelapluie",
+      "id": 291750,
+      "node_id": "MDQ6VXNlcjI5MTc1MA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/291750?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/roidelapluie",
+      "html_url": "https://github.com/roidelapluie",
+      "followers_url": "https://api.github.com/users/roidelapluie/followers",
+      "following_url": "https://api.github.com/users/roidelapluie/following{/other_user}",
+      "gists_url": "https://api.github.com/users/roidelapluie/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/roidelapluie/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/roidelapluie/subscriptions",
+      "organizations_url": "https://api.github.com/users/roidelapluie/orgs",
+      "repos_url": "https://api.github.com/users/roidelapluie/repos",
+      "events_url": "https://api.github.com/users/roidelapluie/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/roidelapluie/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "1bd2f3a9fdedf52e6f613449cc4c50e86ca24676",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/1bd2f3a9fdedf52e6f613449cc4c50e86ca24676",
+        "html_url": "https://github.com/prometheus/prometheus/commit/1bd2f3a9fdedf52e6f613449cc4c50e86ca24676"
+      }
+    ]
+  },
+  {
+    "sha": "e95d2e38e301d2e6274b12373d05eeb9b16c4028",
+    "node_id": "C_kwDOAGhaidoAKGU5NWQyZTM4ZTMwMWQyZTYyNzRiMTIzNzNkMDVlZWI5YjE2YzQwMjg",
+    "commit": {
+      "author": {
+        "name": "Julien",
+        "email": "291750+roidelapluie@users.noreply.github.com",
+        "date": "2026-04-10T12:17:05Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-04-10T12:17:05Z"
+      },
+      "message": "Merge pull request #18506 from roidelapluie/roidelapluie/backport-xss-issue\n\nUI: Fix stored XSS via unescaped metric names and labels",
+      "tree": {
+        "sha": "29a81f07fc6de311f6440f259e50c30a998cf903",
+        "url": "https://api.github.com/repos/prometheus/prometheus/git/trees/29a81f07fc6de311f6440f259e50c30a998cf903"
+      },
+      "url": "https://api.github.com/repos/prometheus/prometheus/git/commits/e95d2e38e301d2e6274b12373d05eeb9b16c4028",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp2OpBCRC1aQ7uu5UhlAAABm4QAKZ51BVo/3DSHAuZAWPNsr+V\nw7c3bd47Dlo9TiqRaLUMfE5mt9BkE+H6TbMw+mh5NgI4BhXpC5Bc5e7/Q+KMnVXq\nVOtAtyeY9iUMhKNilvEiQGKwYF90J4DPp8B1D3iMP06neskFEgzppT1YDhHMU0Az\nrNRPlzzw+lx4yLic291iUx4tFVKHPrJMgZSpL7ky37FYYL8Qw3dtt9V+z0b26fm0\nbw6OnfKW8Sl20wee6swa/88S/MmHiWeFkM7f414Bk8GS1Nzb4GqyeMggHU03Ow4d\nJJogyzLwfdJFac4BSJ2/kWfYDChbwIeCyClHqpj3PjiDVzTkYOUOwFYF7a+jV/ye\nqTbkd2GnPywFAjrHGay1d5HgVIA2RfC3yLYEkmbmFbOeq9Cd9hooMxD1MoliBs5a\nBGol7yNBTqwTwr6VvcXDPUEFukdLEzPLxI2XOp2JVbV/feDfCo2I5yHybCtLDQGr\no/HDLqwhWehetFH/6eG1SvBVVqnLEa8uZb6JWFjF7um+yjoL2t/puCLua8qWYokN\nbHq1B/i9bdjOFCR1Ve745qoLbcX8WHfN5ZkZx7KzjEaWi7iOw4tdAjI1IPuMQlrd\n+5L2csuWwiDxeYu6V0i7U8uynk9g8z98FZEf7HFD1HVjCFAEShyGUTxdgwOPGbyn\nCodkibjbtTN4jkhw61nb\n=yWk7\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 29a81f07fc6de311f6440f259e50c30a998cf903\nparent 1bd2f3a9fdedf52e6f613449cc4c50e86ca24676\nparent fddbccf79bc81a870dd455dfd1c8368d31b93a4b\nauthor Julien <291750+roidelapluie@users.noreply.github.com> 1775823425 +0200\ncommitter GitHub <noreply@github.com> 1775823425 +0200\n\nMerge pull request #18506 from roidelapluie/roidelapluie/backport-xss-issue\n\nUI: Fix stored XSS via unescaped metric names and labels",
+        "verified_at": "2026-04-10T12:17:06Z"
+      }
+    },
+    "url": "https://api.github.com/repos/prometheus/prometheus/commits/e95d2e38e301d2e6274b12373d05eeb9b16c4028",
+    "html_url": "https://github.com/prometheus/prometheus/commit/e95d2e38e301d2e6274b12373d05eeb9b16c4028",
+    "comments_url": "https://api.github.com/repos/prometheus/prometheus/commits/e95d2e38e301d2e6274b12373d05eeb9b16c4028/comments",
+    "author": {
+      "login": "roidelapluie",
+      "id": 291750,
+      "node_id": "MDQ6VXNlcjI5MTc1MA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/291750?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/roidelapluie",
+      "html_url": "https://github.com/roidelapluie",
+      "followers_url": "https://api.github.com/users/roidelapluie/followers",
+      "following_url": "https://api.github.com/users/roidelapluie/following{/other_user}",
+      "gists_url": "https://api.github.com/users/roidelapluie/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/roidelapluie/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/roidelapluie/subscriptions",
+      "organizations_url": "https://api.github.com/users/roidelapluie/orgs",
+      "repos_url": "https://api.github.com/users/roidelapluie/repos",
+      "events_url": "https://api.github.com/users/roidelapluie/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/roidelapluie/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "1bd2f3a9fdedf52e6f613449cc4c50e86ca24676",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/1bd2f3a9fdedf52e6f613449cc4c50e86ca24676",
+        "html_url": "https://github.com/prometheus/prometheus/commit/1bd2f3a9fdedf52e6f613449cc4c50e86ca24676"
+      },
+      {
+        "sha": "fddbccf79bc81a870dd455dfd1c8368d31b93a4b",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/fddbccf79bc81a870dd455dfd1c8368d31b93a4b",
+        "html_url": "https://github.com/prometheus/prometheus/commit/fddbccf79bc81a870dd455dfd1c8368d31b93a4b"
+      }
+    ]
+  },
+  {
+    "sha": "d09ea56b38b14b004f4399c3bf71698774c44369",
+    "node_id": "C_kwDOAGhaidoAKGQwOWVhNTZiMzhiMTRiMDA0ZjQzOTljM2JmNzE2OTg3NzRjNDQzNjk",
+    "commit": {
+      "author": {
+        "name": "Julien",
+        "email": "291750+roidelapluie@users.noreply.github.com",
+        "date": "2026-04-10T12:50:54Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-04-10T12:50:54Z"
+      },
+      "message": "Update docs/configuration/configuration.md\n\nCo-authored-by: George Krajcsovits <krajorama@users.noreply.github.com>\nSigned-off-by: Julien <291750+roidelapluie@users.noreply.github.com>",
+      "tree": {
+        "sha": "8a3611896161551ec69c4eaf24de292c942d1790",
+        "url": "https://api.github.com/repos/prometheus/prometheus/git/trees/8a3611896161551ec69c4eaf24de292c942d1790"
+      },
+      "url": "https://api.github.com/repos/prometheus/prometheus/git/commits/d09ea56b38b14b004f4399c3bf71698774c44369",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp2PIuCRC1aQ7uu5UhlAAAkW4QAFmE51d7b//omnkfWlFZac3V\nxzCSBHKD6Ze+pKrwD3j95DlJF74SGJdBp8ctK33J/1r/2xEdYHOCl1xGh8CoVerJ\nsYKW2KuhKilwz0R7tM5s1NUHnPPB5HpR10JO1XypnKrbZW+IcTqKwq6neh3B2cZk\n2OfQsDaWJ587fLzBAwdCe4B3EXKc/zahqnfsL1R1jEL6i82K+r5Di0vGqek+g19y\nXa2l0b5PTJHQVm5a7tkhNfOBVVzexSrZAWW+PsK8TWUvPzNjSV0oQAiXSaVrq1jY\nsJZD4/4VmTzkC2+AGRazI6PXxmw7/To3kixYuJLpsxZWUy7f/RxeHrNF5Xp2RKJk\nts7NnYurVugpuOPsa5T7tV8/VN+mLGRvDnGLX82UJo01NoZrDU0mYdZBmCZBvGh+\nHEVmbq0mllPmSJuQJQRmYOj3E1KBNHa7CgwRxYl2B4ziI9Jd71NmvAEOhCReL/N0\nxdrDBCerMNkl9IMWkNySiw7TlPxW6lkpiwQWP3WupY0s6GYEtcK8aEN7obFfXdnj\n2TwkC5YU+5UVuHv5mLb40d06AgOfwFm5+zpTNkHgFc1J8IZnTPXlqpQVkZu+7MyG\nUtBqmysHkpT4IqIed7pGoBGIydMK67wmIyinGOc6e70FYSUZasnYAVQWq6UVJm1M\nCnpQAZmnD+oiF1gfg3I3\n=Hf7U\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 8a3611896161551ec69c4eaf24de292c942d1790\nparent 4cc50803ff1b494403a81c8ea5f566685f12de5b\nauthor Julien <291750+roidelapluie@users.noreply.github.com> 1775825454 +0200\ncommitter GitHub <noreply@github.com> 1775825454 +0200\n\nUpdate docs/configuration/configuration.md\n\nCo-authored-by: George Krajcsovits <krajorama@users.noreply.github.com>\nSigned-off-by: Julien <291750+roidelapluie@users.noreply.github.com>",
+        "verified_at": "2026-04-10T12:50:54Z"
+      }
+    },
+    "url": "https://api.github.com/repos/prometheus/prometheus/commits/d09ea56b38b14b004f4399c3bf71698774c44369",
+    "html_url": "https://github.com/prometheus/prometheus/commit/d09ea56b38b14b004f4399c3bf71698774c44369",
+    "comments_url": "https://api.github.com/repos/prometheus/prometheus/commits/d09ea56b38b14b004f4399c3bf71698774c44369/comments",
+    "author": {
+      "login": "roidelapluie",
+      "id": 291750,
+      "node_id": "MDQ6VXNlcjI5MTc1MA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/291750?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/roidelapluie",
+      "html_url": "https://github.com/roidelapluie",
+      "followers_url": "https://api.github.com/users/roidelapluie/followers",
+      "following_url": "https://api.github.com/users/roidelapluie/following{/other_user}",
+      "gists_url": "https://api.github.com/users/roidelapluie/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/roidelapluie/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/roidelapluie/subscriptions",
+      "organizations_url": "https://api.github.com/users/roidelapluie/orgs",
+      "repos_url": "https://api.github.com/users/roidelapluie/repos",
+      "events_url": "https://api.github.com/users/roidelapluie/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/roidelapluie/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "4cc50803ff1b494403a81c8ea5f566685f12de5b",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/4cc50803ff1b494403a81c8ea5f566685f12de5b",
+        "html_url": "https://github.com/prometheus/prometheus/commit/4cc50803ff1b494403a81c8ea5f566685f12de5b"
+      }
+    ]
+  },
+  {
+    "sha": "fac097b161da0090a1923a8733c563689c72a0b0",
+    "node_id": "C_kwDOAGhaidoAKGZhYzA5N2IxNjFkYTAwOTBhMTkyM2E4NzMzYzU2MzY4OWM3MmEwYjA",
+    "commit": {
+      "author": {
+        "name": "Julien",
+        "email": "291750+roidelapluie@users.noreply.github.com",
+        "date": "2026-04-10T13:15:47Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-04-10T13:15:47Z"
+      },
+      "message": "Merge pull request #18499 from roidelapluie/roidelapluie/consul-health-filter-3.11\n\ndiscovery/consul: add health_filter for Health API filtering",
+      "tree": {
+        "sha": "bd38f66b5b2e11783721f4e535ed259859cd08a8",
+        "url": "https://api.github.com/repos/prometheus/prometheus/git/trees/bd38f66b5b2e11783721f4e535ed259859cd08a8"
+      },
+      "url": "https://api.github.com/repos/prometheus/prometheus/git/commits/fac097b161da0090a1923a8733c563689c72a0b0",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp2PgDCRC1aQ7uu5UhlAAAGoEQAKPgJgi8jzpfIbz7k0hV5V/4\ntRNe0F6TKWO4d6tL1bP0U/eO5bjkI6w2182A2483bHKkS7LL8u8OhedGg2Ppx4TC\nUiEuWNWWOZkCu8GG20FCVe1JXT0KO9fSmJjeeRYMpmiC6NZsqVr5uo7BumG94xhi\n6g7XFXp8sG843zOatnBWzVdX02SJFfyriyv0QyF27ziFhH+ZTjcqla9h15UpQanr\nGoHPnglfIIJVf31npIi1bQ3W/2J9lr3H6IWDH6m/aVrfREq3D6+zvUVL0KVWCoZy\nbri6VHJLbP89Fp6Iw16tWfdsG2hXalLTJ/1cWdqsUXZ/EQ5Ak1aa/PVknlk1qte/\nwLzje7sYlomCXoWEMrvBvuzWYr/OIp+ikbqJ+7u7pUGTwBctYOCkNj+JNwOsF3bI\nOVSw9I45m2siHL+CM0Udl/ZyYkiMGaOPFgexmiVVMuZ+8M9/tqm8kjS7piwEiwIV\nuYuFNhalvqD+XAMX2WemF1jyuI9qYQsw7quPP6vazrLB3x9OKuwyKTayVqUu/71y\n8OOltmr6stJCQA/4Ec9gHe+9On7MWoObLoxlV5n4uceGgT+Yigjl227eVlYOf/tW\nHlJhbPo1SNkPsn+NPhTRlb1ArH5126AAFVSqAexAKuZTv8CLJGHu1gdWtsGEEIRS\nfbQ+v/C0sL6+qbTyUxDB\n=BNsb\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree bd38f66b5b2e11783721f4e535ed259859cd08a8\nparent e95d2e38e301d2e6274b12373d05eeb9b16c4028\nparent d09ea56b38b14b004f4399c3bf71698774c44369\nauthor Julien <291750+roidelapluie@users.noreply.github.com> 1775826947 +0200\ncommitter GitHub <noreply@github.com> 1775826947 +0200\n\nMerge pull request #18499 from roidelapluie/roidelapluie/consul-health-filter-3.11\n\ndiscovery/consul: add health_filter for Health API filtering",
+        "verified_at": "2026-04-10T13:15:48Z"
+      }
+    },
+    "url": "https://api.github.com/repos/prometheus/prometheus/commits/fac097b161da0090a1923a8733c563689c72a0b0",
+    "html_url": "https://github.com/prometheus/prometheus/commit/fac097b161da0090a1923a8733c563689c72a0b0",
+    "comments_url": "https://api.github.com/repos/prometheus/prometheus/commits/fac097b161da0090a1923a8733c563689c72a0b0/comments",
+    "author": {
+      "login": "roidelapluie",
+      "id": 291750,
+      "node_id": "MDQ6VXNlcjI5MTc1MA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/291750?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/roidelapluie",
+      "html_url": "https://github.com/roidelapluie",
+      "followers_url": "https://api.github.com/users/roidelapluie/followers",
+      "following_url": "https://api.github.com/users/roidelapluie/following{/other_user}",
+      "gists_url": "https://api.github.com/users/roidelapluie/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/roidelapluie/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/roidelapluie/subscriptions",
+      "organizations_url": "https://api.github.com/users/roidelapluie/orgs",
+      "repos_url": "https://api.github.com/users/roidelapluie/repos",
+      "events_url": "https://api.github.com/users/roidelapluie/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/roidelapluie/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "e95d2e38e301d2e6274b12373d05eeb9b16c4028",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/e95d2e38e301d2e6274b12373d05eeb9b16c4028",
+        "html_url": "https://github.com/prometheus/prometheus/commit/e95d2e38e301d2e6274b12373d05eeb9b16c4028"
+      },
+      {
+        "sha": "d09ea56b38b14b004f4399c3bf71698774c44369",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/d09ea56b38b14b004f4399c3bf71698774c44369",
+        "html_url": "https://github.com/prometheus/prometheus/commit/d09ea56b38b14b004f4399c3bf71698774c44369"
+      }
+    ]
+  },
+  {
+    "sha": "06b7f1f6250e98db4850335c73fc2da768010993",
+    "node_id": "C_kwDOAGhaidoAKDA2YjdmMWY2MjUwZTk4ZGI0ODUwMzM1YzczZmMyZGE3NjgwMTA5OTM",
+    "commit": {
+      "author": {
+        "name": "Mohammad Varmazyar",
+        "email": "mrvarmazyar@gmail.com",
+        "date": "2026-04-10T21:36:56Z"
+      },
+      "committer": {
+        "name": "Mohammad Varmazyar",
+        "email": "mrvarmazyar@gmail.com",
+        "date": "2026-04-10T21:36:56Z"
+      },
+      "message": "config: add consul health_filter fixture coverage\n\nSigned-off-by: Mohammad Varmazyar <mrvarmazyar@gmail.com>",
+      "tree": {
+        "sha": "cee097ba01ec627f972aac1e90d7e116495452e4",
+        "url": "https://api.github.com/repos/prometheus/prometheus/git/trees/cee097ba01ec627f972aac1e90d7e116495452e4"
+      },
+      "url": "https://api.github.com/repos/prometheus/prometheus/git/commits/06b7f1f6250e98db4850335c73fc2da768010993",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/prometheus/prometheus/commits/06b7f1f6250e98db4850335c73fc2da768010993",
+    "html_url": "https://github.com/prometheus/prometheus/commit/06b7f1f6250e98db4850335c73fc2da768010993",
+    "comments_url": "https://api.github.com/repos/prometheus/prometheus/commits/06b7f1f6250e98db4850335c73fc2da768010993/comments",
+    "author": {
+      "login": "mrvarmazyar",
+      "id": 27881885,
+      "node_id": "MDQ6VXNlcjI3ODgxODg1",
+      "avatar_url": "https://avatars.githubusercontent.com/u/27881885?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/mrvarmazyar",
+      "html_url": "https://github.com/mrvarmazyar",
+      "followers_url": "https://api.github.com/users/mrvarmazyar/followers",
+      "following_url": "https://api.github.com/users/mrvarmazyar/following{/other_user}",
+      "gists_url": "https://api.github.com/users/mrvarmazyar/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/mrvarmazyar/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/mrvarmazyar/subscriptions",
+      "organizations_url": "https://api.github.com/users/mrvarmazyar/orgs",
+      "repos_url": "https://api.github.com/users/mrvarmazyar/repos",
+      "events_url": "https://api.github.com/users/mrvarmazyar/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/mrvarmazyar/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "mrvarmazyar",
+      "id": 27881885,
+      "node_id": "MDQ6VXNlcjI3ODgxODg1",
+      "avatar_url": "https://avatars.githubusercontent.com/u/27881885?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/mrvarmazyar",
+      "html_url": "https://github.com/mrvarmazyar",
+      "followers_url": "https://api.github.com/users/mrvarmazyar/followers",
+      "following_url": "https://api.github.com/users/mrvarmazyar/following{/other_user}",
+      "gists_url": "https://api.github.com/users/mrvarmazyar/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/mrvarmazyar/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/mrvarmazyar/subscriptions",
+      "organizations_url": "https://api.github.com/users/mrvarmazyar/orgs",
+      "repos_url": "https://api.github.com/users/mrvarmazyar/repos",
+      "events_url": "https://api.github.com/users/mrvarmazyar/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/mrvarmazyar/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "fac097b161da0090a1923a8733c563689c72a0b0",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/fac097b161da0090a1923a8733c563689c72a0b0",
+        "html_url": "https://github.com/prometheus/prometheus/commit/fac097b161da0090a1923a8733c563689c72a0b0"
+      }
+    ]
+  },
+  {
+    "sha": "931b2daf6fa656545629ac41e016ef763cfc1dd4",
+    "node_id": "C_kwDOAGhaidoAKDkzMWIyZGFmNmZhNjU2NTQ1NjI5YWM0MWUwMTZlZjc2M2NmYzFkZDQ",
+    "commit": {
+      "author": {
+        "name": "Julien",
+        "email": "291750+roidelapluie@users.noreply.github.com",
+        "date": "2026-04-13T08:51:00Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-04-13T08:51:00Z"
+      },
+      "message": "Merge pull request #18510 from mrvarmazyar/fix/consul-health-filter-config-fixtures\n\nconfig: add consul health_filter fixture coverage",
+      "tree": {
+        "sha": "cee097ba01ec627f972aac1e90d7e116495452e4",
+        "url": "https://api.github.com/repos/prometheus/prometheus/git/trees/cee097ba01ec627f972aac1e90d7e116495452e4"
+      },
+      "url": "https://api.github.com/repos/prometheus/prometheus/git/commits/931b2daf6fa656545629ac41e016ef763cfc1dd4",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp3K50CRC1aQ7uu5UhlAAA8OEQAHDUqYWJhWCAQiFlMusX1+1t\n2dhHyUkXxKZYWcos/B+mJ/Act6WEvX0SeAgpgslt0Jjk80AKuCKK4xzfTRQZS2Xe\nfdumSS8s4OPYy7fO25v4V203bWZeEuEDEIMktkbXq0uvi385kxrN8Sy6VflcGQzq\njZ8UMkY6VQia3g5zlkH/+cbPNKvgYfvAjH6HYFaJVvTpBfZV1WG2uRiHgRS3j2zU\nlM1sa5lhDy9pMYzaMblrxLMYWr4i0q/+Fn8wWGTRXlunoViVds3G/SUChIW4COck\nJ0Rp6pM7f+hl4PHf4u69SMZ0Iv5/Z33vR/FRnrR8Zuaz1Asd5V8F0wv4Xs76CGPE\nrNirxcuy6margVyC2bijFGHd7tFoQO+bm+pq6mGcElZxPJt7IHNICNVtCPSLOj5d\nQIVEM8V/Kp5U3AbZ83+bTmUCIToZv1Ggshs/qtvAHquiTDg2kUlMTSSiQsT6vaRA\nAkTODCklDL/172oi2GfxYZHVDY8hcVMdRXsnfgbb3g9rdXYsZSxfIC1v/dd2ObCp\ng1dYF0J6V/9DPfKt8tB5u6bTrU/IYP0doZBzWymDhnTtPGtHZaKFhltaoeoLlk+c\nTr6uh4W3B7YaznmV7oL3bPOobZ5TLxwN14ksPDs50WJ+0LD5Oy6vo1DsJM6Q1a5j\nEoF20LCsSeq+cyXxXrHb\n=QENN\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree cee097ba01ec627f972aac1e90d7e116495452e4\nparent fac097b161da0090a1923a8733c563689c72a0b0\nparent 06b7f1f6250e98db4850335c73fc2da768010993\nauthor Julien <291750+roidelapluie@users.noreply.github.com> 1776070260 +0200\ncommitter GitHub <noreply@github.com> 1776070260 +0200\n\nMerge pull request #18510 from mrvarmazyar/fix/consul-health-filter-config-fixtures\n\nconfig: add consul health_filter fixture coverage",
+        "verified_at": "2026-04-13T08:51:01Z"
+      }
+    },
+    "url": "https://api.github.com/repos/prometheus/prometheus/commits/931b2daf6fa656545629ac41e016ef763cfc1dd4",
+    "html_url": "https://github.com/prometheus/prometheus/commit/931b2daf6fa656545629ac41e016ef763cfc1dd4",
+    "comments_url": "https://api.github.com/repos/prometheus/prometheus/commits/931b2daf6fa656545629ac41e016ef763cfc1dd4/comments",
+    "author": {
+      "login": "roidelapluie",
+      "id": 291750,
+      "node_id": "MDQ6VXNlcjI5MTc1MA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/291750?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/roidelapluie",
+      "html_url": "https://github.com/roidelapluie",
+      "followers_url": "https://api.github.com/users/roidelapluie/followers",
+      "following_url": "https://api.github.com/users/roidelapluie/following{/other_user}",
+      "gists_url": "https://api.github.com/users/roidelapluie/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/roidelapluie/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/roidelapluie/subscriptions",
+      "organizations_url": "https://api.github.com/users/roidelapluie/orgs",
+      "repos_url": "https://api.github.com/users/roidelapluie/repos",
+      "events_url": "https://api.github.com/users/roidelapluie/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/roidelapluie/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "fac097b161da0090a1923a8733c563689c72a0b0",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/fac097b161da0090a1923a8733c563689c72a0b0",
+        "html_url": "https://github.com/prometheus/prometheus/commit/fac097b161da0090a1923a8733c563689c72a0b0"
+      },
+      {
+        "sha": "06b7f1f6250e98db4850335c73fc2da768010993",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/06b7f1f6250e98db4850335c73fc2da768010993",
+        "html_url": "https://github.com/prometheus/prometheus/commit/06b7f1f6250e98db4850335c73fc2da768010993"
+      }
+    ]
+  },
+  {
+    "sha": "f08b9837f92d6c6f576a66bb3ffc6526705af2b7",
+    "node_id": "C_kwDOAGhaidoAKGYwOGI5ODM3ZjkyZDZjNmY1NzZhNjZiYjNmZmM2NTI2NzA1YWYyYjc",
+    "commit": {
+      "author": {
+        "name": "Julien Pivotto",
+        "email": "291750+roidelapluie@users.noreply.github.com",
+        "date": "2026-04-13T11:12:11Z"
+      },
+      "committer": {
+        "name": "Julien Pivotto",
+        "email": "291750+roidelapluie@users.noreply.github.com",
+        "date": "2026-04-13T11:12:35Z"
+      },
+      "message": "Release 3.11.2\n\nSigned-off-by: Julien Pivotto <291750+roidelapluie@users.noreply.github.com>",
+      "tree": {
+        "sha": "6c4f59e18a2c12949d27f69511d1cd0921782a51",
+        "url": "https://api.github.com/repos/prometheus/prometheus/git/trees/6c4f59e18a2c12949d27f69511d1cd0921782a51"
+      },
+      "url": "https://api.github.com/repos/prometheus/prometheus/git/commits/f08b9837f92d6c6f576a66bb3ffc6526705af2b7",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/prometheus/prometheus/commits/f08b9837f92d6c6f576a66bb3ffc6526705af2b7",
+    "html_url": "https://github.com/prometheus/prometheus/commit/f08b9837f92d6c6f576a66bb3ffc6526705af2b7",
+    "comments_url": "https://api.github.com/repos/prometheus/prometheus/commits/f08b9837f92d6c6f576a66bb3ffc6526705af2b7/comments",
+    "author": {
+      "login": "roidelapluie",
+      "id": 291750,
+      "node_id": "MDQ6VXNlcjI5MTc1MA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/291750?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/roidelapluie",
+      "html_url": "https://github.com/roidelapluie",
+      "followers_url": "https://api.github.com/users/roidelapluie/followers",
+      "following_url": "https://api.github.com/users/roidelapluie/following{/other_user}",
+      "gists_url": "https://api.github.com/users/roidelapluie/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/roidelapluie/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/roidelapluie/subscriptions",
+      "organizations_url": "https://api.github.com/users/roidelapluie/orgs",
+      "repos_url": "https://api.github.com/users/roidelapluie/repos",
+      "events_url": "https://api.github.com/users/roidelapluie/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/roidelapluie/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "roidelapluie",
+      "id": 291750,
+      "node_id": "MDQ6VXNlcjI5MTc1MA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/291750?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/roidelapluie",
+      "html_url": "https://github.com/roidelapluie",
+      "followers_url": "https://api.github.com/users/roidelapluie/followers",
+      "following_url": "https://api.github.com/users/roidelapluie/following{/other_user}",
+      "gists_url": "https://api.github.com/users/roidelapluie/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/roidelapluie/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/roidelapluie/subscriptions",
+      "organizations_url": "https://api.github.com/users/roidelapluie/orgs",
+      "repos_url": "https://api.github.com/users/roidelapluie/repos",
+      "events_url": "https://api.github.com/users/roidelapluie/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/roidelapluie/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "931b2daf6fa656545629ac41e016ef763cfc1dd4",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/931b2daf6fa656545629ac41e016ef763cfc1dd4",
+        "html_url": "https://github.com/prometheus/prometheus/commit/931b2daf6fa656545629ac41e016ef763cfc1dd4"
+      }
+    ]
+  },
+  {
+    "sha": "f0f0fdd679dcd6df320b0558b20919f7cd44c407",
+    "node_id": "C_kwDOAGhaidoAKGYwZjBmZGQ2NzlkY2Q2ZGYzMjBiMDU1OGIyMDkxOWY3Y2Q0NGM0MDc",
+    "commit": {
+      "author": {
+        "name": "Julien",
+        "email": "291750+roidelapluie@users.noreply.github.com",
+        "date": "2026-04-13T11:39:08Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-04-13T11:39:08Z"
+      },
+      "message": "Merge pull request #18517 from roidelapluie/roidelapluie/cut-3.11.2\n\nRelease 3.11.2",
+      "tree": {
+        "sha": "6c4f59e18a2c12949d27f69511d1cd0921782a51",
+        "url": "https://api.github.com/repos/prometheus/prometheus/git/trees/6c4f59e18a2c12949d27f69511d1cd0921782a51"
+      },
+      "url": "https://api.github.com/repos/prometheus/prometheus/git/commits/f0f0fdd679dcd6df320b0558b20919f7cd44c407",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp3NXcCRC1aQ7uu5UhlAAADlYQAGWkwvZ9XxFX3X3y2G6Y2VTk\naTRDIVa8ZdBZ1l/xFiQn638Ku+pyJ8R7AWhiG4kHXOxKl+xNsIKpM02AY0OzZ9B+\nSYC0S1V3qGfP6pCw/fet27SStFT8x5aFUwYhV1IJyiif1se3u/INZy/+PcTcdIZS\ndJeGnn8DXysaQGXsrv2AbFeUxXVGLqWEkenEp0b9C6nhGlmH/NPeIcCkc9cSMYZI\npMDqI+OCFHO/iWoeE6LQPibIdek4oMzLsonU4QY52JOz2DDgScS9VWNfNyvG3V5C\nhmEDA0MI+uk1tjrwVqFTK5RDYay8WTOI78yKq/qfdKe7DTJiwIsAHX5NgO8AIUYu\nm2SZH00iKEBt7RB5TMLhIjUQR0aFABaL+8xz7n4zOscVIlzZsAQthcWQAiG+1n5z\nFJ9KExzLzMsOmJ66yq86o/raobpH8q2wH+v/T/bSxgMGC0Epcd4O5Qj0n6bDKYst\nNWE2FuAlBb7YQfXS80vuunu+PjhCP9WoKEufYRq+GZJUwJA6kuf2qm5qzya1UJxt\n6zLk/HKwXje3LD00TBBwQIIxUQg0SK6oUi9vuVEZ+vw+EvTUxUHpGlRGYo5NICBd\nL5H7hDdNcTpWxiAcJJg3A+cr5ZOm28n3oLd2ptxLpEA6fiEKnYOXxG/UOlSaDAia\nkqNotghqk/70yDOujNby\n=LwZw\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 6c4f59e18a2c12949d27f69511d1cd0921782a51\nparent 931b2daf6fa656545629ac41e016ef763cfc1dd4\nparent f08b9837f92d6c6f576a66bb3ffc6526705af2b7\nauthor Julien <291750+roidelapluie@users.noreply.github.com> 1776080348 +0200\ncommitter GitHub <noreply@github.com> 1776080348 +0200\n\nMerge pull request #18517 from roidelapluie/roidelapluie/cut-3.11.2\n\nRelease 3.11.2",
+        "verified_at": "2026-04-13T11:39:08Z"
+      }
+    },
+    "url": "https://api.github.com/repos/prometheus/prometheus/commits/f0f0fdd679dcd6df320b0558b20919f7cd44c407",
+    "html_url": "https://github.com/prometheus/prometheus/commit/f0f0fdd679dcd6df320b0558b20919f7cd44c407",
+    "comments_url": "https://api.github.com/repos/prometheus/prometheus/commits/f0f0fdd679dcd6df320b0558b20919f7cd44c407/comments",
+    "author": {
+      "login": "roidelapluie",
+      "id": 291750,
+      "node_id": "MDQ6VXNlcjI5MTc1MA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/291750?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/roidelapluie",
+      "html_url": "https://github.com/roidelapluie",
+      "followers_url": "https://api.github.com/users/roidelapluie/followers",
+      "following_url": "https://api.github.com/users/roidelapluie/following{/other_user}",
+      "gists_url": "https://api.github.com/users/roidelapluie/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/roidelapluie/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/roidelapluie/subscriptions",
+      "organizations_url": "https://api.github.com/users/roidelapluie/orgs",
+      "repos_url": "https://api.github.com/users/roidelapluie/repos",
+      "events_url": "https://api.github.com/users/roidelapluie/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/roidelapluie/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "931b2daf6fa656545629ac41e016ef763cfc1dd4",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/931b2daf6fa656545629ac41e016ef763cfc1dd4",
+        "html_url": "https://github.com/prometheus/prometheus/commit/931b2daf6fa656545629ac41e016ef763cfc1dd4"
+      },
+      {
+        "sha": "f08b9837f92d6c6f576a66bb3ffc6526705af2b7",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/f08b9837f92d6c6f576a66bb3ffc6526705af2b7",
+        "html_url": "https://github.com/prometheus/prometheus/commit/f08b9837f92d6c6f576a66bb3ffc6526705af2b7"
+      }
+    ]
+  }
+]

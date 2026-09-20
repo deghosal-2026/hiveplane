@@ -1,0 +1,1724 @@
+[
+  {
+    "sha": "fc8edc472237049855fc9d7be51fc23a34cd8d5b",
+    "node_id": "C_kwDOBC3CitoAKGZjOGVkYzQ3MjIzNzA0OTg1NWZjOWQ3YmU1MWZjMjNhMzRjZDhkNWI",
+    "commit": {
+      "author": {
+        "name": "Benjamin Woodruff",
+        "email": "benjamin.woodruff@vercel.com",
+        "date": "2026-06-09T17:15:47Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-09T17:15:47Z"
+      },
+      "message": "[ci] Remove dead playwright docker image creation logic (#94576)\n\nWe reverted the use of this docker image in\nhttps://github.com/vercel/next.js/pull/94366\n\nWe're going to use GitHub actions custom runner images instead (which\ndon't use docker)",
+      "tree": {
+        "sha": "bb4373bea8b3428483ef170285d6f163906d2a8f",
+        "url": "https://api.github.com/repos/vercel/next.js/git/trees/bb4373bea8b3428483ef170285d6f163906d2a8f"
+      },
+      "url": "https://api.github.com/repos/vercel/next.js/git/commits/fc8edc472237049855fc9d7be51fc23a34cd8d5b",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqKEpDCRC1aQ7uu5UhlAAAWUUQAGpedrP4E1S0w3D6mtFiPyfv\nzKdFAXjKgw7ZGXuHiozP3GX+z+dLM1ExP/AoQKhN7S9kjsy+cMpka/gLsp6pvG6p\nN7v7GmVes8SbwhHHKMWC2VZWMaVtAQ5wMkEGHOwWJzqND3WkYXECLjSAamENChTv\nTcnJnIFntl7THD/XOyQXp3s6gR+8zzaGG6uiiur2pykNiVBkv+fm0280N/M5aPG+\nBcI+VavnCH9cC9sBr1KPyI18zXSTqf5FnI/HoP0nceCXB8IriCN4I9QLyaOoCHgC\n749oP8juP2yA3VKz5VxHhYsi+pvo4xGU4S+IDVWe5Uhf+WnnPZ7jcFMd/1XvQ5/d\nv/UQTplv9Cc+WmJJ63433zvRIY1v/jFg8AY158W4iKZZ3Kqahlu4hFHkUQYfwXep\nyVF9GvJ8yuD8gXZmM9wJ0gAn85g4rDJGGtfz5CjqrQGdfEaHpxZ46ljkquCIp0jp\ntaIzHpIbPI8Lfy9njwQ4GwOYyN83rJ2l4/trgVlK/aViB4CA8H/WnuXspDRHY+HF\nl1ZpPeHTF0ln8XAZY5X3Cey/WSbJxDt4hAHwcHcVqaDr+87JSC6qQ+WykopWPdl1\nhPmCkkENqx0ET0/wcTaZFpkbOXkpnBZeE1+vWFzTAOjoTbKWLlbzoZ8TJ1xPMvty\nChPJ8Zw/Ng1pFSnlRa/O\n=gFXm\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree bb4373bea8b3428483ef170285d6f163906d2a8f\nparent a1c695a8782d68303059daef237f0d36729a29eb\nauthor Benjamin Woodruff <benjamin.woodruff@vercel.com> 1781025347 -0700\ncommitter GitHub <noreply@github.com> 1781025347 -0700\n\n[ci] Remove dead playwright docker image creation logic (#94576)\n\nWe reverted the use of this docker image in\nhttps://github.com/vercel/next.js/pull/94366\n\nWe're going to use GitHub actions custom runner images instead (which\ndon't use docker)",
+        "verified_at": "2026-06-09T17:15:47Z"
+      }
+    },
+    "url": "https://api.github.com/repos/vercel/next.js/commits/fc8edc472237049855fc9d7be51fc23a34cd8d5b",
+    "html_url": "https://github.com/vercel/next.js/commit/fc8edc472237049855fc9d7be51fc23a34cd8d5b",
+    "comments_url": "https://api.github.com/repos/vercel/next.js/commits/fc8edc472237049855fc9d7be51fc23a34cd8d5b/comments",
+    "author": {
+      "login": "bgw",
+      "id": 180404,
+      "node_id": "MDQ6VXNlcjE4MDQwNA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/180404?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/bgw",
+      "html_url": "https://github.com/bgw",
+      "followers_url": "https://api.github.com/users/bgw/followers",
+      "following_url": "https://api.github.com/users/bgw/following{/other_user}",
+      "gists_url": "https://api.github.com/users/bgw/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/bgw/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/bgw/subscriptions",
+      "organizations_url": "https://api.github.com/users/bgw/orgs",
+      "repos_url": "https://api.github.com/users/bgw/repos",
+      "events_url": "https://api.github.com/users/bgw/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/bgw/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "a1c695a8782d68303059daef237f0d36729a29eb",
+        "url": "https://api.github.com/repos/vercel/next.js/commits/a1c695a8782d68303059daef237f0d36729a29eb",
+        "html_url": "https://github.com/vercel/next.js/commit/a1c695a8782d68303059daef237f0d36729a29eb"
+      }
+    ]
+  },
+  {
+    "sha": "9af81ed9a1a9772c68c4f8bf2d81f83d17ac6a49",
+    "node_id": "C_kwDOBC3CitoAKDlhZjgxZWQ5YTFhOTc3MmM2OGM0ZjhiZjJkODFmODNkMTdhYzZhNDk",
+    "commit": {
+      "author": {
+        "name": "Sebastian \"Sebbie\" Silbermann",
+        "email": "sebastian.silbermann@vercel.com",
+        "date": "2026-06-09T17:25:17Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-09T17:25:17Z"
+      },
+      "message": "[cd] Ensure release can be triggered on old branches (#94596)",
+      "tree": {
+        "sha": "31b682c4c5001e0ed5fba3e49627db574830cafd",
+        "url": "https://api.github.com/repos/vercel/next.js/git/trees/31b682c4c5001e0ed5fba3e49627db574830cafd"
+      },
+      "url": "https://api.github.com/repos/vercel/next.js/git/commits/9af81ed9a1a9772c68c4f8bf2d81f83d17ac6a49",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqKEx9CRC1aQ7uu5UhlAAAntwQAINY62y6NjombcVbVYhMkUQ5\nBbtoXrQmWfFuVXVG4FOL7K/VATNTMqMSqExi2eeLpdC0PjXmBLJLbsBeSyLoO5nq\nvVBfc6tgA7LZ1m3kEHYR9Nnd+zbha2m5uww6OuCXP5w+wrdGwH6anmnK5VP8WpQA\nVmWb9q2IsK815JyNdSPkLOhR5QljWrgNfvYzZyQtTFqcxCX17GT4du+/E1Eie36V\n2B34p3B0B4++f0laE42kHawd5G8Setfj1/nE1bigco3SS+lgp/kQhtOl3I43iCQ9\nBywxUp/RTIoI/U/kUVMcaa73+iptOG1JU9TK+pMrZp+qr3sZGKs4j/onkkd4nhfC\n8JcYkrGrxN0DPloegivTV7cWvEl5l0l0gmVMUJ9n2CUc4Nfj3k/qYZXR4LNmMH0e\nZP0/WAlq68bsl1F04xssTIMgJfeKCTlLl/NcJXSr3AKPu02rjJMbKgF8GqMU3Tqn\nW0TYbyLKgeYHDQHcpEpqBajYx6icfJdSV0tjyo5Huirsrakw3MAX/SF5DJHVgDY4\nel7qYj0Jwa/rfAZD2cTes4EWG8ELIW+m7TTsDqgTbzWoejLp3874WMYPs/UxgyQB\nj8/kzeIu5HYpzJryAu/h+BHnYA30vT2yhMDZsd88+WjS+zHYJWxrvhFlkfhzVZGL\nUuaQXaDvKjPcWJBM/WfM\n=JGaI\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 31b682c4c5001e0ed5fba3e49627db574830cafd\nparent fc8edc472237049855fc9d7be51fc23a34cd8d5b\nauthor Sebastian \"Sebbie\" Silbermann <sebastian.silbermann@vercel.com> 1781025917 +0200\ncommitter GitHub <noreply@github.com> 1781025917 -0700\n\n[cd] Ensure release can be triggered on old branches (#94596)",
+        "verified_at": "2026-06-09T17:25:17Z"
+      }
+    },
+    "url": "https://api.github.com/repos/vercel/next.js/commits/9af81ed9a1a9772c68c4f8bf2d81f83d17ac6a49",
+    "html_url": "https://github.com/vercel/next.js/commit/9af81ed9a1a9772c68c4f8bf2d81f83d17ac6a49",
+    "comments_url": "https://api.github.com/repos/vercel/next.js/commits/9af81ed9a1a9772c68c4f8bf2d81f83d17ac6a49/comments",
+    "author": {
+      "login": "eps1lon",
+      "id": 12292047,
+      "node_id": "MDQ6VXNlcjEyMjkyMDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/12292047?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/eps1lon",
+      "html_url": "https://github.com/eps1lon",
+      "followers_url": "https://api.github.com/users/eps1lon/followers",
+      "following_url": "https://api.github.com/users/eps1lon/following{/other_user}",
+      "gists_url": "https://api.github.com/users/eps1lon/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/eps1lon/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/eps1lon/subscriptions",
+      "organizations_url": "https://api.github.com/users/eps1lon/orgs",
+      "repos_url": "https://api.github.com/users/eps1lon/repos",
+      "events_url": "https://api.github.com/users/eps1lon/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/eps1lon/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "fc8edc472237049855fc9d7be51fc23a34cd8d5b",
+        "url": "https://api.github.com/repos/vercel/next.js/commits/fc8edc472237049855fc9d7be51fc23a34cd8d5b",
+        "html_url": "https://github.com/vercel/next.js/commit/fc8edc472237049855fc9d7be51fc23a34cd8d5b"
+      }
+    ]
+  },
+  {
+    "sha": "f76af5ca6e239d81e277dc32564fd0bea1a53159",
+    "node_id": "C_kwDOBC3CitoAKGY3NmFmNWNhNmUyMzlkODFlMjc3ZGMzMjU2NGZkMGJlYTFhNTMxNTk",
+    "commit": {
+      "author": {
+        "name": "Andrew Clark",
+        "email": "git@andrewclark.io",
+        "date": "2026-06-09T17:37:59Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-09T17:37:59Z"
+      },
+      "message": "Make router-act ignore App Shell prefetch requests (#94580)\n\nWhen App Shells is enabled, prefetching is split into two phases: a\nprefetch for the shell, and a separate phase for the per-page content.\n\nThis would cause a handful of the existing prefetch-related tests to\nfail once App Shells is turned on. However, the fact that the shell is\nprefetched separately from the page content is an incidental detail of\nhow prefetching works. The App Shell is conceptually part of the route,\nnot part of the \"prefetch\". Or in other words, App Shell prefetching has\nmore in common with incremental module loading than it does with\nprefetching in the traditional sense used in the context of web apps.\n\nSo, this updates router-act to ignore App Shell requests for the\npurposes of making assertions about prefetch responses. They're still\ncaptured, fulfilled, and awaited \u2014 they just don't participate in the\nmatching logic. Tests that specifically assert on App Shell behavior can\nopt back in with `createRouterAct(page, { includeAppShellRequests: true\n})`.\n\nThis is groundwork for the next PR, which enables App Shells by default.\nWith these requests ignored, most prefetch tests pass unchanged\nregardless of whether App Shells is on.\n\n<!-- NEXT_JS_LLM_PR -->",
+      "tree": {
+        "sha": "de91e42e8146891be9f42735724586e779263cae",
+        "url": "https://api.github.com/repos/vercel/next.js/git/trees/de91e42e8146891be9f42735724586e779263cae"
+      },
+      "url": "https://api.github.com/repos/vercel/next.js/git/commits/f76af5ca6e239d81e277dc32564fd0bea1a53159",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqKE93CRC1aQ7uu5UhlAAAJEMQAGC1/dnhrWDqc8F/bphalsl2\nByAGrmqEvjAkY8GIcSG3J7zGgMqMNctvZkbSl1rosYPjwCezOvdjmZIATq2sILS7\nDsbKORiTdu182FqTasqlqMAtotG2d6MKqAivu35lwgHRpRlmMXo8oHR3mIgV9eHf\nll9UqjFFOmy/LD/gZylY7Xm336eLTn/HY2M6aV7GorjVj0qhdrt4IIlXwla52JNo\nHfbqe4kyPcJWk/KD3J2hOl+FbWXboyp+0BD2hKCGsfABZXZYrJWx4/EUrMEtjYZe\nJ93iRzGZHAKEG4VfPMLnPbmurEsozqOhzybCpHDtrkjHkHY9U8FOcE6PUf649hz1\nxXPoMYmohYEx7aOOvRRFgC5GC23a6Xn22iRPvZGAQc1gPtmefeLbKWJRV3q9pcwW\nrcpSTVtgeUi8q0el5jNrXpf3DRPa7i5FENxF+YB+Ma5mUtR/vebB0q7L7WA1f4Q6\nhL/7V92k1wEoKI1aLIxbbohtnmz1gBK16HMtwMmZZJqbfpSW8OATXZeEeXAWU1Pj\n5MwgtJ5z7PwyepRmmxM7uM3J/UYBAYeGEaMnOkUjs9jx22QN9x5+amMCG5hK95BX\n0IjzNgNEQJv3a5/t2aqe7nSA7M5lJbwJvbcRK2zg3ZpiQu5cuN9Emm3F+uI4I04K\nOBonAmU9pMPoK+Y6iYKW\n=C9EK\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree de91e42e8146891be9f42735724586e779263cae\nparent 9af81ed9a1a9772c68c4f8bf2d81f83d17ac6a49\nauthor Andrew Clark <git@andrewclark.io> 1781026679 -0700\ncommitter GitHub <noreply@github.com> 1781026679 -0700\n\nMake router-act ignore App Shell prefetch requests (#94580)\n\nWhen App Shells is enabled, prefetching is split into two phases: a\nprefetch for the shell, and a separate phase for the per-page content.\n\nThis would cause a handful of the existing prefetch-related tests to\nfail once App Shells is turned on. However, the fact that the shell is\nprefetched separately from the page content is an incidental detail of\nhow prefetching works. The App Shell is conceptually part of the route,\nnot part of the \"prefetch\". Or in other words, App Shell prefetching has\nmore in common with incremental module loading than it does with\nprefetching in the traditional sense used in the context of web apps.\n\nSo, this updates router-act to ignore App Shell requests for the\npurposes of making assertions about prefetch responses. They're still\ncaptured, fulfilled, and awaited \u2014 they just don't participate in the\nmatching logic. Tests that specifically assert on App Shell behavior can\nopt back in with `createRouterAct(page, { includeAppShellRequests: true\n})`.\n\nThis is groundwork for the next PR, which enables App Shells by default.\nWith these requests ignored, most prefetch tests pass unchanged\nregardless of whether App Shells is on.\n\n<!-- NEXT_JS_LLM_PR -->",
+        "verified_at": "2026-06-09T17:38:00Z"
+      }
+    },
+    "url": "https://api.github.com/repos/vercel/next.js/commits/f76af5ca6e239d81e277dc32564fd0bea1a53159",
+    "html_url": "https://github.com/vercel/next.js/commit/f76af5ca6e239d81e277dc32564fd0bea1a53159",
+    "comments_url": "https://api.github.com/repos/vercel/next.js/commits/f76af5ca6e239d81e277dc32564fd0bea1a53159/comments",
+    "author": {
+      "login": "acdlite",
+      "id": 3624098,
+      "node_id": "MDQ6VXNlcjM2MjQwOTg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3624098?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/acdlite",
+      "html_url": "https://github.com/acdlite",
+      "followers_url": "https://api.github.com/users/acdlite/followers",
+      "following_url": "https://api.github.com/users/acdlite/following{/other_user}",
+      "gists_url": "https://api.github.com/users/acdlite/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/acdlite/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/acdlite/subscriptions",
+      "organizations_url": "https://api.github.com/users/acdlite/orgs",
+      "repos_url": "https://api.github.com/users/acdlite/repos",
+      "events_url": "https://api.github.com/users/acdlite/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/acdlite/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "9af81ed9a1a9772c68c4f8bf2d81f83d17ac6a49",
+        "url": "https://api.github.com/repos/vercel/next.js/commits/9af81ed9a1a9772c68c4f8bf2d81f83d17ac6a49",
+        "html_url": "https://github.com/vercel/next.js/commit/9af81ed9a1a9772c68c4f8bf2d81f83d17ac6a49"
+      }
+    ]
+  },
+  {
+    "sha": "7b6f95367aa3991da0fa9451503a2eb76d1bd90c",
+    "node_id": "C_kwDOBC3CitoAKDdiNmY5NTM2N2FhMzk5MWRhMGZhOTQ1MTUwM2EyZWI3NmQxYmQ5MGM",
+    "commit": {
+      "author": {
+        "name": "Andrew Clark",
+        "email": "git@andrewclark.io",
+        "date": "2026-06-09T17:38:00Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-09T17:38:00Z"
+      },
+      "message": "Enable experimental.appShells by default with cacheComponents (#94516)\n\nTurns on `experimental.appShells` by default for projects already on\n`cacheComponents`, unless explicitly disabled.\n\nThanks to the preceding router-act change, most prefetch tests pass\nunchanged once App Shells is enabled. A few tests are genuinely coupled\nto the non-App-Shells behavior \u2014 they assert on per-link or runtime\nprefetch responses that App Shells instead defers to navigation \u2014 so the\nfixtures for those tests set `appShells` back to `false`. I'll address\nthose in follow-ups.\n\n<!-- NEXT_JS_LLM_PR -->",
+      "tree": {
+        "sha": "f614dafafe4c879c9ba4063f0da4c9f9a1239a9a",
+        "url": "https://api.github.com/repos/vercel/next.js/git/trees/f614dafafe4c879c9ba4063f0da4c9f9a1239a9a"
+      },
+      "url": "https://api.github.com/repos/vercel/next.js/git/commits/7b6f95367aa3991da0fa9451503a2eb76d1bd90c",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqKE94CRC1aQ7uu5UhlAAApPgQAExkoJAs0swXCbsbgfcDp3QX\nYbAx2TMBm4GvdcGSZQ68h5TDrZ5nv7Lo/FdD86ZW977FBCAPdrHTbxkl7yut1hUl\n5FAjDfrrWnrsHYYYlSB3x3+4jqH0kfPpAorEcR43lvi7opsjzK8vfhds35LSREz7\n+RTErrcvLyl+db2TZIoRR/GRnYBDF2aVoTP/dWrkLLhQ6NmOnmFziFtAQj1R+G6e\nAKeTo8r8MOTMDTzx0PCaPjYhMPiJqNOeuKAftID/gyOv9va9tXLe5I6HpIoVpU21\n6IhU20GdP/32eeU7yI6bSkQrYSYUWWW1K3s1E5cVV6GWqFCCEXLzkIzZCBA4cARs\n5PCkGcAyMtcRsnQ5e/uFArhZwVl92UYy5zMuIdw10UcB6A8fYva+dqd9mgLOpuB7\nZJUAXoevnGwJ5SU7LCl2z51SOG5RQMtaIi4guc92aFQs4B/d7Et/ZxCxq24gpz2b\nem4zTJPjxX7RGUrMzCqEXJRgS5+VEGKYZtIwt9L5pIuYB5ceISl/wm/gApE4KyRA\nPxJzyvec4RgTJMIzEVuZ+hbNf6Mam+TtKw9r8ehQxo4jamHlLz7jcB4ZnZT5X/5n\nMi65YHkvY4ZxQfBbnQI21JBnk/OFTVIo1izQXvSj7tdKFJJlZIJE80Rdx5s2vP6y\nu3waq2ZAQU75nK+5EvGh\n=4eqp\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree f614dafafe4c879c9ba4063f0da4c9f9a1239a9a\nparent f76af5ca6e239d81e277dc32564fd0bea1a53159\nauthor Andrew Clark <git@andrewclark.io> 1781026680 -0700\ncommitter GitHub <noreply@github.com> 1781026680 -0700\n\nEnable experimental.appShells by default with cacheComponents (#94516)\n\nTurns on `experimental.appShells` by default for projects already on\n`cacheComponents`, unless explicitly disabled.\n\nThanks to the preceding router-act change, most prefetch tests pass\nunchanged once App Shells is enabled. A few tests are genuinely coupled\nto the non-App-Shells behavior \u2014 they assert on per-link or runtime\nprefetch responses that App Shells instead defers to navigation \u2014 so the\nfixtures for those tests set `appShells` back to `false`. I'll address\nthose in follow-ups.\n\n<!-- NEXT_JS_LLM_PR -->",
+        "verified_at": "2026-06-09T17:38:00Z"
+      }
+    },
+    "url": "https://api.github.com/repos/vercel/next.js/commits/7b6f95367aa3991da0fa9451503a2eb76d1bd90c",
+    "html_url": "https://github.com/vercel/next.js/commit/7b6f95367aa3991da0fa9451503a2eb76d1bd90c",
+    "comments_url": "https://api.github.com/repos/vercel/next.js/commits/7b6f95367aa3991da0fa9451503a2eb76d1bd90c/comments",
+    "author": {
+      "login": "acdlite",
+      "id": 3624098,
+      "node_id": "MDQ6VXNlcjM2MjQwOTg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3624098?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/acdlite",
+      "html_url": "https://github.com/acdlite",
+      "followers_url": "https://api.github.com/users/acdlite/followers",
+      "following_url": "https://api.github.com/users/acdlite/following{/other_user}",
+      "gists_url": "https://api.github.com/users/acdlite/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/acdlite/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/acdlite/subscriptions",
+      "organizations_url": "https://api.github.com/users/acdlite/orgs",
+      "repos_url": "https://api.github.com/users/acdlite/repos",
+      "events_url": "https://api.github.com/users/acdlite/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/acdlite/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "f76af5ca6e239d81e277dc32564fd0bea1a53159",
+        "url": "https://api.github.com/repos/vercel/next.js/commits/f76af5ca6e239d81e277dc32564fd0bea1a53159",
+        "html_url": "https://github.com/vercel/next.js/commit/f76af5ca6e239d81e277dc32564fd0bea1a53159"
+      }
+    ]
+  },
+  {
+    "sha": "de1fdd496a882b9e90702c87fa2f1b3aebea7150",
+    "node_id": "C_kwDOBC3CitoAKGRlMWZkZDQ5NmE4ODJiOWU5MDcwMmM4N2ZhMmYxYjNhZWJlYTcxNTA",
+    "commit": {
+      "author": {
+        "name": "Luke Sandberg",
+        "email": "lukesandberg@users.noreply.github.com",
+        "date": "2026-06-09T18:10:55Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-09T18:10:55Z"
+      },
+      "message": "[turbopack] Lazily allocate the BlockCaches (#94562)\n\nWhen launching turbopack with persistence enabled but an empty disk\ncache, we eagerly allocate some large `quick_cache` caches to accelerate\nreads.\n\nDefer this to better support the empty case which is relatively common.",
+      "tree": {
+        "sha": "18a92fd988666bd41a2b959899e9a86329682d32",
+        "url": "https://api.github.com/repos/vercel/next.js/git/trees/18a92fd988666bd41a2b959899e9a86329682d32"
+      },
+      "url": "https://api.github.com/repos/vercel/next.js/git/commits/de1fdd496a882b9e90702c87fa2f1b3aebea7150",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqKFcvCRC1aQ7uu5UhlAAAGLoQAAiRjueO2FyTrmf6oMap2w38\noDwiIJowhDHA0iAPsbn/VaomFDZHF0EOMU4M47VXzqkEEXe4GvSLsl++uigTp8Ga\nskcXdgHJuO9q2wXbVqj+x62fWzbvW7VR+PfCnp6fyn7BCF6yAV+wUqHzp36oi2Wh\n8Ya0UtY+twCk4eyT1+2jhIlt3qJiQxPrVN23+TcQHzdgceYNUBQaJR09Rpna0hva\naU4msXdGmKYzsWhP22PdFmHbad6GTN3+AUYdc9BAT7SyCLqUm+eNupfG4n6EM87i\nXDiz8guNv6CmgI24Y9/24YCi3ffd/Mfi0r8+zL/5smWI67Gk7RYlYqSeZxL2dv8l\nhpTjZFNF24F8Yv+QoQRWJeAprwlX69eRASNchyV5+bnW+Qa52xl4JqvGpLxXXUiY\nqm4/oLiX92Jx1LZt690Q9PMhJ607hJnLVVkKPuOO5GG1dUJOeLSAcVrQv25PM0MF\nlZVQsumzIcuPxcrdRAROhzGt/tLhbkAxHOSTH/pZgP6OY491jbzngnx55Y6qJYYU\n1EEYL+AJJ2eHNWBOiKPFt257cFHEZISfdpeTHoPkT8t6xouwZWUYZ8bWEEOzadA6\nIvo5O3Lwvp4ZhC/LlRiFqkQp4GYJOimF+Pw40hpFS09dA7cBmC9dTLrpcj/cC3ap\n6gu1Ty/jLMrhpBkWaaSh\n=cU6v\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 18a92fd988666bd41a2b959899e9a86329682d32\nparent 7b6f95367aa3991da0fa9451503a2eb76d1bd90c\nauthor Luke Sandberg <lukesandberg@users.noreply.github.com> 1781028655 -0700\ncommitter GitHub <noreply@github.com> 1781028655 +0200\n\n[turbopack] Lazily allocate the BlockCaches (#94562)\n\nWhen launching turbopack with persistence enabled but an empty disk\ncache, we eagerly allocate some large `quick_cache` caches to accelerate\nreads.\n\nDefer this to better support the empty case which is relatively common.",
+        "verified_at": "2026-06-09T18:10:56Z"
+      }
+    },
+    "url": "https://api.github.com/repos/vercel/next.js/commits/de1fdd496a882b9e90702c87fa2f1b3aebea7150",
+    "html_url": "https://github.com/vercel/next.js/commit/de1fdd496a882b9e90702c87fa2f1b3aebea7150",
+    "comments_url": "https://api.github.com/repos/vercel/next.js/commits/de1fdd496a882b9e90702c87fa2f1b3aebea7150/comments",
+    "author": {
+      "login": "lukesandberg",
+      "id": 210140,
+      "node_id": "MDQ6VXNlcjIxMDE0MA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/210140?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lukesandberg",
+      "html_url": "https://github.com/lukesandberg",
+      "followers_url": "https://api.github.com/users/lukesandberg/followers",
+      "following_url": "https://api.github.com/users/lukesandberg/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lukesandberg/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lukesandberg/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lukesandberg/subscriptions",
+      "organizations_url": "https://api.github.com/users/lukesandberg/orgs",
+      "repos_url": "https://api.github.com/users/lukesandberg/repos",
+      "events_url": "https://api.github.com/users/lukesandberg/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lukesandberg/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "7b6f95367aa3991da0fa9451503a2eb76d1bd90c",
+        "url": "https://api.github.com/repos/vercel/next.js/commits/7b6f95367aa3991da0fa9451503a2eb76d1bd90c",
+        "html_url": "https://github.com/vercel/next.js/commit/7b6f95367aa3991da0fa9451503a2eb76d1bd90c"
+      }
+    ]
+  },
+  {
+    "sha": "6b3936a3329486cc3c126d8cb7701f95517adbc0",
+    "node_id": "C_kwDOBC3CitoAKDZiMzkzNmEzMzI5NDg2Y2MzYzEyNmQ4Y2I3NzAxZjk1NTE3YWRiYzA",
+    "commit": {
+      "author": {
+        "name": "Jiwon Choi",
+        "email": "devjiwonchoi@gmail.com",
+        "date": "2026-06-09T19:05:02Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-09T19:05:02Z"
+      },
+      "message": "Stabilize catchError and retry by removing unstable_ prefix (#94610)\n\n### What?\n\nPromotes two experimental error-handling APIs to stable by dropping the\n`unstable_` prefix:\n\n- `unstable_catchError` \u2192 `catchError` (exported from `next/error`)\n- `unstable_retry` \u2192 `retry` (the prop Next.js injects into `error.js` /\n`global-error.js` boundaries and `catchError` fallbacks)\n\n### Why?\n\nBoth were introduced as `unstable_` in `v16.2.0` and are now stable as\nof `v16.3.0`. The experimental prefix should be removed from the stable\nsurface.\n\n### How?\n\n- Renamed the `next/error` export (`error.d.ts`, `error.js`,\n`src/api/error.ts`, `src/api/error.react-server.ts`) and the\nimplementation in `client/components/catch-error.tsx`.\n- Renamed the framework-injected `retry` prop across\n`error-boundary.tsx`, `builtin/global-error.tsx`, the dev-overlay error\nboundary, and the `ErrorInfo` type.\n- Updated the RSC client-only export list in the SWC transform\n(`react_server_components.rs`) so importing `catchError` in a Server\nComponent still produces the \"only available in Client Components\"\nerror.\n- Updated the thrown error messages and their `errors.json` entries\n(codes 1138/1139), the TypeScript-plugin serialization-exemption rule,\nall affected tests, the rspack test manifests, and the docs.\n- Docs version-history tables keep the historical `unstable_` rows and\nadd a `v16.3.0` row noting the rename to stable.\n\nThis is a clean rename with **no** backward-compatible `unstable_`\nalias.\n\n### Verification\n\n- Passed: pre-commit hooks (`prettier`, `eslint --fix`, `rustfmt`) on\nall 35 changed files.\n- Passed: repo-wide grep confirms no remaining `unstable_catchError` /\n`unstable_retry` outside the intended historical version-history rows.\n- In progress locally (covered by CI): `pnpm build-all` (native SWC\nstill compiling on a fresh worktree), then `pnpm --filter=next types`\nand the targeted e2e suites (`app-dir/catch-error`, `app-dir/errors`,\n`rsc-build-errors`, typescript-plugin `client-boundary`).\n\n<!-- NEXT_JS_LLM_PR -->",
+      "tree": {
+        "sha": "ab60edad8132f72f417f315b4e45d9517ab280e8",
+        "url": "https://api.github.com/repos/vercel/next.js/git/trees/ab60edad8132f72f417f315b4e45d9517ab280e8"
+      },
+      "url": "https://api.github.com/repos/vercel/next.js/git/commits/6b3936a3329486cc3c126d8cb7701f95517adbc0",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqKGPeCRC1aQ7uu5UhlAAAvAoQADLnBisi1okJpIRHyy5TG5nN\nR2eEXW/Q29wLqwlkysJVcFtUgpbEHQsmb4CZZnJ68g9vySnnn7uL995dhYnt3g07\ncn599WVAhEJwF/UqqbjVDou6P0uIa1ZrV186ty7Eahv7wi3S2W8wP1gIVgrbgnpr\nZieStV+mjkxDlkw6aJ3GcGjHS896Y63kqFIR/KFLd60cu0rNGqUfHGtHcmVjxE35\nnro517aLU0ISTEznTLgiRZ68A6BDPbTJ6sjCiP3BMeipAEm5v0Y8Swg/kDdagxOV\nZziauzVVcAXuzIwrWfwYlrDP5PUu6vWi08XxXiNXi3eFqQeruPJHvDM+GxmR5nxN\ncDMYO0teTAztR4qbGg+82Wn5nnUhe55YE+3QCMa7KJqVpV6P1PwGvL7mePk0apWn\nZUeZH2R40RCPJpxR+ndNNireguaTLCQ3cHR0X9fgl6LfbZXew5k8+Kbo+dZ6ZPZD\nka4xeYu4j1iNyY47cZAzsyMMcKxKnW1GBDQWKnaf2t1WmK/1Un9f07aX+8j2tSSi\nHq49LvWDp/dA90VdnXHP8M8iO6qoyX+255zCDY7/91D2M/iqpSIhOkW1KO2Y3jhI\nm/qECZKa/Dn+XYHu2CsfKApbfOj6yugSwpAzznwZlEl3fl+9gPFletoC0OWPBY08\nBDPsrxVzN0KSu3MhonDU\n=CJFI\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree ab60edad8132f72f417f315b4e45d9517ab280e8\nparent de1fdd496a882b9e90702c87fa2f1b3aebea7150\nauthor Jiwon Choi <devjiwonchoi@gmail.com> 1781031902 +0200\ncommitter GitHub <noreply@github.com> 1781031902 +0200\n\nStabilize catchError and retry by removing unstable_ prefix (#94610)\n\n### What?\n\nPromotes two experimental error-handling APIs to stable by dropping the\n`unstable_` prefix:\n\n- `unstable_catchError` \u2192 `catchError` (exported from `next/error`)\n- `unstable_retry` \u2192 `retry` (the prop Next.js injects into `error.js` /\n`global-error.js` boundaries and `catchError` fallbacks)\n\n### Why?\n\nBoth were introduced as `unstable_` in `v16.2.0` and are now stable as\nof `v16.3.0`. The experimental prefix should be removed from the stable\nsurface.\n\n### How?\n\n- Renamed the `next/error` export (`error.d.ts`, `error.js`,\n`src/api/error.ts`, `src/api/error.react-server.ts`) and the\nimplementation in `client/components/catch-error.tsx`.\n- Renamed the framework-injected `retry` prop across\n`error-boundary.tsx`, `builtin/global-error.tsx`, the dev-overlay error\nboundary, and the `ErrorInfo` type.\n- Updated the RSC client-only export list in the SWC transform\n(`react_server_components.rs`) so importing `catchError` in a Server\nComponent still produces the \"only available in Client Components\"\nerror.\n- Updated the thrown error messages and their `errors.json` entries\n(codes 1138/1139), the TypeScript-plugin serialization-exemption rule,\nall affected tests, the rspack test manifests, and the docs.\n- Docs version-history tables keep the historical `unstable_` rows and\nadd a `v16.3.0` row noting the rename to stable.\n\nThis is a clean rename with **no** backward-compatible `unstable_`\nalias.\n\n### Verification\n\n- Passed: pre-commit hooks (`prettier`, `eslint --fix`, `rustfmt`) on\nall 35 changed files.\n- Passed: repo-wide grep confirms no remaining `unstable_catchError` /\n`unstable_retry` outside the intended historical version-history rows.\n- In progress locally (covered by CI): `pnpm build-all` (native SWC\nstill compiling on a fresh worktree), then `pnpm --filter=next types`\nand the targeted e2e suites (`app-dir/catch-error`, `app-dir/errors`,\n`rsc-build-errors`, typescript-plugin `client-boundary`).\n\n<!-- NEXT_JS_LLM_PR -->",
+        "verified_at": "2026-06-09T19:05:03Z"
+      }
+    },
+    "url": "https://api.github.com/repos/vercel/next.js/commits/6b3936a3329486cc3c126d8cb7701f95517adbc0",
+    "html_url": "https://github.com/vercel/next.js/commit/6b3936a3329486cc3c126d8cb7701f95517adbc0",
+    "comments_url": "https://api.github.com/repos/vercel/next.js/commits/6b3936a3329486cc3c126d8cb7701f95517adbc0/comments",
+    "author": {
+      "login": "devjiwonchoi",
+      "id": 120007119,
+      "node_id": "U_kgDOBycpzw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/120007119?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/devjiwonchoi",
+      "html_url": "https://github.com/devjiwonchoi",
+      "followers_url": "https://api.github.com/users/devjiwonchoi/followers",
+      "following_url": "https://api.github.com/users/devjiwonchoi/following{/other_user}",
+      "gists_url": "https://api.github.com/users/devjiwonchoi/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/devjiwonchoi/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/devjiwonchoi/subscriptions",
+      "organizations_url": "https://api.github.com/users/devjiwonchoi/orgs",
+      "repos_url": "https://api.github.com/users/devjiwonchoi/repos",
+      "events_url": "https://api.github.com/users/devjiwonchoi/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/devjiwonchoi/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "de1fdd496a882b9e90702c87fa2f1b3aebea7150",
+        "url": "https://api.github.com/repos/vercel/next.js/commits/de1fdd496a882b9e90702c87fa2f1b3aebea7150",
+        "html_url": "https://github.com/vercel/next.js/commit/de1fdd496a882b9e90702c87fa2f1b3aebea7150"
+      }
+    ]
+  },
+  {
+    "sha": "3d920355dd7f037c942456532d26d6f7eebaea4d",
+    "node_id": "C_kwDOBC3CitoAKDNkOTIwMzU1ZGQ3ZjAzN2M5NDI0NTY1MzJkMjZkNmY3ZWViYWVhNGQ",
+    "commit": {
+      "author": {
+        "name": "Jiwon Choi",
+        "email": "devjiwonchoi@gmail.com",
+        "date": "2026-06-09T19:47:48Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-09T19:47:48Z"
+      },
+      "message": "Revert \"Stabilize catchError and retry by removing unstable_ prefix\" (#94617)\n\nReverts vercel/next.js#94610\n\nUnblock",
+      "tree": {
+        "sha": "18a92fd988666bd41a2b959899e9a86329682d32",
+        "url": "https://api.github.com/repos/vercel/next.js/git/trees/18a92fd988666bd41a2b959899e9a86329682d32"
+      },
+      "url": "https://api.github.com/repos/vercel/next.js/git/commits/3d920355dd7f037c942456532d26d6f7eebaea4d",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqKG3kCRC1aQ7uu5UhlAAAaygQAIQHWqNCsS5rCDGJNR493siH\nITwfDjz0hwQnnQsF7lG3D5idIhKrBMJ1HEPFm1yxGaTTA/G82jO/PXRyPdIRDuXj\n44zdya2kog0zgj8YcuzFuOIfxH7nMexudQXLEEsk+5j3+scLkeK66244HZuWWI4Q\nrgAy8E56Ry0MlNEOJ4Y1ncDhcUYb1jqJRGO3zjYraFwJu09hrmiLtBunH7Zl1DdU\nRrlcde8k22hr7y33naQwjbbi0wLSIV50tlaXRBDBd3xTiLtbEhY3V6c6moQqT2jz\nTTabq38mhn+7699h6HGjYQmkL+oTBQIR1ZlZi4QGncqTAqopy+P5Aui5F+E5lrLK\nOmFPn8iEH3zWcE5Xt4s3gxCygclzopi/RoDrFchJr5eJ/7Bqvd/hdGS89YoPgcKf\nLxgmaBnMB1ZSeFVDuLfWOPIBr3a2ANZDg7xQVEr/JS30kT2ttl/kvYLVu3T8aCTG\nB55CMAQa/9USQY6EnPe3qVjsjx6+l696s5YghRcYR7vi6TDW1mtdhlWWKPJ/Su6K\nwsRJDikQ1HOcCV4e6sGPKjfs6wmnXuX0JCUpkmENUF5kK3+3YQYDSBJqs8gT96o3\n056FLA6BdADRCkTPUjyRt/NsXgeH2s5h0oWehS8JYdijQgktqT3/HyQ53cgHjkPh\nOPNDyu9DqdwVsK+T4XNa\n=pxiB\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 18a92fd988666bd41a2b959899e9a86329682d32\nparent 6b3936a3329486cc3c126d8cb7701f95517adbc0\nauthor Jiwon Choi <devjiwonchoi@gmail.com> 1781034468 +0200\ncommitter GitHub <noreply@github.com> 1781034468 +0000\n\nRevert \"Stabilize catchError and retry by removing unstable_ prefix\" (#94617)\n\nReverts vercel/next.js#94610\n\nUnblock",
+        "verified_at": "2026-06-09T19:47:48Z"
+      }
+    },
+    "url": "https://api.github.com/repos/vercel/next.js/commits/3d920355dd7f037c942456532d26d6f7eebaea4d",
+    "html_url": "https://github.com/vercel/next.js/commit/3d920355dd7f037c942456532d26d6f7eebaea4d",
+    "comments_url": "https://api.github.com/repos/vercel/next.js/commits/3d920355dd7f037c942456532d26d6f7eebaea4d/comments",
+    "author": {
+      "login": "devjiwonchoi",
+      "id": 120007119,
+      "node_id": "U_kgDOBycpzw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/120007119?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/devjiwonchoi",
+      "html_url": "https://github.com/devjiwonchoi",
+      "followers_url": "https://api.github.com/users/devjiwonchoi/followers",
+      "following_url": "https://api.github.com/users/devjiwonchoi/following{/other_user}",
+      "gists_url": "https://api.github.com/users/devjiwonchoi/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/devjiwonchoi/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/devjiwonchoi/subscriptions",
+      "organizations_url": "https://api.github.com/users/devjiwonchoi/orgs",
+      "repos_url": "https://api.github.com/users/devjiwonchoi/repos",
+      "events_url": "https://api.github.com/users/devjiwonchoi/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/devjiwonchoi/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "6b3936a3329486cc3c126d8cb7701f95517adbc0",
+        "url": "https://api.github.com/repos/vercel/next.js/commits/6b3936a3329486cc3c126d8cb7701f95517adbc0",
+        "html_url": "https://github.com/vercel/next.js/commit/6b3936a3329486cc3c126d8cb7701f95517adbc0"
+      }
+    ]
+  },
+  {
+    "sha": "9e4d718de41bc2bceb687c73c2a60fdf6c5c4440",
+    "node_id": "C_kwDOBC3CitoAKDllNGQ3MThkZTQxYmMyYmNlYjY4N2M3M2MyYTYwZmRmNmM1YzQ0NDA",
+    "commit": {
+      "author": {
+        "name": "Joseph",
+        "email": "joseph.chamochumbi@vercel.com",
+        "date": "2026-06-09T20:10:27Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-09T20:10:27Z"
+      },
+      "message": "docs: root-params highligth fixes (#94620)\n\nOnce again, reformatting broke the highlights",
+      "tree": {
+        "sha": "98b78230addfc7c087c08dec2d358d8946f52ee3",
+        "url": "https://api.github.com/repos/vercel/next.js/git/trees/98b78230addfc7c087c08dec2d358d8946f52ee3"
+      },
+      "url": "https://api.github.com/repos/vercel/next.js/git/commits/9e4d718de41bc2bceb687c73c2a60fdf6c5c4440",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqKHMzCRC1aQ7uu5UhlAAAC7gQAAURcZ8hYzG809EmfqQJwadl\n9H2FBLCUU3dbMyfSbKpvPU0Dv4kAcahX2jf1yd8Bjo2LRGqerig64NTzsiKIqzlD\n+n0j+bIjTxgBrZ7G9HRB2TMQngJbmVCosk1UzkgMVBYVR6nPC4u0qhDWUHQD+w4K\nWemNVxlh/+6lqNdeIuiZrk+Niy9Hd/RY9Y6n5zwJDXN2HADe/6be8MW/80nHTo95\nyuSC9Uf4hIAWErrBpE348ANy78BSsv6E+M5iDj7FSl5smFGR8SAfKG3n0VanWh1P\nkyzRGOTSMS7LcmgGTS57ttdbT+H2DDWg0DvxRU3/xhfKlYV0z46f+dfPA2p5x8rM\nfhiT3NtIGNe9qrJ9vCG9qag8j53HH4Hqt9lYt3SXM8Tr6bjQfnL7/mhXIL5f6X0t\nPHoWua8MIZfLQl91sxQLAURj7pV8c1qgUqXqaYiZn5AQABlbRPB4kr1iNNxLdSqu\nsV2WDebxfMLp53Gv0inWRoAlwkj8isuTRb6YER2fgoRba3EzQVNXNGlMBfED1c5c\nsdd9VcNQAJKUoO9L3j9k30SzLt6o8WmPQ4q8dsiH80fP+h3nxcOwdJkAYBC/OXQY\nWToATSLi/Njl+jsRwNlcysUijfOIlZDUDhzjjDIhjNYSgc5C0mZnrlyrO1bTrvPx\nlfxiO9PCR9L7wGpHoaK8\n=h6jg\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 98b78230addfc7c087c08dec2d358d8946f52ee3\nparent 3d920355dd7f037c942456532d26d6f7eebaea4d\nauthor Joseph <joseph.chamochumbi@vercel.com> 1781035827 +0200\ncommitter GitHub <noreply@github.com> 1781035827 +0000\n\ndocs: root-params highligth fixes (#94620)\n\nOnce again, reformatting broke the highlights",
+        "verified_at": "2026-06-09T20:10:28Z"
+      }
+    },
+    "url": "https://api.github.com/repos/vercel/next.js/commits/9e4d718de41bc2bceb687c73c2a60fdf6c5c4440",
+    "html_url": "https://github.com/vercel/next.js/commit/9e4d718de41bc2bceb687c73c2a60fdf6c5c4440",
+    "comments_url": "https://api.github.com/repos/vercel/next.js/commits/9e4d718de41bc2bceb687c73c2a60fdf6c5c4440/comments",
+    "author": {
+      "login": "icyJoseph",
+      "id": 21013447,
+      "node_id": "MDQ6VXNlcjIxMDEzNDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/21013447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/icyJoseph",
+      "html_url": "https://github.com/icyJoseph",
+      "followers_url": "https://api.github.com/users/icyJoseph/followers",
+      "following_url": "https://api.github.com/users/icyJoseph/following{/other_user}",
+      "gists_url": "https://api.github.com/users/icyJoseph/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/icyJoseph/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/icyJoseph/subscriptions",
+      "organizations_url": "https://api.github.com/users/icyJoseph/orgs",
+      "repos_url": "https://api.github.com/users/icyJoseph/repos",
+      "events_url": "https://api.github.com/users/icyJoseph/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/icyJoseph/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "3d920355dd7f037c942456532d26d6f7eebaea4d",
+        "url": "https://api.github.com/repos/vercel/next.js/commits/3d920355dd7f037c942456532d26d6f7eebaea4d",
+        "html_url": "https://github.com/vercel/next.js/commit/3d920355dd7f037c942456532d26d6f7eebaea4d"
+      }
+    ]
+  },
+  {
+    "sha": "d424aa8ec4c7bfdf4175df47e26f17d7a60a49d3",
+    "node_id": "C_kwDOBC3CitoAKGQ0MjRhYThlYzRjN2JmZGY0MTc1ZGY0N2UyNmYxN2Q3YTYwYTQ5ZDM",
+    "commit": {
+      "author": {
+        "name": "Josh Story",
+        "email": "gnoff@storyposted.com",
+        "date": "2026-06-09T20:50:25Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-09T20:50:25Z"
+      },
+      "message": "Stabilize `unstable_instant` (#94578)\n\nThis API has experimental modes for build validation but the dev\nvalidation is going to be stable in the next release.",
+      "tree": {
+        "sha": "fdd5aa2329accab0670e19930573225f5d9f6505",
+        "url": "https://api.github.com/repos/vercel/next.js/git/trees/fdd5aa2329accab0670e19930573225f5d9f6505"
+      },
+      "url": "https://api.github.com/repos/vercel/next.js/git/commits/d424aa8ec4c7bfdf4175df47e26f17d7a60a49d3",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqKHyRCRC1aQ7uu5UhlAAAHjwQAGOgDjwhbfuxfuPehFWbLA0x\nym8T5PIlMbUskyKMqMA1kJZbg1IfnsX397+/+rzrhLXVUpdOq6OEaJ/7dLf9zQwt\n6nH2M1mfWpd73Kjl69/ADj0l+x4aW/CcvtuXw+A8CpqQyTQ7TP70/+4I0lkPL8EF\n7yJvrb1dKPjbii14Wtw2N95FJU+1oRkAecO7Ub00uyvl6TPB5dR0ABtCBC7wDzu2\nzefQSWKeL171sUMEqlns4keOVbkGsoaO1PhHT/V95hbkABhUedC2B+bbHK0of9ua\nixCCNY+b4h73rt0GgqqHexiYbCmzENBG3b0wZ6uVTPb1puHkv5nyTISv7eORxtKU\n29R9/ZoHbM7d6WSgF/ZzZ2YP33nRRIUJ8atH+b3oCjtQz0cLzx4qXFkTbCLSG38h\nyM+VUuTlPhtc5UedTyRpVShMCI9+B6RffsD94KLp21W7bQBrkV1flfLWh+FvWEl+\nm2nLnTpa7PwrXw+zaTthxMsloEOHdPhZXWQcWb6vn7iOmX/VpG+/N0+dtcCO6KgH\nywMXRLmSABcRJNjTjRc8IAmgYO6vt/uA8Qub12+q02II8txaRubXmmIbFObbuQfc\noBedr+Yg+Pr5MaK6G4COIpeoywMSzaqOwGPigN3Y3VEHn2xUE/ZPPbzm84AIdJZA\nng9nXYHuCgdQX6w3QZbb\n=2JZ9\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree fdd5aa2329accab0670e19930573225f5d9f6505\nparent 9e4d718de41bc2bceb687c73c2a60fdf6c5c4440\nauthor Josh Story <gnoff@storyposted.com> 1781038225 -0700\ncommitter GitHub <noreply@github.com> 1781038225 -0700\n\nStabilize `unstable_instant` (#94578)\n\nThis API has experimental modes for build validation but the dev\nvalidation is going to be stable in the next release.",
+        "verified_at": "2026-06-09T20:50:26Z"
+      }
+    },
+    "url": "https://api.github.com/repos/vercel/next.js/commits/d424aa8ec4c7bfdf4175df47e26f17d7a60a49d3",
+    "html_url": "https://github.com/vercel/next.js/commit/d424aa8ec4c7bfdf4175df47e26f17d7a60a49d3",
+    "comments_url": "https://api.github.com/repos/vercel/next.js/commits/d424aa8ec4c7bfdf4175df47e26f17d7a60a49d3/comments",
+    "author": {
+      "login": "gnoff",
+      "id": 2716369,
+      "node_id": "MDQ6VXNlcjI3MTYzNjk=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2716369?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/gnoff",
+      "html_url": "https://github.com/gnoff",
+      "followers_url": "https://api.github.com/users/gnoff/followers",
+      "following_url": "https://api.github.com/users/gnoff/following{/other_user}",
+      "gists_url": "https://api.github.com/users/gnoff/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/gnoff/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/gnoff/subscriptions",
+      "organizations_url": "https://api.github.com/users/gnoff/orgs",
+      "repos_url": "https://api.github.com/users/gnoff/repos",
+      "events_url": "https://api.github.com/users/gnoff/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/gnoff/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "9e4d718de41bc2bceb687c73c2a60fdf6c5c4440",
+        "url": "https://api.github.com/repos/vercel/next.js/commits/9e4d718de41bc2bceb687c73c2a60fdf6c5c4440",
+        "html_url": "https://github.com/vercel/next.js/commit/9e4d718de41bc2bceb687c73c2a60fdf6c5c4440"
+      }
+    ]
+  },
+  {
+    "sha": "23b1977efcea9d78b55607b2c7a7f248aefcf1c5",
+    "node_id": "C_kwDOBC3CitoAKDIzYjE5NzdlZmNlYTlkNzhiNTU2MDdiMmM3YTdmMjQ4YWVmY2YxYzU",
+    "commit": {
+      "author": {
+        "name": "Aurora Scharff",
+        "email": "66901228+aurorascharff@users.noreply.github.com",
+        "date": "2026-06-09T21:15:19Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-09T21:15:19Z"
+      },
+      "message": "docs: remove unstable_disableValidation recommendations (#94608)\n\n### What?\n\nRemoves `unstable_disableValidation` recommendations from all 14\ninsight-kind error pages and the `generateViewport` API reference. The\nkey on `unstable_instant`'s object form is not going to ship as a\nrecommended public API.\n\n### Why?\n\nEach error page's **\"Don't want this validation?\"** block previously\nlisted three opt-out levels:\n\n1. **One segment** \u2014 `export const unstable_instant = false`\n2. ~~**Layout and its children** \u2014 `export const unstable_instant = {\nunstable_disableValidation: true }`~~ \u2190 dropped\n3. **Entire app** \u2014 `experimental.instantInsights.validationLevel:\n'manual-warning'`\n\nDropping the middle bullet aligns the docs with the public-API surface\nwe intend to keep.\n\n### How?\n\n- Removed the `Layout and its children` bullet across 14 `errors/*.mdx`\npages.\n- Removed the now-broken `See [Don't want this validation?] for the\nsubtree-wide opt-out` reference in the in-body **Gotchas** sections.\n- Updated the `generate-viewport.mdx` API reference to drop the same\ndangling reference.\n- Framework source (`unstable_disableValidation` parsing in\n`app-segment-config.ts` and runtime handling in `instant-config.tsx`) is\nunchanged \u2014 that's a separate framework concern.\n\n<!-- NEXT_JS_LLM_PR -->",
+      "tree": {
+        "sha": "1ff57e2d25e87aa72651e0209759a868da6f5a32",
+        "url": "https://api.github.com/repos/vercel/next.js/git/trees/1ff57e2d25e87aa72651e0209759a868da6f5a32"
+      },
+      "url": "https://api.github.com/repos/vercel/next.js/git/commits/23b1977efcea9d78b55607b2c7a7f248aefcf1c5",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqKIJnCRC1aQ7uu5UhlAAAVF4QAJho+G9jhAhG5tXCPPcQqkWr\nwgWVF1VdC0iTbSR898KsFullS6E8QHqtq1iqZ8QuENKN9XMeZWtQ2PX+kig2jokQ\nZ6b+cXvJ8lLtheG4oOEFWpnfdO2ksuxVlRcK6jVdLhXFIG5cw+FoB/BN2RUkV9A/\niRKX0y/aaj6oT9/9mHcu9KdIT8vNe7+aGsNRiD8kvy1mfzLKeduFJ2BqQnbv2PN8\nhP1lUhqaTlvLXQwmAlOcmmBWSIYQ+blucF6yeWVFGdoV5nzHibalQWgnkt9h45JN\nbrDGrtk2ARdtStogQaPC3PIInVjDmykYTp6Tbo4UfhjaGWSgkE10qb0KtFfUh+8M\nWhvyXTvyGXT6feMa63FEXYyT+wWG6YlaVaCBpLisNayfSRHYKQYr1og4H40qUXOu\nTHaVwW/ixYf4FPcONFWaQtB9+7vwRgYeSIMPT6qDgZvIZX9Zx7+WXrosMxqtBf2B\nusRBOkezZaNrY5w0BON1gc2hcXOVbEhG/n3NSvp0N1UGKXao0/z55guUod/kf+Ft\n9FGSqExdLPGpq7cASxiQ6arOI/wwca6Lb7oppKLc4PQqcTLgNPZtrGqB9UZK5LaR\ncuHsyMxVSg3skCKO1h/gHfE7LtXg3KfYEU+poFf25CASA2HJQR+Z7IXwGpYwUCx7\nkUJ+fka3sCVhDSuro/6w\n=wsrs\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 1ff57e2d25e87aa72651e0209759a868da6f5a32\nparent d424aa8ec4c7bfdf4175df47e26f17d7a60a49d3\nauthor Aurora Scharff <66901228+aurorascharff@users.noreply.github.com> 1781039719 +0200\ncommitter GitHub <noreply@github.com> 1781039719 +0200\n\ndocs: remove unstable_disableValidation recommendations (#94608)\n\n### What?\n\nRemoves `unstable_disableValidation` recommendations from all 14\ninsight-kind error pages and the `generateViewport` API reference. The\nkey on `unstable_instant`'s object form is not going to ship as a\nrecommended public API.\n\n### Why?\n\nEach error page's **\"Don't want this validation?\"** block previously\nlisted three opt-out levels:\n\n1. **One segment** \u2014 `export const unstable_instant = false`\n2. ~~**Layout and its children** \u2014 `export const unstable_instant = {\nunstable_disableValidation: true }`~~ \u2190 dropped\n3. **Entire app** \u2014 `experimental.instantInsights.validationLevel:\n'manual-warning'`\n\nDropping the middle bullet aligns the docs with the public-API surface\nwe intend to keep.\n\n### How?\n\n- Removed the `Layout and its children` bullet across 14 `errors/*.mdx`\npages.\n- Removed the now-broken `See [Don't want this validation?] for the\nsubtree-wide opt-out` reference in the in-body **Gotchas** sections.\n- Updated the `generate-viewport.mdx` API reference to drop the same\ndangling reference.\n- Framework source (`unstable_disableValidation` parsing in\n`app-segment-config.ts` and runtime handling in `instant-config.tsx`) is\nunchanged \u2014 that's a separate framework concern.\n\n<!-- NEXT_JS_LLM_PR -->",
+        "verified_at": "2026-06-09T21:15:19Z"
+      }
+    },
+    "url": "https://api.github.com/repos/vercel/next.js/commits/23b1977efcea9d78b55607b2c7a7f248aefcf1c5",
+    "html_url": "https://github.com/vercel/next.js/commit/23b1977efcea9d78b55607b2c7a7f248aefcf1c5",
+    "comments_url": "https://api.github.com/repos/vercel/next.js/commits/23b1977efcea9d78b55607b2c7a7f248aefcf1c5/comments",
+    "author": {
+      "login": "aurorascharff",
+      "id": 66901228,
+      "node_id": "MDQ6VXNlcjY2OTAxMjI4",
+      "avatar_url": "https://avatars.githubusercontent.com/u/66901228?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aurorascharff",
+      "html_url": "https://github.com/aurorascharff",
+      "followers_url": "https://api.github.com/users/aurorascharff/followers",
+      "following_url": "https://api.github.com/users/aurorascharff/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aurorascharff/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aurorascharff/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aurorascharff/subscriptions",
+      "organizations_url": "https://api.github.com/users/aurorascharff/orgs",
+      "repos_url": "https://api.github.com/users/aurorascharff/repos",
+      "events_url": "https://api.github.com/users/aurorascharff/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aurorascharff/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "d424aa8ec4c7bfdf4175df47e26f17d7a60a49d3",
+        "url": "https://api.github.com/repos/vercel/next.js/commits/d424aa8ec4c7bfdf4175df47e26f17d7a60a49d3",
+        "html_url": "https://github.com/vercel/next.js/commit/d424aa8ec4c7bfdf4175df47e26f17d7a60a49d3"
+      }
+    ]
+  },
+  {
+    "sha": "0553b34542432a402012737504e09bf1af3c8b60",
+    "node_id": "C_kwDOBC3CitoAKDA1NTNiMzQ1NDI0MzJhNDAyMDEyNzM3NTA0ZTA5YmYxYWYzYzhiNjA",
+    "commit": {
+      "author": {
+        "name": "Joseph",
+        "email": "joseph.chamochumbi@vercel.com",
+        "date": "2026-06-09T21:46:59Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-09T21:46:59Z"
+      },
+      "message": "doc: instant navs runtime story (#93204)\n\n- changes getting started -> caching\n- new guide for instant navs\n- new guide for runtime-prefetching (most pending stuff is here)\n- x-refs between docs\n- App Shell mentions in other docs (ISR w/ CC)\n\n---------\n\nCo-authored-by: Aurora Scharff <66901228+aurorascharff@users.noreply.github.com>\nCo-authored-by: Aurora Scharff <aurora.sofie@gmail.com>",
+      "tree": {
+        "sha": "ba2f4ce356462c07b216c0163b094880d4ecf69e",
+        "url": "https://api.github.com/repos/vercel/next.js/git/trees/ba2f4ce356462c07b216c0163b094880d4ecf69e"
+      },
+      "url": "https://api.github.com/repos/vercel/next.js/git/commits/0553b34542432a402012737504e09bf1af3c8b60",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqKInTCRC1aQ7uu5UhlAAA9xoQAKmOlaHnJgAZlyDizK68EGbh\nJ2JQMU2WdJa97tf/FanRMg9DczwTc+hWQIoJGVHNYTf81tw6LBnK6At5y6fpkdYg\nUmPhoIm0t1nyS+qUq85sE1gfIZm98SjG0fo7g87Ttzge9w8E2qiEhFfaDsPhvKQ4\nMaAcJ99wCIOhrGG57yRlu7oT/U2erTAVNet1rIlQsHYV0WiWNfE0Av0DOW+OUE+C\nLq1GjLbUUnMyZGOFVpqgtwMBb6OhUQ0EOSJIXLG67pm5p8lK3EH8pQceS4zJD5+w\nTAG+R9CdE8UARBjItc1WS1q4cbfpCPq2fgc/JMNLNtlZMJJHbdWj5AeXpXdZ6mcK\n4ugFMnPVBLAlYjXrl/VoOBZ8xAumgCjAlWyQbNVmPLEjw3LFHh/ld8wnjiRRSAY6\nt+/kfKYHuShoKj/TN2KKsvYnHvAlT2sOjljfhvycztQqx+Qi2T19y3B7nsePk3bx\nv+WwlhJF57uO4QlbTkNerET5y0/eisxuRUV8CUfEqYgstkC3beg4cqqEW0jpw1p4\nm9UuhDxbM8y7/y0QjHtY++sxqray0W1flI+taOTvbDFvWhdEYoOXHc/p0CBz5jpZ\neb5/VHhA0zy1Pn4SNwZ9S6fbwVV3tUGT9rh6OyjGdkhflILbHyN8u21tvHOIFwlF\nCeWemlB62/JNnR90H9OX\n=bf5J\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree ba2f4ce356462c07b216c0163b094880d4ecf69e\nparent 23b1977efcea9d78b55607b2c7a7f248aefcf1c5\nauthor Joseph <joseph.chamochumbi@vercel.com> 1781041619 +0200\ncommitter GitHub <noreply@github.com> 1781041619 +0000\n\ndoc: instant navs runtime story (#93204)\n\n- changes getting started -> caching\n- new guide for instant navs\n- new guide for runtime-prefetching (most pending stuff is here)\n- x-refs between docs\n- App Shell mentions in other docs (ISR w/ CC)\n\n---------\n\nCo-authored-by: Aurora Scharff <66901228+aurorascharff@users.noreply.github.com>\nCo-authored-by: Aurora Scharff <aurora.sofie@gmail.com>",
+        "verified_at": "2026-06-09T21:46:59Z"
+      }
+    },
+    "url": "https://api.github.com/repos/vercel/next.js/commits/0553b34542432a402012737504e09bf1af3c8b60",
+    "html_url": "https://github.com/vercel/next.js/commit/0553b34542432a402012737504e09bf1af3c8b60",
+    "comments_url": "https://api.github.com/repos/vercel/next.js/commits/0553b34542432a402012737504e09bf1af3c8b60/comments",
+    "author": {
+      "login": "icyJoseph",
+      "id": 21013447,
+      "node_id": "MDQ6VXNlcjIxMDEzNDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/21013447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/icyJoseph",
+      "html_url": "https://github.com/icyJoseph",
+      "followers_url": "https://api.github.com/users/icyJoseph/followers",
+      "following_url": "https://api.github.com/users/icyJoseph/following{/other_user}",
+      "gists_url": "https://api.github.com/users/icyJoseph/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/icyJoseph/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/icyJoseph/subscriptions",
+      "organizations_url": "https://api.github.com/users/icyJoseph/orgs",
+      "repos_url": "https://api.github.com/users/icyJoseph/repos",
+      "events_url": "https://api.github.com/users/icyJoseph/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/icyJoseph/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "23b1977efcea9d78b55607b2c7a7f248aefcf1c5",
+        "url": "https://api.github.com/repos/vercel/next.js/commits/23b1977efcea9d78b55607b2c7a7f248aefcf1c5",
+        "html_url": "https://github.com/vercel/next.js/commit/23b1977efcea9d78b55607b2c7a7f248aefcf1c5"
+      }
+    ]
+  },
+  {
+    "sha": "74ce6b2e2f7c8e28de72eb11981862d8ab9703f2",
+    "node_id": "C_kwDOBC3CitoAKDc0Y2U2YjJlMmY3YzhlMjhkZTcyZWIxMTk4MTg2MmQ4YWI5NzAzZjI",
+    "commit": {
+      "author": {
+        "name": "Jiwon Choi",
+        "email": "devjiwonchoi@gmail.com",
+        "date": "2026-06-09T23:11:44Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-09T23:11:44Z"
+      },
+      "message": "Reapply \"Stabilize catchError and retry by removing unstable_ prefix\" (#94623)\n\n### What?\n\nReverts #94617, which had reverted #94610. This re-lands the\nstabilization of the `catchError` API and the `retry` error prop by\nremoving their `unstable_` prefix across source, docs, and tests.\n\n### Why?\n\n#94610 was reverted in #94617 to unblock another change. This re-applies\nit now that it is no longer blocked.\n\n### How?\n\n`git revert` of the revert commit. The repo's custom errors.json merge\ndriver handled the error registry: the original codes `1324`/`1325` had\nbeen reclaimed by `instant` errors after the revert, so the reintroduced\nmessages were minted as new codes `1360` (`retry()` can only be used in\nthe App Router) and `1361` (`catchError` can only be used in Client\nComponents), keeping errors.json append-only.\n\nThe docs changelog adds `v16.3.0 | catchError became stable.` while\nretaining the historical `v16.2.0 | unstable_catchError introduced.`\nrow.\n\n### Verification\n\n- `pnpm update-error-codes` (check_error_codes passes; errors.json in\nsync)\n- `pnpm build` (full JS build, exit 0)\n- `pnpm --filter=next types` (exit 0)\n- Not run: Rust/cargo build (`react_server_components.rs` change is a\none-line allow-list string revert; left to CI)\n\n<!-- NEXT_JS_LLM_PR -->",
+      "tree": {
+        "sha": "46bc6db30675196d42ceb86daf02103606c1bc3f",
+        "url": "https://api.github.com/repos/vercel/next.js/git/trees/46bc6db30675196d42ceb86daf02103606c1bc3f"
+      },
+      "url": "https://api.github.com/repos/vercel/next.js/git/commits/74ce6b2e2f7c8e28de72eb11981862d8ab9703f2",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqKJ2wCRC1aQ7uu5UhlAAAI+sQAJn2Gv5CR2JxQp7Gm4a7hAMN\neObX/O6NdXECfbWBKXNYMj/6agouVxmE8C5U+C8sUi3oYjD2d1PoU6/HA+lZN6s+\nO1RFe7F3LwPuQyGTADNetLxscw0wlhGHU4jp+Dvd66M53CLZhcJfGrZEk7blX3U9\nP9VG3BUbatF+vcF/XBApWkN4WozrAkYlW6k+i40NGMvp+88+YyPaYcCTCQNVDb/8\ncuPS8EB/uCIcb4K5k2n6vhAxGR1iloQo6LoQyTxG+I4kXTn9h37tV/vyof8eYhq3\nhtbmmLokj7nrDosnBPk7MPqAZTheO2UlRVagvNhUL3sA1yiuxxJwgQA+V0MafLZz\nsOuGzkij2l1/bFCXDXPFyc+IqmLPv7DfNW3xGIPi058Q7M9RTaOFUKdKQsy7XcqO\nlQfxeLiiVrk3ZAvKeXii6rhv6K3VHHvPEQHFcjE7U+wkRzm3vbTWMDU2dWfxGwgb\nHjJ5DBbmGO20ZR/65qwAWwzHee0q/huQ5Luff4I2dqPWQ7So0m5K73FwPimQ190w\nDXggp4TkFvin97jvTr6Vz4uK4V9BgiEqJ4RF4qg70hAJcVIsO4aIMRVIKERKkNoK\nPOnRCYgo1erHCn9WYSP2fTKojnmB698wPt9TR11TWHLIOpzxQ4UwyOuSB0Pqtwmc\nOBUZAl6Z+aHC2lN7mEal\n=MMtP\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 46bc6db30675196d42ceb86daf02103606c1bc3f\nparent 0553b34542432a402012737504e09bf1af3c8b60\nauthor Jiwon Choi <devjiwonchoi@gmail.com> 1781046704 +0200\ncommitter GitHub <noreply@github.com> 1781046704 -0700\n\nReapply \"Stabilize catchError and retry by removing unstable_ prefix\" (#94623)\n\n### What?\n\nReverts #94617, which had reverted #94610. This re-lands the\nstabilization of the `catchError` API and the `retry` error prop by\nremoving their `unstable_` prefix across source, docs, and tests.\n\n### Why?\n\n#94610 was reverted in #94617 to unblock another change. This re-applies\nit now that it is no longer blocked.\n\n### How?\n\n`git revert` of the revert commit. The repo's custom errors.json merge\ndriver handled the error registry: the original codes `1324`/`1325` had\nbeen reclaimed by `instant` errors after the revert, so the reintroduced\nmessages were minted as new codes `1360` (`retry()` can only be used in\nthe App Router) and `1361` (`catchError` can only be used in Client\nComponents), keeping errors.json append-only.\n\nThe docs changelog adds `v16.3.0 | catchError became stable.` while\nretaining the historical `v16.2.0 | unstable_catchError introduced.`\nrow.\n\n### Verification\n\n- `pnpm update-error-codes` (check_error_codes passes; errors.json in\nsync)\n- `pnpm build` (full JS build, exit 0)\n- `pnpm --filter=next types` (exit 0)\n- Not run: Rust/cargo build (`react_server_components.rs` change is a\none-line allow-list string revert; left to CI)\n\n<!-- NEXT_JS_LLM_PR -->",
+        "verified_at": "2026-06-09T23:11:45Z"
+      }
+    },
+    "url": "https://api.github.com/repos/vercel/next.js/commits/74ce6b2e2f7c8e28de72eb11981862d8ab9703f2",
+    "html_url": "https://github.com/vercel/next.js/commit/74ce6b2e2f7c8e28de72eb11981862d8ab9703f2",
+    "comments_url": "https://api.github.com/repos/vercel/next.js/commits/74ce6b2e2f7c8e28de72eb11981862d8ab9703f2/comments",
+    "author": {
+      "login": "devjiwonchoi",
+      "id": 120007119,
+      "node_id": "U_kgDOBycpzw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/120007119?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/devjiwonchoi",
+      "html_url": "https://github.com/devjiwonchoi",
+      "followers_url": "https://api.github.com/users/devjiwonchoi/followers",
+      "following_url": "https://api.github.com/users/devjiwonchoi/following{/other_user}",
+      "gists_url": "https://api.github.com/users/devjiwonchoi/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/devjiwonchoi/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/devjiwonchoi/subscriptions",
+      "organizations_url": "https://api.github.com/users/devjiwonchoi/orgs",
+      "repos_url": "https://api.github.com/users/devjiwonchoi/repos",
+      "events_url": "https://api.github.com/users/devjiwonchoi/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/devjiwonchoi/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "0553b34542432a402012737504e09bf1af3c8b60",
+        "url": "https://api.github.com/repos/vercel/next.js/commits/0553b34542432a402012737504e09bf1af3c8b60",
+        "html_url": "https://github.com/vercel/next.js/commit/0553b34542432a402012737504e09bf1af3c8b60"
+      }
+    ]
+  },
+  {
+    "sha": "17c6c6dfb7f42f7f7df7d5f8b872a8dd48d360c5",
+    "node_id": "C_kwDOBC3CitoAKDE3YzZjNmRmYjdmNDJmN2Y3ZGY3ZDVmOGI4NzJhOGRkNDhkMzYwYzU",
+    "commit": {
+      "author": {
+        "name": "next-js-bot[bot]",
+        "email": "279046576+next-js-bot[bot]@users.noreply.github.com",
+        "date": "2026-06-09T23:44:14Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-09T23:44:14Z"
+      },
+      "message": "v16.3.0-canary.47",
+      "tree": {
+        "sha": "32366173aa74900decd6af01df05a81065340f54",
+        "url": "https://api.github.com/repos/vercel/next.js/git/trees/32366173aa74900decd6af01df05a81065340f54"
+      },
+      "url": "https://api.github.com/repos/vercel/next.js/git/commits/17c6c6dfb7f42f7f7df7d5f8b872a8dd48d360c5",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqKKVOCRC1aQ7uu5UhlAAASIUQAD4WuRZNwqDm6NJpqKAVEih3\n2UXJS3x5+GgFXkwzy4a6AL4C7J3jVAI4Vb4L4n6QJ7FxcPyhuT7+hA31/Pd50U5f\nmv5amDrq548kuHDG06Pt2+828MEBXuzBgf3F4Z/u+S1zbk7qpU0J4wXHmSXd8qKl\nGQFARDKbzULbjiipho4hoK89rkxnoXCt3JkS4RBzh/xK816xtj//iNk9WI2B+TI3\nX6eNKquyluUSQMybYoN1Oi9H/BSq3VWFZEQlvOWvXT77AMk400HnFVC4+XrwWkEk\ngVEJfHpIA6uAO+dy/prPyMQW6j1OjejbYeD4wyUXc9ZZZB03aBYgHGGiWcIqXTVN\nDani4x5ymVn74vEDXAd4EjrXiLhiP8cii7LbFTlKkFYDwKZT7Vp0zZfBwcKpPKtl\nE+iGRLwu9WviyCIdqJ5BcJo22ActWkOCbG17ajrUWnhQBZe2k4dzK4367FTpnVft\nNv0FaMLLo7e1R27Q3PJRjlrIKMTUWem1zrclVOVWfaih9ThRM1zyNkbe0iaB53af\nN5D7vVTvglEewScjKX9yiPY97fJGgRGZ/w01oxyvc53dTB22QcozIdyrlXbjd1aM\nQyA+rurpYK5t/qdn/JwqKNIw95pSboF8STAaJKSHNLguKqkiaQ0JYRemPiuFEZNE\n6uQ9gu1AWremzoUObQQJ\n=I5W4\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 32366173aa74900decd6af01df05a81065340f54\nparent 74ce6b2e2f7c8e28de72eb11981862d8ab9703f2\nauthor next-js-bot[bot] <279046576+next-js-bot[bot]@users.noreply.github.com> 1781048654 +0000\ncommitter GitHub <noreply@github.com> 1781048654 +0000\n\nv16.3.0-canary.47",
+        "verified_at": "2026-06-09T23:44:14Z"
+      }
+    },
+    "url": "https://api.github.com/repos/vercel/next.js/commits/17c6c6dfb7f42f7f7df7d5f8b872a8dd48d360c5",
+    "html_url": "https://github.com/vercel/next.js/commit/17c6c6dfb7f42f7f7df7d5f8b872a8dd48d360c5",
+    "comments_url": "https://api.github.com/repos/vercel/next.js/commits/17c6c6dfb7f42f7f7df7d5f8b872a8dd48d360c5/comments",
+    "author": {
+      "login": "next-js-bot[bot]",
+      "id": 279046576,
+      "node_id": "BOT_kgDOEKHpsA",
+      "avatar_url": "https://avatars.githubusercontent.com/in/3491438?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/next-js-bot%5Bbot%5D",
+      "html_url": "https://github.com/apps/next-js-bot",
+      "followers_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "74ce6b2e2f7c8e28de72eb11981862d8ab9703f2",
+        "url": "https://api.github.com/repos/vercel/next.js/commits/74ce6b2e2f7c8e28de72eb11981862d8ab9703f2",
+        "html_url": "https://github.com/vercel/next.js/commit/74ce6b2e2f7c8e28de72eb11981862d8ab9703f2"
+      }
+    ]
+  },
+  {
+    "sha": "2725a6b7f3f83b3bd7f568fc5be1dd7f1e8feaad",
+    "node_id": "C_kwDOBC3CitoAKDI3MjVhNmI3ZjNmODNiM2JkN2Y1NjhmYzViZTFkZDdmMWU4ZmVhYWQ",
+    "commit": {
+      "author": {
+        "name": "Luke Sandberg",
+        "email": "lukesandberg@users.noreply.github.com",
+        "date": "2026-06-10T01:07:45Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-10T01:07:45Z"
+      },
+      "message": "[turbopack] Enable turbopackFileSystemCacheForBuild by default in non-stable releases (#94616)\n\nThis is enabled by default in canary releases if we detect certain\nenvironment variables\n\nIn the future as part of stabilization this should be handled in the\nbuild-adaptors as a more generic solution",
+      "tree": {
+        "sha": "c6a6b7b28608d7697159a697338bfbe6ba6b60be",
+        "url": "https://api.github.com/repos/vercel/next.js/git/trees/c6a6b7b28608d7697159a697338bfbe6ba6b60be"
+      },
+      "url": "https://api.github.com/repos/vercel/next.js/git/commits/2725a6b7f3f83b3bd7f568fc5be1dd7f1e8feaad",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqKLjhCRC1aQ7uu5UhlAAARtcQABTpjLgidSl9wj+HjsOlbtIf\nlPz3PV3zQhYiwf+N2/OhF5Wch8udLC1dI6Es697aFoGVyrmVdQ7k12aXMTX8Na/3\nYNC9/a5/DOczZinPzlf18NN5cgrU7cXXe7/NhIQ/t6vBdRnAfCABZ7qrmbQMGk0e\nVucNwWfuJgVVNBia595F+l8y0e9njf2XcbDuxE0DL9gFrWCBKT5kdrw+mu1obhIB\nQKvLmUowgaxo5MWvz434Qcft5WNGiYleYAYX7cJJCzw6RPgyLtgHuv+osQExDA+C\nkn1Fgq7oKSavVtcGFBCAdHsHN2d3n6sLGntS3fjYHroHHM0/llIzRWKYkVvIu/Ds\nGXfCK9cxN2Qoydhoo3E3lMl/9pdDV+sUXxCyqhdU1MBquoDYaZaWkyg9zB0wv2Ty\npyKOmqfjmRD90lbJVrs7fBSTmKc58aF9fWgrOicF0tA/ro83dIp3+7zj9ctLeBx1\nvZZWJBcSCqJpD8PslWA0S9R4RDZneUnSzpmeN50vSgog3WCpPUy/PEui8VBCZpQk\n5Fw+lqOz1ykwfOcOLnFHoFOjivk2HaEoTDtFdmgDwp1YCYWdBqEF9gTxuHM71JGt\nDj59FOwZVPJA7fdC6s0JAUGbIrvPhFRdl/vKwkqz+mE8SQ1VtuHOqCkY6U6JeMGD\n25UdiOdggvN9CR3ACpTV\n=Y35i\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree c6a6b7b28608d7697159a697338bfbe6ba6b60be\nparent 17c6c6dfb7f42f7f7df7d5f8b872a8dd48d360c5\nauthor Luke Sandberg <lukesandberg@users.noreply.github.com> 1781053665 -0700\ncommitter GitHub <noreply@github.com> 1781053665 +0000\n\n[turbopack] Enable turbopackFileSystemCacheForBuild by default in non-stable releases (#94616)\n\nThis is enabled by default in canary releases if we detect certain\nenvironment variables\n\nIn the future as part of stabilization this should be handled in the\nbuild-adaptors as a more generic solution",
+        "verified_at": "2026-06-10T01:07:45Z"
+      }
+    },
+    "url": "https://api.github.com/repos/vercel/next.js/commits/2725a6b7f3f83b3bd7f568fc5be1dd7f1e8feaad",
+    "html_url": "https://github.com/vercel/next.js/commit/2725a6b7f3f83b3bd7f568fc5be1dd7f1e8feaad",
+    "comments_url": "https://api.github.com/repos/vercel/next.js/commits/2725a6b7f3f83b3bd7f568fc5be1dd7f1e8feaad/comments",
+    "author": {
+      "login": "lukesandberg",
+      "id": 210140,
+      "node_id": "MDQ6VXNlcjIxMDE0MA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/210140?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lukesandberg",
+      "html_url": "https://github.com/lukesandberg",
+      "followers_url": "https://api.github.com/users/lukesandberg/followers",
+      "following_url": "https://api.github.com/users/lukesandberg/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lukesandberg/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lukesandberg/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lukesandberg/subscriptions",
+      "organizations_url": "https://api.github.com/users/lukesandberg/orgs",
+      "repos_url": "https://api.github.com/users/lukesandberg/repos",
+      "events_url": "https://api.github.com/users/lukesandberg/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lukesandberg/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "17c6c6dfb7f42f7f7df7d5f8b872a8dd48d360c5",
+        "url": "https://api.github.com/repos/vercel/next.js/commits/17c6c6dfb7f42f7f7df7d5f8b872a8dd48d360c5",
+        "html_url": "https://github.com/vercel/next.js/commit/17c6c6dfb7f42f7f7df7d5f8b872a8dd48d360c5"
+      }
+    ]
+  },
+  {
+    "sha": "f1add89d35599881d3aa5f81e931452b7accdf35",
+    "node_id": "C_kwDOBC3CitoAKGYxYWRkODlkMzU1OTk4ODFkM2FhNWY4MWU5MzE0NTJiN2FjY2RmMzU",
+    "commit": {
+      "author": {
+        "name": "Sebastian \"Sebbie\" Silbermann",
+        "email": "sebastian.silbermann@vercel.com",
+        "date": "2026-06-09T18:23:45Z"
+      },
+      "committer": {
+        "name": "Sebastian Sebbie Silbermann",
+        "email": "sebastian.silbermann@vercel.com",
+        "date": "2026-06-10T01:09:34Z"
+      },
+      "message": "[16.3.x-preview] Setup release branch (#94594)",
+      "tree": {
+        "sha": "ffec6d6e9c39be9bd802a198f698bebb0d745522",
+        "url": "https://api.github.com/repos/vercel/next.js/git/trees/ffec6d6e9c39be9bd802a198f698bebb0d745522"
+      },
+      "url": "https://api.github.com/repos/vercel/next.js/git/commits/f1add89d35599881d3aa5f81e931452b7accdf35",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN SSH SIGNATURE-----\nU1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgX0lKcA5mDnE6MTcwX47K7U2bf+\n961RO1tddYFjAmL+IAAAADZ2l0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5\nAAAAQEqhpspsbNIOXTvL9qEhGmR4HiRTH5LgvaeD82wvRgdaER/hggbyxk9a4qhoCM+gxm\nqZcM1Z9PiW5XcUIMG66gI=\n-----END SSH SIGNATURE-----",
+        "payload": "tree ffec6d6e9c39be9bd802a198f698bebb0d745522\nparent 2725a6b7f3f83b3bd7f568fc5be1dd7f1e8feaad\nauthor Sebastian \"Sebbie\" Silbermann <sebastian.silbermann@vercel.com> 1781029425 +0200\ncommitter Sebastian Sebbie Silbermann <sebastian.silbermann@vercel.com> 1781053774 +0200\n\n[16.3.x-preview] Setup release branch (#94594)",
+        "verified_at": "2026-06-10T01:13:41Z"
+      }
+    },
+    "url": "https://api.github.com/repos/vercel/next.js/commits/f1add89d35599881d3aa5f81e931452b7accdf35",
+    "html_url": "https://github.com/vercel/next.js/commit/f1add89d35599881d3aa5f81e931452b7accdf35",
+    "comments_url": "https://api.github.com/repos/vercel/next.js/commits/f1add89d35599881d3aa5f81e931452b7accdf35/comments",
+    "author": {
+      "login": "eps1lon",
+      "id": 12292047,
+      "node_id": "MDQ6VXNlcjEyMjkyMDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/12292047?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/eps1lon",
+      "html_url": "https://github.com/eps1lon",
+      "followers_url": "https://api.github.com/users/eps1lon/followers",
+      "following_url": "https://api.github.com/users/eps1lon/following{/other_user}",
+      "gists_url": "https://api.github.com/users/eps1lon/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/eps1lon/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/eps1lon/subscriptions",
+      "organizations_url": "https://api.github.com/users/eps1lon/orgs",
+      "repos_url": "https://api.github.com/users/eps1lon/repos",
+      "events_url": "https://api.github.com/users/eps1lon/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/eps1lon/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "eps1lon",
+      "id": 12292047,
+      "node_id": "MDQ6VXNlcjEyMjkyMDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/12292047?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/eps1lon",
+      "html_url": "https://github.com/eps1lon",
+      "followers_url": "https://api.github.com/users/eps1lon/followers",
+      "following_url": "https://api.github.com/users/eps1lon/following{/other_user}",
+      "gists_url": "https://api.github.com/users/eps1lon/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/eps1lon/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/eps1lon/subscriptions",
+      "organizations_url": "https://api.github.com/users/eps1lon/orgs",
+      "repos_url": "https://api.github.com/users/eps1lon/repos",
+      "events_url": "https://api.github.com/users/eps1lon/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/eps1lon/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "2725a6b7f3f83b3bd7f568fc5be1dd7f1e8feaad",
+        "url": "https://api.github.com/repos/vercel/next.js/commits/2725a6b7f3f83b3bd7f568fc5be1dd7f1e8feaad",
+        "html_url": "https://github.com/vercel/next.js/commit/2725a6b7f3f83b3bd7f568fc5be1dd7f1e8feaad"
+      }
+    ]
+  },
+  {
+    "sha": "da85bc1f232591c63818af4b7e67544343941bf1",
+    "node_id": "C_kwDOBC3CitoAKGRhODViYzFmMjMyNTkxYzYzODE4YWY0YjdlNjc1NDQzNDM5NDFiZjE",
+    "commit": {
+      "author": {
+        "name": "next-js-bot[bot]",
+        "email": "279046576+next-js-bot[bot]@users.noreply.github.com",
+        "date": "2026-06-09T19:14:07Z"
+      },
+      "committer": {
+        "name": "Sebastian Sebbie Silbermann",
+        "email": "sebastian.silbermann@vercel.com",
+        "date": "2026-06-10T01:11:05Z"
+      },
+      "message": "v16.3.0-preview.0",
+      "tree": {
+        "sha": "536e7d2502877dcc1dcd714de76c5133b676c144",
+        "url": "https://api.github.com/repos/vercel/next.js/git/trees/536e7d2502877dcc1dcd714de76c5133b676c144"
+      },
+      "url": "https://api.github.com/repos/vercel/next.js/git/commits/da85bc1f232591c63818af4b7e67544343941bf1",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN SSH SIGNATURE-----\nU1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgX0lKcA5mDnE6MTcwX47K7U2bf+\n961RO1tddYFjAmL+IAAAADZ2l0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5\nAAAAQHpbvO77nbBAGJ5IeJiUPkWQcwgf1I6wOB7mFlM6nCrjvYPXYkgHVsK7PRM15MRVr7\nt5ce9vxjJNX08NLfdRiQU=\n-----END SSH SIGNATURE-----",
+        "payload": "tree 536e7d2502877dcc1dcd714de76c5133b676c144\nparent f1add89d35599881d3aa5f81e931452b7accdf35\nauthor next-js-bot[bot] <279046576+next-js-bot[bot]@users.noreply.github.com> 1781032447 +0000\ncommitter Sebastian Sebbie Silbermann <sebastian.silbermann@vercel.com> 1781053865 +0200\n\nv16.3.0-preview.0\n",
+        "verified_at": "2026-06-10T01:13:41Z"
+      }
+    },
+    "url": "https://api.github.com/repos/vercel/next.js/commits/da85bc1f232591c63818af4b7e67544343941bf1",
+    "html_url": "https://github.com/vercel/next.js/commit/da85bc1f232591c63818af4b7e67544343941bf1",
+    "comments_url": "https://api.github.com/repos/vercel/next.js/commits/da85bc1f232591c63818af4b7e67544343941bf1/comments",
+    "author": {
+      "login": "next-js-bot[bot]",
+      "id": 279046576,
+      "node_id": "BOT_kgDOEKHpsA",
+      "avatar_url": "https://avatars.githubusercontent.com/in/3491438?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/next-js-bot%5Bbot%5D",
+      "html_url": "https://github.com/apps/next-js-bot",
+      "followers_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "eps1lon",
+      "id": 12292047,
+      "node_id": "MDQ6VXNlcjEyMjkyMDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/12292047?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/eps1lon",
+      "html_url": "https://github.com/eps1lon",
+      "followers_url": "https://api.github.com/users/eps1lon/followers",
+      "following_url": "https://api.github.com/users/eps1lon/following{/other_user}",
+      "gists_url": "https://api.github.com/users/eps1lon/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/eps1lon/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/eps1lon/subscriptions",
+      "organizations_url": "https://api.github.com/users/eps1lon/orgs",
+      "repos_url": "https://api.github.com/users/eps1lon/repos",
+      "events_url": "https://api.github.com/users/eps1lon/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/eps1lon/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "f1add89d35599881d3aa5f81e931452b7accdf35",
+        "url": "https://api.github.com/repos/vercel/next.js/commits/f1add89d35599881d3aa5f81e931452b7accdf35",
+        "html_url": "https://github.com/vercel/next.js/commit/f1add89d35599881d3aa5f81e931452b7accdf35"
+      }
+    ]
+  },
+  {
+    "sha": "178bea1aa4d989b94bad7f32c5213523480ff22e",
+    "node_id": "C_kwDOBC3CitoAKDE3OGJlYTFhYTRkOTg5Yjk0YmFkN2YzMmM1MjEzNTIzNDgwZmYyMmU",
+    "commit": {
+      "author": {
+        "name": "Sebastian \"Sebbie\" Silbermann",
+        "email": "sebastian.silbermann@vercel.com",
+        "date": "2026-06-09T20:24:30Z"
+      },
+      "committer": {
+        "name": "Sebastian Sebbie Silbermann",
+        "email": "sebastian.silbermann@vercel.com",
+        "date": "2026-06-10T01:11:17Z"
+      },
+      "message": "[cd] Publish preview release with `@preview` NPM dist-tag (#94619)",
+      "tree": {
+        "sha": "76ddea21cdec96674b86951bc897935a5705a0bd",
+        "url": "https://api.github.com/repos/vercel/next.js/git/trees/76ddea21cdec96674b86951bc897935a5705a0bd"
+      },
+      "url": "https://api.github.com/repos/vercel/next.js/git/commits/178bea1aa4d989b94bad7f32c5213523480ff22e",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN SSH SIGNATURE-----\nU1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgX0lKcA5mDnE6MTcwX47K7U2bf+\n961RO1tddYFjAmL+IAAAADZ2l0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5\nAAAAQMsR8eudfOIo3Pasf8f0sbhqYJWScsZ2Ke52F+5BNKHHqvk6TLSrsLoN0aHt2YW4St\neG4Ej+1NFf3m5ZIAlJGwU=\n-----END SSH SIGNATURE-----",
+        "payload": "tree 76ddea21cdec96674b86951bc897935a5705a0bd\nparent da85bc1f232591c63818af4b7e67544343941bf1\nauthor Sebastian \"Sebbie\" Silbermann <sebastian.silbermann@vercel.com> 1781036670 +0200\ncommitter Sebastian Sebbie Silbermann <sebastian.silbermann@vercel.com> 1781053877 +0200\n\n[cd] Publish preview release with `@preview` NPM dist-tag (#94619)",
+        "verified_at": "2026-06-10T01:13:41Z"
+      }
+    },
+    "url": "https://api.github.com/repos/vercel/next.js/commits/178bea1aa4d989b94bad7f32c5213523480ff22e",
+    "html_url": "https://github.com/vercel/next.js/commit/178bea1aa4d989b94bad7f32c5213523480ff22e",
+    "comments_url": "https://api.github.com/repos/vercel/next.js/commits/178bea1aa4d989b94bad7f32c5213523480ff22e/comments",
+    "author": {
+      "login": "eps1lon",
+      "id": 12292047,
+      "node_id": "MDQ6VXNlcjEyMjkyMDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/12292047?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/eps1lon",
+      "html_url": "https://github.com/eps1lon",
+      "followers_url": "https://api.github.com/users/eps1lon/followers",
+      "following_url": "https://api.github.com/users/eps1lon/following{/other_user}",
+      "gists_url": "https://api.github.com/users/eps1lon/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/eps1lon/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/eps1lon/subscriptions",
+      "organizations_url": "https://api.github.com/users/eps1lon/orgs",
+      "repos_url": "https://api.github.com/users/eps1lon/repos",
+      "events_url": "https://api.github.com/users/eps1lon/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/eps1lon/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "eps1lon",
+      "id": 12292047,
+      "node_id": "MDQ6VXNlcjEyMjkyMDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/12292047?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/eps1lon",
+      "html_url": "https://github.com/eps1lon",
+      "followers_url": "https://api.github.com/users/eps1lon/followers",
+      "following_url": "https://api.github.com/users/eps1lon/following{/other_user}",
+      "gists_url": "https://api.github.com/users/eps1lon/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/eps1lon/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/eps1lon/subscriptions",
+      "organizations_url": "https://api.github.com/users/eps1lon/orgs",
+      "repos_url": "https://api.github.com/users/eps1lon/repos",
+      "events_url": "https://api.github.com/users/eps1lon/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/eps1lon/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "da85bc1f232591c63818af4b7e67544343941bf1",
+        "url": "https://api.github.com/repos/vercel/next.js/commits/da85bc1f232591c63818af4b7e67544343941bf1",
+        "html_url": "https://github.com/vercel/next.js/commit/da85bc1f232591c63818af4b7e67544343941bf1"
+      }
+    ]
+  },
+  {
+    "sha": "454f81d7a68c0a269a2174aeac6641c3075273d4",
+    "node_id": "C_kwDOBC3CitoAKDQ1NGY4MWQ3YTY4YzBhMjY5YTIxNzRhZWFjNjY0MWMzMDc1MjczZDQ",
+    "commit": {
+      "author": {
+        "name": "next-js-bot[bot]",
+        "email": "279046576+next-js-bot[bot]@users.noreply.github.com",
+        "date": "2026-06-09T20:36:30Z"
+      },
+      "committer": {
+        "name": "Sebastian Sebbie Silbermann",
+        "email": "sebastian.silbermann@vercel.com",
+        "date": "2026-06-10T01:11:17Z"
+      },
+      "message": "v16.3.0-preview.1",
+      "tree": {
+        "sha": "ad3e4f478f57a88d92ea97f0376d03259205f906",
+        "url": "https://api.github.com/repos/vercel/next.js/git/trees/ad3e4f478f57a88d92ea97f0376d03259205f906"
+      },
+      "url": "https://api.github.com/repos/vercel/next.js/git/commits/454f81d7a68c0a269a2174aeac6641c3075273d4",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN SSH SIGNATURE-----\nU1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgX0lKcA5mDnE6MTcwX47K7U2bf+\n961RO1tddYFjAmL+IAAAADZ2l0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5\nAAAAQHXwyLzLfTyrQ1iHrXR+KD8Wjr/z5N4icYUWSfw5zAuk+cszRa6jM0ASU1wDYXAxUH\nN4W0FmNt12yWx6YhdyVw4=\n-----END SSH SIGNATURE-----",
+        "payload": "tree ad3e4f478f57a88d92ea97f0376d03259205f906\nparent 178bea1aa4d989b94bad7f32c5213523480ff22e\nauthor next-js-bot[bot] <279046576+next-js-bot[bot]@users.noreply.github.com> 1781037390 +0000\ncommitter Sebastian Sebbie Silbermann <sebastian.silbermann@vercel.com> 1781053877 +0200\n\nv16.3.0-preview.1",
+        "verified_at": "2026-06-10T01:13:41Z"
+      }
+    },
+    "url": "https://api.github.com/repos/vercel/next.js/commits/454f81d7a68c0a269a2174aeac6641c3075273d4",
+    "html_url": "https://github.com/vercel/next.js/commit/454f81d7a68c0a269a2174aeac6641c3075273d4",
+    "comments_url": "https://api.github.com/repos/vercel/next.js/commits/454f81d7a68c0a269a2174aeac6641c3075273d4/comments",
+    "author": {
+      "login": "next-js-bot[bot]",
+      "id": 279046576,
+      "node_id": "BOT_kgDOEKHpsA",
+      "avatar_url": "https://avatars.githubusercontent.com/in/3491438?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/next-js-bot%5Bbot%5D",
+      "html_url": "https://github.com/apps/next-js-bot",
+      "followers_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "eps1lon",
+      "id": 12292047,
+      "node_id": "MDQ6VXNlcjEyMjkyMDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/12292047?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/eps1lon",
+      "html_url": "https://github.com/eps1lon",
+      "followers_url": "https://api.github.com/users/eps1lon/followers",
+      "following_url": "https://api.github.com/users/eps1lon/following{/other_user}",
+      "gists_url": "https://api.github.com/users/eps1lon/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/eps1lon/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/eps1lon/subscriptions",
+      "organizations_url": "https://api.github.com/users/eps1lon/orgs",
+      "repos_url": "https://api.github.com/users/eps1lon/repos",
+      "events_url": "https://api.github.com/users/eps1lon/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/eps1lon/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "178bea1aa4d989b94bad7f32c5213523480ff22e",
+        "url": "https://api.github.com/repos/vercel/next.js/commits/178bea1aa4d989b94bad7f32c5213523480ff22e",
+        "html_url": "https://github.com/vercel/next.js/commit/178bea1aa4d989b94bad7f32c5213523480ff22e"
+      }
+    ]
+  },
+  {
+    "sha": "08e5b839cee42f9c74c3182e0fe2b4b77c0b0c7d",
+    "node_id": "C_kwDOBC3CitoAKDA4ZTViODM5Y2VlNDJmOWM3NGMzMTgyZTBmZTJiNGI3N2MwYjBjN2Q",
+    "commit": {
+      "author": {
+        "name": "Sebastian \"Sebbie\" Silbermann",
+        "email": "sebastian.silbermann@vercel.com",
+        "date": "2026-06-09T20:41:51Z"
+      },
+      "committer": {
+        "name": "Sebastian Sebbie Silbermann",
+        "email": "sebastian.silbermann@vercel.com",
+        "date": "2026-06-10T01:11:17Z"
+      },
+      "message": "[cd] Ensure wasm binaries get tagged properly (#94621)",
+      "tree": {
+        "sha": "f4e8b4e55b6832c96b29a1569d1416ae5727f7c9",
+        "url": "https://api.github.com/repos/vercel/next.js/git/trees/f4e8b4e55b6832c96b29a1569d1416ae5727f7c9"
+      },
+      "url": "https://api.github.com/repos/vercel/next.js/git/commits/08e5b839cee42f9c74c3182e0fe2b4b77c0b0c7d",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN SSH SIGNATURE-----\nU1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgX0lKcA5mDnE6MTcwX47K7U2bf+\n961RO1tddYFjAmL+IAAAADZ2l0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5\nAAAAQIDcMFiItm6PKaO7oYYk8/hN8fkAq6Ptn7YYqQd6+klY4gVOMDvF8LKL/iG7o96XA9\n6UZ/ZnMXk818/UFlcfEAw=\n-----END SSH SIGNATURE-----",
+        "payload": "tree f4e8b4e55b6832c96b29a1569d1416ae5727f7c9\nparent 454f81d7a68c0a269a2174aeac6641c3075273d4\nauthor Sebastian \"Sebbie\" Silbermann <sebastian.silbermann@vercel.com> 1781037711 +0200\ncommitter Sebastian Sebbie Silbermann <sebastian.silbermann@vercel.com> 1781053877 +0200\n\n[cd] Ensure wasm binaries get tagged properly (#94621)",
+        "verified_at": "2026-06-10T01:13:41Z"
+      }
+    },
+    "url": "https://api.github.com/repos/vercel/next.js/commits/08e5b839cee42f9c74c3182e0fe2b4b77c0b0c7d",
+    "html_url": "https://github.com/vercel/next.js/commit/08e5b839cee42f9c74c3182e0fe2b4b77c0b0c7d",
+    "comments_url": "https://api.github.com/repos/vercel/next.js/commits/08e5b839cee42f9c74c3182e0fe2b4b77c0b0c7d/comments",
+    "author": {
+      "login": "eps1lon",
+      "id": 12292047,
+      "node_id": "MDQ6VXNlcjEyMjkyMDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/12292047?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/eps1lon",
+      "html_url": "https://github.com/eps1lon",
+      "followers_url": "https://api.github.com/users/eps1lon/followers",
+      "following_url": "https://api.github.com/users/eps1lon/following{/other_user}",
+      "gists_url": "https://api.github.com/users/eps1lon/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/eps1lon/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/eps1lon/subscriptions",
+      "organizations_url": "https://api.github.com/users/eps1lon/orgs",
+      "repos_url": "https://api.github.com/users/eps1lon/repos",
+      "events_url": "https://api.github.com/users/eps1lon/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/eps1lon/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "eps1lon",
+      "id": 12292047,
+      "node_id": "MDQ6VXNlcjEyMjkyMDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/12292047?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/eps1lon",
+      "html_url": "https://github.com/eps1lon",
+      "followers_url": "https://api.github.com/users/eps1lon/followers",
+      "following_url": "https://api.github.com/users/eps1lon/following{/other_user}",
+      "gists_url": "https://api.github.com/users/eps1lon/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/eps1lon/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/eps1lon/subscriptions",
+      "organizations_url": "https://api.github.com/users/eps1lon/orgs",
+      "repos_url": "https://api.github.com/users/eps1lon/repos",
+      "events_url": "https://api.github.com/users/eps1lon/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/eps1lon/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "454f81d7a68c0a269a2174aeac6641c3075273d4",
+        "url": "https://api.github.com/repos/vercel/next.js/commits/454f81d7a68c0a269a2174aeac6641c3075273d4",
+        "html_url": "https://github.com/vercel/next.js/commit/454f81d7a68c0a269a2174aeac6641c3075273d4"
+      }
+    ]
+  },
+  {
+    "sha": "2242206db1817b54414a775aae959f2f8931f549",
+    "node_id": "C_kwDOBC3CitoAKDIyNDIyMDZkYjE4MTdiNTQ0MTRhNzc1YWFlOTU5ZjJmODkzMWY1NDk",
+    "commit": {
+      "author": {
+        "name": "next-js-bot[bot]",
+        "email": "279046576+next-js-bot[bot]@users.noreply.github.com",
+        "date": "2026-06-09T20:43:50Z"
+      },
+      "committer": {
+        "name": "Sebastian Sebbie Silbermann",
+        "email": "sebastian.silbermann@vercel.com",
+        "date": "2026-06-10T01:11:17Z"
+      },
+      "message": "v16.3.0-preview.2",
+      "tree": {
+        "sha": "3af75c7eeefc65d766839be1153bd3dd3ba161d6",
+        "url": "https://api.github.com/repos/vercel/next.js/git/trees/3af75c7eeefc65d766839be1153bd3dd3ba161d6"
+      },
+      "url": "https://api.github.com/repos/vercel/next.js/git/commits/2242206db1817b54414a775aae959f2f8931f549",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN SSH SIGNATURE-----\nU1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgX0lKcA5mDnE6MTcwX47K7U2bf+\n961RO1tddYFjAmL+IAAAADZ2l0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5\nAAAAQBgybFWkwnfvmK56FeQcj3kQ6oOCaNg5ZtzqDHWVFf0krYJHHJ/Ps5+whVQMeE5CxG\nbhu4/lblysNxy/Zkukqws=\n-----END SSH SIGNATURE-----",
+        "payload": "tree 3af75c7eeefc65d766839be1153bd3dd3ba161d6\nparent 08e5b839cee42f9c74c3182e0fe2b4b77c0b0c7d\nauthor next-js-bot[bot] <279046576+next-js-bot[bot]@users.noreply.github.com> 1781037830 +0000\ncommitter Sebastian Sebbie Silbermann <sebastian.silbermann@vercel.com> 1781053877 +0200\n\nv16.3.0-preview.2",
+        "verified_at": "2026-06-10T01:13:41Z"
+      }
+    },
+    "url": "https://api.github.com/repos/vercel/next.js/commits/2242206db1817b54414a775aae959f2f8931f549",
+    "html_url": "https://github.com/vercel/next.js/commit/2242206db1817b54414a775aae959f2f8931f549",
+    "comments_url": "https://api.github.com/repos/vercel/next.js/commits/2242206db1817b54414a775aae959f2f8931f549/comments",
+    "author": {
+      "login": "next-js-bot[bot]",
+      "id": 279046576,
+      "node_id": "BOT_kgDOEKHpsA",
+      "avatar_url": "https://avatars.githubusercontent.com/in/3491438?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/next-js-bot%5Bbot%5D",
+      "html_url": "https://github.com/apps/next-js-bot",
+      "followers_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "eps1lon",
+      "id": 12292047,
+      "node_id": "MDQ6VXNlcjEyMjkyMDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/12292047?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/eps1lon",
+      "html_url": "https://github.com/eps1lon",
+      "followers_url": "https://api.github.com/users/eps1lon/followers",
+      "following_url": "https://api.github.com/users/eps1lon/following{/other_user}",
+      "gists_url": "https://api.github.com/users/eps1lon/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/eps1lon/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/eps1lon/subscriptions",
+      "organizations_url": "https://api.github.com/users/eps1lon/orgs",
+      "repos_url": "https://api.github.com/users/eps1lon/repos",
+      "events_url": "https://api.github.com/users/eps1lon/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/eps1lon/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "08e5b839cee42f9c74c3182e0fe2b4b77c0b0c7d",
+        "url": "https://api.github.com/repos/vercel/next.js/commits/08e5b839cee42f9c74c3182e0fe2b4b77c0b0c7d",
+        "html_url": "https://github.com/vercel/next.js/commit/08e5b839cee42f9c74c3182e0fe2b4b77c0b0c7d"
+      }
+    ]
+  },
+  {
+    "sha": "98400ab3d283a8ef35dff05a42b9306c456d0c60",
+    "node_id": "C_kwDOBC3CitoAKDk4NDAwYWIzZDI4M2E4ZWYzNWRmZjA1YTQyYjkzMDZjNDU2ZDBjNjA",
+    "commit": {
+      "author": {
+        "name": "next-js-bot[bot]",
+        "email": "279046576+next-js-bot[bot]@users.noreply.github.com",
+        "date": "2026-06-10T01:16:04Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-10T01:16:04Z"
+      },
+      "message": "v16.3.0-preview.3",
+      "tree": {
+        "sha": "38c9905ddc6014019b5a1af10674d64e51812440",
+        "url": "https://api.github.com/repos/vercel/next.js/git/trees/38c9905ddc6014019b5a1af10674d64e51812440"
+      },
+      "url": "https://api.github.com/repos/vercel/next.js/git/commits/98400ab3d283a8ef35dff05a42b9306c456d0c60",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqKLrUCRC1aQ7uu5UhlAAAjuoQAK/99K03J0Uc3SlYb3lwq4Hy\nqhTmqgZTHvZmaHBTijBcjtJEBVgrKmwJpG5b0jnu5ErRpAyJ8wC1Zxida4WvUHoA\nMMH7Eqv3M/kZ0P4jr1wXZi8AomVX6cwB7T+7hmCCESbvZ4aPx3MMllEq5WmBpJg3\nxDfYPJb0R7skNEJ7N3xWL1WD7GU0bc10VbFSTEgT5hbUHV69mametZcDAqsmebof\n0jRuWyUM3flBxEd1xtOm+kYaRXFgHEB1RGI61a/uNhedJJC8KRQwEEfSLtKtmQpL\nC5R96icuPiF1NFrgBjBjdWo7d7U/G/lJqL3MjADAlRet1qlpkNd6f2sd2G58W49f\ns9DS2j5PkfWISxt+h4qj1MuKNqrDugkHV8P2RjRfh21C0vsZwa92Zavr+Dt03TuZ\nnZ7BOWuHJrNZjWYsmJBq9maea6aP6d8ohr37yt9AF0uZVY/wID29vagJF/AlGDyI\nfiRuNaZa8vCEQ/356X8dECE0y9WY1aBl6c3AvKrfo19D6mCNSsDUKEVzcfNtnkM/\nYxdefuagu9FQXaVrMCdOtdTenN1vYj8rAT+n3hs35rG2ZZIVrnI5O4RuUQu5jrIW\nG+muds4N+e7ElEq6q0wj1KneZq4eYo1cL3jGUCj+GC0ONnpW7SzClg3FJpf9UlOO\n/kovYZ3nyMFenQXPCAfJ\n=6gDt\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 38c9905ddc6014019b5a1af10674d64e51812440\nparent 2242206db1817b54414a775aae959f2f8931f549\nauthor next-js-bot[bot] <279046576+next-js-bot[bot]@users.noreply.github.com> 1781054164 +0000\ncommitter GitHub <noreply@github.com> 1781054164 +0000\n\nv16.3.0-preview.3",
+        "verified_at": "2026-06-10T01:16:04Z"
+      }
+    },
+    "url": "https://api.github.com/repos/vercel/next.js/commits/98400ab3d283a8ef35dff05a42b9306c456d0c60",
+    "html_url": "https://github.com/vercel/next.js/commit/98400ab3d283a8ef35dff05a42b9306c456d0c60",
+    "comments_url": "https://api.github.com/repos/vercel/next.js/commits/98400ab3d283a8ef35dff05a42b9306c456d0c60/comments",
+    "author": {
+      "login": "next-js-bot[bot]",
+      "id": 279046576,
+      "node_id": "BOT_kgDOEKHpsA",
+      "avatar_url": "https://avatars.githubusercontent.com/in/3491438?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/next-js-bot%5Bbot%5D",
+      "html_url": "https://github.com/apps/next-js-bot",
+      "followers_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/next-js-bot%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "2242206db1817b54414a775aae959f2f8931f549",
+        "url": "https://api.github.com/repos/vercel/next.js/commits/2242206db1817b54414a775aae959f2f8931f549",
+        "html_url": "https://github.com/vercel/next.js/commit/2242206db1817b54414a775aae959f2f8931f549"
+      }
+    ]
+  }
+]

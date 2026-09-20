@@ -1,0 +1,166 @@
+[
+  {
+    "sha": "ff3fc367d20d6e5bda6d74e1fc2cc798e7cb5416",
+    "node_id": "C_kwDOBC3CitoAKGZmM2ZjMzY3ZDIwZDZlNWJkYTZkNzRlMWZjMmNjNzk4ZTdjYjU0MTY",
+    "commit": {
+      "author": {
+        "name": "Will Binns-Smith",
+        "email": "wbinnssmith@gmail.com",
+        "date": "2024-11-05T22:28:43Z"
+      },
+      "committer": {
+        "name": "Will Binns-Smith",
+        "email": "wbinnssmith@gmail.com",
+        "date": "2024-11-06T00:19:20Z"
+      },
+      "message": "Publish misc. Turbopack packages\n\nThe `turbopack/` directory includes miscellaneous JavaScript packages that should be published to npm. This was handled in https://github.com/vercel/turbo/tree/5fc75a38477e9f810bc4ee8aba4c741425fe2342 before Turbopack moved to the Next.js repo.\n\nTest Plan: Run workflow manually or with this PR and verify the publish xtask is run.",
+      "tree": {
+        "sha": "8eced623e0956ce7d2806c0ae64df0e4866a5396",
+        "url": "https://api.github.com/repos/vercel/next.js/git/trees/8eced623e0956ce7d2806c0ae64df0e4866a5396"
+      },
+      "url": "https://api.github.com/repos/vercel/next.js/git/commits/ff3fc367d20d6e5bda6d74e1fc2cc798e7cb5416",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/vercel/next.js/commits/ff3fc367d20d6e5bda6d74e1fc2cc798e7cb5416",
+    "html_url": "https://github.com/vercel/next.js/commit/ff3fc367d20d6e5bda6d74e1fc2cc798e7cb5416",
+    "comments_url": "https://api.github.com/repos/vercel/next.js/commits/ff3fc367d20d6e5bda6d74e1fc2cc798e7cb5416/comments",
+    "author": {
+      "login": "wbinnssmith",
+      "id": 755844,
+      "node_id": "MDQ6VXNlcjc1NTg0NA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/755844?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/wbinnssmith",
+      "html_url": "https://github.com/wbinnssmith",
+      "followers_url": "https://api.github.com/users/wbinnssmith/followers",
+      "following_url": "https://api.github.com/users/wbinnssmith/following{/other_user}",
+      "gists_url": "https://api.github.com/users/wbinnssmith/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/wbinnssmith/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/wbinnssmith/subscriptions",
+      "organizations_url": "https://api.github.com/users/wbinnssmith/orgs",
+      "repos_url": "https://api.github.com/users/wbinnssmith/repos",
+      "events_url": "https://api.github.com/users/wbinnssmith/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/wbinnssmith/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "wbinnssmith",
+      "id": 755844,
+      "node_id": "MDQ6VXNlcjc1NTg0NA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/755844?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/wbinnssmith",
+      "html_url": "https://github.com/wbinnssmith",
+      "followers_url": "https://api.github.com/users/wbinnssmith/followers",
+      "following_url": "https://api.github.com/users/wbinnssmith/following{/other_user}",
+      "gists_url": "https://api.github.com/users/wbinnssmith/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/wbinnssmith/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/wbinnssmith/subscriptions",
+      "organizations_url": "https://api.github.com/users/wbinnssmith/orgs",
+      "repos_url": "https://api.github.com/users/wbinnssmith/repos",
+      "events_url": "https://api.github.com/users/wbinnssmith/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/wbinnssmith/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "754417805b5456302c9f922e915fafdd0c9fccc5",
+        "url": "https://api.github.com/repos/vercel/next.js/commits/754417805b5456302c9f922e915fafdd0c9fccc5",
+        "html_url": "https://github.com/vercel/next.js/commit/754417805b5456302c9f922e915fafdd0c9fccc5"
+      }
+    ]
+  },
+  {
+    "sha": "1a144a571ea21622ab474ba5de983fd1af392eff",
+    "node_id": "C_kwDOBC3CitoAKDFhMTQ0YTU3MWVhMjE2MjJhYjQ3NGJhNWRlOTgzZmQxYWYzOTJlZmY",
+    "commit": {
+      "author": {
+        "name": "Will Binns-Smith",
+        "email": "wbinnssmith@gmail.com",
+        "date": "2024-11-06T00:40:32Z"
+      },
+      "committer": {
+        "name": "Will Binns-Smith",
+        "email": "wbinnssmith@gmail.com",
+        "date": "2024-11-06T00:40:32Z"
+      },
+      "message": "chore: release turbopack npm packages\n\n- @vercel/devlow-bench@0.3.3",
+      "tree": {
+        "sha": "bb6764a7980ccabca64a7b15ab8b217829d06450",
+        "url": "https://api.github.com/repos/vercel/next.js/git/trees/bb6764a7980ccabca64a7b15ab8b217829d06450"
+      },
+      "url": "https://api.github.com/repos/vercel/next.js/git/commits/1a144a571ea21622ab474ba5de983fd1af392eff",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN SSH SIGNATURE-----\nU1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgDqscmde56h0B8c5+MN9OBK6qzF\njY/8DnyO1lTfekfnUAAAADZ2l0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5\nAAAAQGC7kQjKrAwaIziWPRnq6DhWGGt7QGvtlOYnoYDnLwV6qDqMmI2XUwpDbHcUAVHKCp\n7yePfXzcmvvNdpdTn4+Qc=\n-----END SSH SIGNATURE-----",
+        "payload": "tree bb6764a7980ccabca64a7b15ab8b217829d06450\nparent ff3fc367d20d6e5bda6d74e1fc2cc798e7cb5416\nauthor Will Binns-Smith <wbinnssmith@gmail.com> 1730853632 -0800\ncommitter Will Binns-Smith <wbinnssmith@gmail.com> 1730853632 -0800\n\nchore: release turbopack npm packages\n\n- @vercel/devlow-bench@0.3.3\n",
+        "verified_at": "2024-11-06T00:40:45Z"
+      }
+    },
+    "url": "https://api.github.com/repos/vercel/next.js/commits/1a144a571ea21622ab474ba5de983fd1af392eff",
+    "html_url": "https://github.com/vercel/next.js/commit/1a144a571ea21622ab474ba5de983fd1af392eff",
+    "comments_url": "https://api.github.com/repos/vercel/next.js/commits/1a144a571ea21622ab474ba5de983fd1af392eff/comments",
+    "author": {
+      "login": "wbinnssmith",
+      "id": 755844,
+      "node_id": "MDQ6VXNlcjc1NTg0NA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/755844?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/wbinnssmith",
+      "html_url": "https://github.com/wbinnssmith",
+      "followers_url": "https://api.github.com/users/wbinnssmith/followers",
+      "following_url": "https://api.github.com/users/wbinnssmith/following{/other_user}",
+      "gists_url": "https://api.github.com/users/wbinnssmith/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/wbinnssmith/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/wbinnssmith/subscriptions",
+      "organizations_url": "https://api.github.com/users/wbinnssmith/orgs",
+      "repos_url": "https://api.github.com/users/wbinnssmith/repos",
+      "events_url": "https://api.github.com/users/wbinnssmith/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/wbinnssmith/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "wbinnssmith",
+      "id": 755844,
+      "node_id": "MDQ6VXNlcjc1NTg0NA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/755844?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/wbinnssmith",
+      "html_url": "https://github.com/wbinnssmith",
+      "followers_url": "https://api.github.com/users/wbinnssmith/followers",
+      "following_url": "https://api.github.com/users/wbinnssmith/following{/other_user}",
+      "gists_url": "https://api.github.com/users/wbinnssmith/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/wbinnssmith/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/wbinnssmith/subscriptions",
+      "organizations_url": "https://api.github.com/users/wbinnssmith/orgs",
+      "repos_url": "https://api.github.com/users/wbinnssmith/repos",
+      "events_url": "https://api.github.com/users/wbinnssmith/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/wbinnssmith/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "ff3fc367d20d6e5bda6d74e1fc2cc798e7cb5416",
+        "url": "https://api.github.com/repos/vercel/next.js/commits/ff3fc367d20d6e5bda6d74e1fc2cc798e7cb5416",
+        "html_url": "https://github.com/vercel/next.js/commit/ff3fc367d20d6e5bda6d74e1fc2cc798e7cb5416"
+      }
+    ]
+  }
+]

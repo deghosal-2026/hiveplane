@@ -1,0 +1,166 @@
+[
+  {
+    "sha": "8874c74680b606ed177fd2662f36c9ec00167876",
+    "node_id": "C_kwDOAn8RLNoAKDg4NzRjNzQ2ODBiNjA2ZWQxNzdmZDI2NjJmMzZjOWVjMDAxNjc4NzY",
+    "commit": {
+      "author": {
+        "name": "vs-code-engineering[bot]",
+        "email": "122617954+vs-code-engineering[bot]@users.noreply.github.com",
+        "date": "2026-04-17T00:23:17Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-04-17T00:23:17Z"
+      },
+      "message": "[cherry-pick] Handle showing weekly and session rate limit data (#310857)\n\nCo-authored-by: vs-code-engineering[bot] <vs-code-engineering[bot]@users.noreply.github.com>",
+      "tree": {
+        "sha": "fa5fef3797b9e1b03aeb52fea63fbfa3ca61c433",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/fa5fef3797b9e1b03aeb52fea63fbfa3ca61c433"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/8874c74680b606ed177fd2662f36c9ec00167876",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp4X11CRC1aQ7uu5UhlAAAVukQABYZY8qK4kZgDHea7f+C8+EB\nOIt1MvRH3C0Km25HnlpZgxCs6Ssq7u/gY7PFwLvjqbvMpnvIR5rili3fiHRJ5jqn\nCL+yVSBlF4l5Kb+4MGsPrIj2C2JohnNdy2JMizwlWkMSeSnSgtHCLmX+MfZx0yMK\ndliOs6lhwuHma1sTYaXxnhGkes4Vg5Ml+qeSwsHGWXyEnaVYIn9hcZlmC9tvbPt7\n+G555EYgbjosoVcKdGEk23owWCTzHL0QWExYVpJFZPh9sp2Kj2QB8fhCNv+OkWBL\nHooQeh5d83xOUamz4ubnLZMpOepdneV7qryZIJALH1dtTwficHN5g7a+m7FFtwrN\nw2nuxUVlWCn/LkZCzRxy/WdtNriLbAS18qZfCnYapY2kqw0XbLet+IYqjDh7HxMA\nJHugeb6tWkicwHtWIYje+C997ZogoAh/MIBpZjXUciweEy2P9UHk94vNpIPfIwD1\nU8+jHPmxzLsKn/lcfwrw8xwUJrBsFrdvCslIGzTu8dKdMuKhQ+1/Qsiz7HbEg32M\ndfMPxAv2mOhYODPUSDtkeP3T5jA6i/GAx58pSsaEI0ZZ2KaQCLUlaCh7U+AVB+F9\nkaatglwgg0uRywbZzdNlNISaMtpLM72evk78Z4fVNUgU0Nalld4mhxGtSiSv1t/G\n7V+PLWQtGjHKpbMmQW3K\n=Libr\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree fa5fef3797b9e1b03aeb52fea63fbfa3ca61c433\nparent f89829d8f4bfbd2157a2916d3069f479f6dda69b\nauthor vs-code-engineering[bot] <122617954+vs-code-engineering[bot]@users.noreply.github.com> 1776385397 -0400\ncommitter GitHub <noreply@github.com> 1776385397 -0400\n\n[cherry-pick] Handle showing weekly and session rate limit data (#310857)\n\nCo-authored-by: vs-code-engineering[bot] <vs-code-engineering[bot]@users.noreply.github.com>",
+        "verified_at": "2026-04-17T00:23:18Z"
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/8874c74680b606ed177fd2662f36c9ec00167876",
+    "html_url": "https://github.com/microsoft/vscode/commit/8874c74680b606ed177fd2662f36c9ec00167876",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/8874c74680b606ed177fd2662f36c9ec00167876/comments",
+    "author": {
+      "login": "vs-code-engineering[bot]",
+      "id": 122617954,
+      "node_id": "BOT_kgDOB08AYg",
+      "avatar_url": "https://avatars.githubusercontent.com/in/281319?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/vs-code-engineering%5Bbot%5D",
+      "html_url": "https://github.com/apps/vs-code-engineering",
+      "followers_url": "https://api.github.com/users/vs-code-engineering%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/vs-code-engineering%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/vs-code-engineering%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/vs-code-engineering%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/vs-code-engineering%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/vs-code-engineering%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/vs-code-engineering%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/vs-code-engineering%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/vs-code-engineering%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "f89829d8f4bfbd2157a2916d3069f479f6dda69b",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/f89829d8f4bfbd2157a2916d3069f479f6dda69b",
+        "html_url": "https://github.com/microsoft/vscode/commit/f89829d8f4bfbd2157a2916d3069f479f6dda69b"
+      }
+    ]
+  },
+  {
+    "sha": "8ff9a84c4a9cd0b694aee8f374aa531f7a9d0d08",
+    "node_id": "C_kwDOAn8RLNoAKDhmZjlhODRjNGE5Y2QwYjY5NGFlZThmMzc0YWE1MzFmN2E5ZDBkMDg",
+    "commit": {
+      "author": {
+        "name": "Alex Ross",
+        "email": "38270282+alexr00@users.noreply.github.com",
+        "date": "2026-04-17T09:25:23Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-04-17T09:25:23Z"
+      },
+      "message": "Update Copilot version (#310942)",
+      "tree": {
+        "sha": "3dbc9a2c42390eef76fb4c92b4e744828d966fe9",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/3dbc9a2c42390eef76fb4c92b4e744828d966fe9"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/8ff9a84c4a9cd0b694aee8f374aa531f7a9d0d08",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp4fyDCRC1aQ7uu5UhlAAAQi8QABSTNGSqRxs9cnhSTd9UTt1o\nkVtYnZLGCT+ATIPhTWPYOYoFQuEPXW+sZ+eDN6IX+cijYoscK0bmf7RVZZSHaaFT\n6Wd95bf89n0JpBNb50wcDb5avOmwxgmH3aKlmUnmP7IL822L+mIHUh2uVym6HRd4\nPyEl4zX14UoMnzWyrI80af4QmoBiy7P5XkkGxIEJfIbM+IqodPLKElJOZNLJcCUE\nvfRBBkUmJm+yLGM/TH42xD6gUK/luvDS/JV/bGNG86LOi1A0inQrg63zEh654GYF\nEtek9in2mwJdK3JtWujyxGs+BDvaIntHAST0Y9Dl8qin3wj4Veb6BR32qqG1f1HH\nB5KhMrrPJl2EQ4rJtY/cyUk8av5Mlaar7MQeYqpf4janDbnloYunqMFCo3rSn18y\nIgOUY1qoR8E421zhbiQJk9xgm3iQ3hN+PZv+fdQwqSerwEPKaRLm6mu+1RdTZnje\nOZlx5g6N5k6RyrWbQmjzg2nND3YD/AmUht1HcBOQqD9vuJ1vJ8/JpXZdHiAr7IdY\ne5lLEQL9USBoQfCINMwaIRiN//vZSPCpNptKN83ttuxkXIC7v4sBgZMeTdsRnO3k\nNlnb6k4642I/jEwaqKkhkyzyLTZ1Ht6XKvjW0wXDYNCRSKYZtn8vGKUBUYbx/Zwp\n4JieCYRtBTySR4CF9Qi3\n=N90O\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 3dbc9a2c42390eef76fb4c92b4e744828d966fe9\nparent 8874c74680b606ed177fd2662f36c9ec00167876\nauthor Alex Ross <38270282+alexr00@users.noreply.github.com> 1776417923 +0200\ncommitter GitHub <noreply@github.com> 1776417923 +0000\n\nUpdate Copilot version (#310942)",
+        "verified_at": "2026-04-17T09:25:24Z"
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/8ff9a84c4a9cd0b694aee8f374aa531f7a9d0d08",
+    "html_url": "https://github.com/microsoft/vscode/commit/8ff9a84c4a9cd0b694aee8f374aa531f7a9d0d08",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/8ff9a84c4a9cd0b694aee8f374aa531f7a9d0d08/comments",
+    "author": {
+      "login": "alexr00",
+      "id": 38270282,
+      "node_id": "MDQ6VXNlcjM4MjcwMjgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/38270282?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/alexr00",
+      "html_url": "https://github.com/alexr00",
+      "followers_url": "https://api.github.com/users/alexr00/followers",
+      "following_url": "https://api.github.com/users/alexr00/following{/other_user}",
+      "gists_url": "https://api.github.com/users/alexr00/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/alexr00/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/alexr00/subscriptions",
+      "organizations_url": "https://api.github.com/users/alexr00/orgs",
+      "repos_url": "https://api.github.com/users/alexr00/repos",
+      "events_url": "https://api.github.com/users/alexr00/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/alexr00/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "8874c74680b606ed177fd2662f36c9ec00167876",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/8874c74680b606ed177fd2662f36c9ec00167876",
+        "html_url": "https://github.com/microsoft/vscode/commit/8874c74680b606ed177fd2662f36c9ec00167876"
+      }
+    ]
+  }
+]

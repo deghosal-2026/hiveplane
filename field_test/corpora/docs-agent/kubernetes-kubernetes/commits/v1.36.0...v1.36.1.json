@@ -1,0 +1,2435 @@
+[
+  {
+    "sha": "b2ba48e510e7f9b0e259b4cf36919eab984d7894",
+    "node_id": "C_kwDOAToIktoAKGIyYmE0OGU1MTBlN2Y5YjBlMjU5YjRjZjM2OTE5ZWFiOTg0ZDc4OTQ",
+    "commit": {
+      "author": {
+        "name": "Maciej Szulik",
+        "email": "soltysh@gmail.com",
+        "date": "2026-03-10T10:57:12Z"
+      },
+      "committer": {
+        "name": "Maciej Szulik",
+        "email": "soltysh@gmail.com",
+        "date": "2026-04-21T08:53:58Z"
+      },
+      "message": "Escape path inside the container\n\nSigned-off-by: Maciej Szulik <soltysh@gmail.com>",
+      "tree": {
+        "sha": "b8f5dd2b894193545464d2332066d322ff88dad7",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/b8f5dd2b894193545464d2332066d322ff88dad7"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/b2ba48e510e7f9b0e259b4cf36919eab984d7894",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\niQIzBAABCgAdFiEEX3bnAGFxLuOUq+Ac8V5V0nb6hMQFAmnnOyYACgkQ8V5V0nb6\nhMSnrxAA1+bLsRh8g3KElOr+J+jZedqAGJ2V9d/h0i5UR9wqWOpAIsT/4WSlR5R+\nypa3OCHTodBY8SDXABx2G/8Pi1uq1a/nWR8jO/lWLiErVJwf16PB92lBMdL7h0lt\nQuFyhjULkBne3m/XXp88UVPQdsb7/q5tDR/wm/aSHQaAim5oiX/C6fv1UaYPmmx6\n/eZbeHi+Km6VPflw9fZPaZmL+B1m3t/+ATPKOfkJ0G6z91z56kbqUB2xpBmQVsYW\nGn2d/dyQhu1D/wx3w3ambQzVN/KgUJMW3HAFoQreqfG78ffHyUeapu5jeTZbIirL\nbCpsGSVp42g12l2oAEKeBtzmns0EJW3JrzxmZoS1XWdPRW7AwdwzHTw1Hvj2rNy7\nkCHKQwlZzi2SnQZM67bTazXkW+43dyeMbnbdlukCZ12HKI8W6eIT/HaRskLKb1Kx\niVOPLIqBMaiD9s1tNaUbwDljrqDRHBikRLYoIWASOm4YcbYeJamGLLg1GITfqh9I\nKKwnafyDDSu8zc6iHklGTJNi4iWFKuwu67lbQjkErnnA8ft+NDD2qPhQONAjRaYU\nzrd620zUcI2KY+iMI/EJ5+Ixanl6JVTQbDyUulnJhMufpjw8txSz+SAfDVSz1gtF\nbqpEzCDmRFjBFKVeIAqkBFHfJSlmKZJ3gbuZtxtD7xfBeWUWzxI=\n=T5nC\n-----END PGP SIGNATURE-----",
+        "payload": "tree b8f5dd2b894193545464d2332066d322ff88dad7\nparent f18c99afe9b9993c0cf86631ea3ee9572ebea58b\nauthor Maciej Szulik <soltysh@gmail.com> 1773140232 +0100\ncommitter Maciej Szulik <soltysh@gmail.com> 1776761638 +0200\n\nEscape path inside the container\n\nSigned-off-by: Maciej Szulik <soltysh@gmail.com>\n",
+        "verified_at": "2026-04-21T08:54:09Z"
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/b2ba48e510e7f9b0e259b4cf36919eab984d7894",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/b2ba48e510e7f9b0e259b4cf36919eab984d7894",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/b2ba48e510e7f9b0e259b4cf36919eab984d7894/comments",
+    "author": {
+      "login": "soltysh",
+      "id": 576341,
+      "node_id": "MDQ6VXNlcjU3NjM0MQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/576341?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/soltysh",
+      "html_url": "https://github.com/soltysh",
+      "followers_url": "https://api.github.com/users/soltysh/followers",
+      "following_url": "https://api.github.com/users/soltysh/following{/other_user}",
+      "gists_url": "https://api.github.com/users/soltysh/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/soltysh/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/soltysh/subscriptions",
+      "organizations_url": "https://api.github.com/users/soltysh/orgs",
+      "repos_url": "https://api.github.com/users/soltysh/repos",
+      "events_url": "https://api.github.com/users/soltysh/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/soltysh/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "soltysh",
+      "id": 576341,
+      "node_id": "MDQ6VXNlcjU3NjM0MQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/576341?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/soltysh",
+      "html_url": "https://github.com/soltysh",
+      "followers_url": "https://api.github.com/users/soltysh/followers",
+      "following_url": "https://api.github.com/users/soltysh/following{/other_user}",
+      "gists_url": "https://api.github.com/users/soltysh/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/soltysh/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/soltysh/subscriptions",
+      "organizations_url": "https://api.github.com/users/soltysh/orgs",
+      "repos_url": "https://api.github.com/users/soltysh/repos",
+      "events_url": "https://api.github.com/users/soltysh/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/soltysh/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "f18c99afe9b9993c0cf86631ea3ee9572ebea58b",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/f18c99afe9b9993c0cf86631ea3ee9572ebea58b",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/f18c99afe9b9993c0cf86631ea3ee9572ebea58b"
+      }
+    ]
+  },
+  {
+    "sha": "745e271a9cb9a105ac688761baa31df5474dd9fe",
+    "node_id": "C_kwDOAToIktoAKDc0NWUyNzFhOWNiOWExMDVhYzY4ODc2MWJhYTMxZGY1NDc0ZGQ5ZmU",
+    "commit": {
+      "author": {
+        "name": "Kubernetes Release Robot",
+        "email": "k8s-release-robot@users.noreply.github.com",
+        "date": "2026-04-22T14:04:16Z"
+      },
+      "committer": {
+        "name": "Kubernetes Release Robot",
+        "email": "k8s-release-robot@users.noreply.github.com",
+        "date": "2026-04-22T14:04:16Z"
+      },
+      "message": "Update CHANGELOG/CHANGELOG-1.36.md for v1.36.0",
+      "tree": {
+        "sha": "f9e813a52665a4f45afa677ced3f8f5646858388",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/f9e813a52665a4f45afa677ced3f8f5646858388"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/745e271a9cb9a105ac688761baa31df5474dd9fe",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/745e271a9cb9a105ac688761baa31df5474dd9fe",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/745e271a9cb9a105ac688761baa31df5474dd9fe",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/745e271a9cb9a105ac688761baa31df5474dd9fe/comments",
+    "author": {
+      "login": "k8s-release-robot",
+      "id": 33505452,
+      "node_id": "MDQ6VXNlcjMzNTA1NDUy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/33505452?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/k8s-release-robot",
+      "html_url": "https://github.com/k8s-release-robot",
+      "followers_url": "https://api.github.com/users/k8s-release-robot/followers",
+      "following_url": "https://api.github.com/users/k8s-release-robot/following{/other_user}",
+      "gists_url": "https://api.github.com/users/k8s-release-robot/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/k8s-release-robot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/k8s-release-robot/subscriptions",
+      "organizations_url": "https://api.github.com/users/k8s-release-robot/orgs",
+      "repos_url": "https://api.github.com/users/k8s-release-robot/repos",
+      "events_url": "https://api.github.com/users/k8s-release-robot/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/k8s-release-robot/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "k8s-release-robot",
+      "id": 33505452,
+      "node_id": "MDQ6VXNlcjMzNTA1NDUy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/33505452?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/k8s-release-robot",
+      "html_url": "https://github.com/k8s-release-robot",
+      "followers_url": "https://api.github.com/users/k8s-release-robot/followers",
+      "following_url": "https://api.github.com/users/k8s-release-robot/following{/other_user}",
+      "gists_url": "https://api.github.com/users/k8s-release-robot/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/k8s-release-robot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/k8s-release-robot/subscriptions",
+      "organizations_url": "https://api.github.com/users/k8s-release-robot/orgs",
+      "repos_url": "https://api.github.com/users/k8s-release-robot/repos",
+      "events_url": "https://api.github.com/users/k8s-release-robot/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/k8s-release-robot/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "ecf6decece6a6de25a57aad9ba90b6ce580f6f78",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/ecf6decece6a6de25a57aad9ba90b6ce580f6f78",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/ecf6decece6a6de25a57aad9ba90b6ce580f6f78"
+      }
+    ]
+  },
+  {
+    "sha": "62d05adc8b7277dcdbe1e184b29671db12b38471",
+    "node_id": "C_kwDOAToIktoAKDYyZDA1YWRjOGI3Mjc3ZGNkYmUxZTE4NGIyOTY3MWRiMTJiMzg0NzE",
+    "commit": {
+      "author": {
+        "name": "Ed Bartosh",
+        "email": "eduard.bartosh@intel.com",
+        "date": "2026-03-22T16:41:37Z"
+      },
+      "committer": {
+        "name": "Patrick Ohly",
+        "email": "patrick.ohly@intel.com",
+        "date": "2026-04-23T06:27:36Z"
+      },
+      "message": "localupcluster: properly query /readyz and /healthz\n\nDespite being called checkReadiness, the function was only performing\na liveness check: /healthz was polled over HTTPS without verifying the\ncertificate or authenticating, and any HTTP response was accepted as a\nsignal that the component was up. The only exception was kubelet,\nwhere a node readiness check was added on top.\n\nSwitched to /readyz for kube-apiserver and kube-scheduler,\nkept /healthz for the rest and require HTTP 200 in all cases.\n\nThis ensures that the kube-apiserver is fully initialized before\ndependent components are started.",
+      "tree": {
+        "sha": "1165069094d4734141e54a4b1abf5a5321bc7fc6",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/1165069094d4734141e54a4b1abf5a5321bc7fc6"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/62d05adc8b7277dcdbe1e184b29671db12b38471",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/62d05adc8b7277dcdbe1e184b29671db12b38471",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/62d05adc8b7277dcdbe1e184b29671db12b38471",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/62d05adc8b7277dcdbe1e184b29671db12b38471/comments",
+    "author": {
+      "login": "bart0sh",
+      "id": 13677519,
+      "node_id": "MDQ6VXNlcjEzNjc3NTE5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/13677519?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/bart0sh",
+      "html_url": "https://github.com/bart0sh",
+      "followers_url": "https://api.github.com/users/bart0sh/followers",
+      "following_url": "https://api.github.com/users/bart0sh/following{/other_user}",
+      "gists_url": "https://api.github.com/users/bart0sh/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/bart0sh/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/bart0sh/subscriptions",
+      "organizations_url": "https://api.github.com/users/bart0sh/orgs",
+      "repos_url": "https://api.github.com/users/bart0sh/repos",
+      "events_url": "https://api.github.com/users/bart0sh/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/bart0sh/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pohly",
+      "id": 22076,
+      "node_id": "MDQ6VXNlcjIyMDc2",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22076?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pohly",
+      "html_url": "https://github.com/pohly",
+      "followers_url": "https://api.github.com/users/pohly/followers",
+      "following_url": "https://api.github.com/users/pohly/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pohly/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pohly/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pohly/subscriptions",
+      "organizations_url": "https://api.github.com/users/pohly/orgs",
+      "repos_url": "https://api.github.com/users/pohly/repos",
+      "events_url": "https://api.github.com/users/pohly/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pohly/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "745e271a9cb9a105ac688761baa31df5474dd9fe",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/745e271a9cb9a105ac688761baa31df5474dd9fe",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/745e271a9cb9a105ac688761baa31df5474dd9fe"
+      }
+    ]
+  },
+  {
+    "sha": "1d850e84279c8fb57d1bdcecc8659e911a13cf35",
+    "node_id": "C_kwDOAToIktoAKDFkODUwZTg0Mjc5YzhmYjU3ZDFiZGNlY2M4NjU5ZTkxMWExM2NmMzU",
+    "commit": {
+      "author": {
+        "name": "Ed Bartosh",
+        "email": "eduard.bartosh@intel.com",
+        "date": "2026-03-22T16:41:51Z"
+      },
+      "committer": {
+        "name": "Patrick Ohly",
+        "email": "patrick.ohly@intel.com",
+        "date": "2026-04-23T06:27:36Z"
+      },
+      "message": "localupcluster: set readiness polling interval to 1 second\n\nWithout an explicit interval, Gomega's default polling is very frequent,\ngenerating a large volume of /readyz and /healthz requests in the component\nlogs. Set an explicit 1-second interval to reduce noise while still\ndetecting readiness promptly.",
+      "tree": {
+        "sha": "f9c77ca0bcb20baca907b60eabda1a912558e963",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/f9c77ca0bcb20baca907b60eabda1a912558e963"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/1d850e84279c8fb57d1bdcecc8659e911a13cf35",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/1d850e84279c8fb57d1bdcecc8659e911a13cf35",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/1d850e84279c8fb57d1bdcecc8659e911a13cf35",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/1d850e84279c8fb57d1bdcecc8659e911a13cf35/comments",
+    "author": {
+      "login": "bart0sh",
+      "id": 13677519,
+      "node_id": "MDQ6VXNlcjEzNjc3NTE5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/13677519?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/bart0sh",
+      "html_url": "https://github.com/bart0sh",
+      "followers_url": "https://api.github.com/users/bart0sh/followers",
+      "following_url": "https://api.github.com/users/bart0sh/following{/other_user}",
+      "gists_url": "https://api.github.com/users/bart0sh/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/bart0sh/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/bart0sh/subscriptions",
+      "organizations_url": "https://api.github.com/users/bart0sh/orgs",
+      "repos_url": "https://api.github.com/users/bart0sh/repos",
+      "events_url": "https://api.github.com/users/bart0sh/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/bart0sh/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pohly",
+      "id": 22076,
+      "node_id": "MDQ6VXNlcjIyMDc2",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22076?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pohly",
+      "html_url": "https://github.com/pohly",
+      "followers_url": "https://api.github.com/users/pohly/followers",
+      "following_url": "https://api.github.com/users/pohly/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pohly/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pohly/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pohly/subscriptions",
+      "organizations_url": "https://api.github.com/users/pohly/orgs",
+      "repos_url": "https://api.github.com/users/pohly/repos",
+      "events_url": "https://api.github.com/users/pohly/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pohly/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "62d05adc8b7277dcdbe1e184b29671db12b38471",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/62d05adc8b7277dcdbe1e184b29671db12b38471",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/62d05adc8b7277dcdbe1e184b29671db12b38471"
+      }
+    ]
+  },
+  {
+    "sha": "891a905031b1216e197b51e36319f12f3aac0511",
+    "node_id": "C_kwDOAToIktoAKDg5MWE5MDUwMzFiMTIxNmUxOTdiNTFlMzYzMTlmMTJmM2FhYzA1MTE",
+    "commit": {
+      "author": {
+        "name": "Ed Bartosh",
+        "email": "eduard.bartosh@intel.com",
+        "date": "2026-03-26T09:34:22Z"
+      },
+      "committer": {
+        "name": "Patrick Ohly",
+        "email": "patrick.ohly@intel.com",
+        "date": "2026-04-23T06:27:36Z"
+      },
+      "message": "test/localupcluster: stop all components before starting replacements\n\nModify() was replacing components one at a time: stop X, start X, stop Y,\nstart Y, ... in version-skew order (apiserver last on downgrade). This\ncaused a crash during downgrade: KCM-1.35 started against the still-\nrunning apiserver-1.36, passed its /healthz, and then immediately lose\nits connection when apiserver-1.36 was killed by the localupcluster.\nKCM-1.35 would reconnect to the not-yet-ready apiserver-1.35, hit a\n403 RBAC error during controller initialization, and exit \u2014 because that\ninitialization phase does not retry on RBAC errors.\n\nFix by splitting Modify() into two phases:\n\n  Phase 1 \u2014 stop all components to be replaced, in reverse startup order\n  (kube-proxy down to apiserver), so dependent components release their\n  connections before the apiserver is stopped.\n\n  Phase 2 \u2014 start all replacement components in standard startup order\n  (apiserver first), so each component connects to a fully-ready apiserver.",
+      "tree": {
+        "sha": "ee50cb62346ffa845a67751fe68692120bdf48de",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/ee50cb62346ffa845a67751fe68692120bdf48de"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/891a905031b1216e197b51e36319f12f3aac0511",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/891a905031b1216e197b51e36319f12f3aac0511",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/891a905031b1216e197b51e36319f12f3aac0511",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/891a905031b1216e197b51e36319f12f3aac0511/comments",
+    "author": {
+      "login": "bart0sh",
+      "id": 13677519,
+      "node_id": "MDQ6VXNlcjEzNjc3NTE5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/13677519?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/bart0sh",
+      "html_url": "https://github.com/bart0sh",
+      "followers_url": "https://api.github.com/users/bart0sh/followers",
+      "following_url": "https://api.github.com/users/bart0sh/following{/other_user}",
+      "gists_url": "https://api.github.com/users/bart0sh/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/bart0sh/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/bart0sh/subscriptions",
+      "organizations_url": "https://api.github.com/users/bart0sh/orgs",
+      "repos_url": "https://api.github.com/users/bart0sh/repos",
+      "events_url": "https://api.github.com/users/bart0sh/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/bart0sh/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pohly",
+      "id": 22076,
+      "node_id": "MDQ6VXNlcjIyMDc2",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22076?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pohly",
+      "html_url": "https://github.com/pohly",
+      "followers_url": "https://api.github.com/users/pohly/followers",
+      "following_url": "https://api.github.com/users/pohly/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pohly/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pohly/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pohly/subscriptions",
+      "organizations_url": "https://api.github.com/users/pohly/orgs",
+      "repos_url": "https://api.github.com/users/pohly/repos",
+      "events_url": "https://api.github.com/users/pohly/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pohly/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "1d850e84279c8fb57d1bdcecc8659e911a13cf35",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/1d850e84279c8fb57d1bdcecc8659e911a13cf35",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/1d850e84279c8fb57d1bdcecc8659e911a13cf35"
+      }
+    ]
+  },
+  {
+    "sha": "98ecfc63fe4b4c6e3425fda8c49e0f76108081ce",
+    "node_id": "C_kwDOAToIktoAKDk4ZWNmYzYzZmU0YjRjNmUzNDI1ZmRhOGM0OWUwZjc2MTA4MDgxY2U",
+    "commit": {
+      "author": {
+        "name": "Benjamin Wang",
+        "email": "benjamin.ahrtr@gmail.com",
+        "date": "2026-04-15T17:50:25Z"
+      },
+      "committer": {
+        "name": "Benjamin Wang",
+        "email": "benjamin.ahrtr@gmail.com",
+        "date": "2026-04-23T08:14:21Z"
+      },
+      "message": "Evaluate etcd cluster health using quorum\n\nSigned-off-by: Benjamin Wang <benjamin.ahrtr@gmail.com>",
+      "tree": {
+        "sha": "52249373a1320b82790cf6f0460515edab98d65c",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/52249373a1320b82790cf6f0460515edab98d65c"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/98ecfc63fe4b4c6e3425fda8c49e0f76108081ce",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/98ecfc63fe4b4c6e3425fda8c49e0f76108081ce",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/98ecfc63fe4b4c6e3425fda8c49e0f76108081ce",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/98ecfc63fe4b4c6e3425fda8c49e0f76108081ce/comments",
+    "author": {
+      "login": "ahrtr",
+      "id": 30739825,
+      "node_id": "MDQ6VXNlcjMwNzM5ODI1",
+      "avatar_url": "https://avatars.githubusercontent.com/u/30739825?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ahrtr",
+      "html_url": "https://github.com/ahrtr",
+      "followers_url": "https://api.github.com/users/ahrtr/followers",
+      "following_url": "https://api.github.com/users/ahrtr/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ahrtr/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ahrtr/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ahrtr/subscriptions",
+      "organizations_url": "https://api.github.com/users/ahrtr/orgs",
+      "repos_url": "https://api.github.com/users/ahrtr/repos",
+      "events_url": "https://api.github.com/users/ahrtr/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ahrtr/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "ahrtr",
+      "id": 30739825,
+      "node_id": "MDQ6VXNlcjMwNzM5ODI1",
+      "avatar_url": "https://avatars.githubusercontent.com/u/30739825?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ahrtr",
+      "html_url": "https://github.com/ahrtr",
+      "followers_url": "https://api.github.com/users/ahrtr/followers",
+      "following_url": "https://api.github.com/users/ahrtr/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ahrtr/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ahrtr/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ahrtr/subscriptions",
+      "organizations_url": "https://api.github.com/users/ahrtr/orgs",
+      "repos_url": "https://api.github.com/users/ahrtr/repos",
+      "events_url": "https://api.github.com/users/ahrtr/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ahrtr/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "745e271a9cb9a105ac688761baa31df5474dd9fe",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/745e271a9cb9a105ac688761baa31df5474dd9fe",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/745e271a9cb9a105ac688761baa31df5474dd9fe"
+      }
+    ]
+  },
+  {
+    "sha": "07144e39cd52f8667ca1ac6ffb8b6da0b51d2933",
+    "node_id": "C_kwDOAToIktoAKDA3MTQ0ZTM5Y2Q1MmY4NjY3Y2ExYWM2ZmZiOGI2ZGEwYjUxZDI5MzM",
+    "commit": {
+      "author": {
+        "name": "Benjamin Wang",
+        "email": "benjamin.ahrtr@gmail.com",
+        "date": "2026-04-17T10:45:54Z"
+      },
+      "committer": {
+        "name": "Benjamin Wang",
+        "email": "benjamin.ahrtr@gmail.com",
+        "date": "2026-04-23T08:14:21Z"
+      },
+      "message": "Add a (*Client) addEndpoint method\n\nSigned-off-by: Benjamin Wang <benjamin.ahrtr@gmail.com>",
+      "tree": {
+        "sha": "b6c5b7709b12c845411c9d7e494d4c218b19849a",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/b6c5b7709b12c845411c9d7e494d4c218b19849a"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/07144e39cd52f8667ca1ac6ffb8b6da0b51d2933",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/07144e39cd52f8667ca1ac6ffb8b6da0b51d2933",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/07144e39cd52f8667ca1ac6ffb8b6da0b51d2933",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/07144e39cd52f8667ca1ac6ffb8b6da0b51d2933/comments",
+    "author": {
+      "login": "ahrtr",
+      "id": 30739825,
+      "node_id": "MDQ6VXNlcjMwNzM5ODI1",
+      "avatar_url": "https://avatars.githubusercontent.com/u/30739825?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ahrtr",
+      "html_url": "https://github.com/ahrtr",
+      "followers_url": "https://api.github.com/users/ahrtr/followers",
+      "following_url": "https://api.github.com/users/ahrtr/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ahrtr/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ahrtr/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ahrtr/subscriptions",
+      "organizations_url": "https://api.github.com/users/ahrtr/orgs",
+      "repos_url": "https://api.github.com/users/ahrtr/repos",
+      "events_url": "https://api.github.com/users/ahrtr/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ahrtr/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "ahrtr",
+      "id": 30739825,
+      "node_id": "MDQ6VXNlcjMwNzM5ODI1",
+      "avatar_url": "https://avatars.githubusercontent.com/u/30739825?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ahrtr",
+      "html_url": "https://github.com/ahrtr",
+      "followers_url": "https://api.github.com/users/ahrtr/followers",
+      "following_url": "https://api.github.com/users/ahrtr/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ahrtr/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ahrtr/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ahrtr/subscriptions",
+      "organizations_url": "https://api.github.com/users/ahrtr/orgs",
+      "repos_url": "https://api.github.com/users/ahrtr/repos",
+      "events_url": "https://api.github.com/users/ahrtr/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ahrtr/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "98ecfc63fe4b4c6e3425fda8c49e0f76108081ce",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/98ecfc63fe4b4c6e3425fda8c49e0f76108081ce",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/98ecfc63fe4b4c6e3425fda8c49e0f76108081ce"
+      }
+    ]
+  },
+  {
+    "sha": "3e8d44c79c22a9a71433bd9b0813948a9392c21b",
+    "node_id": "C_kwDOAToIktoAKDNlOGQ0NGM3OWMyMmE5YTcxNDMzYmQ5YjA4MTM5NDhhOTM5MmMyMWI",
+    "commit": {
+      "author": {
+        "name": "Kubernetes Prow Robot",
+        "email": "20407524+k8s-ci-robot@users.noreply.github.com",
+        "date": "2026-04-23T13:16:49Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-04-23T13:16:49Z"
+      },
+      "message": "Merge pull request #138538 from ahrtr/automated-cherry-pick-of-#138403-upstream-release-1.36\n\nAutomated cherry pick of #138403: kubeadm: Evaluate etcd cluster health using quorum",
+      "tree": {
+        "sha": "b6c5b7709b12c845411c9d7e494d4c218b19849a",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/b6c5b7709b12c845411c9d7e494d4c218b19849a"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/3e8d44c79c22a9a71433bd9b0813948a9392c21b",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp6hvBCRC1aQ7uu5UhlAAAfjMQAG54xlycxKPEqTNlwN+cwVI8\nQ432qL/840oquukcvuZviRcCGbUeMETsKH3HJV/Bx2Ike5HksZJoaN77wQHSf4H+\nrm0WgoUbQXC4jBZgrN11n6pNfNnmWda60QETdF+XZ0epee3zkKNi4AqJOIcGB6gV\nORxWmeiJJyegWUh7vMYDPu4Frp0ngtQRmPiXG2VX7i8/1klztYzuodGh81c7WjjN\neNpHkTItdZWHfHHEn69ziyCvp0vyswt5PFkMYhp/swi3vI5JxmCpD884qy2zpVes\nCWvfNaFC7EBcNKD068abKaFQcQtnmnavBY8F8JOD5uMY5tKQbTpzYWiZsWSBTLSG\nMsm5t3vo7YVUF3g/d7pFGLlfmDJtGhff+6UzFK3MAijrlSxEQMmKSuT69h0ts5fO\ngcFcAGwHBncu7egsJHk2PKFkX5/BnqG95FVsa4hlxlVWGrdPG5pWL+gpQD4XbMXy\n3NLmI90fo9xe8G7Ia6/4H0w41kx3hgykmZrK7UtuZb3+0nfp6w5a9UN1MEfp/mcS\np2WzG89UbG4UuywwFjQu8DgeG8qCCw+Dwsod9/D+D5wBLXis3fU2thx1dDL0ip6S\nEoGesGOBrxMuvVw8ney9eojMtxyplcfeBI5x3X6inn2j6ZV/SpqAYLlaTF8gEpXi\nBK/p9rmApzgurgpSaM/7\n=B05u\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree b6c5b7709b12c845411c9d7e494d4c218b19849a\nparent 745e271a9cb9a105ac688761baa31df5474dd9fe\nparent 07144e39cd52f8667ca1ac6ffb8b6da0b51d2933\nauthor Kubernetes Prow Robot <20407524+k8s-ci-robot@users.noreply.github.com> 1776950209 +0530\ncommitter GitHub <noreply@github.com> 1776950209 +0530\n\nMerge pull request #138538 from ahrtr/automated-cherry-pick-of-#138403-upstream-release-1.36\n\nAutomated cherry pick of #138403: kubeadm: Evaluate etcd cluster health using quorum",
+        "verified_at": "2026-04-23T13:16:49Z"
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/3e8d44c79c22a9a71433bd9b0813948a9392c21b",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/3e8d44c79c22a9a71433bd9b0813948a9392c21b",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/3e8d44c79c22a9a71433bd9b0813948a9392c21b/comments",
+    "author": {
+      "login": "k8s-ci-robot",
+      "id": 20407524,
+      "node_id": "MDQ6VXNlcjIwNDA3NTI0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/20407524?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/k8s-ci-robot",
+      "html_url": "https://github.com/k8s-ci-robot",
+      "followers_url": "https://api.github.com/users/k8s-ci-robot/followers",
+      "following_url": "https://api.github.com/users/k8s-ci-robot/following{/other_user}",
+      "gists_url": "https://api.github.com/users/k8s-ci-robot/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/k8s-ci-robot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/k8s-ci-robot/subscriptions",
+      "organizations_url": "https://api.github.com/users/k8s-ci-robot/orgs",
+      "repos_url": "https://api.github.com/users/k8s-ci-robot/repos",
+      "events_url": "https://api.github.com/users/k8s-ci-robot/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/k8s-ci-robot/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "745e271a9cb9a105ac688761baa31df5474dd9fe",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/745e271a9cb9a105ac688761baa31df5474dd9fe",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/745e271a9cb9a105ac688761baa31df5474dd9fe"
+      },
+      {
+        "sha": "07144e39cd52f8667ca1ac6ffb8b6da0b51d2933",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/07144e39cd52f8667ca1ac6ffb8b6da0b51d2933",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/07144e39cd52f8667ca1ac6ffb8b6da0b51d2933"
+      }
+    ]
+  },
+  {
+    "sha": "529473cc4d8cfb77adedc8dc551d2a34b6686fd0",
+    "node_id": "C_kwDOAToIktoAKDUyOTQ3M2NjNGQ4Y2ZiNzdhZGVkYzhkYzU1MWQyYTM0YjY2ODZmZDA",
+    "commit": {
+      "author": {
+        "name": "Benjamin Elder",
+        "email": "bentheelder@google.com",
+        "date": "2026-04-25T02:36:42Z"
+      },
+      "committer": {
+        "name": "Benjamin Elder",
+        "email": "bentheelder@google.com",
+        "date": "2026-04-25T04:40:50Z"
+      },
+      "message": "register zfs cadvisor plugin",
+      "tree": {
+        "sha": "19a537248acf41a892f36468878ef4876d38974d",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/19a537248acf41a892f36468878ef4876d38974d"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/529473cc4d8cfb77adedc8dc551d2a34b6686fd0",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/529473cc4d8cfb77adedc8dc551d2a34b6686fd0",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/529473cc4d8cfb77adedc8dc551d2a34b6686fd0",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/529473cc4d8cfb77adedc8dc551d2a34b6686fd0/comments",
+    "author": {
+      "login": "BenTheElder",
+      "id": 917931,
+      "node_id": "MDQ6VXNlcjkxNzkzMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/917931?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/BenTheElder",
+      "html_url": "https://github.com/BenTheElder",
+      "followers_url": "https://api.github.com/users/BenTheElder/followers",
+      "following_url": "https://api.github.com/users/BenTheElder/following{/other_user}",
+      "gists_url": "https://api.github.com/users/BenTheElder/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/BenTheElder/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/BenTheElder/subscriptions",
+      "organizations_url": "https://api.github.com/users/BenTheElder/orgs",
+      "repos_url": "https://api.github.com/users/BenTheElder/repos",
+      "events_url": "https://api.github.com/users/BenTheElder/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/BenTheElder/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "BenTheElder",
+      "id": 917931,
+      "node_id": "MDQ6VXNlcjkxNzkzMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/917931?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/BenTheElder",
+      "html_url": "https://github.com/BenTheElder",
+      "followers_url": "https://api.github.com/users/BenTheElder/followers",
+      "following_url": "https://api.github.com/users/BenTheElder/following{/other_user}",
+      "gists_url": "https://api.github.com/users/BenTheElder/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/BenTheElder/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/BenTheElder/subscriptions",
+      "organizations_url": "https://api.github.com/users/BenTheElder/orgs",
+      "repos_url": "https://api.github.com/users/BenTheElder/repos",
+      "events_url": "https://api.github.com/users/BenTheElder/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/BenTheElder/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "3e8d44c79c22a9a71433bd9b0813948a9392c21b",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/3e8d44c79c22a9a71433bd9b0813948a9392c21b",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/3e8d44c79c22a9a71433bd9b0813948a9392c21b"
+      }
+    ]
+  },
+  {
+    "sha": "28dd6f275705b388d5155a202246339587987193",
+    "node_id": "C_kwDOAToIktoAKDI4ZGQ2ZjI3NTcwNWIzODhkNTE1NWEyMDIyNDYzMzk1ODc5ODcxOTM",
+    "commit": {
+      "author": {
+        "name": "Benjamin Elder",
+        "email": "bentheelder@google.com",
+        "date": "2026-04-25T04:41:50Z"
+      },
+      "committer": {
+        "name": "Benjamin Elder",
+        "email": "bentheelder@google.com",
+        "date": "2026-04-25T04:41:50Z"
+      },
+      "message": "hack/update-vendor.sh",
+      "tree": {
+        "sha": "8d58c0d62777fe6601ed2e60422fe02739f5b1eb",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/8d58c0d62777fe6601ed2e60422fe02739f5b1eb"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/28dd6f275705b388d5155a202246339587987193",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/28dd6f275705b388d5155a202246339587987193",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/28dd6f275705b388d5155a202246339587987193",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/28dd6f275705b388d5155a202246339587987193/comments",
+    "author": {
+      "login": "BenTheElder",
+      "id": 917931,
+      "node_id": "MDQ6VXNlcjkxNzkzMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/917931?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/BenTheElder",
+      "html_url": "https://github.com/BenTheElder",
+      "followers_url": "https://api.github.com/users/BenTheElder/followers",
+      "following_url": "https://api.github.com/users/BenTheElder/following{/other_user}",
+      "gists_url": "https://api.github.com/users/BenTheElder/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/BenTheElder/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/BenTheElder/subscriptions",
+      "organizations_url": "https://api.github.com/users/BenTheElder/orgs",
+      "repos_url": "https://api.github.com/users/BenTheElder/repos",
+      "events_url": "https://api.github.com/users/BenTheElder/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/BenTheElder/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "BenTheElder",
+      "id": 917931,
+      "node_id": "MDQ6VXNlcjkxNzkzMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/917931?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/BenTheElder",
+      "html_url": "https://github.com/BenTheElder",
+      "followers_url": "https://api.github.com/users/BenTheElder/followers",
+      "following_url": "https://api.github.com/users/BenTheElder/following{/other_user}",
+      "gists_url": "https://api.github.com/users/BenTheElder/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/BenTheElder/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/BenTheElder/subscriptions",
+      "organizations_url": "https://api.github.com/users/BenTheElder/orgs",
+      "repos_url": "https://api.github.com/users/BenTheElder/repos",
+      "events_url": "https://api.github.com/users/BenTheElder/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/BenTheElder/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "529473cc4d8cfb77adedc8dc551d2a34b6686fd0",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/529473cc4d8cfb77adedc8dc551d2a34b6686fd0",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/529473cc4d8cfb77adedc8dc551d2a34b6686fd0"
+      }
+    ]
+  },
+  {
+    "sha": "cbb38cd5ce68c9ef77d564b04f9887264c10eedd",
+    "node_id": "C_kwDOAToIktoAKGNiYjM4Y2Q1Y2U2OGM5ZWY3N2Q1NjRiMDRmOTg4NzI2NGMxMGVlZGQ",
+    "commit": {
+      "author": {
+        "name": "Prince Pereira",
+        "email": "ppereira@microsoft.com",
+        "date": "2026-03-23T13:21:34Z"
+      },
+      "committer": {
+        "name": "Prince Pereira",
+        "email": "ppereira@microsoft.com",
+        "date": "2026-04-26T09:55:19Z"
+      },
+      "message": "Delete remote endpoint if it has same ip as local endpoint in the system.",
+      "tree": {
+        "sha": "1817c5b095dbe7fabacbb0f4b5685e7dd3d01608",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/1817c5b095dbe7fabacbb0f4b5685e7dd3d01608"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/cbb38cd5ce68c9ef77d564b04f9887264c10eedd",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/cbb38cd5ce68c9ef77d564b04f9887264c10eedd",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/cbb38cd5ce68c9ef77d564b04f9887264c10eedd",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/cbb38cd5ce68c9ef77d564b04f9887264c10eedd/comments",
+    "author": {
+      "login": "princepereira",
+      "id": 6368227,
+      "node_id": "MDQ6VXNlcjYzNjgyMjc=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6368227?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/princepereira",
+      "html_url": "https://github.com/princepereira",
+      "followers_url": "https://api.github.com/users/princepereira/followers",
+      "following_url": "https://api.github.com/users/princepereira/following{/other_user}",
+      "gists_url": "https://api.github.com/users/princepereira/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/princepereira/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/princepereira/subscriptions",
+      "organizations_url": "https://api.github.com/users/princepereira/orgs",
+      "repos_url": "https://api.github.com/users/princepereira/repos",
+      "events_url": "https://api.github.com/users/princepereira/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/princepereira/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "princepereira",
+      "id": 6368227,
+      "node_id": "MDQ6VXNlcjYzNjgyMjc=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6368227?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/princepereira",
+      "html_url": "https://github.com/princepereira",
+      "followers_url": "https://api.github.com/users/princepereira/followers",
+      "following_url": "https://api.github.com/users/princepereira/following{/other_user}",
+      "gists_url": "https://api.github.com/users/princepereira/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/princepereira/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/princepereira/subscriptions",
+      "organizations_url": "https://api.github.com/users/princepereira/orgs",
+      "repos_url": "https://api.github.com/users/princepereira/repos",
+      "events_url": "https://api.github.com/users/princepereira/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/princepereira/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "3e8d44c79c22a9a71433bd9b0813948a9392c21b",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/3e8d44c79c22a9a71433bd9b0813948a9392c21b",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/3e8d44c79c22a9a71433bd9b0813948a9392c21b"
+      }
+    ]
+  },
+  {
+    "sha": "a45cef81d62e6c42bbd9f633f58889c4d0933ead",
+    "node_id": "C_kwDOAToIktoAKGE0NWNlZjgxZDYyZTZjNDJiYmQ5ZjYzM2Y1ODg4OWM0ZDA5MzNlYWQ",
+    "commit": {
+      "author": {
+        "name": "Prince Pereira",
+        "email": "ppereira@microsoft.com",
+        "date": "2026-03-24T12:43:27Z"
+      },
+      "committer": {
+        "name": "Prince Pereira",
+        "email": "ppereira@microsoft.com",
+        "date": "2026-04-26T09:55:19Z"
+      },
+      "message": "Delete remote endpoint if it has same ip as local endpoint in the system.",
+      "tree": {
+        "sha": "67fa9db0c553f244d0138a21997dcc15e2f8f0c8",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/67fa9db0c553f244d0138a21997dcc15e2f8f0c8"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/a45cef81d62e6c42bbd9f633f58889c4d0933ead",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/a45cef81d62e6c42bbd9f633f58889c4d0933ead",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/a45cef81d62e6c42bbd9f633f58889c4d0933ead",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/a45cef81d62e6c42bbd9f633f58889c4d0933ead/comments",
+    "author": {
+      "login": "princepereira",
+      "id": 6368227,
+      "node_id": "MDQ6VXNlcjYzNjgyMjc=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6368227?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/princepereira",
+      "html_url": "https://github.com/princepereira",
+      "followers_url": "https://api.github.com/users/princepereira/followers",
+      "following_url": "https://api.github.com/users/princepereira/following{/other_user}",
+      "gists_url": "https://api.github.com/users/princepereira/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/princepereira/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/princepereira/subscriptions",
+      "organizations_url": "https://api.github.com/users/princepereira/orgs",
+      "repos_url": "https://api.github.com/users/princepereira/repos",
+      "events_url": "https://api.github.com/users/princepereira/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/princepereira/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "princepereira",
+      "id": 6368227,
+      "node_id": "MDQ6VXNlcjYzNjgyMjc=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6368227?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/princepereira",
+      "html_url": "https://github.com/princepereira",
+      "followers_url": "https://api.github.com/users/princepereira/followers",
+      "following_url": "https://api.github.com/users/princepereira/following{/other_user}",
+      "gists_url": "https://api.github.com/users/princepereira/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/princepereira/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/princepereira/subscriptions",
+      "organizations_url": "https://api.github.com/users/princepereira/orgs",
+      "repos_url": "https://api.github.com/users/princepereira/repos",
+      "events_url": "https://api.github.com/users/princepereira/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/princepereira/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "cbb38cd5ce68c9ef77d564b04f9887264c10eedd",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/cbb38cd5ce68c9ef77d564b04f9887264c10eedd",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/cbb38cd5ce68c9ef77d564b04f9887264c10eedd"
+      }
+    ]
+  },
+  {
+    "sha": "0008353cef2f0b9674797fb1353c53fb71c53e48",
+    "node_id": "C_kwDOAToIktoAKDAwMDgzNTNjZWYyZjBiOTY3NDc5N2ZiMTM1M2M1M2ZiNzFjNTNlNDg",
+    "commit": {
+      "author": {
+        "name": "Antonio Ojea",
+        "email": "aojea@google.com",
+        "date": "2026-04-24T11:33:01Z"
+      },
+      "committer": {
+        "name": "Antonio Ojea",
+        "email": "aojea@google.com",
+        "date": "2026-04-28T07:49:33Z"
+      },
+      "message": "kube-proxy: don't do full periodic syncs on large cluster mode\n\nPeriodic full-syncs are just reconcile loops just in case somehow\nthe dataplane has drifted, however, they have an important cost on large\nclusters.\n\nWe can avoid to perform full-sync if kube-proxy is in the \"largecluster\"\nmode, we are already doing some optimization, so it is reasonable to\navoid the penalty of a full sync for a \"just in case\" operation.\n\nSigned-off-by: Antonio Ojea <aojea@google.com>",
+      "tree": {
+        "sha": "a3655e66a18c78e850019785f85ad8302ad2038d",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/a3655e66a18c78e850019785f85ad8302ad2038d"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/0008353cef2f0b9674797fb1353c53fb71c53e48",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unknown_key",
+        "signature": "-----BEGIN SSH SIGNATURE-----\nU1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgFc24AVgNkUYA7vnlmR37Hb1wmP\nNZejpLOORHYbddPwsAAAADZ2l0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5\nAAAAQMlZUYU5GFf54D6rhveTzzjVAk+UDY+VggUWIEjWNlmmy7jd7ukCGGsx8fvj8qRFQx\nUbTfmFuz3q7pKaQ4RW0Q0=\n-----END SSH SIGNATURE-----",
+        "payload": "tree a3655e66a18c78e850019785f85ad8302ad2038d\nparent 3e8d44c79c22a9a71433bd9b0813948a9392c21b\nauthor Antonio Ojea <aojea@google.com> 1777030381 +0000\ncommitter Antonio Ojea <aojea@google.com> 1777362573 +0000\n\nkube-proxy: don't do full periodic syncs on large cluster mode\n\nPeriodic full-syncs are just reconcile loops just in case somehow\nthe dataplane has drifted, however, they have an important cost on large\nclusters.\n\nWe can avoid to perform full-sync if kube-proxy is in the \"largecluster\"\nmode, we are already doing some optimization, so it is reasonable to\navoid the penalty of a full sync for a \"just in case\" operation.\n\nSigned-off-by: Antonio Ojea <aojea@google.com>\n",
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/0008353cef2f0b9674797fb1353c53fb71c53e48",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/0008353cef2f0b9674797fb1353c53fb71c53e48",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/0008353cef2f0b9674797fb1353c53fb71c53e48/comments",
+    "author": {
+      "login": "aojea",
+      "id": 6450081,
+      "node_id": "MDQ6VXNlcjY0NTAwODE=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6450081?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aojea",
+      "html_url": "https://github.com/aojea",
+      "followers_url": "https://api.github.com/users/aojea/followers",
+      "following_url": "https://api.github.com/users/aojea/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aojea/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aojea/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aojea/subscriptions",
+      "organizations_url": "https://api.github.com/users/aojea/orgs",
+      "repos_url": "https://api.github.com/users/aojea/repos",
+      "events_url": "https://api.github.com/users/aojea/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aojea/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "aojea",
+      "id": 6450081,
+      "node_id": "MDQ6VXNlcjY0NTAwODE=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6450081?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aojea",
+      "html_url": "https://github.com/aojea",
+      "followers_url": "https://api.github.com/users/aojea/followers",
+      "following_url": "https://api.github.com/users/aojea/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aojea/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aojea/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aojea/subscriptions",
+      "organizations_url": "https://api.github.com/users/aojea/orgs",
+      "repos_url": "https://api.github.com/users/aojea/repos",
+      "events_url": "https://api.github.com/users/aojea/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aojea/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "3e8d44c79c22a9a71433bd9b0813948a9392c21b",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/3e8d44c79c22a9a71433bd9b0813948a9392c21b",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/3e8d44c79c22a9a71433bd9b0813948a9392c21b"
+      }
+    ]
+  },
+  {
+    "sha": "100bf5d4997fb46586726b89895755a51e97ae60",
+    "node_id": "C_kwDOAToIktoAKDEwMGJmNWQ0OTk3ZmI0NjU4NjcyNmI4OTg5NTc1NWE1MWU5N2FlNjA",
+    "commit": {
+      "author": {
+        "name": "Lubomir I. Ivanov",
+        "email": "neolit123@gmail.com",
+        "date": "2026-04-17T16:47:35Z"
+      },
+      "committer": {
+        "name": "Lubomir I. Ivanov",
+        "email": "neolit123@gmail.com",
+        "date": "2026-04-29T15:35:31Z"
+      },
+      "message": "kubeadm: use the localAPIEndpoint for all API calls in 'init'\n\nHistoricaly the kubeadm clients have used the 'admin.conf'\nand 'super-admin.conf' directly, which makes all API calls\ngo trough the CPE (control plane endpoint). This can create\nproblems for scenarios when the LB is provisioned only after\n'init' starts the kube-apiserver.\n\nInstead of using the '.conf' as they are, modify them\nin memory to point to the LAE (localAPIEndpoint).\nThis was already done by the WaitControlPlaneClient for\nthe WaitControlPlane phase, which required it. This separate\nclient is no longer needed.\n\nHowever, do use a unmodified kubeconfig to the init phase\nbootstrap-token since this is the phase that creates\nthe cluster-info CM and for that we need the original CPE\nserver address.",
+      "tree": {
+        "sha": "ee059c99e878b7c0dda6129ae34866cddda60411",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/ee059c99e878b7c0dda6129ae34866cddda60411"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/100bf5d4997fb46586726b89895755a51e97ae60",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/100bf5d4997fb46586726b89895755a51e97ae60",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/100bf5d4997fb46586726b89895755a51e97ae60",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/100bf5d4997fb46586726b89895755a51e97ae60/comments",
+    "author": {
+      "login": "neolit123",
+      "id": 331852,
+      "node_id": "MDQ6VXNlcjMzMTg1Mg==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/331852?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/neolit123",
+      "html_url": "https://github.com/neolit123",
+      "followers_url": "https://api.github.com/users/neolit123/followers",
+      "following_url": "https://api.github.com/users/neolit123/following{/other_user}",
+      "gists_url": "https://api.github.com/users/neolit123/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/neolit123/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/neolit123/subscriptions",
+      "organizations_url": "https://api.github.com/users/neolit123/orgs",
+      "repos_url": "https://api.github.com/users/neolit123/repos",
+      "events_url": "https://api.github.com/users/neolit123/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/neolit123/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "neolit123",
+      "id": 331852,
+      "node_id": "MDQ6VXNlcjMzMTg1Mg==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/331852?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/neolit123",
+      "html_url": "https://github.com/neolit123",
+      "followers_url": "https://api.github.com/users/neolit123/followers",
+      "following_url": "https://api.github.com/users/neolit123/following{/other_user}",
+      "gists_url": "https://api.github.com/users/neolit123/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/neolit123/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/neolit123/subscriptions",
+      "organizations_url": "https://api.github.com/users/neolit123/orgs",
+      "repos_url": "https://api.github.com/users/neolit123/repos",
+      "events_url": "https://api.github.com/users/neolit123/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/neolit123/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "3e8d44c79c22a9a71433bd9b0813948a9392c21b",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/3e8d44c79c22a9a71433bd9b0813948a9392c21b",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/3e8d44c79c22a9a71433bd9b0813948a9392c21b"
+      }
+    ]
+  },
+  {
+    "sha": "76cd418bc2deb8070faac6616e4292b365005d33",
+    "node_id": "C_kwDOAToIktoAKDc2Y2Q0MThiYzJkZWI4MDcwZmFhYzY2MTZlNDI5MmIzNjUwMDVkMzM",
+    "commit": {
+      "author": {
+        "name": "Kubernetes Prow Robot",
+        "email": "20407524+k8s-ci-robot@users.noreply.github.com",
+        "date": "2026-05-05T02:32:21Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-05-05T02:32:21Z"
+      },
+      "message": "Merge pull request #138603 from princepereira/automated-cherry-pick-of-#138000-upstream-release-1.36\n\nAutomated cherry pick of #138000: Delete remote endpoint if it has same ip as local endpoint in the system.",
+      "tree": {
+        "sha": "67fa9db0c553f244d0138a21997dcc15e2f8f0c8",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/67fa9db0c553f244d0138a21997dcc15e2f8f0c8"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/76cd418bc2deb8070faac6616e4292b365005d33",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp+Va1CRC1aQ7uu5UhlAAAglAQAEda46xFUVXblf7ZKIcVtP5c\n3XxCu/81yI7dvqGs6rgrRaMQ+xkIoFFojMM9gFDrcZ6McrYe1SkQ01KzFHMNv1Ro\n1waXvhS0dlyCnkMC31lhuQZd/qbJ0AatxGh7Yewyf4gNbkg4EmjW5Nc/iVNhJqAr\n1g06yLfMidieaeVnUB2zjaA9Z37pRB7ZDBCkKVyCCrYKi7Psp+ByKSOS5LuEzEZX\nXj+0XtYBtkgWBueCZRbvVHn0JNSxCSZQ2ePRxOM0VqGbadmidauEAE4PaeK125Ww\nmr8FdkiZaC8hTelryr+4j0FDzwTZe3hHUOFbdkHU01kICoIpqBq17Itdw9sTz/+i\nQirP+pMRzke0/M4sF70CjsA/O7F1c83+puNek8HCi7nXEzt4Z6ygN29nxnU+FP/3\nPNYzBHgN6cBTJSVK78x52MoYZkT01RcbFZn+Hs3X7DpaEcd3EscUJJ7asmAnww7h\n/9aHj6yMxPLXi8to7QYiHT2KNiKxraPOP+iqWMOFYBMY/wk6AxEok/UxBep0xLIn\n4O0WItu4nWZnz4rlrVYLLzGXd25d4hQidFE0pCQAKU9sZStTv4ze6iCgRYtwAad5\n2rmSfXEs0R1JZuUN6DVLP5TdY70KWFDoRDK/1zajy09j+uwz9qaIhjRiBo+AS/Le\n1k4Koxla0APsEmTmL/Rx\n=jr1H\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 67fa9db0c553f244d0138a21997dcc15e2f8f0c8\nparent 3e8d44c79c22a9a71433bd9b0813948a9392c21b\nparent a45cef81d62e6c42bbd9f633f58889c4d0933ead\nauthor Kubernetes Prow Robot <20407524+k8s-ci-robot@users.noreply.github.com> 1777948341 +0530\ncommitter GitHub <noreply@github.com> 1777948341 +0530\n\nMerge pull request #138603 from princepereira/automated-cherry-pick-of-#138000-upstream-release-1.36\n\nAutomated cherry pick of #138000: Delete remote endpoint if it has same ip as local endpoint in the system.",
+        "verified_at": "2026-05-05T02:32:22Z"
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/76cd418bc2deb8070faac6616e4292b365005d33",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/76cd418bc2deb8070faac6616e4292b365005d33",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/76cd418bc2deb8070faac6616e4292b365005d33/comments",
+    "author": {
+      "login": "k8s-ci-robot",
+      "id": 20407524,
+      "node_id": "MDQ6VXNlcjIwNDA3NTI0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/20407524?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/k8s-ci-robot",
+      "html_url": "https://github.com/k8s-ci-robot",
+      "followers_url": "https://api.github.com/users/k8s-ci-robot/followers",
+      "following_url": "https://api.github.com/users/k8s-ci-robot/following{/other_user}",
+      "gists_url": "https://api.github.com/users/k8s-ci-robot/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/k8s-ci-robot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/k8s-ci-robot/subscriptions",
+      "organizations_url": "https://api.github.com/users/k8s-ci-robot/orgs",
+      "repos_url": "https://api.github.com/users/k8s-ci-robot/repos",
+      "events_url": "https://api.github.com/users/k8s-ci-robot/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/k8s-ci-robot/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "3e8d44c79c22a9a71433bd9b0813948a9392c21b",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/3e8d44c79c22a9a71433bd9b0813948a9392c21b",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/3e8d44c79c22a9a71433bd9b0813948a9392c21b"
+      },
+      {
+        "sha": "a45cef81d62e6c42bbd9f633f58889c4d0933ead",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/a45cef81d62e6c42bbd9f633f58889c4d0933ead",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/a45cef81d62e6c42bbd9f633f58889c4d0933ead"
+      }
+    ]
+  },
+  {
+    "sha": "e9d3bc863412f60d5e00372a3ddb675f7348a791",
+    "node_id": "C_kwDOAToIktoAKGU5ZDNiYzg2MzQxMmY2MGQ1ZTAwMzcyYTNkZGI2NzVmNzM0OGE3OTE",
+    "commit": {
+      "author": {
+        "name": "Kubernetes Prow Robot",
+        "email": "20407524+k8s-ci-robot@users.noreply.github.com",
+        "date": "2026-05-05T15:04:23Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-05-05T15:04:23Z"
+      },
+      "message": "Merge pull request #138682 from neolit123/automated-cherry-pick-of-#138449-origin-release-1.36\n\nAutomated cherry pick of #138449: kubeadm: use the localAPIEndpoint for all API calls in 'init'",
+      "tree": {
+        "sha": "ac0fbc6bf6b8536eda1ade4dd99c67172daf6d16",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/ac0fbc6bf6b8536eda1ade4dd99c67172daf6d16"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/e9d3bc863412f60d5e00372a3ddb675f7348a791",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp+gb3CRC1aQ7uu5UhlAAAsF8QAGfK79fXwkpBebaeXpYjEApB\nb2Llay01c2bUfQNsI4LtHLf1pRnqHM4RoWckTVODefD6FaO+xpMDPDJ+oYpHc/UZ\n1LEJWPxl1n8R2cju2ICU4ZlCP862kjWPsHuQ7cTK7USP3dbSgywsO+IaZLkdWKwl\nA9pX3dFq7CI16U6GZObqHiAw7HlmTVONS0XPsigcXvEgAaCQs7A3H3ADTcWDGLEu\nceXQDYfEB4B20Xu7EeJjIn3xqb8fxdEvP0X2h6Lc42wmARt8TTHvA0EIgqERaGuT\npdlpZlBpynk1v9UgUwsXFUktwn5uqqIkRBpNfmRgpxDYBToPJ8jokyD7Nm3PiOZE\nuwJ34MsqkxSnKCddTI7kfinuPEcP1yqnke44HufUR+gRbvQ6IhbEpKZbKVg91kUB\n0i5+RKXldarDfbFS/W9MGviTcMAWWzzAjn0r4mnmsyJc59w59MSOCERuMokAvdg/\nTfP/ImrShmNHvi4NH29ZxHlIAM3ouv58qJ8B0Tvu8WZZiIGTSD+sZcmDIODSt9nP\n+uljQpM/vH+L6dl5xqM7QEvnmMu5oZynKHRgHJiCoiXezJ5M2Uh8T++vwoKvHviG\n4TcYjJdylmILQatQ04Q4TFNVlp4I05DR5sFBx2RrEgfpJuM1LlovahRrZCUAyEg0\n1SpEY9NKRCPeRHhV2KLD\n=3NCs\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree ac0fbc6bf6b8536eda1ade4dd99c67172daf6d16\nparent 76cd418bc2deb8070faac6616e4292b365005d33\nparent 100bf5d4997fb46586726b89895755a51e97ae60\nauthor Kubernetes Prow Robot <20407524+k8s-ci-robot@users.noreply.github.com> 1777993463 +0530\ncommitter GitHub <noreply@github.com> 1777993463 +0530\n\nMerge pull request #138682 from neolit123/automated-cherry-pick-of-#138449-origin-release-1.36\n\nAutomated cherry pick of #138449: kubeadm: use the localAPIEndpoint for all API calls in 'init'",
+        "verified_at": "2026-05-05T15:04:24Z"
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/e9d3bc863412f60d5e00372a3ddb675f7348a791",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/e9d3bc863412f60d5e00372a3ddb675f7348a791",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/e9d3bc863412f60d5e00372a3ddb675f7348a791/comments",
+    "author": {
+      "login": "k8s-ci-robot",
+      "id": 20407524,
+      "node_id": "MDQ6VXNlcjIwNDA3NTI0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/20407524?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/k8s-ci-robot",
+      "html_url": "https://github.com/k8s-ci-robot",
+      "followers_url": "https://api.github.com/users/k8s-ci-robot/followers",
+      "following_url": "https://api.github.com/users/k8s-ci-robot/following{/other_user}",
+      "gists_url": "https://api.github.com/users/k8s-ci-robot/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/k8s-ci-robot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/k8s-ci-robot/subscriptions",
+      "organizations_url": "https://api.github.com/users/k8s-ci-robot/orgs",
+      "repos_url": "https://api.github.com/users/k8s-ci-robot/repos",
+      "events_url": "https://api.github.com/users/k8s-ci-robot/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/k8s-ci-robot/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "76cd418bc2deb8070faac6616e4292b365005d33",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/76cd418bc2deb8070faac6616e4292b365005d33",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/76cd418bc2deb8070faac6616e4292b365005d33"
+      },
+      {
+        "sha": "100bf5d4997fb46586726b89895755a51e97ae60",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/100bf5d4997fb46586726b89895755a51e97ae60",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/100bf5d4997fb46586726b89895755a51e97ae60"
+      }
+    ]
+  },
+  {
+    "sha": "5cdb448736dff72f94979bffffe7c6ff9384f71d",
+    "node_id": "C_kwDOAToIktoAKDVjZGI0NDg3MzZkZmY3MmY5NDk3OWJmZmZmZTdjNmZmOTM4NGY3MWQ",
+    "commit": {
+      "author": {
+        "name": "Kubernetes Prow Robot",
+        "email": "20407524+k8s-ci-robot@users.noreply.github.com",
+        "date": "2026-05-06T01:10:20Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-05-06T01:10:20Z"
+      },
+      "message": "Merge pull request #138635 from aojea/automated-cherry-pick-of-#138571-upstream-release-1.36\n\nAutomated cherry pick of #138571: kube-proxy: don't do full periodic syncs on large cluster mode",
+      "tree": {
+        "sha": "9c560a65ab77955559555797371ffafb8e6a0cdd",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/9c560a65ab77955559555797371ffafb8e6a0cdd"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/5cdb448736dff72f94979bffffe7c6ff9384f71d",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp+pT9CRC1aQ7uu5UhlAAA4XIQABBTyRFRUUEM8rCsIUhp/i5I\nRQ+TPxhV+pE5zXAbVidU2bnrG61QTFSpfaG7YTZMbFrJavKrrdsk1tYfaUxKMpK6\n/krE1ekI2cePqYd8rARYvMuTCilhVDyVUjwD8y9BnY4E+bWnBwIw8yFniyXq+gEP\nzmYVG4TOij1GQt+4nEC5ACsSSMVgjYrI/QmDm5+sySG/hDs5SfMWjz2BrXsDtT75\nVpCH96cZY/8pEZB5jKxs8Xg2h4kqNyr0J8K7hMyXzqnILh8Vnl8zxW6cA/Q3FQ0h\nHA2WDqmHiHeTB0M2Z03cld9dmhwRXGoh/qcdhpsnHlI0We0nT3iqjtx1Vo0odqqj\nV6iFmmr1jdAIWClU0kGyZX7rNq0f1q/Rtygut2cyeez36bjU0JbIbMBs47iHda+u\nJTIHjbQkBeANKR1NtLsfYa1pz0lJpjgfy06QDHRTxSkvx4H18ePr1bExHMM5BGwm\nyFjck40wB8ZxWuNxccljojvHWEsyWFXVplt7bTF47NbbuDtkSHjVplgN+IPrJlVQ\nVC9Mp5SDDGJTa/WDJ+ISEzFyBO+5Ihb9SJq/9IUdGA0mQZz7dnuRX87AGvxLm8po\nI9IcOl6Wks9Zt7Um/MljDwQTzGhvbvquZyxQEpsCytxIhedqP2YKM1keLnGaeF/j\nSaI3F+y9R9JLUYudaMjT\n=ptaX\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 9c560a65ab77955559555797371ffafb8e6a0cdd\nparent e9d3bc863412f60d5e00372a3ddb675f7348a791\nparent 0008353cef2f0b9674797fb1353c53fb71c53e48\nauthor Kubernetes Prow Robot <20407524+k8s-ci-robot@users.noreply.github.com> 1778029820 +0530\ncommitter GitHub <noreply@github.com> 1778029820 +0530\n\nMerge pull request #138635 from aojea/automated-cherry-pick-of-#138571-upstream-release-1.36\n\nAutomated cherry pick of #138571: kube-proxy: don't do full periodic syncs on large cluster mode",
+        "verified_at": "2026-05-06T01:10:21Z"
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/5cdb448736dff72f94979bffffe7c6ff9384f71d",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/5cdb448736dff72f94979bffffe7c6ff9384f71d",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/5cdb448736dff72f94979bffffe7c6ff9384f71d/comments",
+    "author": {
+      "login": "k8s-ci-robot",
+      "id": 20407524,
+      "node_id": "MDQ6VXNlcjIwNDA3NTI0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/20407524?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/k8s-ci-robot",
+      "html_url": "https://github.com/k8s-ci-robot",
+      "followers_url": "https://api.github.com/users/k8s-ci-robot/followers",
+      "following_url": "https://api.github.com/users/k8s-ci-robot/following{/other_user}",
+      "gists_url": "https://api.github.com/users/k8s-ci-robot/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/k8s-ci-robot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/k8s-ci-robot/subscriptions",
+      "organizations_url": "https://api.github.com/users/k8s-ci-robot/orgs",
+      "repos_url": "https://api.github.com/users/k8s-ci-robot/repos",
+      "events_url": "https://api.github.com/users/k8s-ci-robot/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/k8s-ci-robot/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "e9d3bc863412f60d5e00372a3ddb675f7348a791",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/e9d3bc863412f60d5e00372a3ddb675f7348a791",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/e9d3bc863412f60d5e00372a3ddb675f7348a791"
+      },
+      {
+        "sha": "0008353cef2f0b9674797fb1353c53fb71c53e48",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/0008353cef2f0b9674797fb1353c53fb71c53e48",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/0008353cef2f0b9674797fb1353c53fb71c53e48"
+      }
+    ]
+  },
+  {
+    "sha": "f0d0ff95d296cbdc594f52f1d57589db525fa2d0",
+    "node_id": "C_kwDOAToIktoAKGYwZDBmZjk1ZDI5NmNiZGM1OTRmNTJmMWQ1NzU4OWRiNTI1ZmEyZDA",
+    "commit": {
+      "author": {
+        "name": "Seena Fallah",
+        "email": "seenafallah@gmail.com",
+        "date": "2026-04-29T19:19:33Z"
+      },
+      "committer": {
+        "name": "Lubomir I. Ivanov",
+        "email": "neolit123@gmail.com",
+        "date": "2026-05-06T09:08:19Z"
+      },
+      "message": "kubeadm: skip LocalAPIEndpoint defaulting on worker join\n\nFetchInitConfigurationFromCluster always called SetAPIEndpointDynamicDefaults,\nwhich invokes ChooseAPIServerBindAddress and requires a default route on the\nhost. Worker nodes joining the cluster don't need a LocalAPIEndpoint and may\nlegitimately have no default route, causing kubeadm join to fail with:\n\n```\nunable to fetch the kubeadm-config ConfigMap: unable to select an IP from\ndefault routes.\n```\n\nAdd a skipAPIEndpoint parameter to SetInitDynamicDefaults and pass\n`!getAPIEndpoint` from FetchInitConfigurationFromCluster, so the endpoint\ndefaulter is bypassed when the caller did not request the endpoint (worker\njoin, non-control-plane reset/certs/upgrade paths).\n\nSigned-off-by: Seena Fallah <seenafallah@gmail.com>",
+      "tree": {
+        "sha": "9ac0b81f1025dd38e14c8ec3d6a39e3d6b0b47fc",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/9ac0b81f1025dd38e14c8ec3d6a39e3d6b0b47fc"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/f0d0ff95d296cbdc594f52f1d57589db525fa2d0",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/f0d0ff95d296cbdc594f52f1d57589db525fa2d0",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/f0d0ff95d296cbdc594f52f1d57589db525fa2d0",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/f0d0ff95d296cbdc594f52f1d57589db525fa2d0/comments",
+    "author": {
+      "login": "clwluvw",
+      "id": 46720919,
+      "node_id": "MDQ6VXNlcjQ2NzIwOTE5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/46720919?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/clwluvw",
+      "html_url": "https://github.com/clwluvw",
+      "followers_url": "https://api.github.com/users/clwluvw/followers",
+      "following_url": "https://api.github.com/users/clwluvw/following{/other_user}",
+      "gists_url": "https://api.github.com/users/clwluvw/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/clwluvw/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/clwluvw/subscriptions",
+      "organizations_url": "https://api.github.com/users/clwluvw/orgs",
+      "repos_url": "https://api.github.com/users/clwluvw/repos",
+      "events_url": "https://api.github.com/users/clwluvw/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/clwluvw/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "neolit123",
+      "id": 331852,
+      "node_id": "MDQ6VXNlcjMzMTg1Mg==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/331852?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/neolit123",
+      "html_url": "https://github.com/neolit123",
+      "followers_url": "https://api.github.com/users/neolit123/followers",
+      "following_url": "https://api.github.com/users/neolit123/following{/other_user}",
+      "gists_url": "https://api.github.com/users/neolit123/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/neolit123/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/neolit123/subscriptions",
+      "organizations_url": "https://api.github.com/users/neolit123/orgs",
+      "repos_url": "https://api.github.com/users/neolit123/repos",
+      "events_url": "https://api.github.com/users/neolit123/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/neolit123/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "5cdb448736dff72f94979bffffe7c6ff9384f71d",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/5cdb448736dff72f94979bffffe7c6ff9384f71d",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/5cdb448736dff72f94979bffffe7c6ff9384f71d"
+      }
+    ]
+  },
+  {
+    "sha": "b643483ccc4160d0bedb56ea1a302b8ff5b73700",
+    "node_id": "C_kwDOAToIktoAKGI2NDM0ODNjY2M0MTYwZDBiZWRiNTZlYTFhMzAyYjhmZjViNzM3MDA",
+    "commit": {
+      "author": {
+        "name": "Or Shoval",
+        "email": "oshoval@redhat.com",
+        "date": "2026-04-15T05:58:25Z"
+      },
+      "committer": {
+        "name": "Alay Patel",
+        "email": "alayp@nvidia.com",
+        "date": "2026-05-06T18:28:27Z"
+      },
+      "message": "DRA: merge same request metadata across drivers\n\nWhen multiple driver metadata files contain the same request name, keep a\nsingle request entry and merge devices into it. This avoids duplicate request\nobjects when count>1 allocations are split across drivers.\n\nAssisted-by: Cursor (codex-5.3)\nSigned-off-by: Or Shoval <oshoval@redhat.com>",
+      "tree": {
+        "sha": "c35d83dea06ecc89958dbd5a88f5aa20b505ee2c",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/c35d83dea06ecc89958dbd5a88f5aa20b505ee2c"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/b643483ccc4160d0bedb56ea1a302b8ff5b73700",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/b643483ccc4160d0bedb56ea1a302b8ff5b73700",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/b643483ccc4160d0bedb56ea1a302b8ff5b73700",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/b643483ccc4160d0bedb56ea1a302b8ff5b73700/comments",
+    "author": {
+      "login": "oshoval",
+      "id": 53794883,
+      "node_id": "MDQ6VXNlcjUzNzk0ODgz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/53794883?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/oshoval",
+      "html_url": "https://github.com/oshoval",
+      "followers_url": "https://api.github.com/users/oshoval/followers",
+      "following_url": "https://api.github.com/users/oshoval/following{/other_user}",
+      "gists_url": "https://api.github.com/users/oshoval/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/oshoval/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/oshoval/subscriptions",
+      "organizations_url": "https://api.github.com/users/oshoval/orgs",
+      "repos_url": "https://api.github.com/users/oshoval/repos",
+      "events_url": "https://api.github.com/users/oshoval/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/oshoval/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "alaypatel07",
+      "id": 8192650,
+      "node_id": "MDQ6VXNlcjgxOTI2NTA=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/8192650?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/alaypatel07",
+      "html_url": "https://github.com/alaypatel07",
+      "followers_url": "https://api.github.com/users/alaypatel07/followers",
+      "following_url": "https://api.github.com/users/alaypatel07/following{/other_user}",
+      "gists_url": "https://api.github.com/users/alaypatel07/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/alaypatel07/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/alaypatel07/subscriptions",
+      "organizations_url": "https://api.github.com/users/alaypatel07/orgs",
+      "repos_url": "https://api.github.com/users/alaypatel07/repos",
+      "events_url": "https://api.github.com/users/alaypatel07/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/alaypatel07/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "5cdb448736dff72f94979bffffe7c6ff9384f71d",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/5cdb448736dff72f94979bffffe7c6ff9384f71d",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/5cdb448736dff72f94979bffffe7c6ff9384f71d"
+      }
+    ]
+  },
+  {
+    "sha": "2bd86062e71af47e45398d3578b1327ba52a6252",
+    "node_id": "C_kwDOAToIktoAKDJiZDg2MDYyZTcxYWY0N2U0NTM5OGQzNTc4YjEzMjdiYTUyYTYyNTI",
+    "commit": {
+      "author": {
+        "name": "Alay Patel",
+        "email": "alayp@nvidia.com",
+        "date": "2026-04-22T21:11:17Z"
+      },
+      "committer": {
+        "name": "Alay Patel",
+        "email": "alayp@nvidia.com",
+        "date": "2026-05-07T13:25:33Z"
+      },
+      "message": "KEP-5304: DecodeMetadataFromStream only skips metadata entries with unknown API versions\n\nSigned-off-by: Alay Patel <alayp@nvidia.com>",
+      "tree": {
+        "sha": "166e4d3908d2cb377784677f0386bf6494193f64",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/166e4d3908d2cb377784677f0386bf6494193f64"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/2bd86062e71af47e45398d3578b1327ba52a6252",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/2bd86062e71af47e45398d3578b1327ba52a6252",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/2bd86062e71af47e45398d3578b1327ba52a6252",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/2bd86062e71af47e45398d3578b1327ba52a6252/comments",
+    "author": {
+      "login": "alaypatel07",
+      "id": 8192650,
+      "node_id": "MDQ6VXNlcjgxOTI2NTA=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/8192650?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/alaypatel07",
+      "html_url": "https://github.com/alaypatel07",
+      "followers_url": "https://api.github.com/users/alaypatel07/followers",
+      "following_url": "https://api.github.com/users/alaypatel07/following{/other_user}",
+      "gists_url": "https://api.github.com/users/alaypatel07/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/alaypatel07/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/alaypatel07/subscriptions",
+      "organizations_url": "https://api.github.com/users/alaypatel07/orgs",
+      "repos_url": "https://api.github.com/users/alaypatel07/repos",
+      "events_url": "https://api.github.com/users/alaypatel07/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/alaypatel07/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "alaypatel07",
+      "id": 8192650,
+      "node_id": "MDQ6VXNlcjgxOTI2NTA=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/8192650?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/alaypatel07",
+      "html_url": "https://github.com/alaypatel07",
+      "followers_url": "https://api.github.com/users/alaypatel07/followers",
+      "following_url": "https://api.github.com/users/alaypatel07/following{/other_user}",
+      "gists_url": "https://api.github.com/users/alaypatel07/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/alaypatel07/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/alaypatel07/subscriptions",
+      "organizations_url": "https://api.github.com/users/alaypatel07/orgs",
+      "repos_url": "https://api.github.com/users/alaypatel07/repos",
+      "events_url": "https://api.github.com/users/alaypatel07/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/alaypatel07/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "5cdb448736dff72f94979bffffe7c6ff9384f71d",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/5cdb448736dff72f94979bffffe7c6ff9384f71d",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/5cdb448736dff72f94979bffffe7c6ff9384f71d"
+      }
+    ]
+  },
+  {
+    "sha": "29952022e7e68b85281812c80a2287fb13afe7ee",
+    "node_id": "C_kwDOAToIktoAKDI5OTUyMDIyZTdlNjhiODUyODE4MTJjODBhMjI4N2ZiMTNhZmU3ZWU",
+    "commit": {
+      "author": {
+        "name": "Kubernetes Prow Robot",
+        "email": "20407524+k8s-ci-robot@users.noreply.github.com",
+        "date": "2026-05-08T11:55:17Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-05-08T11:55:17Z"
+      },
+      "message": "Merge pull request #138802 from neolit123/automated-cherry-pick-of-#138692-origin-release-1.36\n\nAutomated cherry pick of #138692: kubeadm: skip LocalAPIEndpoint defaulting on worker join",
+      "tree": {
+        "sha": "9ac0b81f1025dd38e14c8ec3d6a39e3d6b0b47fc",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/9ac0b81f1025dd38e14c8ec3d6a39e3d6b0b47fc"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/29952022e7e68b85281812c80a2287fb13afe7ee",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp/c8lCRC1aQ7uu5UhlAAAFLUQAIS9z22FhRERM8TcBqg4LYDl\n7TqD4qCGCWiECpamgaz156M+hqLeDRtdqK8keoHnvO6MDQms38OSGagLI33wx8wT\nCK22zYhJmsZrCLs3AAectwSvW5uvAHCkIADNJghxUps07FDiRfz3FEfPDhqxuPrS\n2B8ltRICE9nKqaO6WZyyYod4zyo3TPkN/yJPwsioElwPrJkyLMq9lb62dxhcfLXx\n+BH+PK+qpoTA0cUp43ueuOyMz074XLwP54WqaQqecLZvwZ1pjcanmo1P6t3EROuQ\nAABDpvaHPS6OcuZNC3YknrOf+RK9JABQI0bpAxqPI/EYDoaVowsvhHW3vP3h7n1y\nKl44cH3yNpEd2m1so7gdmYRlAHQimB5BIm1UdEGcEB4JlG6IMn6/4AAsHfiZ2j7a\nzqYRBHfzyMXaSebGUgMEL8XCIybN9/D4nDmu6k2zyGK4rrYZjVrNS466ZqtRRtEX\neeJXwbD+yDYptWgxo8+e0lSPMLYpYLoSKLkJAUcBh7kbxvLqOK1A3avr0C8vnjB7\nyMN9urVLP57q+a80ssJQ8XPMPird+pwQxFKfSL7T8mSCJA7F6FXu437eIl9Opwgp\nUuk6DUYB5IegwSlOdNFAG80I+EVZz+jaVEU0rNabLaCAzmNWl32bV2lzNtCLOvl+\nY2i/R8fx9nV8g3p4s7oP\n=bKiw\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 9ac0b81f1025dd38e14c8ec3d6a39e3d6b0b47fc\nparent 5cdb448736dff72f94979bffffe7c6ff9384f71d\nparent f0d0ff95d296cbdc594f52f1d57589db525fa2d0\nauthor Kubernetes Prow Robot <20407524+k8s-ci-robot@users.noreply.github.com> 1778241317 +0530\ncommitter GitHub <noreply@github.com> 1778241317 +0530\n\nMerge pull request #138802 from neolit123/automated-cherry-pick-of-#138692-origin-release-1.36\n\nAutomated cherry pick of #138692: kubeadm: skip LocalAPIEndpoint defaulting on worker join",
+        "verified_at": "2026-05-08T11:55:18Z"
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/29952022e7e68b85281812c80a2287fb13afe7ee",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/29952022e7e68b85281812c80a2287fb13afe7ee",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/29952022e7e68b85281812c80a2287fb13afe7ee/comments",
+    "author": {
+      "login": "k8s-ci-robot",
+      "id": 20407524,
+      "node_id": "MDQ6VXNlcjIwNDA3NTI0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/20407524?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/k8s-ci-robot",
+      "html_url": "https://github.com/k8s-ci-robot",
+      "followers_url": "https://api.github.com/users/k8s-ci-robot/followers",
+      "following_url": "https://api.github.com/users/k8s-ci-robot/following{/other_user}",
+      "gists_url": "https://api.github.com/users/k8s-ci-robot/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/k8s-ci-robot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/k8s-ci-robot/subscriptions",
+      "organizations_url": "https://api.github.com/users/k8s-ci-robot/orgs",
+      "repos_url": "https://api.github.com/users/k8s-ci-robot/repos",
+      "events_url": "https://api.github.com/users/k8s-ci-robot/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/k8s-ci-robot/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "5cdb448736dff72f94979bffffe7c6ff9384f71d",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/5cdb448736dff72f94979bffffe7c6ff9384f71d",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/5cdb448736dff72f94979bffffe7c6ff9384f71d"
+      },
+      {
+        "sha": "f0d0ff95d296cbdc594f52f1d57589db525fa2d0",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/f0d0ff95d296cbdc594f52f1d57589db525fa2d0",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/f0d0ff95d296cbdc594f52f1d57589db525fa2d0"
+      }
+    ]
+  },
+  {
+    "sha": "3aa1cf5ec26a7f98593feb513250e8e872a7d81e",
+    "node_id": "C_kwDOAToIktoAKDNhYTFjZjVlYzI2YTdmOTg1OTNmZWI1MTMyNTBlOGU4NzJhN2Q4MWU",
+    "commit": {
+      "author": {
+        "name": "Kubernetes Prow Robot",
+        "email": "20407524+k8s-ci-robot@users.noreply.github.com",
+        "date": "2026-05-08T15:35:18Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-05-08T15:35:18Z"
+      },
+      "message": "Merge pull request #138825 from alaypatel07/automated-cherry-pick-of-#138394-upstream-release-1.36\n\nAutomated cherry pick of #138394: KEP-5304, fix: merge same request metadata across drivers",
+      "tree": {
+        "sha": "4567e70ddcdd0d736aaad54af48dd56ca4d5183b",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/4567e70ddcdd0d736aaad54af48dd56ca4d5183b"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/3aa1cf5ec26a7f98593feb513250e8e872a7d81e",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp/gK2CRC1aQ7uu5UhlAAAk/cQABhz1beI0ICH5bnUe+l4d2WF\nIUfqITRcC/W5B7Gq71Q/pKmCN/WsUSH2h72sanhNpUW6if+DNoFQRGzpGijNE9Aw\nnAfcw+UxgWxZ2JKP7kLSjM/IoQWbZPaXL2XsajyRx/unusL1HvxnAJW+1WZJyXRU\nCulsK5oST/gt28tjiTFZTnmtJAbyJN/wVohJurpKLc9ziEkh2aAzOuxD6U6gweTd\nbK7CVuIMC3zKxcsAq61dyQwMDDSz5ZxSqFENlArrBv3X6AsWclXVbCp6sYdlFVrn\nuElb6NBhjy5gurDGwrRDqEU77DqdekhuRfzjDM5Hf8ZoCN9D3uF4/9gVCLpE0lyy\nNwR5Vnq8s5mnAQlLFUnSrInCiUDzmM4e2Ro8Psgs1EWpCobXRSXxnxnI6b+ETyWy\nrcXiwHZXPzsfUvdn76GQZNzwjbDSgzBANijbNX1i9rRwv4ZuOvMDu1S8wP/UtIXE\nvdf7fhJCMyEZxCIEH4Hue5tDmwvpdCaOY7ZSohmskzaskZwQy5m5PfYx/Lqtdfzt\ndtV5wU2cENivaqHfTSA6YHuFs4nmGaRmIDUFoO1gATWcRdinJKElysHX9XQiWrdM\n4p1Jg4rh/xHL2F+lII3c+HgZtQ4AOAxVLyl0CwLChjpLdvtvMRvdfqTY5Ngqc4q8\nVZwyYIqPLbxUs/vAOi69\n=lfs/\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 4567e70ddcdd0d736aaad54af48dd56ca4d5183b\nparent 29952022e7e68b85281812c80a2287fb13afe7ee\nparent b643483ccc4160d0bedb56ea1a302b8ff5b73700\nauthor Kubernetes Prow Robot <20407524+k8s-ci-robot@users.noreply.github.com> 1778254518 +0530\ncommitter GitHub <noreply@github.com> 1778254518 +0530\n\nMerge pull request #138825 from alaypatel07/automated-cherry-pick-of-#138394-upstream-release-1.36\n\nAutomated cherry pick of #138394: KEP-5304, fix: merge same request metadata across drivers",
+        "verified_at": "2026-05-08T15:35:19Z"
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/3aa1cf5ec26a7f98593feb513250e8e872a7d81e",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/3aa1cf5ec26a7f98593feb513250e8e872a7d81e",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/3aa1cf5ec26a7f98593feb513250e8e872a7d81e/comments",
+    "author": {
+      "login": "k8s-ci-robot",
+      "id": 20407524,
+      "node_id": "MDQ6VXNlcjIwNDA3NTI0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/20407524?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/k8s-ci-robot",
+      "html_url": "https://github.com/k8s-ci-robot",
+      "followers_url": "https://api.github.com/users/k8s-ci-robot/followers",
+      "following_url": "https://api.github.com/users/k8s-ci-robot/following{/other_user}",
+      "gists_url": "https://api.github.com/users/k8s-ci-robot/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/k8s-ci-robot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/k8s-ci-robot/subscriptions",
+      "organizations_url": "https://api.github.com/users/k8s-ci-robot/orgs",
+      "repos_url": "https://api.github.com/users/k8s-ci-robot/repos",
+      "events_url": "https://api.github.com/users/k8s-ci-robot/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/k8s-ci-robot/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "29952022e7e68b85281812c80a2287fb13afe7ee",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/29952022e7e68b85281812c80a2287fb13afe7ee",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/29952022e7e68b85281812c80a2287fb13afe7ee"
+      },
+      {
+        "sha": "b643483ccc4160d0bedb56ea1a302b8ff5b73700",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/b643483ccc4160d0bedb56ea1a302b8ff5b73700",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/b643483ccc4160d0bedb56ea1a302b8ff5b73700"
+      }
+    ]
+  },
+  {
+    "sha": "294c4333d231a5d9e5f7d03ce71ead9921f0f39e",
+    "node_id": "C_kwDOAToIktoAKDI5NGM0MzMzZDIzMWE1ZDllNWY3ZDAzY2U3MWVhZDk5MjFmMGYzOWU",
+    "commit": {
+      "author": {
+        "name": "Kubernetes Prow Robot",
+        "email": "20407524+k8s-ci-robot@users.noreply.github.com",
+        "date": "2026-05-08T15:35:26Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-05-08T15:35:26Z"
+      },
+      "message": "Merge pull request #138859 from alaypatel07/automated-cherry-pick-of-#138530-upstream-release-1.36\n\nAutomated cherry pick of #138530: KEP-5304:  DecodeMetadataFromStream only skips metadata entries with unknown API versions",
+      "tree": {
+        "sha": "bb9d791ab6a1e691daf0d23650991b7c91f725ae",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/bb9d791ab6a1e691daf0d23650991b7c91f725ae"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/294c4333d231a5d9e5f7d03ce71ead9921f0f39e",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp/gK+CRC1aQ7uu5UhlAAASCwQAGnHnzaJQrs4SIDjvmFlzo/5\nLHfLIAePVBalqMY2zp5cn6fP+We3qKpoJ4sOAonuL88uEh9nZgde4Mroo9WEo1Fc\n5lDupwBMA3L6bMS4i4lXLEb3feswano0nOaG0VgOjXuX+Vz8oi9+sehOks1cGq9D\n+yiV7BMhO5I5OqVAIfVuOYAFT2VDfaUF/koLL8l5fjGdC2Z6n3kKai5+J97ghhSd\nNCWyxs8PNkvbUc/OuSDdt7qsKTTyqawn2ObyosD6bU+uzFOIPNsEJH+MbopW13JL\nNMbeE00mSfZCg3/LVXA79bbq69UqeMfmAErc06U+esYHc4ch9ldTyWoL+zHFy9nu\nYpM3P4eCx1IJbqSeWrdrcpCzbFuYFuUl631Uo67QAVX9PmkRgFIHsYQH5XhMX9LE\nVPgtgZi2NXZFPJErD03DwB88spmXNNKye2H8tyuAM09r0C87mPkhuFp4eThy8Nei\n8+yBrfTaQ5LNE8vmQKiiJyz+IdpfKEGw8sNkNlBZ9GV/DxIwj6CRnV4sxZSHy5HI\npOPUJKF0tESKz/4Tr/3T8jYrrklZ59X5wEkxSjuuDLiAcTy9g8y7CvXF5z+UH/iq\nTzNj+dquKAPOh1bHFkWr1mZhND45pDFDP0aUgbtiT6Lb7UpRRMtA8WWQV4fzbHbB\ntqRKbGifBfWFslMUZ+qT\n=i5OX\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree bb9d791ab6a1e691daf0d23650991b7c91f725ae\nparent 3aa1cf5ec26a7f98593feb513250e8e872a7d81e\nparent 2bd86062e71af47e45398d3578b1327ba52a6252\nauthor Kubernetes Prow Robot <20407524+k8s-ci-robot@users.noreply.github.com> 1778254526 +0530\ncommitter GitHub <noreply@github.com> 1778254526 +0530\n\nMerge pull request #138859 from alaypatel07/automated-cherry-pick-of-#138530-upstream-release-1.36\n\nAutomated cherry pick of #138530: KEP-5304:  DecodeMetadataFromStream only skips metadata entries with unknown API versions",
+        "verified_at": "2026-05-08T15:35:27Z"
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/294c4333d231a5d9e5f7d03ce71ead9921f0f39e",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/294c4333d231a5d9e5f7d03ce71ead9921f0f39e",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/294c4333d231a5d9e5f7d03ce71ead9921f0f39e/comments",
+    "author": {
+      "login": "k8s-ci-robot",
+      "id": 20407524,
+      "node_id": "MDQ6VXNlcjIwNDA3NTI0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/20407524?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/k8s-ci-robot",
+      "html_url": "https://github.com/k8s-ci-robot",
+      "followers_url": "https://api.github.com/users/k8s-ci-robot/followers",
+      "following_url": "https://api.github.com/users/k8s-ci-robot/following{/other_user}",
+      "gists_url": "https://api.github.com/users/k8s-ci-robot/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/k8s-ci-robot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/k8s-ci-robot/subscriptions",
+      "organizations_url": "https://api.github.com/users/k8s-ci-robot/orgs",
+      "repos_url": "https://api.github.com/users/k8s-ci-robot/repos",
+      "events_url": "https://api.github.com/users/k8s-ci-robot/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/k8s-ci-robot/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "3aa1cf5ec26a7f98593feb513250e8e872a7d81e",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/3aa1cf5ec26a7f98593feb513250e8e872a7d81e",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/3aa1cf5ec26a7f98593feb513250e8e872a7d81e"
+      },
+      {
+        "sha": "2bd86062e71af47e45398d3578b1327ba52a6252",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/2bd86062e71af47e45398d3578b1327ba52a6252",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/2bd86062e71af47e45398d3578b1327ba52a6252"
+      }
+    ]
+  },
+  {
+    "sha": "cc1b390ed46180652e386b82cc069a00bdb85fcd",
+    "node_id": "C_kwDOAToIktoAKGNjMWIzOTBlZDQ2MTgwNjUyZTM4NmI4MmNjMDY5YTAwYmRiODVmY2Q",
+    "commit": {
+      "author": {
+        "name": "Kubernetes Prow Robot",
+        "email": "20407524+k8s-ci-robot@users.noreply.github.com",
+        "date": "2026-05-08T18:25:19Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-05-08T18:25:19Z"
+      },
+      "message": "Merge pull request #138590 from BenTheElder/fix-zfs-136\n\nrelease-1.36: re-introduce cadvisor ZFS support to kubelet",
+      "tree": {
+        "sha": "f411de9b7ef892cb747be2d85098412f1b19cefc",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/f411de9b7ef892cb747be2d85098412f1b19cefc"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/cc1b390ed46180652e386b82cc069a00bdb85fcd",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp/iqPCRC1aQ7uu5UhlAAAcrYQAFAYLvcB7Yh3CXj6aPijGRZP\n2xxDHrD8xknA2xBKJ8RAo1i6kuLqxg39Q5C2nlqcIWEi28hLO2NU0JfVU2M9/Uvd\nW2pUq1N/ls6o+1zGKS5ubbiuMZBph9gAgvvC9+Wlol5YqYgfgtljG79iHuhYFq4P\nzw39YTxHzCePZ2y9lOwTQQT3SNQ1bKnMOQzuu77xVemd/EOwxlWxk0znd+6R3p1X\nNgARxqD+yeiZ5HayNxbHr83dWupv7tHkhc7j2PQIZo5SZ58WAyqdnRULhZriTKZs\nV45DfMx2r4WrjV/1TuwG2D2nPzSVk4uU38Q1kEQVPyMgJuEQgbZ3jwhDTJxZsIGH\nrRKpaH05gbkQTPIrz9gj3Aa3/sdYSQUU1mGRHrE2V1sO5ga7AVtPRukfuqIjCYr+\nKwaGl22eGySEY3I3LItgG/IErgkivfPBFUT4/aFUezqTnfPEwz/9US+4QTFIssRD\n2SBO1km22pGj3NQbK3Yi/qWj4FH/MYB60lT8Xxj1Mc34WOEFsAkK8MzRFn42j+eP\na5+7/Z/6LP3BHWYFzfIcB4/Sm+s3NemmdLS6ClqlWzeymXvWBkJs/0QMTFt6mQiY\nUDtqa4XhbGFr+nb4HVvmCVj7smeSxt/dNyQVjUjRO8XnxlsBb1R15zoyOGyXf0os\nugxQPj0Ykl1lZdJtMnud\n=lAnB\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree f411de9b7ef892cb747be2d85098412f1b19cefc\nparent 294c4333d231a5d9e5f7d03ce71ead9921f0f39e\nparent 28dd6f275705b388d5155a202246339587987193\nauthor Kubernetes Prow Robot <20407524+k8s-ci-robot@users.noreply.github.com> 1778264719 +0530\ncommitter GitHub <noreply@github.com> 1778264719 +0530\n\nMerge pull request #138590 from BenTheElder/fix-zfs-136\n\nrelease-1.36: re-introduce cadvisor ZFS support to kubelet",
+        "verified_at": "2026-05-08T18:25:21Z"
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/cc1b390ed46180652e386b82cc069a00bdb85fcd",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/cc1b390ed46180652e386b82cc069a00bdb85fcd",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/cc1b390ed46180652e386b82cc069a00bdb85fcd/comments",
+    "author": {
+      "login": "k8s-ci-robot",
+      "id": 20407524,
+      "node_id": "MDQ6VXNlcjIwNDA3NTI0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/20407524?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/k8s-ci-robot",
+      "html_url": "https://github.com/k8s-ci-robot",
+      "followers_url": "https://api.github.com/users/k8s-ci-robot/followers",
+      "following_url": "https://api.github.com/users/k8s-ci-robot/following{/other_user}",
+      "gists_url": "https://api.github.com/users/k8s-ci-robot/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/k8s-ci-robot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/k8s-ci-robot/subscriptions",
+      "organizations_url": "https://api.github.com/users/k8s-ci-robot/orgs",
+      "repos_url": "https://api.github.com/users/k8s-ci-robot/repos",
+      "events_url": "https://api.github.com/users/k8s-ci-robot/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/k8s-ci-robot/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "294c4333d231a5d9e5f7d03ce71ead9921f0f39e",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/294c4333d231a5d9e5f7d03ce71ead9921f0f39e",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/294c4333d231a5d9e5f7d03ce71ead9921f0f39e"
+      },
+      {
+        "sha": "28dd6f275705b388d5155a202246339587987193",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/28dd6f275705b388d5155a202246339587987193",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/28dd6f275705b388d5155a202246339587987193"
+      }
+    ]
+  },
+  {
+    "sha": "0c872bc6944adee41861965512641853c2439a6a",
+    "node_id": "C_kwDOAToIktoAKDBjODcyYmM2OTQ0YWRlZTQxODYxOTY1NTEyNjQxODUzYzI0MzlhNmE",
+    "commit": {
+      "author": {
+        "name": "Kubernetes Prow Robot",
+        "email": "20407524+k8s-ci-robot@users.noreply.github.com",
+        "date": "2026-05-08T20:27:18Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-05-08T20:27:18Z"
+      },
+      "message": "Merge pull request #138535 from pohly/automated-cherry-pick-of-#137958-origin-release-1.36\n\nAutomated cherry pick of #137958: localupcluster: properly query /readyz and /healthz, change cluster modification procedure",
+      "tree": {
+        "sha": "b9f446331baf8a742600a54f38a6b90689dabcbc",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/b9f446331baf8a742600a54f38a6b90689dabcbc"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/0c872bc6944adee41861965512641853c2439a6a",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp/kcmCRC1aQ7uu5UhlAAAhe0QAKCqriVskrgzwWlkJZWTiee1\n8KEgS1gqaEjB4sLxMGcFoq6/5ssYPy9DFKr+x81CxeuHQGp/n3pkMxhoYTcwAlnm\nXnGmxlE6vI7DlXnVmPdjLki6VXTU/szpgHw5qYneAMtKXJFJM6oH1d0HVbw+Ffhl\n07IDzVb6U3yTpReQeb295DvOuQNh5YYcRc+qwNjFjZD38dvcC90WkYtKJDTW9hPi\n8J1hxJG17Ughnc5pgAxw13SGUqPeBuUeTTdGw/4K2I62sg9yvZ9N4I3MgeyK+NBS\nu7eRtp+sFdlCyjWgv2gEBobTTu63t4T+jus9l9zJ/69DGyiSxp2AsTzs01d4sqI7\nilzlG541h9cngPybCsWjWFQnKKlHEGDytOOS8CDs+wRCUqPOHiGRmqWyEyExEVv5\nqDNtfTVNbIuOwRTt7JWrjZwMh+graMppRJhF3KN9/37in52UWeISViQpf8Vn2l89\nvr9fiZAKF2eY/d1Chktn1AtY4zel/Di1tNatd+CXTkGiuwZngkTM09wIu/E3eDwJ\nL1ga+S0EmiEygXnlMlPmQXJf4GSel8m1UPnmm0QVV3VUoNcJbfqS5sj9gCGGRVrE\nXWbKA1zweRk2bRsvDysOW9oDjlnMD/ATFk5JEKWNCR6J362G52brv6UN2ElyaD58\nkZnoEZLYuAS4+VkNxshc\n=25uX\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree b9f446331baf8a742600a54f38a6b90689dabcbc\nparent cc1b390ed46180652e386b82cc069a00bdb85fcd\nparent 891a905031b1216e197b51e36319f12f3aac0511\nauthor Kubernetes Prow Robot <20407524+k8s-ci-robot@users.noreply.github.com> 1778272038 +0530\ncommitter GitHub <noreply@github.com> 1778272038 +0530\n\nMerge pull request #138535 from pohly/automated-cherry-pick-of-#137958-origin-release-1.36\n\nAutomated cherry pick of #137958: localupcluster: properly query /readyz and /healthz, change cluster modification procedure",
+        "verified_at": "2026-05-08T20:27:19Z"
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/0c872bc6944adee41861965512641853c2439a6a",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/0c872bc6944adee41861965512641853c2439a6a",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/0c872bc6944adee41861965512641853c2439a6a/comments",
+    "author": {
+      "login": "k8s-ci-robot",
+      "id": 20407524,
+      "node_id": "MDQ6VXNlcjIwNDA3NTI0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/20407524?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/k8s-ci-robot",
+      "html_url": "https://github.com/k8s-ci-robot",
+      "followers_url": "https://api.github.com/users/k8s-ci-robot/followers",
+      "following_url": "https://api.github.com/users/k8s-ci-robot/following{/other_user}",
+      "gists_url": "https://api.github.com/users/k8s-ci-robot/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/k8s-ci-robot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/k8s-ci-robot/subscriptions",
+      "organizations_url": "https://api.github.com/users/k8s-ci-robot/orgs",
+      "repos_url": "https://api.github.com/users/k8s-ci-robot/repos",
+      "events_url": "https://api.github.com/users/k8s-ci-robot/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/k8s-ci-robot/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "cc1b390ed46180652e386b82cc069a00bdb85fcd",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/cc1b390ed46180652e386b82cc069a00bdb85fcd",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/cc1b390ed46180652e386b82cc069a00bdb85fcd"
+      },
+      {
+        "sha": "891a905031b1216e197b51e36319f12f3aac0511",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/891a905031b1216e197b51e36319f12f3aac0511",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/891a905031b1216e197b51e36319f12f3aac0511"
+      }
+    ]
+  },
+  {
+    "sha": "493c5a49deef9bb85842f8d7b154b546505fd594",
+    "node_id": "C_kwDOAToIktoAKDQ5M2M1YTQ5ZGVlZjliYjg1ODQyZjhkN2IxNTRiNTQ2NTA1ZmQ1OTQ",
+    "commit": {
+      "author": {
+        "name": "Kubernetes Prow Robot",
+        "email": "20407524+k8s-ci-robot@users.noreply.github.com",
+        "date": "2026-05-08T23:45:19Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-05-08T23:45:19Z"
+      },
+      "message": "Merge pull request #138500 from soltysh/automated-cherry-pick-of-#138499-upstream-release-1.36\n\nAutomated cherry pick of #138499: Ensure the path inside the container is correctly handled",
+      "tree": {
+        "sha": "f746f5110255fb6ab3d982459265cc9404bd73a8",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/f746f5110255fb6ab3d982459265cc9404bd73a8"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/493c5a49deef9bb85842f8d7b154b546505fd594",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJp/nWPCRC1aQ7uu5UhlAAAQlsQAFSc/Szz1YMH+0n9uv4eHjzm\nOSLW6+FpgF6q6wxmHJbE3S8iSsqrMMNNIpQ/gs1Ac4FzYDZztnvWojnx0lCx1m1P\nm/sPJiR+CCXoYq8dSokNWMidK6VXNrAeA4ql7gESCavF9y/P4RXAkgt5sfezxJsB\nV6NjivP0kJwDTAcB0Wd3nqCyh1m3swo2Y1tAfWFRv4ubacH2qeYaDpQIt0QJsmc8\ndwWbY48+VwYvwb05+/fK6mGwGuRXuEHvIVmBje0wT773ENE2cKjzsvQ+69YjQIXn\nHvtChZWWSFs2Q23whDS/MnX7QUungkwWILTdFQqGnxdxngYongvwzY7I8St/Vbrt\nbiewZ9LIzgeD0J+i3jItyJ1dGxewcC3tJXAyXIAHJSltvqBxFmBbzXOi2P91fOGY\nH+aVpSwgPHkwIZMrI22tSxW0n+CnYriZofk+UQlBCxEsmitjqV+xUS0N7DLdQukD\nbn8UVWz9D+Ebe3Ku+7/ueaxb+b0QHOfmXzK4d6U1aaS85bFF8Umsne+qQyP2wI/h\nAkOUC27X4C6tWzJup2dskgG2rvrz7fJObH328sC2GNpeZY04Uz6siSzufVo/SQXu\nYzPFCJqZWSOEWeSFxeV7/pfuy3WTtXkOZr3yT0oYw5UPK21CqOSgh3GNtfY8WxhP\nEfTw3rBAKFRe0tLkiaBP\n=K2qH\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree f746f5110255fb6ab3d982459265cc9404bd73a8\nparent 0c872bc6944adee41861965512641853c2439a6a\nparent b2ba48e510e7f9b0e259b4cf36919eab984d7894\nauthor Kubernetes Prow Robot <20407524+k8s-ci-robot@users.noreply.github.com> 1778283919 +0530\ncommitter GitHub <noreply@github.com> 1778283919 +0530\n\nMerge pull request #138500 from soltysh/automated-cherry-pick-of-#138499-upstream-release-1.36\n\nAutomated cherry pick of #138499: Ensure the path inside the container is correctly handled",
+        "verified_at": "2026-05-08T23:45:19Z"
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/493c5a49deef9bb85842f8d7b154b546505fd594",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/493c5a49deef9bb85842f8d7b154b546505fd594",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/493c5a49deef9bb85842f8d7b154b546505fd594/comments",
+    "author": {
+      "login": "k8s-ci-robot",
+      "id": 20407524,
+      "node_id": "MDQ6VXNlcjIwNDA3NTI0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/20407524?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/k8s-ci-robot",
+      "html_url": "https://github.com/k8s-ci-robot",
+      "followers_url": "https://api.github.com/users/k8s-ci-robot/followers",
+      "following_url": "https://api.github.com/users/k8s-ci-robot/following{/other_user}",
+      "gists_url": "https://api.github.com/users/k8s-ci-robot/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/k8s-ci-robot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/k8s-ci-robot/subscriptions",
+      "organizations_url": "https://api.github.com/users/k8s-ci-robot/orgs",
+      "repos_url": "https://api.github.com/users/k8s-ci-robot/repos",
+      "events_url": "https://api.github.com/users/k8s-ci-robot/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/k8s-ci-robot/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "0c872bc6944adee41861965512641853c2439a6a",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/0c872bc6944adee41861965512641853c2439a6a",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/0c872bc6944adee41861965512641853c2439a6a"
+      },
+      {
+        "sha": "b2ba48e510e7f9b0e259b4cf36919eab984d7894",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/b2ba48e510e7f9b0e259b4cf36919eab984d7894",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/b2ba48e510e7f9b0e259b4cf36919eab984d7894"
+      }
+    ]
+  },
+  {
+    "sha": "b0b25e8ade23a6066c28ad5c66151ec117b2808e",
+    "node_id": "C_kwDOAToIktoAKGIwYjI1ZThhZGUyM2E2MDY2YzI4YWQ1YzY2MTUxZWMxMTdiMjgwOGU",
+    "commit": {
+      "author": {
+        "name": "Micah Hausler",
+        "email": "mhausler@amazon.com",
+        "date": "2026-02-16T16:27:20Z"
+      },
+      "committer": {
+        "name": "Lubomir I. Ivanov",
+        "email": "neolit123@gmail.com",
+        "date": "2026-05-11T09:25:19Z"
+      },
+      "message": "kubeadm: use dedicated ClusterRole for apiserver kubelet client\n\nSigned-off-by: Micah Hausler <mhausler@amazon.com>",
+      "tree": {
+        "sha": "f40bef847f6bda111e122a880d21ec9c0aaaf750",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/f40bef847f6bda111e122a880d21ec9c0aaaf750"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/b0b25e8ade23a6066c28ad5c66151ec117b2808e",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/b0b25e8ade23a6066c28ad5c66151ec117b2808e",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/b0b25e8ade23a6066c28ad5c66151ec117b2808e",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/b0b25e8ade23a6066c28ad5c66151ec117b2808e/comments",
+    "author": {
+      "login": "micahhausler",
+      "id": 791000,
+      "node_id": "MDQ6VXNlcjc5MTAwMA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/791000?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/micahhausler",
+      "html_url": "https://github.com/micahhausler",
+      "followers_url": "https://api.github.com/users/micahhausler/followers",
+      "following_url": "https://api.github.com/users/micahhausler/following{/other_user}",
+      "gists_url": "https://api.github.com/users/micahhausler/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/micahhausler/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/micahhausler/subscriptions",
+      "organizations_url": "https://api.github.com/users/micahhausler/orgs",
+      "repos_url": "https://api.github.com/users/micahhausler/repos",
+      "events_url": "https://api.github.com/users/micahhausler/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/micahhausler/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "neolit123",
+      "id": 331852,
+      "node_id": "MDQ6VXNlcjMzMTg1Mg==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/331852?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/neolit123",
+      "html_url": "https://github.com/neolit123",
+      "followers_url": "https://api.github.com/users/neolit123/followers",
+      "following_url": "https://api.github.com/users/neolit123/following{/other_user}",
+      "gists_url": "https://api.github.com/users/neolit123/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/neolit123/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/neolit123/subscriptions",
+      "organizations_url": "https://api.github.com/users/neolit123/orgs",
+      "repos_url": "https://api.github.com/users/neolit123/repos",
+      "events_url": "https://api.github.com/users/neolit123/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/neolit123/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "493c5a49deef9bb85842f8d7b154b546505fd594",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/493c5a49deef9bb85842f8d7b154b546505fd594",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/493c5a49deef9bb85842f8d7b154b546505fd594"
+      }
+    ]
+  },
+  {
+    "sha": "710a59eee8b03fc1f8aef1c93d81cea19fde421b",
+    "node_id": "C_kwDOAToIktoAKDcxMGE1OWVlZThiMDNmYzFmOGFlZjFjOTNkODFjZWExOWZkZTQyMWI",
+    "commit": {
+      "author": {
+        "name": "Kubernetes Prow Robot",
+        "email": "20407524+k8s-ci-robot@users.noreply.github.com",
+        "date": "2026-05-11T12:23:51Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-05-11T12:23:51Z"
+      },
+      "message": "Merge pull request #138958 from neolit123/automated-cherry-pick-of-#138957-origin-release-1.36\n\nAutomated cherry pick of #138957: kubeadm: use dedicated ClusterRole for apiserver kubelet client",
+      "tree": {
+        "sha": "f40bef847f6bda111e122a880d21ec9c0aaaf750",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/f40bef847f6bda111e122a880d21ec9c0aaaf750"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/710a59eee8b03fc1f8aef1c93d81cea19fde421b",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqAcpXCRC1aQ7uu5UhlAAAPbgQALAw2FVJAUVoDqI+VHZ0VGIc\nBcsBMnXnEf4HbQZ5Jeg4+sKNoJUMyugNhSdIe4IOXt0C08qlM8OLMcl1CYqdiGvG\nv/xM65Wo7F86GmWwwbHufSZCCTMzH3Rx8N9Qod/vC0gzpop3s9P3RxWuKHUYNN+c\nJgeWDCVPi5j3Vm1S/sMVAcoD2AGV0/OT35uQgbQ6NfCRmDVha4e3QHSKctDeGBa8\npbItMhcEGoegy5/TaQ5v82gnGfq2I3oX4u0yeQOoISsrJouiyHBsplNkKI3IdybF\n8i0uKxRoCEjEZ14CLiVjdlCxZSa0CG9xV1QBpLj4FqNHPj+IlxArZA8oKtcOqj9X\nRl3XTAkqoF7bHhsREXI/toKPEFUT7livteB6X6T/rCL7roJ3w/UTOnKV+ZX7pXSh\n2m4DmddZJk8auy95Vw1ETP6hRpbroHFF0WuIkmVPxsRllCmb1177n4WK1JSfucRC\nJSB2s3IFgH16ttpe8+HYNL133X0XAcPVY8V3yCQmqb8w/74bkrEY16crNxeCYlRW\nmMkJhOg1lu+ih22PeYsVjV/BWC9RKCd3cd6NEuiBH3lX9Rb1AqzdhQ0KSnHtx9rj\n1s8lMAmXeTvOG+l1Affnp6AVRqZmcEoOMvRwxC8z7EmM0Q16xvmoz/zywGd+GjjT\nQ4mn6erBybHzobXmW14G\n=RW0A\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree f40bef847f6bda111e122a880d21ec9c0aaaf750\nparent 493c5a49deef9bb85842f8d7b154b546505fd594\nparent b0b25e8ade23a6066c28ad5c66151ec117b2808e\nauthor Kubernetes Prow Robot <20407524+k8s-ci-robot@users.noreply.github.com> 1778502231 +0530\ncommitter GitHub <noreply@github.com> 1778502231 +0530\n\nMerge pull request #138958 from neolit123/automated-cherry-pick-of-#138957-origin-release-1.36\n\nAutomated cherry pick of #138957: kubeadm: use dedicated ClusterRole for apiserver kubelet client",
+        "verified_at": "2026-05-11T12:23:52Z"
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/710a59eee8b03fc1f8aef1c93d81cea19fde421b",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/710a59eee8b03fc1f8aef1c93d81cea19fde421b",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/710a59eee8b03fc1f8aef1c93d81cea19fde421b/comments",
+    "author": {
+      "login": "k8s-ci-robot",
+      "id": 20407524,
+      "node_id": "MDQ6VXNlcjIwNDA3NTI0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/20407524?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/k8s-ci-robot",
+      "html_url": "https://github.com/k8s-ci-robot",
+      "followers_url": "https://api.github.com/users/k8s-ci-robot/followers",
+      "following_url": "https://api.github.com/users/k8s-ci-robot/following{/other_user}",
+      "gists_url": "https://api.github.com/users/k8s-ci-robot/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/k8s-ci-robot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/k8s-ci-robot/subscriptions",
+      "organizations_url": "https://api.github.com/users/k8s-ci-robot/orgs",
+      "repos_url": "https://api.github.com/users/k8s-ci-robot/repos",
+      "events_url": "https://api.github.com/users/k8s-ci-robot/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/k8s-ci-robot/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "493c5a49deef9bb85842f8d7b154b546505fd594",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/493c5a49deef9bb85842f8d7b154b546505fd594",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/493c5a49deef9bb85842f8d7b154b546505fd594"
+      },
+      {
+        "sha": "b0b25e8ade23a6066c28ad5c66151ec117b2808e",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/b0b25e8ade23a6066c28ad5c66151ec117b2808e",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/b0b25e8ade23a6066c28ad5c66151ec117b2808e"
+      }
+    ]
+  },
+  {
+    "sha": "756939600b9a7180fc2df6550a4585b638875e67",
+    "node_id": "C_kwDOAToIktoAKDc1NjkzOTYwMGI5YTcxODBmYzJkZjY1NTBhNDU4NWI2Mzg4NzVlNjc",
+    "commit": {
+      "author": {
+        "name": "Kubernetes Release Robot",
+        "email": "k8s-release-robot@users.noreply.github.com",
+        "date": "2026-05-12T09:51:33Z"
+      },
+      "committer": {
+        "name": "Kubernetes Release Robot",
+        "email": "k8s-release-robot@users.noreply.github.com",
+        "date": "2026-05-12T09:51:33Z"
+      },
+      "message": "Release commit for Kubernetes v1.36.1",
+      "tree": {
+        "sha": "f40bef847f6bda111e122a880d21ec9c0aaaf750",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/git/trees/f40bef847f6bda111e122a880d21ec9c0aaaf750"
+      },
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/git/commits/756939600b9a7180fc2df6550a4585b638875e67",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/756939600b9a7180fc2df6550a4585b638875e67",
+    "html_url": "https://github.com/kubernetes/kubernetes/commit/756939600b9a7180fc2df6550a4585b638875e67",
+    "comments_url": "https://api.github.com/repos/kubernetes/kubernetes/commits/756939600b9a7180fc2df6550a4585b638875e67/comments",
+    "author": {
+      "login": "k8s-release-robot",
+      "id": 33505452,
+      "node_id": "MDQ6VXNlcjMzNTA1NDUy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/33505452?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/k8s-release-robot",
+      "html_url": "https://github.com/k8s-release-robot",
+      "followers_url": "https://api.github.com/users/k8s-release-robot/followers",
+      "following_url": "https://api.github.com/users/k8s-release-robot/following{/other_user}",
+      "gists_url": "https://api.github.com/users/k8s-release-robot/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/k8s-release-robot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/k8s-release-robot/subscriptions",
+      "organizations_url": "https://api.github.com/users/k8s-release-robot/orgs",
+      "repos_url": "https://api.github.com/users/k8s-release-robot/repos",
+      "events_url": "https://api.github.com/users/k8s-release-robot/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/k8s-release-robot/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "k8s-release-robot",
+      "id": 33505452,
+      "node_id": "MDQ6VXNlcjMzNTA1NDUy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/33505452?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/k8s-release-robot",
+      "html_url": "https://github.com/k8s-release-robot",
+      "followers_url": "https://api.github.com/users/k8s-release-robot/followers",
+      "following_url": "https://api.github.com/users/k8s-release-robot/following{/other_user}",
+      "gists_url": "https://api.github.com/users/k8s-release-robot/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/k8s-release-robot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/k8s-release-robot/subscriptions",
+      "organizations_url": "https://api.github.com/users/k8s-release-robot/orgs",
+      "repos_url": "https://api.github.com/users/k8s-release-robot/repos",
+      "events_url": "https://api.github.com/users/k8s-release-robot/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/k8s-release-robot/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "710a59eee8b03fc1f8aef1c93d81cea19fde421b",
+        "url": "https://api.github.com/repos/kubernetes/kubernetes/commits/710a59eee8b03fc1f8aef1c93d81cea19fde421b",
+        "html_url": "https://github.com/kubernetes/kubernetes/commit/710a59eee8b03fc1f8aef1c93d81cea19fde421b"
+      }
+    ]
+  }
+]

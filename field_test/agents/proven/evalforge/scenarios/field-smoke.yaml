@@ -1,0 +1,50 @@
+pack:
+  name: "field-smoke"
+  version: "0.1.0"
+  description: "Smoke-test scenarios for field agents — works across all frameworks"
+
+scenarios:
+  - id: "smoke-tool-call"
+    title: "Basic tool call"
+    goal: "Agent calls at least one tool"
+    input: "What is the weather in London?"
+    allowed_tools:
+      - name: "get_weather"
+        description: "Get current weather for a city"
+    expected:
+      type: task_completion
+      reference_answer: "Weather information for London"
+    metrics:
+      tool_called: {threshold: 1.0}
+    tags: [smoke, tool-call]
+    difficulty: easy
+    budget: {max_steps: 5, max_tokens: 500}
+
+  - id: "smoke-no-tool"
+    title: "No tool needed"
+    goal: "Agent answers simple question without tools"
+    input: "What is 2+2? Answer with just the number."
+    expected:
+      type: task_completion
+      reference_answer: "4"
+    tags: [smoke, no-tool]
+    difficulty: easy
+    budget: {max_steps: 3, max_tokens: 300}
+
+  - id: "smoke-multi-tool"
+    title: "Multi-step tool sequence"
+    goal: "Agent calls two different tools"
+    input: "First search for the capital of France, then get the weather there."
+    allowed_tools:
+      - name: "web_search"
+        description: "Search the web for information"
+      - name: "get_weather"
+        description: "Get current weather for a city"
+    expected:
+      type: task_completion
+      reference_answer: "Weather information for Paris"
+    metrics:
+      tool_called: {threshold: 2.0}
+    tags: [smoke, multi-tool]
+    difficulty: medium
+    budget: {max_steps: 8, max_tokens: 800}

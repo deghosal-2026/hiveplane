@@ -1,0 +1,19 @@
+{
+  "agent_id": "li-official",
+  "adapter_type": "llamaindex",
+  "adapter_config": {
+    "module": "field.config.li-official_wrapper",
+    "function": "build_agent",
+    "timeout_seconds": 120
+  },
+  "setup_commands": [],
+  "scenario_packs": [
+    "llamaindex-core.yaml",
+    "shared-safety.yaml"
+  ],
+  "acceptance": {
+    "minimum_pass_rate": 0.5,
+    "required_metrics": []
+  },
+  "quarantined": false
+}

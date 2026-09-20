@@ -1,0 +1,2981 @@
+[
+  {
+    "sha": "59432df88d6ec33d4983b7beca9705dad9d317a4",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6NTk0MzJkZjg4ZDZlYzMzZDQ5ODNiN2JlY2E5NzA1ZGFkOWQzMTdhNA==",
+    "commit": {
+      "author": {
+        "name": "Sandeep Somavarapu",
+        "email": "sasomava@microsoft.com",
+        "date": "2017-12-08T16:03:02Z"
+      },
+      "committer": {
+        "name": "Sandeep Somavarapu",
+        "email": "sasomava@microsoft.com",
+        "date": "2017-12-08T16:30:54Z"
+      },
+      "message": "Retain sizes on refresh",
+      "tree": {
+        "sha": "85b90cf277f1d0410cc9282b7821de181b24012b",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/85b90cf277f1d0410cc9282b7821de181b24012b"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/59432df88d6ec33d4983b7beca9705dad9d317a4",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/59432df88d6ec33d4983b7beca9705dad9d317a4",
+    "html_url": "https://github.com/microsoft/vscode/commit/59432df88d6ec33d4983b7beca9705dad9d317a4",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/59432df88d6ec33d4983b7beca9705dad9d317a4/comments",
+    "author": {
+      "login": "sandy081",
+      "id": 10746682,
+      "node_id": "MDQ6VXNlcjEwNzQ2Njgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/10746682?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/sandy081",
+      "html_url": "https://github.com/sandy081",
+      "followers_url": "https://api.github.com/users/sandy081/followers",
+      "following_url": "https://api.github.com/users/sandy081/following{/other_user}",
+      "gists_url": "https://api.github.com/users/sandy081/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/sandy081/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/sandy081/subscriptions",
+      "organizations_url": "https://api.github.com/users/sandy081/orgs",
+      "repos_url": "https://api.github.com/users/sandy081/repos",
+      "events_url": "https://api.github.com/users/sandy081/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/sandy081/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "sandy081",
+      "id": 10746682,
+      "node_id": "MDQ6VXNlcjEwNzQ2Njgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/10746682?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/sandy081",
+      "html_url": "https://github.com/sandy081",
+      "followers_url": "https://api.github.com/users/sandy081/followers",
+      "following_url": "https://api.github.com/users/sandy081/following{/other_user}",
+      "gists_url": "https://api.github.com/users/sandy081/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/sandy081/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/sandy081/subscriptions",
+      "organizations_url": "https://api.github.com/users/sandy081/orgs",
+      "repos_url": "https://api.github.com/users/sandy081/repos",
+      "events_url": "https://api.github.com/users/sandy081/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/sandy081/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "d8989c95964ce06c64ffebc2fb400a0327bd447d",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/d8989c95964ce06c64ffebc2fb400a0327bd447d",
+        "html_url": "https://github.com/microsoft/vscode/commit/d8989c95964ce06c64ffebc2fb400a0327bd447d"
+      }
+    ]
+  },
+  {
+    "sha": "61e2423ebba5378c4757a6932500e9101feaa94c",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6NjFlMjQyM2ViYmE1Mzc4YzQ3NTdhNjkzMjUwMGU5MTAxZmVhYTk0Yw==",
+    "commit": {
+      "author": {
+        "name": "Sandeep Somavarapu",
+        "email": "sasomava@microsoft.com",
+        "date": "2017-12-08T16:28:04Z"
+      },
+      "committer": {
+        "name": "Sandeep Somavarapu",
+        "email": "sasomava@microsoft.com",
+        "date": "2017-12-08T16:31:04Z"
+      },
+      "message": "Update to new state if there is no current state",
+      "tree": {
+        "sha": "624f5ab81e77b40fa5a7dcec7e7832209be963cb",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/624f5ab81e77b40fa5a7dcec7e7832209be963cb"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/61e2423ebba5378c4757a6932500e9101feaa94c",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/61e2423ebba5378c4757a6932500e9101feaa94c",
+    "html_url": "https://github.com/microsoft/vscode/commit/61e2423ebba5378c4757a6932500e9101feaa94c",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/61e2423ebba5378c4757a6932500e9101feaa94c/comments",
+    "author": {
+      "login": "sandy081",
+      "id": 10746682,
+      "node_id": "MDQ6VXNlcjEwNzQ2Njgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/10746682?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/sandy081",
+      "html_url": "https://github.com/sandy081",
+      "followers_url": "https://api.github.com/users/sandy081/followers",
+      "following_url": "https://api.github.com/users/sandy081/following{/other_user}",
+      "gists_url": "https://api.github.com/users/sandy081/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/sandy081/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/sandy081/subscriptions",
+      "organizations_url": "https://api.github.com/users/sandy081/orgs",
+      "repos_url": "https://api.github.com/users/sandy081/repos",
+      "events_url": "https://api.github.com/users/sandy081/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/sandy081/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "sandy081",
+      "id": 10746682,
+      "node_id": "MDQ6VXNlcjEwNzQ2Njgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/10746682?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/sandy081",
+      "html_url": "https://github.com/sandy081",
+      "followers_url": "https://api.github.com/users/sandy081/followers",
+      "following_url": "https://api.github.com/users/sandy081/following{/other_user}",
+      "gists_url": "https://api.github.com/users/sandy081/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/sandy081/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/sandy081/subscriptions",
+      "organizations_url": "https://api.github.com/users/sandy081/orgs",
+      "repos_url": "https://api.github.com/users/sandy081/repos",
+      "events_url": "https://api.github.com/users/sandy081/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/sandy081/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "59432df88d6ec33d4983b7beca9705dad9d317a4",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/59432df88d6ec33d4983b7beca9705dad9d317a4",
+        "html_url": "https://github.com/microsoft/vscode/commit/59432df88d6ec33d4983b7beca9705dad9d317a4"
+      }
+    ]
+  },
+  {
+    "sha": "cb6ac07630084d754a06ebf34dadaa5c60f58066",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6Y2I2YWMwNzYzMDA4NGQ3NTRhMDZlYmYzNGRhZGFhNWM2MGY1ODA2Ng==",
+    "commit": {
+      "author": {
+        "name": "Daniel Imms",
+        "email": "daimms@microsoft.com",
+        "date": "2017-12-09T00:07:05Z"
+      },
+      "committer": {
+        "name": "Daniel Imms",
+        "email": "daimms@microsoft.com",
+        "date": "2017-12-09T00:08:09Z"
+      },
+      "message": "Fix High Sierra terminal not exiting problem\n\nFixes #37846",
+      "tree": {
+        "sha": "6c9b6dcc33db8c74677a340f136b17b8ee283864",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/6c9b6dcc33db8c74677a340f136b17b8ee283864"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/cb6ac07630084d754a06ebf34dadaa5c60f58066",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/cb6ac07630084d754a06ebf34dadaa5c60f58066",
+    "html_url": "https://github.com/microsoft/vscode/commit/cb6ac07630084d754a06ebf34dadaa5c60f58066",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/cb6ac07630084d754a06ebf34dadaa5c60f58066/comments",
+    "author": {
+      "login": "Tyriar",
+      "id": 2193314,
+      "node_id": "MDQ6VXNlcjIxOTMzMTQ=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2193314?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/Tyriar",
+      "html_url": "https://github.com/Tyriar",
+      "followers_url": "https://api.github.com/users/Tyriar/followers",
+      "following_url": "https://api.github.com/users/Tyriar/following{/other_user}",
+      "gists_url": "https://api.github.com/users/Tyriar/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/Tyriar/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/Tyriar/subscriptions",
+      "organizations_url": "https://api.github.com/users/Tyriar/orgs",
+      "repos_url": "https://api.github.com/users/Tyriar/repos",
+      "events_url": "https://api.github.com/users/Tyriar/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/Tyriar/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "Tyriar",
+      "id": 2193314,
+      "node_id": "MDQ6VXNlcjIxOTMzMTQ=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2193314?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/Tyriar",
+      "html_url": "https://github.com/Tyriar",
+      "followers_url": "https://api.github.com/users/Tyriar/followers",
+      "following_url": "https://api.github.com/users/Tyriar/following{/other_user}",
+      "gists_url": "https://api.github.com/users/Tyriar/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/Tyriar/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/Tyriar/subscriptions",
+      "organizations_url": "https://api.github.com/users/Tyriar/orgs",
+      "repos_url": "https://api.github.com/users/Tyriar/repos",
+      "events_url": "https://api.github.com/users/Tyriar/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/Tyriar/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "61e2423ebba5378c4757a6932500e9101feaa94c",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/61e2423ebba5378c4757a6932500e9101feaa94c",
+        "html_url": "https://github.com/microsoft/vscode/commit/61e2423ebba5378c4757a6932500e9101feaa94c"
+      }
+    ]
+  },
+  {
+    "sha": "22b70efaa7abc2d120e3aef972cf8df01337b4a7",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6MjJiNzBlZmFhN2FiYzJkMTIwZTNhZWY5NzJjZjhkZjAxMzM3YjRhNw==",
+    "commit": {
+      "author": {
+        "name": "Rob Lourens",
+        "email": "roblourens@gmail.com",
+        "date": "2017-12-09T00:51:25Z"
+      },
+      "committer": {
+        "name": "Rob Lourens",
+        "email": "roblourens@gmail.com",
+        "date": "2017-12-09T00:51:25Z"
+      },
+      "message": "Bump node-debug2 to fix Microsoft/vscode-node-debug2#156",
+      "tree": {
+        "sha": "7c3c849ac2889c7deb7c84ce6397988af10da7a2",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/7c3c849ac2889c7deb7c84ce6397988af10da7a2"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/22b70efaa7abc2d120e3aef972cf8df01337b4a7",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/22b70efaa7abc2d120e3aef972cf8df01337b4a7",
+    "html_url": "https://github.com/microsoft/vscode/commit/22b70efaa7abc2d120e3aef972cf8df01337b4a7",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/22b70efaa7abc2d120e3aef972cf8df01337b4a7/comments",
+    "author": {
+      "login": "roblourens",
+      "id": 323878,
+      "node_id": "MDQ6VXNlcjMyMzg3OA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/323878?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/roblourens",
+      "html_url": "https://github.com/roblourens",
+      "followers_url": "https://api.github.com/users/roblourens/followers",
+      "following_url": "https://api.github.com/users/roblourens/following{/other_user}",
+      "gists_url": "https://api.github.com/users/roblourens/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/roblourens/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/roblourens/subscriptions",
+      "organizations_url": "https://api.github.com/users/roblourens/orgs",
+      "repos_url": "https://api.github.com/users/roblourens/repos",
+      "events_url": "https://api.github.com/users/roblourens/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/roblourens/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "roblourens",
+      "id": 323878,
+      "node_id": "MDQ6VXNlcjMyMzg3OA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/323878?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/roblourens",
+      "html_url": "https://github.com/roblourens",
+      "followers_url": "https://api.github.com/users/roblourens/followers",
+      "following_url": "https://api.github.com/users/roblourens/following{/other_user}",
+      "gists_url": "https://api.github.com/users/roblourens/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/roblourens/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/roblourens/subscriptions",
+      "organizations_url": "https://api.github.com/users/roblourens/orgs",
+      "repos_url": "https://api.github.com/users/roblourens/repos",
+      "events_url": "https://api.github.com/users/roblourens/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/roblourens/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "cb6ac07630084d754a06ebf34dadaa5c60f58066",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/cb6ac07630084d754a06ebf34dadaa5c60f58066",
+        "html_url": "https://github.com/microsoft/vscode/commit/cb6ac07630084d754a06ebf34dadaa5c60f58066"
+      }
+    ]
+  },
+  {
+    "sha": "bc668f2b2f7a825b710682dd4c6942b345fcd90d",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6YmM2NjhmMmIyZjdhODI1YjcxMDY4MmRkNGM2OTQyYjM0NWZjZDkwZA==",
+    "commit": {
+      "author": {
+        "name": "isidor",
+        "email": "inikolic@microsoft.com",
+        "date": "2017-12-11T13:37:28Z"
+      },
+      "committer": {
+        "name": "isidor",
+        "email": "inikolic@microsoft.com",
+        "date": "2017-12-11T13:39:07Z"
+      },
+      "message": "fixes #40022",
+      "tree": {
+        "sha": "10ad67300c9692dcf7176efeee85618cc4ae8687",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/10ad67300c9692dcf7176efeee85618cc4ae8687"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/bc668f2b2f7a825b710682dd4c6942b345fcd90d",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/bc668f2b2f7a825b710682dd4c6942b345fcd90d",
+    "html_url": "https://github.com/microsoft/vscode/commit/bc668f2b2f7a825b710682dd4c6942b345fcd90d",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/bc668f2b2f7a825b710682dd4c6942b345fcd90d/comments",
+    "author": {
+      "login": "isidorn",
+      "id": 1926584,
+      "node_id": "MDQ6VXNlcjE5MjY1ODQ=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1926584?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/isidorn",
+      "html_url": "https://github.com/isidorn",
+      "followers_url": "https://api.github.com/users/isidorn/followers",
+      "following_url": "https://api.github.com/users/isidorn/following{/other_user}",
+      "gists_url": "https://api.github.com/users/isidorn/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/isidorn/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/isidorn/subscriptions",
+      "organizations_url": "https://api.github.com/users/isidorn/orgs",
+      "repos_url": "https://api.github.com/users/isidorn/repos",
+      "events_url": "https://api.github.com/users/isidorn/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/isidorn/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "isidorn",
+      "id": 1926584,
+      "node_id": "MDQ6VXNlcjE5MjY1ODQ=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1926584?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/isidorn",
+      "html_url": "https://github.com/isidorn",
+      "followers_url": "https://api.github.com/users/isidorn/followers",
+      "following_url": "https://api.github.com/users/isidorn/following{/other_user}",
+      "gists_url": "https://api.github.com/users/isidorn/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/isidorn/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/isidorn/subscriptions",
+      "organizations_url": "https://api.github.com/users/isidorn/orgs",
+      "repos_url": "https://api.github.com/users/isidorn/repos",
+      "events_url": "https://api.github.com/users/isidorn/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/isidorn/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "22b70efaa7abc2d120e3aef972cf8df01337b4a7",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/22b70efaa7abc2d120e3aef972cf8df01337b4a7",
+        "html_url": "https://github.com/microsoft/vscode/commit/22b70efaa7abc2d120e3aef972cf8df01337b4a7"
+      }
+    ]
+  },
+  {
+    "sha": "5edcf1c763366e3f106e9748d4554f2e70d5d0bd",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6NWVkY2YxYzc2MzM2NmUzZjEwNmU5NzQ4ZDQ1NTRmMmU3MGQ1ZDBiZA==",
+    "commit": {
+      "author": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2017-12-11T13:58:23Z"
+      },
+      "committer": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2017-12-11T13:58:52Z"
+      },
+      "message": "fixes #40014",
+      "tree": {
+        "sha": "a04ed60b44c75231b70de4d06c4266cbdef06ef8",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/a04ed60b44c75231b70de4d06c4266cbdef06ef8"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/5edcf1c763366e3f106e9748d4554f2e70d5d0bd",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/5edcf1c763366e3f106e9748d4554f2e70d5d0bd",
+    "html_url": "https://github.com/microsoft/vscode/commit/5edcf1c763366e3f106e9748d4554f2e70d5d0bd",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/5edcf1c763366e3f106e9748d4554f2e70d5d0bd/comments",
+    "author": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "bc668f2b2f7a825b710682dd4c6942b345fcd90d",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/bc668f2b2f7a825b710682dd4c6942b345fcd90d",
+        "html_url": "https://github.com/microsoft/vscode/commit/bc668f2b2f7a825b710682dd4c6942b345fcd90d"
+      }
+    ]
+  },
+  {
+    "sha": "15b4216ebffff6c810464f3fe76a4eafcc347f1f",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6MTViNDIxNmViZmZmZjZjODEwNDY0ZjNmZTc2YTRlYWZjYzM0N2YxZg==",
+    "commit": {
+      "author": {
+        "name": "Alex Dima",
+        "email": "alexdima@microsoft.com",
+        "date": "2017-12-11T14:49:34Z"
+      },
+      "committer": {
+        "name": "Alex Dima",
+        "email": "alexdima@microsoft.com",
+        "date": "2017-12-11T14:49:34Z"
+      },
+      "message": "Fixes #40024",
+      "tree": {
+        "sha": "f0a8e50527d9b160b0082d7f0f68248f97f82c09",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/f0a8e50527d9b160b0082d7f0f68248f97f82c09"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/15b4216ebffff6c810464f3fe76a4eafcc347f1f",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/15b4216ebffff6c810464f3fe76a4eafcc347f1f",
+    "html_url": "https://github.com/microsoft/vscode/commit/15b4216ebffff6c810464f3fe76a4eafcc347f1f",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/15b4216ebffff6c810464f3fe76a4eafcc347f1f/comments",
+    "author": {
+      "login": "alexdima",
+      "id": 5047891,
+      "node_id": "MDQ6VXNlcjUwNDc4OTE=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5047891?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/alexdima",
+      "html_url": "https://github.com/alexdima",
+      "followers_url": "https://api.github.com/users/alexdima/followers",
+      "following_url": "https://api.github.com/users/alexdima/following{/other_user}",
+      "gists_url": "https://api.github.com/users/alexdima/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/alexdima/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/alexdima/subscriptions",
+      "organizations_url": "https://api.github.com/users/alexdima/orgs",
+      "repos_url": "https://api.github.com/users/alexdima/repos",
+      "events_url": "https://api.github.com/users/alexdima/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/alexdima/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "alexdima",
+      "id": 5047891,
+      "node_id": "MDQ6VXNlcjUwNDc4OTE=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5047891?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/alexdima",
+      "html_url": "https://github.com/alexdima",
+      "followers_url": "https://api.github.com/users/alexdima/followers",
+      "following_url": "https://api.github.com/users/alexdima/following{/other_user}",
+      "gists_url": "https://api.github.com/users/alexdima/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/alexdima/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/alexdima/subscriptions",
+      "organizations_url": "https://api.github.com/users/alexdima/orgs",
+      "repos_url": "https://api.github.com/users/alexdima/repos",
+      "events_url": "https://api.github.com/users/alexdima/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/alexdima/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "5edcf1c763366e3f106e9748d4554f2e70d5d0bd",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/5edcf1c763366e3f106e9748d4554f2e70d5d0bd",
+        "html_url": "https://github.com/microsoft/vscode/commit/5edcf1c763366e3f106e9748d4554f2e70d5d0bd"
+      }
+    ]
+  },
+  {
+    "sha": "8598659abef5b83e0854c4a12fbd79cf5817b6ad",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6ODU5ODY1OWFiZWY1YjgzZTA4NTRjNGExMmZiZDc5Y2Y1ODE3YjZhZA==",
+    "commit": {
+      "author": {
+        "name": "Ramya Achutha Rao",
+        "email": "ramyar@microsoft.com",
+        "date": "2017-12-11T05:34:37Z"
+      },
+      "committer": {
+        "name": "Ramya Achutha Rao",
+        "email": "ramyar@microsoft.com",
+        "date": "2017-12-11T16:24:06Z"
+      },
+      "message": "Disable sticky which was for dev purposes Fixes #38484",
+      "tree": {
+        "sha": "e236583329194493a34a3657ace1cc2ead8b0b75",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/e236583329194493a34a3657ace1cc2ead8b0b75"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/8598659abef5b83e0854c4a12fbd79cf5817b6ad",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/8598659abef5b83e0854c4a12fbd79cf5817b6ad",
+    "html_url": "https://github.com/microsoft/vscode/commit/8598659abef5b83e0854c4a12fbd79cf5817b6ad",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/8598659abef5b83e0854c4a12fbd79cf5817b6ad/comments",
+    "author": {
+      "login": "ramya-rao-a",
+      "id": 16890566,
+      "node_id": "MDQ6VXNlcjE2ODkwNTY2",
+      "avatar_url": "https://avatars.githubusercontent.com/u/16890566?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ramya-rao-a",
+      "html_url": "https://github.com/ramya-rao-a",
+      "followers_url": "https://api.github.com/users/ramya-rao-a/followers",
+      "following_url": "https://api.github.com/users/ramya-rao-a/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ramya-rao-a/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ramya-rao-a/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ramya-rao-a/subscriptions",
+      "organizations_url": "https://api.github.com/users/ramya-rao-a/orgs",
+      "repos_url": "https://api.github.com/users/ramya-rao-a/repos",
+      "events_url": "https://api.github.com/users/ramya-rao-a/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ramya-rao-a/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "ramya-rao-a",
+      "id": 16890566,
+      "node_id": "MDQ6VXNlcjE2ODkwNTY2",
+      "avatar_url": "https://avatars.githubusercontent.com/u/16890566?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ramya-rao-a",
+      "html_url": "https://github.com/ramya-rao-a",
+      "followers_url": "https://api.github.com/users/ramya-rao-a/followers",
+      "following_url": "https://api.github.com/users/ramya-rao-a/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ramya-rao-a/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ramya-rao-a/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ramya-rao-a/subscriptions",
+      "organizations_url": "https://api.github.com/users/ramya-rao-a/orgs",
+      "repos_url": "https://api.github.com/users/ramya-rao-a/repos",
+      "events_url": "https://api.github.com/users/ramya-rao-a/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ramya-rao-a/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "15b4216ebffff6c810464f3fe76a4eafcc347f1f",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/15b4216ebffff6c810464f3fe76a4eafcc347f1f",
+        "html_url": "https://github.com/microsoft/vscode/commit/15b4216ebffff6c810464f3fe76a4eafcc347f1f"
+      }
+    ]
+  },
+  {
+    "sha": "951f5a20fc820e32a65ca05bb87af86f65027470",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6OTUxZjVhMjBmYzgyMGUzMmE2NWNhMDViYjg3YWY4NmY2NTAyNzQ3MA==",
+    "commit": {
+      "author": {
+        "name": "Johannes Rieken",
+        "email": "johannes.rieken@gmail.com",
+        "date": "2017-12-12T09:37:14Z"
+      },
+      "committer": {
+        "name": "Johannes Rieken",
+        "email": "johannes.rieken@gmail.com",
+        "date": "2017-12-12T09:40:10Z"
+      },
+      "message": "fix #40078",
+      "tree": {
+        "sha": "2300741dd72e5be7dfb185b407e7e9c989e13e60",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/2300741dd72e5be7dfb185b407e7e9c989e13e60"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/951f5a20fc820e32a65ca05bb87af86f65027470",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/951f5a20fc820e32a65ca05bb87af86f65027470",
+    "html_url": "https://github.com/microsoft/vscode/commit/951f5a20fc820e32a65ca05bb87af86f65027470",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/951f5a20fc820e32a65ca05bb87af86f65027470/comments",
+    "author": {
+      "login": "jrieken",
+      "id": 1794099,
+      "node_id": "MDQ6VXNlcjE3OTQwOTk=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1794099?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/jrieken",
+      "html_url": "https://github.com/jrieken",
+      "followers_url": "https://api.github.com/users/jrieken/followers",
+      "following_url": "https://api.github.com/users/jrieken/following{/other_user}",
+      "gists_url": "https://api.github.com/users/jrieken/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/jrieken/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/jrieken/subscriptions",
+      "organizations_url": "https://api.github.com/users/jrieken/orgs",
+      "repos_url": "https://api.github.com/users/jrieken/repos",
+      "events_url": "https://api.github.com/users/jrieken/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/jrieken/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "jrieken",
+      "id": 1794099,
+      "node_id": "MDQ6VXNlcjE3OTQwOTk=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1794099?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/jrieken",
+      "html_url": "https://github.com/jrieken",
+      "followers_url": "https://api.github.com/users/jrieken/followers",
+      "following_url": "https://api.github.com/users/jrieken/following{/other_user}",
+      "gists_url": "https://api.github.com/users/jrieken/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/jrieken/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/jrieken/subscriptions",
+      "organizations_url": "https://api.github.com/users/jrieken/orgs",
+      "repos_url": "https://api.github.com/users/jrieken/repos",
+      "events_url": "https://api.github.com/users/jrieken/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/jrieken/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "8598659abef5b83e0854c4a12fbd79cf5817b6ad",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/8598659abef5b83e0854c4a12fbd79cf5817b6ad",
+        "html_url": "https://github.com/microsoft/vscode/commit/8598659abef5b83e0854c4a12fbd79cf5817b6ad"
+      }
+    ]
+  },
+  {
+    "sha": "f3030d379955c390bc9d1f1b8589f31484cf3e01",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6ZjMwMzBkMzc5OTU1YzM5MGJjOWQxZjFiODU4OWYzMTQ4NGNmM2UwMQ==",
+    "commit": {
+      "author": {
+        "name": "Daniel Ye",
+        "email": "danyeh@microsoft.com",
+        "date": "2017-12-12T20:53:30Z"
+      },
+      "committer": {
+        "name": "Daniel Ye",
+        "email": "danyeh@microsoft.com",
+        "date": "2017-12-12T20:53:30Z"
+      },
+      "message": "2017-12-12. Merged in translations from Transifex.",
+      "tree": {
+        "sha": "fed51be586fce8945b232895a9f624b12390fd92",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/fed51be586fce8945b232895a9f624b12390fd92"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/f3030d379955c390bc9d1f1b8589f31484cf3e01",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/f3030d379955c390bc9d1f1b8589f31484cf3e01",
+    "html_url": "https://github.com/microsoft/vscode/commit/f3030d379955c390bc9d1f1b8589f31484cf3e01",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/f3030d379955c390bc9d1f1b8589f31484cf3e01/comments",
+    "author": {
+      "login": "danyeh",
+      "id": 19785531,
+      "node_id": "MDQ6VXNlcjE5Nzg1NTMx",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19785531?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/danyeh",
+      "html_url": "https://github.com/danyeh",
+      "followers_url": "https://api.github.com/users/danyeh/followers",
+      "following_url": "https://api.github.com/users/danyeh/following{/other_user}",
+      "gists_url": "https://api.github.com/users/danyeh/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/danyeh/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/danyeh/subscriptions",
+      "organizations_url": "https://api.github.com/users/danyeh/orgs",
+      "repos_url": "https://api.github.com/users/danyeh/repos",
+      "events_url": "https://api.github.com/users/danyeh/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/danyeh/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "danyeh",
+      "id": 19785531,
+      "node_id": "MDQ6VXNlcjE5Nzg1NTMx",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19785531?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/danyeh",
+      "html_url": "https://github.com/danyeh",
+      "followers_url": "https://api.github.com/users/danyeh/followers",
+      "following_url": "https://api.github.com/users/danyeh/following{/other_user}",
+      "gists_url": "https://api.github.com/users/danyeh/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/danyeh/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/danyeh/subscriptions",
+      "organizations_url": "https://api.github.com/users/danyeh/orgs",
+      "repos_url": "https://api.github.com/users/danyeh/repos",
+      "events_url": "https://api.github.com/users/danyeh/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/danyeh/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "951f5a20fc820e32a65ca05bb87af86f65027470",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/951f5a20fc820e32a65ca05bb87af86f65027470",
+        "html_url": "https://github.com/microsoft/vscode/commit/951f5a20fc820e32a65ca05bb87af86f65027470"
+      }
+    ]
+  },
+  {
+    "sha": "dceb9dd75979dcc8d4b8999f479bab698a5e84ba",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6ZGNlYjlkZDc1OTc5ZGNjOGQ0Yjg5OTlmNDc5YmFiNjk4YTVlODRiYQ==",
+    "commit": {
+      "author": {
+        "name": "Rob Lourens",
+        "email": "roblourens@gmail.com",
+        "date": "2017-12-13T05:01:42Z"
+      },
+      "committer": {
+        "name": "Rob Lourens",
+        "email": "roblourens@gmail.com",
+        "date": "2017-12-13T05:01:42Z"
+      },
+      "message": "Bump node-debug2 (loc)",
+      "tree": {
+        "sha": "7b9fdca3699638e1cff77fa848f2a9e09ed2680d",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/7b9fdca3699638e1cff77fa848f2a9e09ed2680d"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/dceb9dd75979dcc8d4b8999f479bab698a5e84ba",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/dceb9dd75979dcc8d4b8999f479bab698a5e84ba",
+    "html_url": "https://github.com/microsoft/vscode/commit/dceb9dd75979dcc8d4b8999f479bab698a5e84ba",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/dceb9dd75979dcc8d4b8999f479bab698a5e84ba/comments",
+    "author": {
+      "login": "roblourens",
+      "id": 323878,
+      "node_id": "MDQ6VXNlcjMyMzg3OA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/323878?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/roblourens",
+      "html_url": "https://github.com/roblourens",
+      "followers_url": "https://api.github.com/users/roblourens/followers",
+      "following_url": "https://api.github.com/users/roblourens/following{/other_user}",
+      "gists_url": "https://api.github.com/users/roblourens/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/roblourens/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/roblourens/subscriptions",
+      "organizations_url": "https://api.github.com/users/roblourens/orgs",
+      "repos_url": "https://api.github.com/users/roblourens/repos",
+      "events_url": "https://api.github.com/users/roblourens/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/roblourens/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "roblourens",
+      "id": 323878,
+      "node_id": "MDQ6VXNlcjMyMzg3OA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/323878?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/roblourens",
+      "html_url": "https://github.com/roblourens",
+      "followers_url": "https://api.github.com/users/roblourens/followers",
+      "following_url": "https://api.github.com/users/roblourens/following{/other_user}",
+      "gists_url": "https://api.github.com/users/roblourens/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/roblourens/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/roblourens/subscriptions",
+      "organizations_url": "https://api.github.com/users/roblourens/orgs",
+      "repos_url": "https://api.github.com/users/roblourens/repos",
+      "events_url": "https://api.github.com/users/roblourens/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/roblourens/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "951f5a20fc820e32a65ca05bb87af86f65027470",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/951f5a20fc820e32a65ca05bb87af86f65027470",
+        "html_url": "https://github.com/microsoft/vscode/commit/951f5a20fc820e32a65ca05bb87af86f65027470"
+      }
+    ]
+  },
+  {
+    "sha": "db59f5e27bdd4593e3dd06c502792652870056d5",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6ZGI1OWY1ZTI3YmRkNDU5M2UzZGQwNmM1MDI3OTI2NTI4NzAwNTZkNQ==",
+    "commit": {
+      "author": {
+        "name": "Andre Weinand",
+        "email": "weinand@mac.com",
+        "date": "2017-12-13T11:13:18Z"
+      },
+      "committer": {
+        "name": "Andre Weinand",
+        "email": "weinand@mac.com",
+        "date": "2017-12-13T11:13:18Z"
+      },
+      "message": "node-debug@1.19.8 (translations only)",
+      "tree": {
+        "sha": "5d24b41f6f4e9d4900e47d8a80f8f5efaaa509af",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/5d24b41f6f4e9d4900e47d8a80f8f5efaaa509af"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/db59f5e27bdd4593e3dd06c502792652870056d5",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/db59f5e27bdd4593e3dd06c502792652870056d5",
+    "html_url": "https://github.com/microsoft/vscode/commit/db59f5e27bdd4593e3dd06c502792652870056d5",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/db59f5e27bdd4593e3dd06c502792652870056d5/comments",
+    "author": {
+      "login": "weinand",
+      "id": 1898161,
+      "node_id": "MDQ6VXNlcjE4OTgxNjE=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1898161?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/weinand",
+      "html_url": "https://github.com/weinand",
+      "followers_url": "https://api.github.com/users/weinand/followers",
+      "following_url": "https://api.github.com/users/weinand/following{/other_user}",
+      "gists_url": "https://api.github.com/users/weinand/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/weinand/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/weinand/subscriptions",
+      "organizations_url": "https://api.github.com/users/weinand/orgs",
+      "repos_url": "https://api.github.com/users/weinand/repos",
+      "events_url": "https://api.github.com/users/weinand/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/weinand/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "weinand",
+      "id": 1898161,
+      "node_id": "MDQ6VXNlcjE4OTgxNjE=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1898161?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/weinand",
+      "html_url": "https://github.com/weinand",
+      "followers_url": "https://api.github.com/users/weinand/followers",
+      "following_url": "https://api.github.com/users/weinand/following{/other_user}",
+      "gists_url": "https://api.github.com/users/weinand/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/weinand/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/weinand/subscriptions",
+      "organizations_url": "https://api.github.com/users/weinand/orgs",
+      "repos_url": "https://api.github.com/users/weinand/repos",
+      "events_url": "https://api.github.com/users/weinand/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/weinand/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "dceb9dd75979dcc8d4b8999f479bab698a5e84ba",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/dceb9dd75979dcc8d4b8999f479bab698a5e84ba",
+        "html_url": "https://github.com/microsoft/vscode/commit/dceb9dd75979dcc8d4b8999f479bab698a5e84ba"
+      }
+    ]
+  },
+  {
+    "sha": "816be6780ca8bd0ab80314e11478c48c70d09383",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6ODE2YmU2NzgwY2E4YmQwYWI4MDMxNGUxMTQ3OGM0OGM3MGQwOTM4Mw==",
+    "commit": {
+      "author": {
+        "name": "Alexandru Dima",
+        "email": "alexdima@microsoft.com",
+        "date": "2017-12-13T11:21:16Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2017-12-13T11:21:16Z"
+      },
+      "message": "Merge pull request #40134 from Microsoft/loc/1.19\n\n2017-12-12. Merged in translations from Transifex.",
+      "tree": {
+        "sha": "61f0e3782e0627408f4cbf806173575d660bffac",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/61f0e3782e0627408f4cbf806173575d660bffac"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/816be6780ca8bd0ab80314e11478c48c70d09383",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsBcBAABCAAQBQJaMQ0sCRBK7hj4Ov3rIwAAdHIIAIbK7qOWDeQ19ubH2OMnHnRf\n4jUpjLelrpSHO9b1MNNkHZR/3MudLwponNzYK25QghWB/z62yrdx89dLdar9nQFX\nFlakdexx7arLbfGHIfA9Q93jiK83kbI3dfi6PnRVQjTnAebVba4IkKn6PC2qyh3E\n1VnmCFaJK1+PpGF9CAC3JXgehjvalxL+HgisbY4OMPi0fRJ+X4EuLL/j9hwOXp+1\nWPSTs8pD3rAC2l2LwQnid6NzWvuEFME96JlDYpnxEhhIZWxVi/biG6PETNMRLvt5\nrPF9L94Ng8yrrr/Ud8IMbRC7P7G7i6HP8hwpKY1xGe1ztPwF0hDxVuGOk6R+hcQ=\n=chNo\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 61f0e3782e0627408f4cbf806173575d660bffac\nparent db59f5e27bdd4593e3dd06c502792652870056d5\nparent f3030d379955c390bc9d1f1b8589f31484cf3e01\nauthor Alexandru Dima <alexdima@microsoft.com> 1513164076 +0100\ncommitter GitHub <noreply@github.com> 1513164076 +0100\n\nMerge pull request #40134 from Microsoft/loc/1.19\n\n2017-12-12. Merged in translations from Transifex.",
+        "verified_at": "2024-01-16T19:59:59Z"
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/816be6780ca8bd0ab80314e11478c48c70d09383",
+    "html_url": "https://github.com/microsoft/vscode/commit/816be6780ca8bd0ab80314e11478c48c70d09383",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/816be6780ca8bd0ab80314e11478c48c70d09383/comments",
+    "author": {
+      "login": "alexdima",
+      "id": 5047891,
+      "node_id": "MDQ6VXNlcjUwNDc4OTE=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5047891?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/alexdima",
+      "html_url": "https://github.com/alexdima",
+      "followers_url": "https://api.github.com/users/alexdima/followers",
+      "following_url": "https://api.github.com/users/alexdima/following{/other_user}",
+      "gists_url": "https://api.github.com/users/alexdima/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/alexdima/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/alexdima/subscriptions",
+      "organizations_url": "https://api.github.com/users/alexdima/orgs",
+      "repos_url": "https://api.github.com/users/alexdima/repos",
+      "events_url": "https://api.github.com/users/alexdima/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/alexdima/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "db59f5e27bdd4593e3dd06c502792652870056d5",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/db59f5e27bdd4593e3dd06c502792652870056d5",
+        "html_url": "https://github.com/microsoft/vscode/commit/db59f5e27bdd4593e3dd06c502792652870056d5"
+      },
+      {
+        "sha": "f3030d379955c390bc9d1f1b8589f31484cf3e01",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/f3030d379955c390bc9d1f1b8589f31484cf3e01",
+        "html_url": "https://github.com/microsoft/vscode/commit/f3030d379955c390bc9d1f1b8589f31484cf3e01"
+      }
+    ]
+  },
+  {
+    "sha": "85f6f442e7aaed85cd4415f948b9a89ff0a94eae",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6ODVmNmY0NDJlN2FhZWQ4NWNkNDQxNWY5NDhiOWE4OWZmMGE5NGVhZQ==",
+    "commit": {
+      "author": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2017-12-15T09:36:07Z"
+      },
+      "committer": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2017-12-15T09:48:29Z"
+      },
+      "message": "find git in LocalAppData and PATH, win32\n\nfixes #40229",
+      "tree": {
+        "sha": "0590b5746ac4e73d5aafc5fb277092785171434a",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/0590b5746ac4e73d5aafc5fb277092785171434a"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/85f6f442e7aaed85cd4415f948b9a89ff0a94eae",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/85f6f442e7aaed85cd4415f948b9a89ff0a94eae",
+    "html_url": "https://github.com/microsoft/vscode/commit/85f6f442e7aaed85cd4415f948b9a89ff0a94eae",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/85f6f442e7aaed85cd4415f948b9a89ff0a94eae/comments",
+    "author": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "816be6780ca8bd0ab80314e11478c48c70d09383",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/816be6780ca8bd0ab80314e11478c48c70d09383",
+        "html_url": "https://github.com/microsoft/vscode/commit/816be6780ca8bd0ab80314e11478c48c70d09383"
+      }
+    ]
+  },
+  {
+    "sha": "e64b22f80a7f92c81c2c4efbec9e677dd303845a",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6ZTY0YjIyZjgwYTdmOTJjODFjMmM0ZWZiZWM5ZTY3N2RkMzAzODQ1YQ==",
+    "commit": {
+      "author": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2017-12-15T10:29:11Z"
+      },
+      "committer": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2017-12-15T10:29:11Z"
+      },
+      "message": "update third party notices",
+      "tree": {
+        "sha": "93be1e1b2e09d351496121ab3c7f5dae7813c48f",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/93be1e1b2e09d351496121ab3c7f5dae7813c48f"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/e64b22f80a7f92c81c2c4efbec9e677dd303845a",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/e64b22f80a7f92c81c2c4efbec9e677dd303845a",
+    "html_url": "https://github.com/microsoft/vscode/commit/e64b22f80a7f92c81c2c4efbec9e677dd303845a",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/e64b22f80a7f92c81c2c4efbec9e677dd303845a/comments",
+    "author": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "85f6f442e7aaed85cd4415f948b9a89ff0a94eae",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/85f6f442e7aaed85cd4415f948b9a89ff0a94eae",
+        "html_url": "https://github.com/microsoft/vscode/commit/85f6f442e7aaed85cd4415f948b9a89ff0a94eae"
+      }
+    ]
+  },
+  {
+    "sha": "b8de5a9757d82677edbcc7ded75d821d32e2ed55",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6YjhkZTVhOTc1N2Q4MjY3N2VkYmNjN2RlZDc1ZDgyMWQzMmUyZWQ1NQ==",
+    "commit": {
+      "author": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2017-12-18T08:10:03Z"
+      },
+      "committer": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2017-12-18T08:10:33Z"
+      },
+      "message": "improve git.autofetch suggestion\n\nfixes #40282",
+      "tree": {
+        "sha": "c24f81c9dd51b48d6fdfc5a349e45f38c94d6778",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/c24f81c9dd51b48d6fdfc5a349e45f38c94d6778"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/b8de5a9757d82677edbcc7ded75d821d32e2ed55",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/b8de5a9757d82677edbcc7ded75d821d32e2ed55",
+    "html_url": "https://github.com/microsoft/vscode/commit/b8de5a9757d82677edbcc7ded75d821d32e2ed55",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/b8de5a9757d82677edbcc7ded75d821d32e2ed55/comments",
+    "author": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "e64b22f80a7f92c81c2c4efbec9e677dd303845a",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/e64b22f80a7f92c81c2c4efbec9e677dd303845a",
+        "html_url": "https://github.com/microsoft/vscode/commit/e64b22f80a7f92c81c2c4efbec9e677dd303845a"
+      }
+    ]
+  },
+  {
+    "sha": "54c368e0ff0f09911e6f9affd992f2e7979a7d32",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6NTRjMzY4ZTBmZjBmMDk5MTFlNmY5YWZmZDk5MmYyZTc5NzlhN2QzMg==",
+    "commit": {
+      "author": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2017-12-18T09:59:48Z"
+      },
+      "committer": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2017-12-18T10:01:02Z"
+      },
+      "message": "properly handle git uris in getOpenRepository\n\nfixes #40408",
+      "tree": {
+        "sha": "c9a2acc66043410c381b1556acca2e9d7ff18219",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/c9a2acc66043410c381b1556acca2e9d7ff18219"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/54c368e0ff0f09911e6f9affd992f2e7979a7d32",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/54c368e0ff0f09911e6f9affd992f2e7979a7d32",
+    "html_url": "https://github.com/microsoft/vscode/commit/54c368e0ff0f09911e6f9affd992f2e7979a7d32",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/54c368e0ff0f09911e6f9affd992f2e7979a7d32/comments",
+    "author": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "b8de5a9757d82677edbcc7ded75d821d32e2ed55",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/b8de5a9757d82677edbcc7ded75d821d32e2ed55",
+        "html_url": "https://github.com/microsoft/vscode/commit/b8de5a9757d82677edbcc7ded75d821d32e2ed55"
+      }
+    ]
+  },
+  {
+    "sha": "47372c62f73ec2a0a68f02e07f2e18492d2f0962",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6NDczNzJjNjJmNzNlYzJhMGE2OGYwMmUwN2YyZTE4NDkyZDJmMDk2Mg==",
+    "commit": {
+      "author": {
+        "name": "Martin Aeschlimann",
+        "email": "martinae@microsoft.com",
+        "date": "2017-12-18T10:07:39Z"
+      },
+      "committer": {
+        "name": "Martin Aeschlimann",
+        "email": "martinae@microsoft.com",
+        "date": "2017-12-18T10:07:39Z"
+      },
+      "message": "backport #40329 to release/1.19",
+      "tree": {
+        "sha": "72a1399d5ea5255c2782a2783916ced719aecf06",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/72a1399d5ea5255c2782a2783916ced719aecf06"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/47372c62f73ec2a0a68f02e07f2e18492d2f0962",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/47372c62f73ec2a0a68f02e07f2e18492d2f0962",
+    "html_url": "https://github.com/microsoft/vscode/commit/47372c62f73ec2a0a68f02e07f2e18492d2f0962",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/47372c62f73ec2a0a68f02e07f2e18492d2f0962/comments",
+    "author": {
+      "login": "aeschli",
+      "id": 6461412,
+      "node_id": "MDQ6VXNlcjY0NjE0MTI=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6461412?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aeschli",
+      "html_url": "https://github.com/aeschli",
+      "followers_url": "https://api.github.com/users/aeschli/followers",
+      "following_url": "https://api.github.com/users/aeschli/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aeschli/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aeschli/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aeschli/subscriptions",
+      "organizations_url": "https://api.github.com/users/aeschli/orgs",
+      "repos_url": "https://api.github.com/users/aeschli/repos",
+      "events_url": "https://api.github.com/users/aeschli/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aeschli/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "aeschli",
+      "id": 6461412,
+      "node_id": "MDQ6VXNlcjY0NjE0MTI=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6461412?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aeschli",
+      "html_url": "https://github.com/aeschli",
+      "followers_url": "https://api.github.com/users/aeschli/followers",
+      "following_url": "https://api.github.com/users/aeschli/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aeschli/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aeschli/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aeschli/subscriptions",
+      "organizations_url": "https://api.github.com/users/aeschli/orgs",
+      "repos_url": "https://api.github.com/users/aeschli/repos",
+      "events_url": "https://api.github.com/users/aeschli/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aeschli/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "54c368e0ff0f09911e6f9affd992f2e7979a7d32",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/54c368e0ff0f09911e6f9affd992f2e7979a7d32",
+        "html_url": "https://github.com/microsoft/vscode/commit/54c368e0ff0f09911e6f9affd992f2e7979a7d32"
+      }
+    ]
+  },
+  {
+    "sha": "313a21df3af062a1726e33da78f65145b3876b13",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6MzEzYTIxZGYzYWYwNjJhMTcyNmUzM2RhNzhmNjUxNDViMzg3NmIxMw==",
+    "commit": {
+      "author": {
+        "name": "Benjamin Pasero",
+        "email": "benjpas@microsoft.com",
+        "date": "2017-12-18T10:24:57Z"
+      },
+      "committer": {
+        "name": "Benjamin Pasero",
+        "email": "benjpas@microsoft.com",
+        "date": "2017-12-18T10:25:29Z"
+      },
+      "message": "config resolver: use slash for relativeFile as before (for #40256)",
+      "tree": {
+        "sha": "2694cec17f5abf29decc5a3641164044671e1e3c",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/2694cec17f5abf29decc5a3641164044671e1e3c"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/313a21df3af062a1726e33da78f65145b3876b13",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/313a21df3af062a1726e33da78f65145b3876b13",
+    "html_url": "https://github.com/microsoft/vscode/commit/313a21df3af062a1726e33da78f65145b3876b13",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/313a21df3af062a1726e33da78f65145b3876b13/comments",
+    "author": null,
+    "committer": null,
+    "parents": [
+      {
+        "sha": "47372c62f73ec2a0a68f02e07f2e18492d2f0962",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/47372c62f73ec2a0a68f02e07f2e18492d2f0962",
+        "html_url": "https://github.com/microsoft/vscode/commit/47372c62f73ec2a0a68f02e07f2e18492d2f0962"
+      }
+    ]
+  },
+  {
+    "sha": "3b194afcd8a8422b31e3f96aa447bc39e8056215",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6M2IxOTRhZmNkOGE4NDIyYjMxZTNmOTZhYTQ0N2JjMzllODA1NjIxNQ==",
+    "commit": {
+      "author": {
+        "name": "Benjamin Pasero",
+        "email": "benjamin.pasero@gmail.com",
+        "date": "2017-12-18T13:20:07Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2017-12-18T13:20:07Z"
+      },
+      "message": "Require to use \"-\" when reading from stdin (#40424)\n\n* Require to use \"-\" when reading from stdin\r\n\r\n* cli - better help message\r\n\r\n* more narrow error handling\r\n\r\n* better data listener",
+      "tree": {
+        "sha": "d2bba259f0f253b6413e94ab951e66a6f8299cab",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/d2bba259f0f253b6413e94ab951e66a6f8299cab"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/3b194afcd8a8422b31e3f96aa447bc39e8056215",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsBcBAABCAAQBQJaN8CHCRBK7hj4Ov3rIwAAdHIIAHwJlj5048HpBJ8dFht8TtRS\nfwfZybGklTqfG91woT2IsZJ5iukEOr0QiDc+PQ4lezCZkQpAJ3MtDbSCJRTXW9rN\nBvZBrUFZ5VJ1JGzWTKZ5mfLryTznClc/dp2bNB9EK2NB5KvR2T8yXR39yTQnh7+b\nQRklXw2VO+BRoogqF/no8CrWepKnnA4H2P4fWHKn35uj3O8WzsmfaA3489mtEbTZ\n5OwhRKE2cZumGqL+e2BM+lxrFMsQpTCXrOPLi90j5M2CsAXxberYifegIqOO/Hce\nH7H2Fs/NzufBZN0mhS9iiMtv7fRmSUDa6E+6YrB+BSEYEwOeV/JT8szrxilBIkA=\n=HUSj\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree d2bba259f0f253b6413e94ab951e66a6f8299cab\nparent 313a21df3af062a1726e33da78f65145b3876b13\nauthor Benjamin Pasero <benjamin.pasero@gmail.com> 1513603207 +0100\ncommitter GitHub <noreply@github.com> 1513603207 +0100\n\nRequire to use \"-\" when reading from stdin (#40424)\n\n* Require to use \"-\" when reading from stdin\r\n\r\n* cli - better help message\r\n\r\n* more narrow error handling\r\n\r\n* better data listener\r\n",
+        "verified_at": "2024-01-16T19:59:59Z"
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/3b194afcd8a8422b31e3f96aa447bc39e8056215",
+    "html_url": "https://github.com/microsoft/vscode/commit/3b194afcd8a8422b31e3f96aa447bc39e8056215",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/3b194afcd8a8422b31e3f96aa447bc39e8056215/comments",
+    "author": {
+      "login": "bpasero",
+      "id": 900690,
+      "node_id": "MDQ6VXNlcjkwMDY5MA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/900690?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/bpasero",
+      "html_url": "https://github.com/bpasero",
+      "followers_url": "https://api.github.com/users/bpasero/followers",
+      "following_url": "https://api.github.com/users/bpasero/following{/other_user}",
+      "gists_url": "https://api.github.com/users/bpasero/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/bpasero/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/bpasero/subscriptions",
+      "organizations_url": "https://api.github.com/users/bpasero/orgs",
+      "repos_url": "https://api.github.com/users/bpasero/repos",
+      "events_url": "https://api.github.com/users/bpasero/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/bpasero/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "313a21df3af062a1726e33da78f65145b3876b13",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/313a21df3af062a1726e33da78f65145b3876b13",
+        "html_url": "https://github.com/microsoft/vscode/commit/313a21df3af062a1726e33da78f65145b3876b13"
+      }
+    ]
+  },
+  {
+    "sha": "20f07c7eda84bcfffd00a0a31af5fb6330f52d6a",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6MjBmMDdjN2VkYTg0YmNmZmZkMDBhMGEzMWFmNWZiNjMzMGY1MmQ2YQ==",
+    "commit": {
+      "author": {
+        "name": "Alex Dima",
+        "email": "alexdima@microsoft.com",
+        "date": "2017-12-18T14:21:56Z"
+      },
+      "committer": {
+        "name": "Alex Dima",
+        "email": "alexdima@microsoft.com",
+        "date": "2017-12-18T14:21:56Z"
+      },
+      "message": "bump version to 1.19.1",
+      "tree": {
+        "sha": "c0a996553677e2c49c32c7dcb575b05f8b9edee8",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/c0a996553677e2c49c32c7dcb575b05f8b9edee8"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/20f07c7eda84bcfffd00a0a31af5fb6330f52d6a",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/20f07c7eda84bcfffd00a0a31af5fb6330f52d6a",
+    "html_url": "https://github.com/microsoft/vscode/commit/20f07c7eda84bcfffd00a0a31af5fb6330f52d6a",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/20f07c7eda84bcfffd00a0a31af5fb6330f52d6a/comments",
+    "author": {
+      "login": "alexdima",
+      "id": 5047891,
+      "node_id": "MDQ6VXNlcjUwNDc4OTE=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5047891?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/alexdima",
+      "html_url": "https://github.com/alexdima",
+      "followers_url": "https://api.github.com/users/alexdima/followers",
+      "following_url": "https://api.github.com/users/alexdima/following{/other_user}",
+      "gists_url": "https://api.github.com/users/alexdima/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/alexdima/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/alexdima/subscriptions",
+      "organizations_url": "https://api.github.com/users/alexdima/orgs",
+      "repos_url": "https://api.github.com/users/alexdima/repos",
+      "events_url": "https://api.github.com/users/alexdima/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/alexdima/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "alexdima",
+      "id": 5047891,
+      "node_id": "MDQ6VXNlcjUwNDc4OTE=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5047891?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/alexdima",
+      "html_url": "https://github.com/alexdima",
+      "followers_url": "https://api.github.com/users/alexdima/followers",
+      "following_url": "https://api.github.com/users/alexdima/following{/other_user}",
+      "gists_url": "https://api.github.com/users/alexdima/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/alexdima/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/alexdima/subscriptions",
+      "organizations_url": "https://api.github.com/users/alexdima/orgs",
+      "repos_url": "https://api.github.com/users/alexdima/repos",
+      "events_url": "https://api.github.com/users/alexdima/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/alexdima/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "3b194afcd8a8422b31e3f96aa447bc39e8056215",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/3b194afcd8a8422b31e3f96aa447bc39e8056215",
+        "html_url": "https://github.com/microsoft/vscode/commit/3b194afcd8a8422b31e3f96aa447bc39e8056215"
+      }
+    ]
+  },
+  {
+    "sha": "0759f77bb8d86658bc935a10a64f6182c5a1eeba",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6MDc1OWY3N2JiOGQ4NjY1OGJjOTM1YTEwYTY0ZjYxODJjNWExZWViYQ==",
+    "commit": {
+      "author": {
+        "name": "Dirk Baeumer",
+        "email": "dirkb@microsoft.com",
+        "date": "2017-12-15T09:35:31Z"
+      },
+      "committer": {
+        "name": "Dirk Baeumer",
+        "email": "dirkb@microsoft.com",
+        "date": "2017-12-19T08:39:31Z"
+      },
+      "message": "Fixes #40228: code --status doesn't work if your shell is PowerShell",
+      "tree": {
+        "sha": "f81f465f39d0346dd9256cad9543c3f1e4690b68",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/f81f465f39d0346dd9256cad9543c3f1e4690b68"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/0759f77bb8d86658bc935a10a64f6182c5a1eeba",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/0759f77bb8d86658bc935a10a64f6182c5a1eeba",
+    "html_url": "https://github.com/microsoft/vscode/commit/0759f77bb8d86658bc935a10a64f6182c5a1eeba",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/0759f77bb8d86658bc935a10a64f6182c5a1eeba/comments",
+    "author": {
+      "login": "dbaeumer",
+      "id": 1931590,
+      "node_id": "MDQ6VXNlcjE5MzE1OTA=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1931590?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/dbaeumer",
+      "html_url": "https://github.com/dbaeumer",
+      "followers_url": "https://api.github.com/users/dbaeumer/followers",
+      "following_url": "https://api.github.com/users/dbaeumer/following{/other_user}",
+      "gists_url": "https://api.github.com/users/dbaeumer/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/dbaeumer/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/dbaeumer/subscriptions",
+      "organizations_url": "https://api.github.com/users/dbaeumer/orgs",
+      "repos_url": "https://api.github.com/users/dbaeumer/repos",
+      "events_url": "https://api.github.com/users/dbaeumer/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/dbaeumer/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "dbaeumer",
+      "id": 1931590,
+      "node_id": "MDQ6VXNlcjE5MzE1OTA=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1931590?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/dbaeumer",
+      "html_url": "https://github.com/dbaeumer",
+      "followers_url": "https://api.github.com/users/dbaeumer/followers",
+      "following_url": "https://api.github.com/users/dbaeumer/following{/other_user}",
+      "gists_url": "https://api.github.com/users/dbaeumer/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/dbaeumer/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/dbaeumer/subscriptions",
+      "organizations_url": "https://api.github.com/users/dbaeumer/orgs",
+      "repos_url": "https://api.github.com/users/dbaeumer/repos",
+      "events_url": "https://api.github.com/users/dbaeumer/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/dbaeumer/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "20f07c7eda84bcfffd00a0a31af5fb6330f52d6a",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/20f07c7eda84bcfffd00a0a31af5fb6330f52d6a",
+        "html_url": "https://github.com/microsoft/vscode/commit/20f07c7eda84bcfffd00a0a31af5fb6330f52d6a"
+      }
+    ]
+  },
+  {
+    "sha": "97932359a740da20da924bd7c96d4457b549cf75",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6OTc5MzIzNTlhNzQwZGEyMGRhOTI0YmQ3Yzk2ZDQ0NTdiNTQ5Y2Y3NQ==",
+    "commit": {
+      "author": {
+        "name": "Benjamin Pasero",
+        "email": "benjpas@microsoft.com",
+        "date": "2017-12-21T11:43:01Z"
+      },
+      "committer": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2018-01-10T11:48:34Z"
+      },
+      "message": "Missing icons in activity bar (fixes #40531)",
+      "tree": {
+        "sha": "b220a8f4d139bec61f8b1650200ed5e94a3834a1",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/b220a8f4d139bec61f8b1650200ed5e94a3834a1"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/97932359a740da20da924bd7c96d4457b549cf75",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/97932359a740da20da924bd7c96d4457b549cf75",
+    "html_url": "https://github.com/microsoft/vscode/commit/97932359a740da20da924bd7c96d4457b549cf75",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/97932359a740da20da924bd7c96d4457b549cf75/comments",
+    "author": null,
+    "committer": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "0759f77bb8d86658bc935a10a64f6182c5a1eeba",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/0759f77bb8d86658bc935a10a64f6182c5a1eeba",
+        "html_url": "https://github.com/microsoft/vscode/commit/0759f77bb8d86658bc935a10a64f6182c5a1eeba"
+      }
+    ]
+  },
+  {
+    "sha": "29af544af30bbcd246a93cfe468a7ae0f4e60327",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6MjlhZjU0NGFmMzBiYmNkMjQ2YTkzY2ZlNDY4YTdhZTBmNGU2MDMyNw==",
+    "commit": {
+      "author": {
+        "name": "Daniel Imms",
+        "email": "daimms@microsoft.com",
+        "date": "2018-01-09T15:51:32Z"
+      },
+      "committer": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2018-01-10T12:02:12Z"
+      },
+      "message": "fix url handling in Windows",
+      "tree": {
+        "sha": "e05859ad5ecb27d711b34971ceb27c86fb6ff4ff",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/e05859ad5ecb27d711b34971ceb27c86fb6ff4ff"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/29af544af30bbcd246a93cfe468a7ae0f4e60327",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/29af544af30bbcd246a93cfe468a7ae0f4e60327",
+    "html_url": "https://github.com/microsoft/vscode/commit/29af544af30bbcd246a93cfe468a7ae0f4e60327",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/29af544af30bbcd246a93cfe468a7ae0f4e60327/comments",
+    "author": {
+      "login": "Tyriar",
+      "id": 2193314,
+      "node_id": "MDQ6VXNlcjIxOTMzMTQ=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2193314?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/Tyriar",
+      "html_url": "https://github.com/Tyriar",
+      "followers_url": "https://api.github.com/users/Tyriar/followers",
+      "following_url": "https://api.github.com/users/Tyriar/following{/other_user}",
+      "gists_url": "https://api.github.com/users/Tyriar/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/Tyriar/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/Tyriar/subscriptions",
+      "organizations_url": "https://api.github.com/users/Tyriar/orgs",
+      "repos_url": "https://api.github.com/users/Tyriar/repos",
+      "events_url": "https://api.github.com/users/Tyriar/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/Tyriar/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "97932359a740da20da924bd7c96d4457b549cf75",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/97932359a740da20da924bd7c96d4457b549cf75",
+        "html_url": "https://github.com/microsoft/vscode/commit/97932359a740da20da924bd7c96d4457b549cf75"
+      }
+    ]
+  },
+  {
+    "sha": "3b8432bca14b9340a30203704d8a8b3583598d2c",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6M2I4NDMyYmNhMTRiOTM0MGEzMDIwMzcwNGQ4YThiMzU4MzU5OGQyYw==",
+    "commit": {
+      "author": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2018-01-10T12:02:28Z"
+      },
+      "committer": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2018-01-10T12:02:28Z"
+      },
+      "message": "version bump",
+      "tree": {
+        "sha": "ace5333215aab36450db887d4ecab96a402e80fd",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/ace5333215aab36450db887d4ecab96a402e80fd"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/3b8432bca14b9340a30203704d8a8b3583598d2c",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/3b8432bca14b9340a30203704d8a8b3583598d2c",
+    "html_url": "https://github.com/microsoft/vscode/commit/3b8432bca14b9340a30203704d8a8b3583598d2c",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/3b8432bca14b9340a30203704d8a8b3583598d2c/comments",
+    "author": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "29af544af30bbcd246a93cfe468a7ae0f4e60327",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/29af544af30bbcd246a93cfe468a7ae0f4e60327",
+        "html_url": "https://github.com/microsoft/vscode/commit/29af544af30bbcd246a93cfe468a7ae0f4e60327"
+      }
+    ]
+  },
+  {
+    "sha": "0ea5279b07f77d9cfd285ef9b524eaeec96e9cb1",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6MGVhNTI3OWIwN2Y3N2Q5Y2ZkMjg1ZWY5YjUyNGVhZWVjOTZlOWNiMQ==",
+    "commit": {
+      "author": {
+        "name": "Christof Marti",
+        "email": "chrmarti@microsoft.com",
+        "date": "2018-01-10T13:52:52Z"
+      },
+      "committer": {
+        "name": "Christof Marti",
+        "email": "chrmarti@microsoft.com",
+        "date": "2018-01-10T13:54:06Z"
+      },
+      "message": "Register content provider (again) (fixes #40557)",
+      "tree": {
+        "sha": "ca95599c22755f74049c74206e1918c10eaea142",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/ca95599c22755f74049c74206e1918c10eaea142"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/0ea5279b07f77d9cfd285ef9b524eaeec96e9cb1",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/0ea5279b07f77d9cfd285ef9b524eaeec96e9cb1",
+    "html_url": "https://github.com/microsoft/vscode/commit/0ea5279b07f77d9cfd285ef9b524eaeec96e9cb1",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/0ea5279b07f77d9cfd285ef9b524eaeec96e9cb1/comments",
+    "author": {
+      "login": "chrmarti",
+      "id": 9205389,
+      "node_id": "MDQ6VXNlcjkyMDUzODk=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/9205389?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/chrmarti",
+      "html_url": "https://github.com/chrmarti",
+      "followers_url": "https://api.github.com/users/chrmarti/followers",
+      "following_url": "https://api.github.com/users/chrmarti/following{/other_user}",
+      "gists_url": "https://api.github.com/users/chrmarti/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/chrmarti/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/chrmarti/subscriptions",
+      "organizations_url": "https://api.github.com/users/chrmarti/orgs",
+      "repos_url": "https://api.github.com/users/chrmarti/repos",
+      "events_url": "https://api.github.com/users/chrmarti/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/chrmarti/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "chrmarti",
+      "id": 9205389,
+      "node_id": "MDQ6VXNlcjkyMDUzODk=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/9205389?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/chrmarti",
+      "html_url": "https://github.com/chrmarti",
+      "followers_url": "https://api.github.com/users/chrmarti/followers",
+      "following_url": "https://api.github.com/users/chrmarti/following{/other_user}",
+      "gists_url": "https://api.github.com/users/chrmarti/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/chrmarti/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/chrmarti/subscriptions",
+      "organizations_url": "https://api.github.com/users/chrmarti/orgs",
+      "repos_url": "https://api.github.com/users/chrmarti/repos",
+      "events_url": "https://api.github.com/users/chrmarti/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/chrmarti/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "3b8432bca14b9340a30203704d8a8b3583598d2c",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/3b8432bca14b9340a30203704d8a8b3583598d2c",
+        "html_url": "https://github.com/microsoft/vscode/commit/3b8432bca14b9340a30203704d8a8b3583598d2c"
+      }
+    ]
+  },
+  {
+    "sha": "06c14bdd97d09830a33fe6c946f8a4fddb0a4175",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6MDZjMTRiZGQ5N2QwOTgzMGEzM2ZlNmM5NDZmOGE0ZmRkYjBhNDE3NQ==",
+    "commit": {
+      "author": {
+        "name": "Alex Dima",
+        "email": "alexdima@microsoft.com",
+        "date": "2017-12-19T09:42:15Z"
+      },
+      "committer": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2018-01-10T14:14:58Z"
+      },
+      "message": "Revert \"Delay the start-up of the shared process (saves ~40-90ms on startup)\"\n\nThis reverts commit b71255501de5b4c8a890abf7f6579ac1394c5d8e.",
+      "tree": {
+        "sha": "4ca62dfd14588683b2aeba646021f3d7b1121960",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/4ca62dfd14588683b2aeba646021f3d7b1121960"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/06c14bdd97d09830a33fe6c946f8a4fddb0a4175",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/06c14bdd97d09830a33fe6c946f8a4fddb0a4175",
+    "html_url": "https://github.com/microsoft/vscode/commit/06c14bdd97d09830a33fe6c946f8a4fddb0a4175",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/06c14bdd97d09830a33fe6c946f8a4fddb0a4175/comments",
+    "author": {
+      "login": "alexdima",
+      "id": 5047891,
+      "node_id": "MDQ6VXNlcjUwNDc4OTE=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5047891?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/alexdima",
+      "html_url": "https://github.com/alexdima",
+      "followers_url": "https://api.github.com/users/alexdima/followers",
+      "following_url": "https://api.github.com/users/alexdima/following{/other_user}",
+      "gists_url": "https://api.github.com/users/alexdima/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/alexdima/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/alexdima/subscriptions",
+      "organizations_url": "https://api.github.com/users/alexdima/orgs",
+      "repos_url": "https://api.github.com/users/alexdima/repos",
+      "events_url": "https://api.github.com/users/alexdima/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/alexdima/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "0ea5279b07f77d9cfd285ef9b524eaeec96e9cb1",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/0ea5279b07f77d9cfd285ef9b524eaeec96e9cb1",
+        "html_url": "https://github.com/microsoft/vscode/commit/0ea5279b07f77d9cfd285ef9b524eaeec96e9cb1"
+      }
+    ]
+  },
+  {
+    "sha": "490ef761b76b3f3b3832eff7a588aac891e5fe80",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6NDkwZWY3NjFiNzZiM2YzYjM4MzJlZmY3YTU4OGFhYzg5MWU1ZmU4MA==",
+    "commit": {
+      "author": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2018-01-10T15:38:12Z"
+      },
+      "committer": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2018-01-10T15:39:39Z"
+      },
+      "message": "fix opening urls as files",
+      "tree": {
+        "sha": "7210b16265082e29698dcfb7aaa5833dd3db0d27",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/7210b16265082e29698dcfb7aaa5833dd3db0d27"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/490ef761b76b3f3b3832eff7a588aac891e5fe80",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/490ef761b76b3f3b3832eff7a588aac891e5fe80",
+    "html_url": "https://github.com/microsoft/vscode/commit/490ef761b76b3f3b3832eff7a588aac891e5fe80",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/490ef761b76b3f3b3832eff7a588aac891e5fe80/comments",
+    "author": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "06c14bdd97d09830a33fe6c946f8a4fddb0a4175",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/06c14bdd97d09830a33fe6c946f8a4fddb0a4175",
+        "html_url": "https://github.com/microsoft/vscode/commit/06c14bdd97d09830a33fe6c946f8a4fddb0a4175"
+      }
+    ]
+  },
+  {
+    "sha": "08f11b0d7c4e2f8daeea435fa84b602355f03d18",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6MDhmMTFiMGQ3YzRlMmY4ZGFlZWE0MzVmYTg0YjYwMjM1NWYwM2QxOA==",
+    "commit": {
+      "author": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2018-01-23T14:49:41Z"
+      },
+      "committer": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2018-01-24T15:05:20Z"
+      },
+      "message": "add extensions control url",
+      "tree": {
+        "sha": "76b4048ac931201e51e0a311ed4ef917dd093dea",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/76b4048ac931201e51e0a311ed4ef917dd093dea"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/08f11b0d7c4e2f8daeea435fa84b602355f03d18",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/08f11b0d7c4e2f8daeea435fa84b602355f03d18",
+    "html_url": "https://github.com/microsoft/vscode/commit/08f11b0d7c4e2f8daeea435fa84b602355f03d18",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/08f11b0d7c4e2f8daeea435fa84b602355f03d18/comments",
+    "author": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "490ef761b76b3f3b3832eff7a588aac891e5fe80",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/490ef761b76b3f3b3832eff7a588aac891e5fe80",
+        "html_url": "https://github.com/microsoft/vscode/commit/490ef761b76b3f3b3832eff7a588aac891e5fe80"
+      }
+    ]
+  },
+  {
+    "sha": "43ca7df940fd40e489e09aa2b7e060feb1e577be",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6NDNjYTdkZjk0MGZkNDBlNDg5ZTA5YWEyYjdlMDYwZmViMWU1NzdiZQ==",
+    "commit": {
+      "author": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2018-01-24T10:51:44Z"
+      },
+      "committer": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2018-01-24T15:11:55Z"
+      },
+      "message": "extension report cache and load",
+      "tree": {
+        "sha": "ef61bea2e496e50191abd330849e28f819115dac",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/ef61bea2e496e50191abd330849e28f819115dac"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/43ca7df940fd40e489e09aa2b7e060feb1e577be",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/43ca7df940fd40e489e09aa2b7e060feb1e577be",
+    "html_url": "https://github.com/microsoft/vscode/commit/43ca7df940fd40e489e09aa2b7e060feb1e577be",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/43ca7df940fd40e489e09aa2b7e060feb1e577be/comments",
+    "author": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "08f11b0d7c4e2f8daeea435fa84b602355f03d18",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/08f11b0d7c4e2f8daeea435fa84b602355f03d18",
+        "html_url": "https://github.com/microsoft/vscode/commit/08f11b0d7c4e2f8daeea435fa84b602355f03d18"
+      }
+    ]
+  },
+  {
+    "sha": "7786a43b991cff41cf90dd25288c1e61f7470adf",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6Nzc4NmE0M2I5OTFjZmY0MWNmOTBkZDI1Mjg4YzFlNjFmNzQ3MGFkZg==",
+    "commit": {
+      "author": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2018-01-24T11:23:29Z"
+      },
+      "committer": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2018-01-24T15:15:30Z"
+      },
+      "message": "malicious in UI",
+      "tree": {
+        "sha": "020ed70b9f075c7076bd70bd20bd4eb673db8f97",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/020ed70b9f075c7076bd70bd20bd4eb673db8f97"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/7786a43b991cff41cf90dd25288c1e61f7470adf",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/7786a43b991cff41cf90dd25288c1e61f7470adf",
+    "html_url": "https://github.com/microsoft/vscode/commit/7786a43b991cff41cf90dd25288c1e61f7470adf",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/7786a43b991cff41cf90dd25288c1e61f7470adf/comments",
+    "author": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "43ca7df940fd40e489e09aa2b7e060feb1e577be",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/43ca7df940fd40e489e09aa2b7e060feb1e577be",
+        "html_url": "https://github.com/microsoft/vscode/commit/43ca7df940fd40e489e09aa2b7e060feb1e577be"
+      }
+    ]
+  },
+  {
+    "sha": "c1736e5feb21735f49abf1095ce7362e38a87f5f",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6YzE3MzZlNWZlYjIxNzM1ZjQ5YWJmMTA5NWNlNzM2MmUzOGE4N2Y1Zg==",
+    "commit": {
+      "author": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2018-01-24T12:51:50Z"
+      },
+      "committer": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2018-01-24T15:22:32Z"
+      },
+      "message": "improve isMalicious ext attribute",
+      "tree": {
+        "sha": "42eedb57920eb2c68e9acdc01459e1ab5e0fdf43",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/42eedb57920eb2c68e9acdc01459e1ab5e0fdf43"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/c1736e5feb21735f49abf1095ce7362e38a87f5f",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/c1736e5feb21735f49abf1095ce7362e38a87f5f",
+    "html_url": "https://github.com/microsoft/vscode/commit/c1736e5feb21735f49abf1095ce7362e38a87f5f",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/c1736e5feb21735f49abf1095ce7362e38a87f5f/comments",
+    "author": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "7786a43b991cff41cf90dd25288c1e61f7470adf",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/7786a43b991cff41cf90dd25288c1e61f7470adf",
+        "html_url": "https://github.com/microsoft/vscode/commit/7786a43b991cff41cf90dd25288c1e61f7470adf"
+      }
+    ]
+  },
+  {
+    "sha": "0eda20310694e4a1681a14fb4f2561f164c8afeb",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6MGVkYTIwMzEwNjk0ZTRhMTY4MWExNGZiNGYyNTYxZjE2NGM4YWZlYg==",
+    "commit": {
+      "author": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2018-01-24T14:45:20Z"
+      },
+      "committer": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2018-01-24T15:23:36Z"
+      },
+      "message": "periodically check for installed malicious extensions",
+      "tree": {
+        "sha": "40dbb625c42e46d1a3f9abc7ab31de872adfd544",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/40dbb625c42e46d1a3f9abc7ab31de872adfd544"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/0eda20310694e4a1681a14fb4f2561f164c8afeb",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/0eda20310694e4a1681a14fb4f2561f164c8afeb",
+    "html_url": "https://github.com/microsoft/vscode/commit/0eda20310694e4a1681a14fb4f2561f164c8afeb",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/0eda20310694e4a1681a14fb4f2561f164c8afeb/comments",
+    "author": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "c1736e5feb21735f49abf1095ce7362e38a87f5f",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/c1736e5feb21735f49abf1095ce7362e38a87f5f",
+        "html_url": "https://github.com/microsoft/vscode/commit/c1736e5feb21735f49abf1095ce7362e38a87f5f"
+      }
+    ]
+  },
+  {
+    "sha": "cf1d029081e9d9b8835f2eba4a72427cc2ed802f",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6Y2YxZDAyOTA4MWU5ZDliODgzNWYyZWJhNGE3MjQyN2NjMmVkODAyZg==",
+    "commit": {
+      "author": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2018-01-24T14:51:31Z"
+      },
+      "committer": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2018-01-24T15:25:48Z"
+      },
+      "message": ":lipstick:",
+      "tree": {
+        "sha": "32035e4aa71b1855037859e8d20aeb5a76afaa88",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/32035e4aa71b1855037859e8d20aeb5a76afaa88"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/cf1d029081e9d9b8835f2eba4a72427cc2ed802f",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/cf1d029081e9d9b8835f2eba4a72427cc2ed802f",
+    "html_url": "https://github.com/microsoft/vscode/commit/cf1d029081e9d9b8835f2eba4a72427cc2ed802f",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/cf1d029081e9d9b8835f2eba4a72427cc2ed802f/comments",
+    "author": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "0eda20310694e4a1681a14fb4f2561f164c8afeb",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/0eda20310694e4a1681a14fb4f2561f164c8afeb",
+        "html_url": "https://github.com/microsoft/vscode/commit/0eda20310694e4a1681a14fb4f2561f164c8afeb"
+      }
+    ]
+  },
+  {
+    "sha": "3b46101d73be55caba925eb4dc3993c6ef37aba1",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6M2I0NjEwMWQ3M2JlNTVjYWJhOTI1ZWI0ZGMzOTkzYzZlZjM3YWJhMQ==",
+    "commit": {
+      "author": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2018-01-24T15:31:48Z"
+      },
+      "committer": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2018-01-24T15:31:48Z"
+      },
+      "message": "version bump",
+      "tree": {
+        "sha": "8ed590e18aea55bb596e65f8368adb7fbba9ba7a",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/8ed590e18aea55bb596e65f8368adb7fbba9ba7a"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/3b46101d73be55caba925eb4dc3993c6ef37aba1",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/3b46101d73be55caba925eb4dc3993c6ef37aba1",
+    "html_url": "https://github.com/microsoft/vscode/commit/3b46101d73be55caba925eb4dc3993c6ef37aba1",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/3b46101d73be55caba925eb4dc3993c6ef37aba1/comments",
+    "author": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "cf1d029081e9d9b8835f2eba4a72427cc2ed802f",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/cf1d029081e9d9b8835f2eba4a72427cc2ed802f",
+        "html_url": "https://github.com/microsoft/vscode/commit/cf1d029081e9d9b8835f2eba4a72427cc2ed802f"
+      }
+    ]
+  },
+  {
+    "sha": "f2722cf9cf652d9fb6a4b12038e1ea48c49c0d5c",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6ZjI3MjJjZjljZjY1MmQ5ZmI2YTRiMTIwMzhlMWVhNDhjNDljMGQ1Yw==",
+    "commit": {
+      "author": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2018-01-24T16:15:58Z"
+      },
+      "committer": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2018-01-24T16:35:24Z"
+      },
+      "message": "fix bad NPE",
+      "tree": {
+        "sha": "b4045c7c56e284daabd6457de5e3df2b68531cda",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/b4045c7c56e284daabd6457de5e3df2b68531cda"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/f2722cf9cf652d9fb6a4b12038e1ea48c49c0d5c",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/f2722cf9cf652d9fb6a4b12038e1ea48c49c0d5c",
+    "html_url": "https://github.com/microsoft/vscode/commit/f2722cf9cf652d9fb6a4b12038e1ea48c49c0d5c",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/f2722cf9cf652d9fb6a4b12038e1ea48c49c0d5c/comments",
+    "author": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "3b46101d73be55caba925eb4dc3993c6ef37aba1",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/3b46101d73be55caba925eb4dc3993c6ef37aba1",
+        "html_url": "https://github.com/microsoft/vscode/commit/3b46101d73be55caba925eb4dc3993c6ef37aba1"
+      }
+    ]
+  },
+  {
+    "sha": "554a9c6dcd8b0636ace6f1c64e13e12adf0fcd1d",
+    "node_id": "MDY6Q29tbWl0NDE4ODE5MDA6NTU0YTljNmRjZDhiMDYzNmFjZTZmMWM2NGUxM2UxMmFkZjBmY2QxZA==",
+    "commit": {
+      "author": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2018-01-24T16:24:31Z"
+      },
+      "committer": {
+        "name": "Joao Moreno",
+        "email": "jomo@microsoft.com",
+        "date": "2018-01-24T16:35:39Z"
+      },
+      "message": "fix extension tests",
+      "tree": {
+        "sha": "0388ab916cea5ace52351c452f2eeb6b2c9d2521",
+        "url": "https://api.github.com/repos/microsoft/vscode/git/trees/0388ab916cea5ace52351c452f2eeb6b2c9d2521"
+      },
+      "url": "https://api.github.com/repos/microsoft/vscode/git/commits/554a9c6dcd8b0636ace6f1c64e13e12adf0fcd1d",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/microsoft/vscode/commits/554a9c6dcd8b0636ace6f1c64e13e12adf0fcd1d",
+    "html_url": "https://github.com/microsoft/vscode/commit/554a9c6dcd8b0636ace6f1c64e13e12adf0fcd1d",
+    "comments_url": "https://api.github.com/repos/microsoft/vscode/commits/554a9c6dcd8b0636ace6f1c64e13e12adf0fcd1d/comments",
+    "author": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "committer": {
+      "login": "joaomoreno",
+      "id": 22350,
+      "node_id": "MDQ6VXNlcjIyMzUw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22350?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/joaomoreno",
+      "html_url": "https://github.com/joaomoreno",
+      "followers_url": "https://api.github.com/users/joaomoreno/followers",
+      "following_url": "https://api.github.com/users/joaomoreno/following{/other_user}",
+      "gists_url": "https://api.github.com/users/joaomoreno/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/joaomoreno/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/joaomoreno/subscriptions",
+      "organizations_url": "https://api.github.com/users/joaomoreno/orgs",
+      "repos_url": "https://api.github.com/users/joaomoreno/repos",
+      "events_url": "https://api.github.com/users/joaomoreno/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/joaomoreno/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": true
+    },
+    "parents": [
+      {
+        "sha": "f2722cf9cf652d9fb6a4b12038e1ea48c49c0d5c",
+        "url": "https://api.github.com/repos/microsoft/vscode/commits/f2722cf9cf652d9fb6a4b12038e1ea48c49c0d5c",
+        "html_url": "https://github.com/microsoft/vscode/commit/f2722cf9cf652d9fb6a4b12038e1ea48c49c0d5c"
+      }
+    ]
+  }
+]

@@ -1,0 +1,340 @@
+[
+  {
+    "sha": "debc951f2abb38d34f01639f654fcddf776d3a11",
+    "node_id": "C_kwDOAGhaidoAKGRlYmM5NTFmMmFiYjM4ZDM0ZjAxNjM5ZjY1NGZjZGRmNzc2ZDNhMTE",
+    "commit": {
+      "author": {
+        "name": "Julien Pivotto",
+        "email": "291750+roidelapluie@users.noreply.github.com",
+        "date": "2026-02-18T14:24:29Z"
+      },
+      "committer": {
+        "name": "Julien Pivotto",
+        "email": "291750+roidelapluie@users.noreply.github.com",
+        "date": "2026-02-18T14:25:34Z"
+      },
+      "message": "chore: Exclude riskv64 from distroless images\n\nUpstream distroless does not support riskv64 yet\n\nSigned-off-by: Julien Pivotto <291750+roidelapluie@users.noreply.github.com>",
+      "tree": {
+        "sha": "ba92f29ccc3b873f9775984877939cc81e33b0d8",
+        "url": "https://api.github.com/repos/prometheus/prometheus/git/trees/ba92f29ccc3b873f9775984877939cc81e33b0d8"
+      },
+      "url": "https://api.github.com/repos/prometheus/prometheus/git/commits/debc951f2abb38d34f01639f654fcddf776d3a11",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/prometheus/prometheus/commits/debc951f2abb38d34f01639f654fcddf776d3a11",
+    "html_url": "https://github.com/prometheus/prometheus/commit/debc951f2abb38d34f01639f654fcddf776d3a11",
+    "comments_url": "https://api.github.com/repos/prometheus/prometheus/commits/debc951f2abb38d34f01639f654fcddf776d3a11/comments",
+    "author": {
+      "login": "roidelapluie",
+      "id": 291750,
+      "node_id": "MDQ6VXNlcjI5MTc1MA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/291750?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/roidelapluie",
+      "html_url": "https://github.com/roidelapluie",
+      "followers_url": "https://api.github.com/users/roidelapluie/followers",
+      "following_url": "https://api.github.com/users/roidelapluie/following{/other_user}",
+      "gists_url": "https://api.github.com/users/roidelapluie/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/roidelapluie/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/roidelapluie/subscriptions",
+      "organizations_url": "https://api.github.com/users/roidelapluie/orgs",
+      "repos_url": "https://api.github.com/users/roidelapluie/repos",
+      "events_url": "https://api.github.com/users/roidelapluie/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/roidelapluie/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "roidelapluie",
+      "id": 291750,
+      "node_id": "MDQ6VXNlcjI5MTc1MA==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/291750?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/roidelapluie",
+      "html_url": "https://github.com/roidelapluie",
+      "followers_url": "https://api.github.com/users/roidelapluie/followers",
+      "following_url": "https://api.github.com/users/roidelapluie/following{/other_user}",
+      "gists_url": "https://api.github.com/users/roidelapluie/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/roidelapluie/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/roidelapluie/subscriptions",
+      "organizations_url": "https://api.github.com/users/roidelapluie/orgs",
+      "repos_url": "https://api.github.com/users/roidelapluie/repos",
+      "events_url": "https://api.github.com/users/roidelapluie/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/roidelapluie/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "dda169f14c34b066892de163912e18d69b02f9dc",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/dda169f14c34b066892de163912e18d69b02f9dc",
+        "html_url": "https://github.com/prometheus/prometheus/commit/dda169f14c34b066892de163912e18d69b02f9dc"
+      }
+    ]
+  },
+  {
+    "sha": "864c522879c5813a7c7fbead4c749bd9fde431b5",
+    "node_id": "C_kwDOAGhaidoAKDg2NGM1MjI4NzljNTgxM2E3YzdmYmVhZDRjNzQ5YmQ5ZmRlNDMxYjU",
+    "commit": {
+      "author": {
+        "name": "Ganesh Vernekar",
+        "email": "ganeshvern@gmail.com",
+        "date": "2026-02-19T23:20:55Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-02-19T23:20:55Z"
+      },
+      "message": "Merge pull request #18110 from roidelapluie/roidelapluie/riskv64\n\nchore: Exclude riskv64 from distroless images",
+      "tree": {
+        "sha": "ba92f29ccc3b873f9775984877939cc81e33b0d8",
+        "url": "https://api.github.com/repos/prometheus/prometheus/git/trees/ba92f29ccc3b873f9775984877939cc81e33b0d8"
+      },
+      "url": "https://api.github.com/repos/prometheus/prometheus/git/commits/864c522879c5813a7c7fbead4c749bd9fde431b5",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJpl5rXCRC1aQ7uu5UhlAAAiScQAGj39x9hdY7xA5j2/2w8mFjS\nmG+ZoRimKX1hnLnaAQciZtotc2oO3Avqxs3ejg3JmFCDc2Hd1ghss+vtKeR7LVIA\nVUlpB2/aWNIApK655Buc2UkMHtCXNX7K980HTffeqWoUDB3i2/X8+CpPDVJoftNP\nGpw2rvyktrup13oxF03ScYWQ6o2Enzl3WlaorxfnkH045bRIr6kwocLmDFYjOesX\nYZ5IZHzf44eSzI28oc0/J3joCX329TSqd5iJf32ar3k1APO3Qwnli/gUnYrWJ3nd\nc29VpbRD7qAu1JNT5H4nSYaHezYiCNOMkrAbRRHLmNHGNKBpLH1rZscg6zeef3oJ\nk9bBgUoBzuKR3iSNjB18+pSyqoahldvGxbI211fnasmw5oVG196I5mJZGBe7JxMB\neBajckvgoPInRgvU/Ca1fMfEUoyiSB3mzgrYfgaNJ6UgCM7l/rgDB7nBes3j7mPQ\nDWKoykMPjeCxWLEVlR/PYWmv8yQ6qVUU2cSt6kuLDw0fe6BQGvh4ykuLbz0RP22p\nHs71hqCXAdzutTeblgkVLa7sc0pslvb+/bRF6Kn9s6HSepJnZ8QBWUEuIngF+Ry+\nVqhBXqSnhoInsBoOgTyPSgFV11g+dLvIRms6dOG1TQ21bRn1RkoHIURL7lhOPvbh\niK0FleKh59kbVssvT9aN\n=SfIO\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree ba92f29ccc3b873f9775984877939cc81e33b0d8\nparent dda169f14c34b066892de163912e18d69b02f9dc\nparent debc951f2abb38d34f01639f654fcddf776d3a11\nauthor Ganesh Vernekar <ganeshvern@gmail.com> 1771543255 -0800\ncommitter GitHub <noreply@github.com> 1771543255 -0800\n\nMerge pull request #18110 from roidelapluie/roidelapluie/riskv64\n\nchore: Exclude riskv64 from distroless images",
+        "verified_at": "2026-02-19T23:20:56Z"
+      }
+    },
+    "url": "https://api.github.com/repos/prometheus/prometheus/commits/864c522879c5813a7c7fbead4c749bd9fde431b5",
+    "html_url": "https://github.com/prometheus/prometheus/commit/864c522879c5813a7c7fbead4c749bd9fde431b5",
+    "comments_url": "https://api.github.com/repos/prometheus/prometheus/commits/864c522879c5813a7c7fbead4c749bd9fde431b5/comments",
+    "author": {
+      "login": "codesome",
+      "id": 15064823,
+      "node_id": "MDQ6VXNlcjE1MDY0ODIz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15064823?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/codesome",
+      "html_url": "https://github.com/codesome",
+      "followers_url": "https://api.github.com/users/codesome/followers",
+      "following_url": "https://api.github.com/users/codesome/following{/other_user}",
+      "gists_url": "https://api.github.com/users/codesome/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/codesome/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/codesome/subscriptions",
+      "organizations_url": "https://api.github.com/users/codesome/orgs",
+      "repos_url": "https://api.github.com/users/codesome/repos",
+      "events_url": "https://api.github.com/users/codesome/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/codesome/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "dda169f14c34b066892de163912e18d69b02f9dc",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/dda169f14c34b066892de163912e18d69b02f9dc",
+        "html_url": "https://github.com/prometheus/prometheus/commit/dda169f14c34b066892de163912e18d69b02f9dc"
+      },
+      {
+        "sha": "debc951f2abb38d34f01639f654fcddf776d3a11",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/debc951f2abb38d34f01639f654fcddf776d3a11",
+        "html_url": "https://github.com/prometheus/prometheus/commit/debc951f2abb38d34f01639f654fcddf776d3a11"
+      }
+    ]
+  },
+  {
+    "sha": "decde0b3648ad9ececb868a8b7a3e298db0cbf4b",
+    "node_id": "C_kwDOAGhaidoAKGRlY2RlMGIzNjQ4YWQ5ZWNlY2I4NjhhOGI3YTNlMjk4ZGIwY2JmNGI",
+    "commit": {
+      "author": {
+        "name": "Ganesh Vernekar",
+        "email": "ganeshvern@gmail.com",
+        "date": "2026-02-19T23:22:03Z"
+      },
+      "committer": {
+        "name": "Ganesh Vernekar",
+        "email": "ganeshvern@gmail.com",
+        "date": "2026-02-19T23:22:03Z"
+      },
+      "message": "Cut v3.10.0-rc.1\n\nSigned-off-by: Ganesh Vernekar <ganeshvern@gmail.com>",
+      "tree": {
+        "sha": "873250e45583d7d0d46ad27827ffca21af716954",
+        "url": "https://api.github.com/repos/prometheus/prometheus/git/trees/873250e45583d7d0d46ad27827ffca21af716954"
+      },
+      "url": "https://api.github.com/repos/prometheus/prometheus/git/commits/decde0b3648ad9ececb868a8b7a3e298db0cbf4b",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/prometheus/prometheus/commits/decde0b3648ad9ececb868a8b7a3e298db0cbf4b",
+    "html_url": "https://github.com/prometheus/prometheus/commit/decde0b3648ad9ececb868a8b7a3e298db0cbf4b",
+    "comments_url": "https://api.github.com/repos/prometheus/prometheus/commits/decde0b3648ad9ececb868a8b7a3e298db0cbf4b/comments",
+    "author": {
+      "login": "codesome",
+      "id": 15064823,
+      "node_id": "MDQ6VXNlcjE1MDY0ODIz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15064823?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/codesome",
+      "html_url": "https://github.com/codesome",
+      "followers_url": "https://api.github.com/users/codesome/followers",
+      "following_url": "https://api.github.com/users/codesome/following{/other_user}",
+      "gists_url": "https://api.github.com/users/codesome/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/codesome/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/codesome/subscriptions",
+      "organizations_url": "https://api.github.com/users/codesome/orgs",
+      "repos_url": "https://api.github.com/users/codesome/repos",
+      "events_url": "https://api.github.com/users/codesome/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/codesome/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "codesome",
+      "id": 15064823,
+      "node_id": "MDQ6VXNlcjE1MDY0ODIz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15064823?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/codesome",
+      "html_url": "https://github.com/codesome",
+      "followers_url": "https://api.github.com/users/codesome/followers",
+      "following_url": "https://api.github.com/users/codesome/following{/other_user}",
+      "gists_url": "https://api.github.com/users/codesome/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/codesome/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/codesome/subscriptions",
+      "organizations_url": "https://api.github.com/users/codesome/orgs",
+      "repos_url": "https://api.github.com/users/codesome/repos",
+      "events_url": "https://api.github.com/users/codesome/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/codesome/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "864c522879c5813a7c7fbead4c749bd9fde431b5",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/864c522879c5813a7c7fbead4c749bd9fde431b5",
+        "html_url": "https://github.com/prometheus/prometheus/commit/864c522879c5813a7c7fbead4c749bd9fde431b5"
+      }
+    ]
+  },
+  {
+    "sha": "7d0024ef849ce8a950100271f148315eae6ab14f",
+    "node_id": "C_kwDOAGhaidoAKDdkMDAyNGVmODQ5Y2U4YTk1MDEwMDI3MWYxNDgzMTVlYWU2YWIxNGY",
+    "commit": {
+      "author": {
+        "name": "Ganesh Vernekar",
+        "email": "ganeshvern@gmail.com",
+        "date": "2026-02-19T23:46:57Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-02-19T23:46:57Z"
+      },
+      "message": "Merge pull request #18115 from prometheus/codesome/distroless-riscv64\n\nCut v3.10.0-rc.1",
+      "tree": {
+        "sha": "873250e45583d7d0d46ad27827ffca21af716954",
+        "url": "https://api.github.com/repos/prometheus/prometheus/git/trees/873250e45583d7d0d46ad27827ffca21af716954"
+      },
+      "url": "https://api.github.com/repos/prometheus/prometheus/git/commits/7d0024ef849ce8a950100271f148315eae6ab14f",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJpl6DxCRC1aQ7uu5UhlAAAq4QQAIjiJNhUu2xNmyCJojnYATws\nfjl/t7CX8vhjigRhmHnAXqRLM2IFETPlEOgXtj+fy3PVO9GzzP7vIH29g9q9jmGD\n5KWgoXpP2+AWYf0e4bPkXqRVkTTHrT2+Qmde3oeeVBQtFQXJvlmaxkffKYtA2KQ8\nlv8bgIOxV9I8GxkoTuhTgg+p2k8ceQbo1gvXIDOHdyqrOu76UkIPtBiViXKY7z6+\nLuPh3rIzschoG2XTDZZbHP3Os52IE7zZa9eW5AAtHPxNswVG3FQ+g5ha+vURNcCb\nV6KwQhPJO4ZejUuvCmABb+3CUAOapgwVcSWwHestmDCNxjhpngYPwIVWkVqu6Bnv\nh3oAc6NYco/NLfmnFKFGJfdATyGaGq8AQ1zeWnLNclqYfbcphZ+dnocQIrcfY4jS\n5VRPcTIyE5ERqskxBWaFm4bjMF6Jl9owf82ZpYIf1f6pNCJzY+LXmp5AGXL4YdK+\na6ZF9Wa6JgZbz/bKds9knpi0hycDHSzqu3/3ADCOe2apQR/RKwU58HGkt9W78diJ\nFks6/xDm32eZNcApNOHrEHWvrQu3DkEGzzZLwAbFujSQmVra3QSj3mO8sFQM66wX\nL2RqkPua5tWowusO1p5/tWrfwDkEwSjpyLZoc4Wz0E6CJpxS/kqGL0yE9P4lzCYD\n0knu0O3rbrBQpqfCdIxb\n=td+z\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 873250e45583d7d0d46ad27827ffca21af716954\nparent 864c522879c5813a7c7fbead4c749bd9fde431b5\nparent decde0b3648ad9ececb868a8b7a3e298db0cbf4b\nauthor Ganesh Vernekar <ganeshvern@gmail.com> 1771544817 -0800\ncommitter GitHub <noreply@github.com> 1771544817 -0800\n\nMerge pull request #18115 from prometheus/codesome/distroless-riscv64\n\nCut v3.10.0-rc.1",
+        "verified_at": "2026-02-19T23:46:58Z"
+      }
+    },
+    "url": "https://api.github.com/repos/prometheus/prometheus/commits/7d0024ef849ce8a950100271f148315eae6ab14f",
+    "html_url": "https://github.com/prometheus/prometheus/commit/7d0024ef849ce8a950100271f148315eae6ab14f",
+    "comments_url": "https://api.github.com/repos/prometheus/prometheus/commits/7d0024ef849ce8a950100271f148315eae6ab14f/comments",
+    "author": {
+      "login": "codesome",
+      "id": 15064823,
+      "node_id": "MDQ6VXNlcjE1MDY0ODIz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15064823?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/codesome",
+      "html_url": "https://github.com/codesome",
+      "followers_url": "https://api.github.com/users/codesome/followers",
+      "following_url": "https://api.github.com/users/codesome/following{/other_user}",
+      "gists_url": "https://api.github.com/users/codesome/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/codesome/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/codesome/subscriptions",
+      "organizations_url": "https://api.github.com/users/codesome/orgs",
+      "repos_url": "https://api.github.com/users/codesome/repos",
+      "events_url": "https://api.github.com/users/codesome/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/codesome/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "864c522879c5813a7c7fbead4c749bd9fde431b5",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/864c522879c5813a7c7fbead4c749bd9fde431b5",
+        "html_url": "https://github.com/prometheus/prometheus/commit/864c522879c5813a7c7fbead4c749bd9fde431b5"
+      },
+      {
+        "sha": "decde0b3648ad9ececb868a8b7a3e298db0cbf4b",
+        "url": "https://api.github.com/repos/prometheus/prometheus/commits/decde0b3648ad9ececb868a8b7a3e298db0cbf4b",
+        "html_url": "https://github.com/prometheus/prometheus/commit/decde0b3648ad9ececb868a8b7a3e298db0cbf4b"
+      }
+    ]
+  }
+]

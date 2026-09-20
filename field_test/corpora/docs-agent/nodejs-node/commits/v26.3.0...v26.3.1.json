@@ -1,0 +1,1560 @@
+[
+  {
+    "sha": "619b38e9b0a0d8e15906f8d64575efd44072947c",
+    "node_id": "C_kwDOAZ7xs9oAKDYxOWIzOGU5YjBhMGQ4ZTE1OTA2ZjhkNjQ1NzVlZmQ0NDA3Mjk0N2M",
+    "commit": {
+      "author": {
+        "name": "Antoine du Hamel",
+        "email": "duhamelantoine1995@gmail.com",
+        "date": "2026-06-01T12:59:22Z"
+      },
+      "committer": {
+        "name": "Antoine du Hamel",
+        "email": "duhamelantoine1995@gmail.com",
+        "date": "2026-06-01T12:59:22Z"
+      },
+      "message": "Working on v26.3.1\n\nPR-URL: https://github.com/nodejs/node/pull/63664",
+      "tree": {
+        "sha": "2e8fdd12646e9b0fcf7ebee26f2af2a6d2ec6696",
+        "url": "https://api.github.com/repos/nodejs/node/git/trees/2e8fdd12646e9b0fcf7ebee26f2af2a6d2ec6696"
+      },
+      "url": "https://api.github.com/repos/nodejs/node/git/commits/619b38e9b0a0d8e15906f8d64575efd44072947c",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\niJMEABYKADsWIQRb6KP2yKXAHRBsCtggsaOQsWjTVgUCah2CKh0cZHVoYW1lbGFu\ndG9pbmUxOTk1QGdtYWlsLmNvbQAKCRAgsaOQsWjTViYlAQD3s82cjBCeHm/KpdZE\nwljsBk9zq0IZ1k+VTJRSga5wuwEAknYy57cE4xqhljZTkMFS8mITyFyi9lgRGWCw\nuu+o4Qw=\n=XCut\n-----END PGP SIGNATURE-----",
+        "payload": "tree 2e8fdd12646e9b0fcf7ebee26f2af2a6d2ec6696\nparent b7e6a5d37e7a14ef0f2cc95214b95d66c4081415\nauthor Antoine du Hamel <duhamelantoine1995@gmail.com> 1780318762 +0200\ncommitter Antoine du Hamel <duhamelantoine1995@gmail.com> 1780318762 +0200\n\nWorking on v26.3.1\n\nPR-URL: https://github.com/nodejs/node/pull/63664\n",
+        "verified_at": "2026-06-01T13:01:21Z"
+      }
+    },
+    "url": "https://api.github.com/repos/nodejs/node/commits/619b38e9b0a0d8e15906f8d64575efd44072947c",
+    "html_url": "https://github.com/nodejs/node/commit/619b38e9b0a0d8e15906f8d64575efd44072947c",
+    "comments_url": "https://api.github.com/repos/nodejs/node/commits/619b38e9b0a0d8e15906f8d64575efd44072947c/comments",
+    "author": {
+      "login": "aduh95",
+      "id": 14309773,
+      "node_id": "MDQ6VXNlcjE0MzA5Nzcz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14309773?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aduh95",
+      "html_url": "https://github.com/aduh95",
+      "followers_url": "https://api.github.com/users/aduh95/followers",
+      "following_url": "https://api.github.com/users/aduh95/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aduh95/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aduh95/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aduh95/subscriptions",
+      "organizations_url": "https://api.github.com/users/aduh95/orgs",
+      "repos_url": "https://api.github.com/users/aduh95/repos",
+      "events_url": "https://api.github.com/users/aduh95/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aduh95/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "aduh95",
+      "id": 14309773,
+      "node_id": "MDQ6VXNlcjE0MzA5Nzcz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14309773?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aduh95",
+      "html_url": "https://github.com/aduh95",
+      "followers_url": "https://api.github.com/users/aduh95/followers",
+      "following_url": "https://api.github.com/users/aduh95/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aduh95/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aduh95/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aduh95/subscriptions",
+      "organizations_url": "https://api.github.com/users/aduh95/orgs",
+      "repos_url": "https://api.github.com/users/aduh95/repos",
+      "events_url": "https://api.github.com/users/aduh95/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aduh95/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "b7e6a5d37e7a14ef0f2cc95214b95d66c4081415",
+        "url": "https://api.github.com/repos/nodejs/node/commits/b7e6a5d37e7a14ef0f2cc95214b95d66c4081415",
+        "html_url": "https://github.com/nodejs/node/commit/b7e6a5d37e7a14ef0f2cc95214b95d66c4081415"
+      }
+    ]
+  },
+  {
+    "sha": "362725d4e55dfa8fe14981d363da7f6eabb6cc27",
+    "node_id": "C_kwDOAZ7xs9oAKDM2MjcyNWQ0ZTU1ZGZhOGZlMTQ5ODFkMzYzZGE3ZjZlYWJiNmNjMjc",
+    "commit": {
+      "author": {
+        "name": "Node.js GitHub Bot",
+        "email": "github-bot@iojs.org",
+        "date": "2026-06-09T13:38:55Z"
+      },
+      "committer": {
+        "name": "Antoine du Hamel",
+        "email": "duhamelantoine1995@gmail.com",
+        "date": "2026-06-16T15:26:52Z"
+      },
+      "message": "deps: upgrade openssl sources to openssl-3.5.7\n\nPR-URL: https://github.com/nodejs/node/pull/63820\nReviewed-By: Antoine du Hamel <duhamelantoine1995@gmail.com>\nReviewed-By: Richard Lau <richard.lau@ibm.com>\nReviewed-By: Luigi Pinca <luigipinca@gmail.com>\nReviewed-By: Filip Skokan <panva.ip@gmail.com>",
+      "tree": {
+        "sha": "1dbb83b2f5fb7042c887733aefd206022d538d3f",
+        "url": "https://api.github.com/repos/nodejs/node/git/trees/1dbb83b2f5fb7042c887733aefd206022d538d3f"
+      },
+      "url": "https://api.github.com/repos/nodejs/node/git/commits/362725d4e55dfa8fe14981d363da7f6eabb6cc27",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\niJMEABYKADsWIQRb6KP2yKXAHRBsCtggsaOQsWjTVgUCajFrPB0cZHVoYW1lbGFu\ndG9pbmUxOTk1QGdtYWlsLmNvbQAKCRAgsaOQsWjTVr8wAP9uik8uNsc/hCB2ketL\nG9gLxvECj0LwgbJIkY0s8VY3pwEA+IzmRVt7UKKZdw3yZrY9AAwKJPKbTPcsDr5s\nr2sYyww=\n=PZym\n-----END PGP SIGNATURE-----",
+        "payload": "tree 1dbb83b2f5fb7042c887733aefd206022d538d3f\nparent 619b38e9b0a0d8e15906f8d64575efd44072947c\nauthor Node.js GitHub Bot <github-bot@iojs.org> 1781012335 +0000\ncommitter Antoine du Hamel <duhamelantoine1995@gmail.com> 1781623612 +0200\n\ndeps: upgrade openssl sources to openssl-3.5.7\n\nPR-URL: https://github.com/nodejs/node/pull/63820\nReviewed-By: Antoine du Hamel <duhamelantoine1995@gmail.com>\nReviewed-By: Richard Lau <richard.lau@ibm.com>\nReviewed-By: Luigi Pinca <luigipinca@gmail.com>\nReviewed-By: Filip Skokan <panva.ip@gmail.com>\n",
+        "verified_at": "2026-06-16T15:27:11Z"
+      }
+    },
+    "url": "https://api.github.com/repos/nodejs/node/commits/362725d4e55dfa8fe14981d363da7f6eabb6cc27",
+    "html_url": "https://github.com/nodejs/node/commit/362725d4e55dfa8fe14981d363da7f6eabb6cc27",
+    "comments_url": "https://api.github.com/repos/nodejs/node/commits/362725d4e55dfa8fe14981d363da7f6eabb6cc27/comments",
+    "author": {
+      "login": "nodejs-github-bot",
+      "id": 18269663,
+      "node_id": "MDQ6VXNlcjE4MjY5NjYz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/18269663?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/nodejs-github-bot",
+      "html_url": "https://github.com/nodejs-github-bot",
+      "followers_url": "https://api.github.com/users/nodejs-github-bot/followers",
+      "following_url": "https://api.github.com/users/nodejs-github-bot/following{/other_user}",
+      "gists_url": "https://api.github.com/users/nodejs-github-bot/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/nodejs-github-bot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/nodejs-github-bot/subscriptions",
+      "organizations_url": "https://api.github.com/users/nodejs-github-bot/orgs",
+      "repos_url": "https://api.github.com/users/nodejs-github-bot/repos",
+      "events_url": "https://api.github.com/users/nodejs-github-bot/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/nodejs-github-bot/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "aduh95",
+      "id": 14309773,
+      "node_id": "MDQ6VXNlcjE0MzA5Nzcz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14309773?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aduh95",
+      "html_url": "https://github.com/aduh95",
+      "followers_url": "https://api.github.com/users/aduh95/followers",
+      "following_url": "https://api.github.com/users/aduh95/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aduh95/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aduh95/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aduh95/subscriptions",
+      "organizations_url": "https://api.github.com/users/aduh95/orgs",
+      "repos_url": "https://api.github.com/users/aduh95/repos",
+      "events_url": "https://api.github.com/users/aduh95/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aduh95/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "619b38e9b0a0d8e15906f8d64575efd44072947c",
+        "url": "https://api.github.com/repos/nodejs/node/commits/619b38e9b0a0d8e15906f8d64575efd44072947c",
+        "html_url": "https://github.com/nodejs/node/commit/619b38e9b0a0d8e15906f8d64575efd44072947c"
+      }
+    ]
+  },
+  {
+    "sha": "5a17d5b07ac00314f970981ba1f30c9dd28e6e91",
+    "node_id": "C_kwDOAZ7xs9oAKDVhMTdkNWIwN2FjMDAzMTRmOTcwOTgxYmExZjMwYzlkZDI4ZTZlOTE",
+    "commit": {
+      "author": {
+        "name": "Node.js GitHub Bot",
+        "email": "github-bot@iojs.org",
+        "date": "2026-06-09T13:55:30Z"
+      },
+      "committer": {
+        "name": "Antoine du Hamel",
+        "email": "duhamelantoine1995@gmail.com",
+        "date": "2026-06-16T15:26:52Z"
+      },
+      "message": "deps: update archs files for openssl-3.5.7\n\nPR-URL: https://github.com/nodejs/node/pull/63820\nReviewed-By: Antoine du Hamel <duhamelantoine1995@gmail.com>\nReviewed-By: Richard Lau <richard.lau@ibm.com>\nReviewed-By: Luigi Pinca <luigipinca@gmail.com>\nReviewed-By: Filip Skokan <panva.ip@gmail.com>",
+      "tree": {
+        "sha": "5fb7827591caf52f7fe6f345303e821eccbd56e5",
+        "url": "https://api.github.com/repos/nodejs/node/git/trees/5fb7827591caf52f7fe6f345303e821eccbd56e5"
+      },
+      "url": "https://api.github.com/repos/nodejs/node/git/commits/5a17d5b07ac00314f970981ba1f30c9dd28e6e91",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\niJMEABYKADsWIQRb6KP2yKXAHRBsCtggsaOQsWjTVgUCajFrPB0cZHVoYW1lbGFu\ndG9pbmUxOTk1QGdtYWlsLmNvbQAKCRAgsaOQsWjTVvb7AQDASE8YvXAHTCRXIlmS\ngwpZFnrgUQ7xfM/e5eIaMAtzqgD8C1vdzYZ9Inf9lKxZBwSg/gCvRyaaemPnMeCN\n6fQrZQ8=\n=XSKt\n-----END PGP SIGNATURE-----",
+        "payload": "tree 5fb7827591caf52f7fe6f345303e821eccbd56e5\nparent 362725d4e55dfa8fe14981d363da7f6eabb6cc27\nauthor Node.js GitHub Bot <github-bot@iojs.org> 1781013330 +0000\ncommitter Antoine du Hamel <duhamelantoine1995@gmail.com> 1781623612 +0200\n\ndeps: update archs files for openssl-3.5.7\n\nPR-URL: https://github.com/nodejs/node/pull/63820\nReviewed-By: Antoine du Hamel <duhamelantoine1995@gmail.com>\nReviewed-By: Richard Lau <richard.lau@ibm.com>\nReviewed-By: Luigi Pinca <luigipinca@gmail.com>\nReviewed-By: Filip Skokan <panva.ip@gmail.com>\n",
+        "verified_at": "2026-06-16T15:27:11Z"
+      }
+    },
+    "url": "https://api.github.com/repos/nodejs/node/commits/5a17d5b07ac00314f970981ba1f30c9dd28e6e91",
+    "html_url": "https://github.com/nodejs/node/commit/5a17d5b07ac00314f970981ba1f30c9dd28e6e91",
+    "comments_url": "https://api.github.com/repos/nodejs/node/commits/5a17d5b07ac00314f970981ba1f30c9dd28e6e91/comments",
+    "author": {
+      "login": "nodejs-github-bot",
+      "id": 18269663,
+      "node_id": "MDQ6VXNlcjE4MjY5NjYz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/18269663?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/nodejs-github-bot",
+      "html_url": "https://github.com/nodejs-github-bot",
+      "followers_url": "https://api.github.com/users/nodejs-github-bot/followers",
+      "following_url": "https://api.github.com/users/nodejs-github-bot/following{/other_user}",
+      "gists_url": "https://api.github.com/users/nodejs-github-bot/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/nodejs-github-bot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/nodejs-github-bot/subscriptions",
+      "organizations_url": "https://api.github.com/users/nodejs-github-bot/orgs",
+      "repos_url": "https://api.github.com/users/nodejs-github-bot/repos",
+      "events_url": "https://api.github.com/users/nodejs-github-bot/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/nodejs-github-bot/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "aduh95",
+      "id": 14309773,
+      "node_id": "MDQ6VXNlcjE0MzA5Nzcz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14309773?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aduh95",
+      "html_url": "https://github.com/aduh95",
+      "followers_url": "https://api.github.com/users/aduh95/followers",
+      "following_url": "https://api.github.com/users/aduh95/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aduh95/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aduh95/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aduh95/subscriptions",
+      "organizations_url": "https://api.github.com/users/aduh95/orgs",
+      "repos_url": "https://api.github.com/users/aduh95/repos",
+      "events_url": "https://api.github.com/users/aduh95/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aduh95/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "362725d4e55dfa8fe14981d363da7f6eabb6cc27",
+        "url": "https://api.github.com/repos/nodejs/node/commits/362725d4e55dfa8fe14981d363da7f6eabb6cc27",
+        "html_url": "https://github.com/nodejs/node/commit/362725d4e55dfa8fe14981d363da7f6eabb6cc27"
+      }
+    ]
+  },
+  {
+    "sha": "2e6d03993ae69d08407b3a142bd42a8ff5b6b3e1",
+    "node_id": "C_kwDOAZ7xs9oAKDJlNmQwMzk5M2FlNjlkMDg0MDdiM2ExNDJiZDQyYThmZjViNmIzZTE",
+    "commit": {
+      "author": {
+        "name": "Node.js GitHub Bot",
+        "email": "github-bot@iojs.org",
+        "date": "2026-06-09T02:07:19Z"
+      },
+      "committer": {
+        "name": "Antoine du Hamel",
+        "email": "duhamelantoine1995@gmail.com",
+        "date": "2026-06-16T15:26:52Z"
+      },
+      "message": "deps: update undici to 8.4.0\n\nPR-URL: https://github.com/nodejs/node/pull/63779\nReviewed-By: Matteo Collina <matteo.collina@gmail.com>\nReviewed-By: Ulises Gasc\u00f3n <ulisesgascongonzalez@gmail.com>\nReviewed-By: Trivikram Kamat <trivikr.dev@gmail.com>\nReviewed-By: Matthew Aitken <maitken033380023@gmail.com>\nReviewed-By: Rafael Gonzaga <rafael.nunu@hotmail.com>",
+      "tree": {
+        "sha": "1a4264dd3a26862477f049b8a9979fb609dcc760",
+        "url": "https://api.github.com/repos/nodejs/node/git/trees/1a4264dd3a26862477f049b8a9979fb609dcc760"
+      },
+      "url": "https://api.github.com/repos/nodejs/node/git/commits/2e6d03993ae69d08407b3a142bd42a8ff5b6b3e1",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\niJMEABYKADsWIQRb6KP2yKXAHRBsCtggsaOQsWjTVgUCajFrPB0cZHVoYW1lbGFu\ndG9pbmUxOTk1QGdtYWlsLmNvbQAKCRAgsaOQsWjTVmU9AP9jz8SP+pYJjkK8NNDo\n9eCzM9RTXkN/hsSlK7nEOHK1wQD9FkuPnbH20sKuJ9Q3dsxARDxWwkCgKHPcMRdb\nBxE2hQk=\n=leZU\n-----END PGP SIGNATURE-----",
+        "payload": "tree 1a4264dd3a26862477f049b8a9979fb609dcc760\nparent 5a17d5b07ac00314f970981ba1f30c9dd28e6e91\nauthor Node.js GitHub Bot <github-bot@iojs.org> 1780970839 -0400\ncommitter Antoine du Hamel <duhamelantoine1995@gmail.com> 1781623612 +0200\n\ndeps: update undici to 8.4.0\n\nPR-URL: https://github.com/nodejs/node/pull/63779\nReviewed-By: Matteo Collina <matteo.collina@gmail.com>\nReviewed-By: Ulises Gasc\u00f3n <ulisesgascongonzalez@gmail.com>\nReviewed-By: Trivikram Kamat <trivikr.dev@gmail.com>\nReviewed-By: Matthew Aitken <maitken033380023@gmail.com>\nReviewed-By: Rafael Gonzaga <rafael.nunu@hotmail.com>",
+        "verified_at": "2026-06-16T15:27:11Z"
+      }
+    },
+    "url": "https://api.github.com/repos/nodejs/node/commits/2e6d03993ae69d08407b3a142bd42a8ff5b6b3e1",
+    "html_url": "https://github.com/nodejs/node/commit/2e6d03993ae69d08407b3a142bd42a8ff5b6b3e1",
+    "comments_url": "https://api.github.com/repos/nodejs/node/commits/2e6d03993ae69d08407b3a142bd42a8ff5b6b3e1/comments",
+    "author": {
+      "login": "nodejs-github-bot",
+      "id": 18269663,
+      "node_id": "MDQ6VXNlcjE4MjY5NjYz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/18269663?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/nodejs-github-bot",
+      "html_url": "https://github.com/nodejs-github-bot",
+      "followers_url": "https://api.github.com/users/nodejs-github-bot/followers",
+      "following_url": "https://api.github.com/users/nodejs-github-bot/following{/other_user}",
+      "gists_url": "https://api.github.com/users/nodejs-github-bot/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/nodejs-github-bot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/nodejs-github-bot/subscriptions",
+      "organizations_url": "https://api.github.com/users/nodejs-github-bot/orgs",
+      "repos_url": "https://api.github.com/users/nodejs-github-bot/repos",
+      "events_url": "https://api.github.com/users/nodejs-github-bot/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/nodejs-github-bot/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "aduh95",
+      "id": 14309773,
+      "node_id": "MDQ6VXNlcjE0MzA5Nzcz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14309773?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aduh95",
+      "html_url": "https://github.com/aduh95",
+      "followers_url": "https://api.github.com/users/aduh95/followers",
+      "following_url": "https://api.github.com/users/aduh95/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aduh95/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aduh95/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aduh95/subscriptions",
+      "organizations_url": "https://api.github.com/users/aduh95/orgs",
+      "repos_url": "https://api.github.com/users/aduh95/repos",
+      "events_url": "https://api.github.com/users/aduh95/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aduh95/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "5a17d5b07ac00314f970981ba1f30c9dd28e6e91",
+        "url": "https://api.github.com/repos/nodejs/node/commits/5a17d5b07ac00314f970981ba1f30c9dd28e6e91",
+        "html_url": "https://github.com/nodejs/node/commit/5a17d5b07ac00314f970981ba1f30c9dd28e6e91"
+      }
+    ]
+  },
+  {
+    "sha": "8d36d522b2784b205185bafb2d92df6151a256dc",
+    "node_id": "C_kwDOAZ7xs9oAKDhkMzZkNTIyYjI3ODRiMjA1MTg1YmFmYjJkOTJkZjYxNTFhMjU2ZGM",
+    "commit": {
+      "author": {
+        "name": "Node.js GitHub Bot",
+        "email": "github-bot@iojs.org",
+        "date": "2026-06-16T09:35:14Z"
+      },
+      "committer": {
+        "name": "Antoine du Hamel",
+        "email": "duhamelantoine1995@gmail.com",
+        "date": "2026-06-16T15:26:52Z"
+      },
+      "message": "deps: update undici to 8.5.0\n\nPR-URL: https://github.com/nodejs/node/pull/63903\nReviewed-By: Matthew Aitken <maitken033380023@gmail.com>\nReviewed-By: Antoine du Hamel <duhamelantoine1995@gmail.com>\nReviewed-By: Trivikram Kamat <trivikr.dev@gmail.com>",
+      "tree": {
+        "sha": "0472ee34e0d603b4d182e558174f119cedb0ab39",
+        "url": "https://api.github.com/repos/nodejs/node/git/trees/0472ee34e0d603b4d182e558174f119cedb0ab39"
+      },
+      "url": "https://api.github.com/repos/nodejs/node/git/commits/8d36d522b2784b205185bafb2d92df6151a256dc",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\niJMEABYKADsWIQRb6KP2yKXAHRBsCtggsaOQsWjTVgUCajFrPB0cZHVoYW1lbGFu\ndG9pbmUxOTk1QGdtYWlsLmNvbQAKCRAgsaOQsWjTVg8KAQDbvsOVWrsbndI6bi+B\n0Rx58Xkj2PZ702NYJgvQB69fEgEAmdG+0U85QRwT+Hag7LOi7MFq8uZ4qDpnczHN\nbnA2kQc=\n=pmIj\n-----END PGP SIGNATURE-----",
+        "payload": "tree 0472ee34e0d603b4d182e558174f119cedb0ab39\nparent 2e6d03993ae69d08407b3a142bd42a8ff5b6b3e1\nauthor Node.js GitHub Bot <github-bot@iojs.org> 1781602514 -0400\ncommitter Antoine du Hamel <duhamelantoine1995@gmail.com> 1781623612 +0200\n\ndeps: update undici to 8.5.0\n\nPR-URL: https://github.com/nodejs/node/pull/63903\nReviewed-By: Matthew Aitken <maitken033380023@gmail.com>\nReviewed-By: Antoine du Hamel <duhamelantoine1995@gmail.com>\nReviewed-By: Trivikram Kamat <trivikr.dev@gmail.com>",
+        "verified_at": "2026-06-16T15:27:11Z"
+      }
+    },
+    "url": "https://api.github.com/repos/nodejs/node/commits/8d36d522b2784b205185bafb2d92df6151a256dc",
+    "html_url": "https://github.com/nodejs/node/commit/8d36d522b2784b205185bafb2d92df6151a256dc",
+    "comments_url": "https://api.github.com/repos/nodejs/node/commits/8d36d522b2784b205185bafb2d92df6151a256dc/comments",
+    "author": {
+      "login": "nodejs-github-bot",
+      "id": 18269663,
+      "node_id": "MDQ6VXNlcjE4MjY5NjYz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/18269663?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/nodejs-github-bot",
+      "html_url": "https://github.com/nodejs-github-bot",
+      "followers_url": "https://api.github.com/users/nodejs-github-bot/followers",
+      "following_url": "https://api.github.com/users/nodejs-github-bot/following{/other_user}",
+      "gists_url": "https://api.github.com/users/nodejs-github-bot/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/nodejs-github-bot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/nodejs-github-bot/subscriptions",
+      "organizations_url": "https://api.github.com/users/nodejs-github-bot/orgs",
+      "repos_url": "https://api.github.com/users/nodejs-github-bot/repos",
+      "events_url": "https://api.github.com/users/nodejs-github-bot/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/nodejs-github-bot/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "aduh95",
+      "id": 14309773,
+      "node_id": "MDQ6VXNlcjE0MzA5Nzcz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14309773?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aduh95",
+      "html_url": "https://github.com/aduh95",
+      "followers_url": "https://api.github.com/users/aduh95/followers",
+      "following_url": "https://api.github.com/users/aduh95/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aduh95/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aduh95/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aduh95/subscriptions",
+      "organizations_url": "https://api.github.com/users/aduh95/orgs",
+      "repos_url": "https://api.github.com/users/aduh95/repos",
+      "events_url": "https://api.github.com/users/aduh95/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aduh95/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "2e6d03993ae69d08407b3a142bd42a8ff5b6b3e1",
+        "url": "https://api.github.com/repos/nodejs/node/commits/2e6d03993ae69d08407b3a142bd42a8ff5b6b3e1",
+        "html_url": "https://github.com/nodejs/node/commit/2e6d03993ae69d08407b3a142bd42a8ff5b6b3e1"
+      }
+    ]
+  },
+  {
+    "sha": "9308084fcb388194dd35b525ce8b139206b56df7",
+    "node_id": "C_kwDOAZ7xs9oAKDkzMDgwODRmY2IzODgxOTRkZDM1YjUyNWNlOGIxMzkyMDZiNTZkZjc",
+    "commit": {
+      "author": {
+        "name": "Matteo Collina",
+        "email": "hello@matteocollina.com",
+        "date": "2026-05-10T11:20:44Z"
+      },
+      "committer": {
+        "name": "Antoine du Hamel",
+        "email": "duhamelantoine1995@gmail.com",
+        "date": "2026-06-17T16:50:12Z"
+      },
+      "message": "lib,test: redact proxy credentials in tunnel errors\n\nRefs: https://hackerone.com/reports/3720313\nSigned-off-by: Matteo Collina <hello@matteocollina.com>\nPR-URL: https://github.com/nodejs-private/node-private/pull/867\nReviewed-By: Joyee Cheung <joyeec9h3@gmail.com>\nCVE-ID: CVE-2026-48615",
+      "tree": {
+        "sha": "50bc1f73a7bcf15f036d064e1b05ad949e658089",
+        "url": "https://api.github.com/repos/nodejs/node/git/trees/50bc1f73a7bcf15f036d064e1b05ad949e658089"
+      },
+      "url": "https://api.github.com/repos/nodejs/node/git/commits/9308084fcb388194dd35b525ce8b139206b56df7",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\niJMEABYKADsWIQRb6KP2yKXAHRBsCtggsaOQsWjTVgUCajLQUx0cZHVoYW1lbGFu\ndG9pbmUxOTk1QGdtYWlsLmNvbQAKCRAgsaOQsWjTVsquAP4iNZ0K9iU1kDXBKhWC\nlzGPKHH/h0FUYe7nXS3VHgte6gEA+icpWjCLu/3cWCeNHfFsUff3HJCCsQ6xGq/0\nqgkTfgY=\n=oCWG\n-----END PGP SIGNATURE-----",
+        "payload": "tree 50bc1f73a7bcf15f036d064e1b05ad949e658089\nparent 8d36d522b2784b205185bafb2d92df6151a256dc\nauthor Matteo Collina <hello@matteocollina.com> 1778412044 +0200\ncommitter Antoine du Hamel <duhamelantoine1995@gmail.com> 1781715012 +0200\n\nlib,test: redact proxy credentials in tunnel errors\n\nRefs: https://hackerone.com/reports/3720313\nSigned-off-by: Matteo Collina <hello@matteocollina.com>\nPR-URL: https://github.com/nodejs-private/node-private/pull/867\nReviewed-By: Joyee Cheung <joyeec9h3@gmail.com>\nCVE-ID: CVE-2026-48615\n",
+        "verified_at": "2026-06-18T04:27:31Z"
+      }
+    },
+    "url": "https://api.github.com/repos/nodejs/node/commits/9308084fcb388194dd35b525ce8b139206b56df7",
+    "html_url": "https://github.com/nodejs/node/commit/9308084fcb388194dd35b525ce8b139206b56df7",
+    "comments_url": "https://api.github.com/repos/nodejs/node/commits/9308084fcb388194dd35b525ce8b139206b56df7/comments",
+    "author": {
+      "login": "mcollina",
+      "id": 52195,
+      "node_id": "MDQ6VXNlcjUyMTk1",
+      "avatar_url": "https://avatars.githubusercontent.com/u/52195?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/mcollina",
+      "html_url": "https://github.com/mcollina",
+      "followers_url": "https://api.github.com/users/mcollina/followers",
+      "following_url": "https://api.github.com/users/mcollina/following{/other_user}",
+      "gists_url": "https://api.github.com/users/mcollina/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/mcollina/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/mcollina/subscriptions",
+      "organizations_url": "https://api.github.com/users/mcollina/orgs",
+      "repos_url": "https://api.github.com/users/mcollina/repos",
+      "events_url": "https://api.github.com/users/mcollina/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/mcollina/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "aduh95",
+      "id": 14309773,
+      "node_id": "MDQ6VXNlcjE0MzA5Nzcz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14309773?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aduh95",
+      "html_url": "https://github.com/aduh95",
+      "followers_url": "https://api.github.com/users/aduh95/followers",
+      "following_url": "https://api.github.com/users/aduh95/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aduh95/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aduh95/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aduh95/subscriptions",
+      "organizations_url": "https://api.github.com/users/aduh95/orgs",
+      "repos_url": "https://api.github.com/users/aduh95/repos",
+      "events_url": "https://api.github.com/users/aduh95/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aduh95/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "8d36d522b2784b205185bafb2d92df6151a256dc",
+        "url": "https://api.github.com/repos/nodejs/node/commits/8d36d522b2784b205185bafb2d92df6151a256dc",
+        "html_url": "https://github.com/nodejs/node/commit/8d36d522b2784b205185bafb2d92df6151a256dc"
+      }
+    ]
+  },
+  {
+    "sha": "6bc17a6b5156502247f242b8151e047a178c3374",
+    "node_id": "C_kwDOAZ7xs9oAKDZiYzE3YTZiNTE1NjUwMjI0N2YyNDJiODE1MWUwNDdhMTc4YzMzNzQ",
+    "commit": {
+      "author": {
+        "name": "RafaelGSS",
+        "email": "rafael.nunu@hotmail.com",
+        "date": "2026-05-11T21:25:16Z"
+      },
+      "committer": {
+        "name": "Antoine du Hamel",
+        "email": "duhamelantoine1995@gmail.com",
+        "date": "2026-06-17T16:50:34Z"
+      },
+      "message": "permission: handle process.chdir on writereport\n\nSigned-off-by: RafaelGSS <rafael.nunu@hotmail.com>\nPR-URL: https://github.com/nodejs-private/node-private/pull/870\nReviewed-By: Antoine du Hamel <duhamelantoine1995@gmail.com>\nCVE-ID: CVE-2026-48617\nRefs: https://hackerone.com/reports/3625987",
+      "tree": {
+        "sha": "7dbdbc3f1e415d8b822df4f561cb80d720462249",
+        "url": "https://api.github.com/repos/nodejs/node/git/trees/7dbdbc3f1e415d8b822df4f561cb80d720462249"
+      },
+      "url": "https://api.github.com/repos/nodejs/node/git/commits/6bc17a6b5156502247f242b8151e047a178c3374",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\niJMEABYKADsWIQRb6KP2yKXAHRBsCtggsaOQsWjTVgUCajLQaR0cZHVoYW1lbGFu\ndG9pbmUxOTk1QGdtYWlsLmNvbQAKCRAgsaOQsWjTViPaAQD7cEnnJVpZ4+bnnKhE\n3Zr7a8PCtU3RJrAKS+T3cF6Z1AEAl5iv4+nUtAZtGkRBnLSmModfXIT7odvduGYp\ntkmuTgE=\n=z+vI\n-----END PGP SIGNATURE-----",
+        "payload": "tree 7dbdbc3f1e415d8b822df4f561cb80d720462249\nparent 9308084fcb388194dd35b525ce8b139206b56df7\nauthor RafaelGSS <rafael.nunu@hotmail.com> 1778534716 -0300\ncommitter Antoine du Hamel <duhamelantoine1995@gmail.com> 1781715034 +0200\n\npermission: handle process.chdir on writereport\n\nSigned-off-by: RafaelGSS <rafael.nunu@hotmail.com>\nPR-URL: https://github.com/nodejs-private/node-private/pull/870\nReviewed-By: Antoine du Hamel <duhamelantoine1995@gmail.com>\nCVE-ID: CVE-2026-48617\nRefs: https://hackerone.com/reports/3625987\n",
+        "verified_at": "2026-06-18T04:27:31Z"
+      }
+    },
+    "url": "https://api.github.com/repos/nodejs/node/commits/6bc17a6b5156502247f242b8151e047a178c3374",
+    "html_url": "https://github.com/nodejs/node/commit/6bc17a6b5156502247f242b8151e047a178c3374",
+    "comments_url": "https://api.github.com/repos/nodejs/node/commits/6bc17a6b5156502247f242b8151e047a178c3374/comments",
+    "author": {
+      "login": "RafaelGSS",
+      "id": 26234614,
+      "node_id": "MDQ6VXNlcjI2MjM0NjE0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/26234614?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/RafaelGSS",
+      "html_url": "https://github.com/RafaelGSS",
+      "followers_url": "https://api.github.com/users/RafaelGSS/followers",
+      "following_url": "https://api.github.com/users/RafaelGSS/following{/other_user}",
+      "gists_url": "https://api.github.com/users/RafaelGSS/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/RafaelGSS/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/RafaelGSS/subscriptions",
+      "organizations_url": "https://api.github.com/users/RafaelGSS/orgs",
+      "repos_url": "https://api.github.com/users/RafaelGSS/repos",
+      "events_url": "https://api.github.com/users/RafaelGSS/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/RafaelGSS/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "aduh95",
+      "id": 14309773,
+      "node_id": "MDQ6VXNlcjE0MzA5Nzcz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14309773?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aduh95",
+      "html_url": "https://github.com/aduh95",
+      "followers_url": "https://api.github.com/users/aduh95/followers",
+      "following_url": "https://api.github.com/users/aduh95/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aduh95/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aduh95/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aduh95/subscriptions",
+      "organizations_url": "https://api.github.com/users/aduh95/orgs",
+      "repos_url": "https://api.github.com/users/aduh95/repos",
+      "events_url": "https://api.github.com/users/aduh95/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aduh95/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "9308084fcb388194dd35b525ce8b139206b56df7",
+        "url": "https://api.github.com/repos/nodejs/node/commits/9308084fcb388194dd35b525ce8b139206b56df7",
+        "html_url": "https://github.com/nodejs/node/commit/9308084fcb388194dd35b525ce8b139206b56df7"
+      }
+    ]
+  },
+  {
+    "sha": "ebda73470df57ffddd21eef962942e82277c8054",
+    "node_id": "C_kwDOAZ7xs9oAKGViZGE3MzQ3MGRmNTdmZmRkZDIxZWVmOTYyOTQyZTgyMjc3YzgwNTQ",
+    "commit": {
+      "author": {
+        "name": "Matteo Collina",
+        "email": "hello@matteocollina.com",
+        "date": "2026-05-11T11:02:28Z"
+      },
+      "committer": {
+        "name": "Antoine du Hamel",
+        "email": "duhamelantoine1995@gmail.com",
+        "date": "2026-06-17T16:50:53Z"
+      },
+      "message": "tls: normalize hostname for server identity checks\n\nSigned-off-by: Matteo Collina <hello@matteocollina.com>\nPR-URL: https://github.com/nodejs-private/node-private/pull/869\nReviewed-By: Antoine du Hamel <duhamelantoine1995@gmail.com>\nCVE-ID: CVE-2026-48618\nRefs: https://hackerone.com/reports/3688064",
+      "tree": {
+        "sha": "9b8c662e3ed849e95367b1b4d983dbcf005ffbf4",
+        "url": "https://api.github.com/repos/nodejs/node/git/trees/9b8c662e3ed849e95367b1b4d983dbcf005ffbf4"
+      },
+      "url": "https://api.github.com/repos/nodejs/node/git/commits/ebda73470df57ffddd21eef962942e82277c8054",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\niJMEABYKADsWIQRb6KP2yKXAHRBsCtggsaOQsWjTVgUCajLQeh0cZHVoYW1lbGFu\ndG9pbmUxOTk1QGdtYWlsLmNvbQAKCRAgsaOQsWjTVgObAP0cxwnnaHpdi1MtEEgw\nvAlDMwgl+NHluRVUcCtF9e8AyQEAv2eMM902QFagc9QQTNPf8rnyc59y+emkUVIC\nrzoxjAQ=\n=oJDF\n-----END PGP SIGNATURE-----",
+        "payload": "tree 9b8c662e3ed849e95367b1b4d983dbcf005ffbf4\nparent 6bc17a6b5156502247f242b8151e047a178c3374\nauthor Matteo Collina <hello@matteocollina.com> 1778497348 +0200\ncommitter Antoine du Hamel <duhamelantoine1995@gmail.com> 1781715053 +0200\n\ntls: normalize hostname for server identity checks\n\nSigned-off-by: Matteo Collina <hello@matteocollina.com>\nPR-URL: https://github.com/nodejs-private/node-private/pull/869\nReviewed-By: Antoine du Hamel <duhamelantoine1995@gmail.com>\nCVE-ID: CVE-2026-48618\nRefs: https://hackerone.com/reports/3688064\n",
+        "verified_at": "2026-06-18T04:27:31Z"
+      }
+    },
+    "url": "https://api.github.com/repos/nodejs/node/commits/ebda73470df57ffddd21eef962942e82277c8054",
+    "html_url": "https://github.com/nodejs/node/commit/ebda73470df57ffddd21eef962942e82277c8054",
+    "comments_url": "https://api.github.com/repos/nodejs/node/commits/ebda73470df57ffddd21eef962942e82277c8054/comments",
+    "author": {
+      "login": "mcollina",
+      "id": 52195,
+      "node_id": "MDQ6VXNlcjUyMTk1",
+      "avatar_url": "https://avatars.githubusercontent.com/u/52195?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/mcollina",
+      "html_url": "https://github.com/mcollina",
+      "followers_url": "https://api.github.com/users/mcollina/followers",
+      "following_url": "https://api.github.com/users/mcollina/following{/other_user}",
+      "gists_url": "https://api.github.com/users/mcollina/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/mcollina/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/mcollina/subscriptions",
+      "organizations_url": "https://api.github.com/users/mcollina/orgs",
+      "repos_url": "https://api.github.com/users/mcollina/repos",
+      "events_url": "https://api.github.com/users/mcollina/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/mcollina/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "aduh95",
+      "id": 14309773,
+      "node_id": "MDQ6VXNlcjE0MzA5Nzcz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14309773?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aduh95",
+      "html_url": "https://github.com/aduh95",
+      "followers_url": "https://api.github.com/users/aduh95/followers",
+      "following_url": "https://api.github.com/users/aduh95/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aduh95/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aduh95/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aduh95/subscriptions",
+      "organizations_url": "https://api.github.com/users/aduh95/orgs",
+      "repos_url": "https://api.github.com/users/aduh95/repos",
+      "events_url": "https://api.github.com/users/aduh95/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aduh95/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "6bc17a6b5156502247f242b8151e047a178c3374",
+        "url": "https://api.github.com/repos/nodejs/node/commits/6bc17a6b5156502247f242b8151e047a178c3374",
+        "html_url": "https://github.com/nodejs/node/commit/6bc17a6b5156502247f242b8151e047a178c3374"
+      }
+    ]
+  },
+  {
+    "sha": "110840f2c74d774d885d5823e454f26798ebcad0",
+    "node_id": "C_kwDOAZ7xs9oAKDExMDg0MGYyYzc0ZDc3NGQ4ODVkNTgyM2U0NTRmMjY3OThlYmNhZDA",
+    "commit": {
+      "author": {
+        "name": "Antoine du Hamel",
+        "email": "duhamelantoine1995@gmail.com",
+        "date": "2026-06-09T12:28:34Z"
+      },
+      "committer": {
+        "name": "Antoine du Hamel",
+        "email": "duhamelantoine1995@gmail.com",
+        "date": "2026-06-17T16:51:09Z"
+      },
+      "message": "deps: update llhttp to 9.4.2\n\nPR-URL: https://github.com/nodejs-private/node-private/pull/890\nReviewed-By: Tobias Nie\u00dfen <tniessen@tnie.de>",
+      "tree": {
+        "sha": "89b690dab86786d01ba8a374a7dee36c87d35fb2",
+        "url": "https://api.github.com/repos/nodejs/node/git/trees/89b690dab86786d01ba8a374a7dee36c87d35fb2"
+      },
+      "url": "https://api.github.com/repos/nodejs/node/git/commits/110840f2c74d774d885d5823e454f26798ebcad0",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\niJMEABYKADsWIQRb6KP2yKXAHRBsCtggsaOQsWjTVgUCajLQhB0cZHVoYW1lbGFu\ndG9pbmUxOTk1QGdtYWlsLmNvbQAKCRAgsaOQsWjTVrKaAP94DT1QmAXdXZG5jRRv\nEc8+K0uGniP5aZ6BNHPgg3+NrwD+LHpQN5Kfbzq8WIvOCLO8Zl0mo6PdMHBPVYJn\nPtNSFg4=\n=e2Xw\n-----END PGP SIGNATURE-----",
+        "payload": "tree 89b690dab86786d01ba8a374a7dee36c87d35fb2\nparent ebda73470df57ffddd21eef962942e82277c8054\nauthor Antoine du Hamel <duhamelantoine1995@gmail.com> 1781008114 +0200\ncommitter Antoine du Hamel <duhamelantoine1995@gmail.com> 1781715069 +0200\n\ndeps: update llhttp to 9.4.2\n\nPR-URL: https://github.com/nodejs-private/node-private/pull/890\nReviewed-By: Tobias Nie\u00dfen <tniessen@tnie.de>\n",
+        "verified_at": "2026-06-18T04:27:31Z"
+      }
+    },
+    "url": "https://api.github.com/repos/nodejs/node/commits/110840f2c74d774d885d5823e454f26798ebcad0",
+    "html_url": "https://github.com/nodejs/node/commit/110840f2c74d774d885d5823e454f26798ebcad0",
+    "comments_url": "https://api.github.com/repos/nodejs/node/commits/110840f2c74d774d885d5823e454f26798ebcad0/comments",
+    "author": {
+      "login": "aduh95",
+      "id": 14309773,
+      "node_id": "MDQ6VXNlcjE0MzA5Nzcz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14309773?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aduh95",
+      "html_url": "https://github.com/aduh95",
+      "followers_url": "https://api.github.com/users/aduh95/followers",
+      "following_url": "https://api.github.com/users/aduh95/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aduh95/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aduh95/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aduh95/subscriptions",
+      "organizations_url": "https://api.github.com/users/aduh95/orgs",
+      "repos_url": "https://api.github.com/users/aduh95/repos",
+      "events_url": "https://api.github.com/users/aduh95/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aduh95/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "aduh95",
+      "id": 14309773,
+      "node_id": "MDQ6VXNlcjE0MzA5Nzcz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14309773?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aduh95",
+      "html_url": "https://github.com/aduh95",
+      "followers_url": "https://api.github.com/users/aduh95/followers",
+      "following_url": "https://api.github.com/users/aduh95/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aduh95/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aduh95/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aduh95/subscriptions",
+      "organizations_url": "https://api.github.com/users/aduh95/orgs",
+      "repos_url": "https://api.github.com/users/aduh95/repos",
+      "events_url": "https://api.github.com/users/aduh95/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aduh95/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "ebda73470df57ffddd21eef962942e82277c8054",
+        "url": "https://api.github.com/repos/nodejs/node/commits/ebda73470df57ffddd21eef962942e82277c8054",
+        "html_url": "https://github.com/nodejs/node/commit/ebda73470df57ffddd21eef962942e82277c8054"
+      }
+    ]
+  },
+  {
+    "sha": "87d847bc708c56343fb83dfe54e14ed7f782bcd4",
+    "node_id": "C_kwDOAZ7xs9oAKDg3ZDg0N2JjNzA4YzU2MzQzZmI4M2RmZTU0ZTE0ZWQ3Zjc4MmJjZDQ",
+    "commit": {
+      "author": {
+        "name": "Matteo Collina",
+        "email": "hello@matteocollina.com",
+        "date": "2026-04-19T14:48:43Z"
+      },
+      "committer": {
+        "name": "Antoine du Hamel",
+        "email": "duhamelantoine1995@gmail.com",
+        "date": "2026-06-17T16:51:19Z"
+      },
+      "message": "http2: cap originSet size to prevent unbounded memory growth\n\nA malicious HTTP/2 server can send repeated ORIGIN frames with unique\norigins, causing unbounded growth of the client-side originSet for the\nlifetime of the session. Cap the set at 128 entries; once full, new\norigins from ORIGIN frames are silently dropped.\n\nRefs: https://hackerone.com/reports/3676863\nPR-URL: https://github.com/nodejs-private/node-private/pull/855\nReviewed-By: Antoine du Hamel <duhamelantoine1995@gmail.com>\nCVE-ID: CVE-2026-48619",
+      "tree": {
+        "sha": "01cb64575d72b238ca4615eea5121b0cbbe4d346",
+        "url": "https://api.github.com/repos/nodejs/node/git/trees/01cb64575d72b238ca4615eea5121b0cbbe4d346"
+      },
+      "url": "https://api.github.com/repos/nodejs/node/git/commits/87d847bc708c56343fb83dfe54e14ed7f782bcd4",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\niJMEABYKADsWIQRb6KP2yKXAHRBsCtggsaOQsWjTVgUCajLQjh0cZHVoYW1lbGFu\ndG9pbmUxOTk1QGdtYWlsLmNvbQAKCRAgsaOQsWjTVqD5AP0fWM/pyK41B7nANbZj\nr6rOCZCS09eHUqCEC6RHuCpp8gEA+Bd0Eiem6Hdd6TmA3w+5xh1ZuUkEuUgi60Em\ncVJMYQc=\n=iC14\n-----END PGP SIGNATURE-----",
+        "payload": "tree 01cb64575d72b238ca4615eea5121b0cbbe4d346\nparent 110840f2c74d774d885d5823e454f26798ebcad0\nauthor Matteo Collina <hello@matteocollina.com> 1776610123 +0200\ncommitter Antoine du Hamel <duhamelantoine1995@gmail.com> 1781715079 +0200\n\nhttp2: cap originSet size to prevent unbounded memory growth\n\nA malicious HTTP/2 server can send repeated ORIGIN frames with unique\norigins, causing unbounded growth of the client-side originSet for the\nlifetime of the session. Cap the set at 128 entries; once full, new\norigins from ORIGIN frames are silently dropped.\n\nRefs: https://hackerone.com/reports/3676863\nPR-URL: https://github.com/nodejs-private/node-private/pull/855\nReviewed-By: Antoine du Hamel <duhamelantoine1995@gmail.com>\nCVE-ID: CVE-2026-48619\n",
+        "verified_at": "2026-06-18T04:27:31Z"
+      }
+    },
+    "url": "https://api.github.com/repos/nodejs/node/commits/87d847bc708c56343fb83dfe54e14ed7f782bcd4",
+    "html_url": "https://github.com/nodejs/node/commit/87d847bc708c56343fb83dfe54e14ed7f782bcd4",
+    "comments_url": "https://api.github.com/repos/nodejs/node/commits/87d847bc708c56343fb83dfe54e14ed7f782bcd4/comments",
+    "author": {
+      "login": "mcollina",
+      "id": 52195,
+      "node_id": "MDQ6VXNlcjUyMTk1",
+      "avatar_url": "https://avatars.githubusercontent.com/u/52195?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/mcollina",
+      "html_url": "https://github.com/mcollina",
+      "followers_url": "https://api.github.com/users/mcollina/followers",
+      "following_url": "https://api.github.com/users/mcollina/following{/other_user}",
+      "gists_url": "https://api.github.com/users/mcollina/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/mcollina/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/mcollina/subscriptions",
+      "organizations_url": "https://api.github.com/users/mcollina/orgs",
+      "repos_url": "https://api.github.com/users/mcollina/repos",
+      "events_url": "https://api.github.com/users/mcollina/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/mcollina/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "aduh95",
+      "id": 14309773,
+      "node_id": "MDQ6VXNlcjE0MzA5Nzcz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14309773?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aduh95",
+      "html_url": "https://github.com/aduh95",
+      "followers_url": "https://api.github.com/users/aduh95/followers",
+      "following_url": "https://api.github.com/users/aduh95/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aduh95/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aduh95/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aduh95/subscriptions",
+      "organizations_url": "https://api.github.com/users/aduh95/orgs",
+      "repos_url": "https://api.github.com/users/aduh95/repos",
+      "events_url": "https://api.github.com/users/aduh95/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aduh95/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "110840f2c74d774d885d5823e454f26798ebcad0",
+        "url": "https://api.github.com/repos/nodejs/node/commits/110840f2c74d774d885d5823e454f26798ebcad0",
+        "html_url": "https://github.com/nodejs/node/commit/110840f2c74d774d885d5823e454f26798ebcad0"
+      }
+    ]
+  },
+  {
+    "sha": "a14c158bb337e485d35d23b26cb1c47affa48a46",
+    "node_id": "C_kwDOAZ7xs9oAKGExNGMxNThiYjMzN2U0ODVkMzVkMjNiMjZjYjFjNDdhZmZhNDhhNDY",
+    "commit": {
+      "author": {
+        "name": "Matteo Collina",
+        "email": "hello@matteocollina.com",
+        "date": "2026-04-20T16:06:29Z"
+      },
+      "committer": {
+        "name": "Antoine du Hamel",
+        "email": "duhamelantoine1995@gmail.com",
+        "date": "2026-06-17T16:51:29Z"
+      },
+      "message": "tls: fix case-sensitive SNI context matching\n\nThe regex constructed by server.addContext() lacked the case-insensitive\nflag, causing uppercase or mixed-case SNI hostnames from ClientHello to\nmiss their intended context and fall back to the default context. This\nviolates RFC 6066 Section 3, which states that DNS hostnames are\ncase-insensitive. In mTLS configurations with per-tenant contexts, this\nallowed bypassing client certificate authorization by simply\nuppercasing the SNI hostname.\n\nAdd the 'i' flag to the RegExp in addContext() so that SNI matching\nis case-insensitive.\n\nPR-URL: https://github.com/nodejs-private/node-private/pull/857\nReviewed-By: Antoine du Hamel <duhamelantoine1995@gmail.com>\nCVE-ID: CVE-2026-48928\nRefs: https://hackerone.com/reports/3656869",
+      "tree": {
+        "sha": "321446ef5844d2de689d9d3c85d22cfd638382f4",
+        "url": "https://api.github.com/repos/nodejs/node/git/trees/321446ef5844d2de689d9d3c85d22cfd638382f4"
+      },
+      "url": "https://api.github.com/repos/nodejs/node/git/commits/a14c158bb337e485d35d23b26cb1c47affa48a46",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\niJMEABYKADsWIQRb6KP2yKXAHRBsCtggsaOQsWjTVgUCajLQnh0cZHVoYW1lbGFu\ndG9pbmUxOTk1QGdtYWlsLmNvbQAKCRAgsaOQsWjTVix6AP9FK6FmYgH70DXoX+2s\nH4bTIWg/yLtwDkvnHS1g8HDncAD8CT1yUtTvKdCuztLN+4ye6Ngc0t916Yds1K7n\niVtu7QE=\n=7kL4\n-----END PGP SIGNATURE-----",
+        "payload": "tree 321446ef5844d2de689d9d3c85d22cfd638382f4\nparent 87d847bc708c56343fb83dfe54e14ed7f782bcd4\nauthor Matteo Collina <hello@matteocollina.com> 1776701189 +0200\ncommitter Antoine du Hamel <duhamelantoine1995@gmail.com> 1781715089 +0200\n\ntls: fix case-sensitive SNI context matching\n\nThe regex constructed by server.addContext() lacked the case-insensitive\nflag, causing uppercase or mixed-case SNI hostnames from ClientHello to\nmiss their intended context and fall back to the default context. This\nviolates RFC 6066 Section 3, which states that DNS hostnames are\ncase-insensitive. In mTLS configurations with per-tenant contexts, this\nallowed bypassing client certificate authorization by simply\nuppercasing the SNI hostname.\n\nAdd the 'i' flag to the RegExp in addContext() so that SNI matching\nis case-insensitive.\n\nPR-URL: https://github.com/nodejs-private/node-private/pull/857\nReviewed-By: Antoine du Hamel <duhamelantoine1995@gmail.com>\nCVE-ID: CVE-2026-48928\nRefs: https://hackerone.com/reports/3656869\n",
+        "verified_at": "2026-06-18T04:27:31Z"
+      }
+    },
+    "url": "https://api.github.com/repos/nodejs/node/commits/a14c158bb337e485d35d23b26cb1c47affa48a46",
+    "html_url": "https://github.com/nodejs/node/commit/a14c158bb337e485d35d23b26cb1c47affa48a46",
+    "comments_url": "https://api.github.com/repos/nodejs/node/commits/a14c158bb337e485d35d23b26cb1c47affa48a46/comments",
+    "author": {
+      "login": "mcollina",
+      "id": 52195,
+      "node_id": "MDQ6VXNlcjUyMTk1",
+      "avatar_url": "https://avatars.githubusercontent.com/u/52195?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/mcollina",
+      "html_url": "https://github.com/mcollina",
+      "followers_url": "https://api.github.com/users/mcollina/followers",
+      "following_url": "https://api.github.com/users/mcollina/following{/other_user}",
+      "gists_url": "https://api.github.com/users/mcollina/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/mcollina/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/mcollina/subscriptions",
+      "organizations_url": "https://api.github.com/users/mcollina/orgs",
+      "repos_url": "https://api.github.com/users/mcollina/repos",
+      "events_url": "https://api.github.com/users/mcollina/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/mcollina/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "aduh95",
+      "id": 14309773,
+      "node_id": "MDQ6VXNlcjE0MzA5Nzcz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14309773?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aduh95",
+      "html_url": "https://github.com/aduh95",
+      "followers_url": "https://api.github.com/users/aduh95/followers",
+      "following_url": "https://api.github.com/users/aduh95/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aduh95/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aduh95/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aduh95/subscriptions",
+      "organizations_url": "https://api.github.com/users/aduh95/orgs",
+      "repos_url": "https://api.github.com/users/aduh95/repos",
+      "events_url": "https://api.github.com/users/aduh95/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aduh95/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "87d847bc708c56343fb83dfe54e14ed7f782bcd4",
+        "url": "https://api.github.com/repos/nodejs/node/commits/87d847bc708c56343fb83dfe54e14ed7f782bcd4",
+        "html_url": "https://github.com/nodejs/node/commit/87d847bc708c56343fb83dfe54e14ed7f782bcd4"
+      }
+    ]
+  },
+  {
+    "sha": "bd1214ab01d34b2cf190d6c9e714a043824dd06d",
+    "node_id": "C_kwDOAZ7xs9oAKGJkMTIxNGFiMDFkMzRiMmNmMTkwZDZjOWU3MTRhMDQzODI0ZGQwNmQ",
+    "commit": {
+      "author": {
+        "name": "Matteo Collina",
+        "email": "hello@matteocollina.com",
+        "date": "2026-05-11T07:29:15Z"
+      },
+      "committer": {
+        "name": "Antoine du Hamel",
+        "email": "duhamelantoine1995@gmail.com",
+        "date": "2026-06-17T16:51:45Z"
+      },
+      "message": "dns,net: reject hostnames with embedded NUL bytes\n\nRefs: https://hackerone.com/reports/3656716\nPR-URL: https://github.com/nodejs-private/node-private/pull/868\nReviewed-By: Antoine du Hamel <duhamelantoine1995@gmail.com>\nCVE-ID: CVE-2026-48930",
+      "tree": {
+        "sha": "7e235b6ca8a4590d3d12165c5ad34d52c75ff35c",
+        "url": "https://api.github.com/repos/nodejs/node/git/trees/7e235b6ca8a4590d3d12165c5ad34d52c75ff35c"
+      },
+      "url": "https://api.github.com/repos/nodejs/node/git/commits/bd1214ab01d34b2cf190d6c9e714a043824dd06d",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\niJMEABYKADsWIQRb6KP2yKXAHRBsCtggsaOQsWjTVgUCajLQrR0cZHVoYW1lbGFu\ndG9pbmUxOTk1QGdtYWlsLmNvbQAKCRAgsaOQsWjTVpCbAP4k30+O6K3bHZIVfsAi\n3Jj5i1U/iuk6gqOh/yTtvGS/kAEAsHVS8cfxWpcktKN2h32mSyeOZVtNOkqN3onb\nOLWLjQs=\n=7Hd1\n-----END PGP SIGNATURE-----",
+        "payload": "tree 7e235b6ca8a4590d3d12165c5ad34d52c75ff35c\nparent a14c158bb337e485d35d23b26cb1c47affa48a46\nauthor Matteo Collina <hello@matteocollina.com> 1778484555 +0200\ncommitter Antoine du Hamel <duhamelantoine1995@gmail.com> 1781715105 +0200\n\ndns,net: reject hostnames with embedded NUL bytes\n\nRefs: https://hackerone.com/reports/3656716\nPR-URL: https://github.com/nodejs-private/node-private/pull/868\nReviewed-By: Antoine du Hamel <duhamelantoine1995@gmail.com>\nCVE-ID: CVE-2026-48930\n",
+        "verified_at": "2026-06-18T04:27:31Z"
+      }
+    },
+    "url": "https://api.github.com/repos/nodejs/node/commits/bd1214ab01d34b2cf190d6c9e714a043824dd06d",
+    "html_url": "https://github.com/nodejs/node/commit/bd1214ab01d34b2cf190d6c9e714a043824dd06d",
+    "comments_url": "https://api.github.com/repos/nodejs/node/commits/bd1214ab01d34b2cf190d6c9e714a043824dd06d/comments",
+    "author": {
+      "login": "mcollina",
+      "id": 52195,
+      "node_id": "MDQ6VXNlcjUyMTk1",
+      "avatar_url": "https://avatars.githubusercontent.com/u/52195?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/mcollina",
+      "html_url": "https://github.com/mcollina",
+      "followers_url": "https://api.github.com/users/mcollina/followers",
+      "following_url": "https://api.github.com/users/mcollina/following{/other_user}",
+      "gists_url": "https://api.github.com/users/mcollina/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/mcollina/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/mcollina/subscriptions",
+      "organizations_url": "https://api.github.com/users/mcollina/orgs",
+      "repos_url": "https://api.github.com/users/mcollina/repos",
+      "events_url": "https://api.github.com/users/mcollina/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/mcollina/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "aduh95",
+      "id": 14309773,
+      "node_id": "MDQ6VXNlcjE0MzA5Nzcz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14309773?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aduh95",
+      "html_url": "https://github.com/aduh95",
+      "followers_url": "https://api.github.com/users/aduh95/followers",
+      "following_url": "https://api.github.com/users/aduh95/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aduh95/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aduh95/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aduh95/subscriptions",
+      "organizations_url": "https://api.github.com/users/aduh95/orgs",
+      "repos_url": "https://api.github.com/users/aduh95/repos",
+      "events_url": "https://api.github.com/users/aduh95/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aduh95/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "a14c158bb337e485d35d23b26cb1c47affa48a46",
+        "url": "https://api.github.com/repos/nodejs/node/commits/a14c158bb337e485d35d23b26cb1c47affa48a46",
+        "html_url": "https://github.com/nodejs/node/commit/a14c158bb337e485d35d23b26cb1c47affa48a46"
+      }
+    ]
+  },
+  {
+    "sha": "c8668beff8e5aab856bc39de4feed1afec920f81",
+    "node_id": "C_kwDOAZ7xs9oAKGM4NjY4YmVmZjhlNWFhYjg1NmJjMzlkZTRmZWVkMWFmZWM5MjBmODE",
+    "commit": {
+      "author": {
+        "name": "Matteo Collina",
+        "email": "hello@matteocollina.com",
+        "date": "2026-04-12T19:53:37Z"
+      },
+      "committer": {
+        "name": "Antoine du Hamel",
+        "email": "duhamelantoine1995@gmail.com",
+        "date": "2026-06-17T16:51:59Z"
+      },
+      "message": "test: add session reuse host verification regressions\n\nPR-URL: https://github.com/nodejs-private/node-private/pull/854\nReviewed-By: Robert Nagy <ronagy@icloud.com>\nCVE-ID: CVE-2020-8172\nRefs: https://hackerone.com/reports/3649802",
+      "tree": {
+        "sha": "7684efe4e0de3fdbc513777e152a8b548958a32a",
+        "url": "https://api.github.com/repos/nodejs/node/git/trees/7684efe4e0de3fdbc513777e152a8b548958a32a"
+      },
+      "url": "https://api.github.com/repos/nodejs/node/git/commits/c8668beff8e5aab856bc39de4feed1afec920f81",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\niJMEABYKADsWIQRb6KP2yKXAHRBsCtggsaOQsWjTVgUCajLQvB0cZHVoYW1lbGFu\ndG9pbmUxOTk1QGdtYWlsLmNvbQAKCRAgsaOQsWjTVn84AP46cq1HycWjatqbHUn+\n6VijfQPQ8rdH/IzZ/3n7fIhfNwD9H+dTcljCotRQp0ErKvV2o9PwLPi1TRjB2gPk\nlQzlYww=\n=qUj4\n-----END PGP SIGNATURE-----",
+        "payload": "tree 7684efe4e0de3fdbc513777e152a8b548958a32a\nparent bd1214ab01d34b2cf190d6c9e714a043824dd06d\nauthor Matteo Collina <hello@matteocollina.com> 1776023617 +0200\ncommitter Antoine du Hamel <duhamelantoine1995@gmail.com> 1781715119 +0200\n\ntest: add session reuse host verification regressions\n\nPR-URL: https://github.com/nodejs-private/node-private/pull/854\nReviewed-By: Robert Nagy <ronagy@icloud.com>\nCVE-ID: CVE-2020-8172\nRefs: https://hackerone.com/reports/3649802\n",
+        "verified_at": "2026-06-18T04:27:31Z"
+      }
+    },
+    "url": "https://api.github.com/repos/nodejs/node/commits/c8668beff8e5aab856bc39de4feed1afec920f81",
+    "html_url": "https://github.com/nodejs/node/commit/c8668beff8e5aab856bc39de4feed1afec920f81",
+    "comments_url": "https://api.github.com/repos/nodejs/node/commits/c8668beff8e5aab856bc39de4feed1afec920f81/comments",
+    "author": {
+      "login": "mcollina",
+      "id": 52195,
+      "node_id": "MDQ6VXNlcjUyMTk1",
+      "avatar_url": "https://avatars.githubusercontent.com/u/52195?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/mcollina",
+      "html_url": "https://github.com/mcollina",
+      "followers_url": "https://api.github.com/users/mcollina/followers",
+      "following_url": "https://api.github.com/users/mcollina/following{/other_user}",
+      "gists_url": "https://api.github.com/users/mcollina/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/mcollina/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/mcollina/subscriptions",
+      "organizations_url": "https://api.github.com/users/mcollina/orgs",
+      "repos_url": "https://api.github.com/users/mcollina/repos",
+      "events_url": "https://api.github.com/users/mcollina/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/mcollina/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "aduh95",
+      "id": 14309773,
+      "node_id": "MDQ6VXNlcjE0MzA5Nzcz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14309773?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aduh95",
+      "html_url": "https://github.com/aduh95",
+      "followers_url": "https://api.github.com/users/aduh95/followers",
+      "following_url": "https://api.github.com/users/aduh95/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aduh95/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aduh95/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aduh95/subscriptions",
+      "organizations_url": "https://api.github.com/users/aduh95/orgs",
+      "repos_url": "https://api.github.com/users/aduh95/repos",
+      "events_url": "https://api.github.com/users/aduh95/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aduh95/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "bd1214ab01d34b2cf190d6c9e714a043824dd06d",
+        "url": "https://api.github.com/repos/nodejs/node/commits/bd1214ab01d34b2cf190d6c9e714a043824dd06d",
+        "html_url": "https://github.com/nodejs/node/commit/bd1214ab01d34b2cf190d6c9e714a043824dd06d"
+      }
+    ]
+  },
+  {
+    "sha": "d1be6304159277028c35c997d44d6a7c4229ed69",
+    "node_id": "C_kwDOAZ7xs9oAKGQxYmU2MzA0MTU5Mjc3MDI4YzM1Yzk5N2Q0NGQ2YTdjNDIyOWVkNjk",
+    "commit": {
+      "author": {
+        "name": "Matteo Collina",
+        "email": "hello@matteocollina.com",
+        "date": "2026-04-13T07:53:48Z"
+      },
+      "committer": {
+        "name": "Antoine du Hamel",
+        "email": "duhamelantoine1995@gmail.com",
+        "date": "2026-06-17T16:52:14Z"
+      },
+      "message": "tls: bind reusable sessions to authenticated host\n\nPR-URL: https://github.com/nodejs-private/node-private/pull/854\nReviewed-By: Robert Nagy <ronagy@icloud.com>\nCVE-ID: CVE-2026-48934\nRefs: https://hackerone.com/reports/3649802",
+      "tree": {
+        "sha": "b6475c4c0739c2b0ce134932143f422c639d46cd",
+        "url": "https://api.github.com/repos/nodejs/node/git/trees/b6475c4c0739c2b0ce134932143f422c639d46cd"
+      },
+      "url": "https://api.github.com/repos/nodejs/node/git/commits/d1be6304159277028c35c997d44d6a7c4229ed69",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\niJMEABYKADsWIQRb6KP2yKXAHRBsCtggsaOQsWjTVgUCajLQwR0cZHVoYW1lbGFu\ndG9pbmUxOTk1QGdtYWlsLmNvbQAKCRAgsaOQsWjTVvd1AQCqsJYy/SlJ6aq9S8A9\nVxGD3ELRaDcGV+uyywVGnpmNsAEAgJvJQh7hlanti9uqSkK87gADPLQLR+aShnql\n8+lJqAY=\n=NJwG\n-----END PGP SIGNATURE-----",
+        "payload": "tree b6475c4c0739c2b0ce134932143f422c639d46cd\nparent c8668beff8e5aab856bc39de4feed1afec920f81\nauthor Matteo Collina <hello@matteocollina.com> 1776066828 +0200\ncommitter Antoine du Hamel <duhamelantoine1995@gmail.com> 1781715134 +0200\n\ntls: bind reusable sessions to authenticated host\n\nPR-URL: https://github.com/nodejs-private/node-private/pull/854\nReviewed-By: Robert Nagy <ronagy@icloud.com>\nCVE-ID: CVE-2026-48934\nRefs: https://hackerone.com/reports/3649802\n",
+        "verified_at": "2026-06-18T04:27:31Z"
+      }
+    },
+    "url": "https://api.github.com/repos/nodejs/node/commits/d1be6304159277028c35c997d44d6a7c4229ed69",
+    "html_url": "https://github.com/nodejs/node/commit/d1be6304159277028c35c997d44d6a7c4229ed69",
+    "comments_url": "https://api.github.com/repos/nodejs/node/commits/d1be6304159277028c35c997d44d6a7c4229ed69/comments",
+    "author": {
+      "login": "mcollina",
+      "id": 52195,
+      "node_id": "MDQ6VXNlcjUyMTk1",
+      "avatar_url": "https://avatars.githubusercontent.com/u/52195?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/mcollina",
+      "html_url": "https://github.com/mcollina",
+      "followers_url": "https://api.github.com/users/mcollina/followers",
+      "following_url": "https://api.github.com/users/mcollina/following{/other_user}",
+      "gists_url": "https://api.github.com/users/mcollina/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/mcollina/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/mcollina/subscriptions",
+      "organizations_url": "https://api.github.com/users/mcollina/orgs",
+      "repos_url": "https://api.github.com/users/mcollina/repos",
+      "events_url": "https://api.github.com/users/mcollina/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/mcollina/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "aduh95",
+      "id": 14309773,
+      "node_id": "MDQ6VXNlcjE0MzA5Nzcz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14309773?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aduh95",
+      "html_url": "https://github.com/aduh95",
+      "followers_url": "https://api.github.com/users/aduh95/followers",
+      "following_url": "https://api.github.com/users/aduh95/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aduh95/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aduh95/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aduh95/subscriptions",
+      "organizations_url": "https://api.github.com/users/aduh95/orgs",
+      "repos_url": "https://api.github.com/users/aduh95/repos",
+      "events_url": "https://api.github.com/users/aduh95/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aduh95/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "c8668beff8e5aab856bc39de4feed1afec920f81",
+        "url": "https://api.github.com/repos/nodejs/node/commits/c8668beff8e5aab856bc39de4feed1afec920f81",
+        "html_url": "https://github.com/nodejs/node/commit/c8668beff8e5aab856bc39de4feed1afec920f81"
+      }
+    ]
+  },
+  {
+    "sha": "7057c3f16cee53fbba8b2e1d29fd73db5ed658d4",
+    "node_id": "C_kwDOAZ7xs9oAKDcwNTdjM2YxNmNlZTUzZmJiYThiMmUxZDI5ZmQ3M2RiNWVkNjU4ZDQ",
+    "commit": {
+      "author": {
+        "name": "RafaelGSS",
+        "email": "rafael.nunu@hotmail.com",
+        "date": "2026-05-11T21:44:39Z"
+      },
+      "committer": {
+        "name": "Antoine du Hamel",
+        "email": "duhamelantoine1995@gmail.com",
+        "date": "2026-06-17T16:52:17Z"
+      },
+      "message": "permission: disable FileHandle utimes with permission model\n\nPR-URL: https://github.com/nodejs-private/node-private/pull/873\nReviewed-By: Antoine du Hamel <duhamelantoine1995@gmail.com>\nCVE-ID: CVE-2026-48935\nRefs: https://hackerone.com/reports/3625987",
+      "tree": {
+        "sha": "c6f44f880a8d4789fcf5e7c307815cc2e5c9c347",
+        "url": "https://api.github.com/repos/nodejs/node/git/trees/c6f44f880a8d4789fcf5e7c307815cc2e5c9c347"
+      },
+      "url": "https://api.github.com/repos/nodejs/node/git/commits/7057c3f16cee53fbba8b2e1d29fd73db5ed658d4",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\niJMEABYKADsWIQRb6KP2yKXAHRBsCtggsaOQsWjTVgUCajLQwh0cZHVoYW1lbGFu\ndG9pbmUxOTk1QGdtYWlsLmNvbQAKCRAgsaOQsWjTVj9ZAQCHnN/1KZg00PU5MAfK\nUpiVsUyTQ8DWlNYb1G+8HRZAzgD6A3DRiGK5ZGRg4+WxnBNCGBZCfFjwSTFJYh6M\n72d9rQY=\n=SmA5\n-----END PGP SIGNATURE-----",
+        "payload": "tree c6f44f880a8d4789fcf5e7c307815cc2e5c9c347\nparent d1be6304159277028c35c997d44d6a7c4229ed69\nauthor RafaelGSS <rafael.nunu@hotmail.com> 1778535879 -0300\ncommitter Antoine du Hamel <duhamelantoine1995@gmail.com> 1781715137 +0200\n\npermission: disable FileHandle utimes with permission model\n\nPR-URL: https://github.com/nodejs-private/node-private/pull/873\nReviewed-By: Antoine du Hamel <duhamelantoine1995@gmail.com>\nCVE-ID: CVE-2026-48935\nRefs: https://hackerone.com/reports/3625987\n",
+        "verified_at": "2026-06-18T04:27:31Z"
+      }
+    },
+    "url": "https://api.github.com/repos/nodejs/node/commits/7057c3f16cee53fbba8b2e1d29fd73db5ed658d4",
+    "html_url": "https://github.com/nodejs/node/commit/7057c3f16cee53fbba8b2e1d29fd73db5ed658d4",
+    "comments_url": "https://api.github.com/repos/nodejs/node/commits/7057c3f16cee53fbba8b2e1d29fd73db5ed658d4/comments",
+    "author": {
+      "login": "RafaelGSS",
+      "id": 26234614,
+      "node_id": "MDQ6VXNlcjI2MjM0NjE0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/26234614?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/RafaelGSS",
+      "html_url": "https://github.com/RafaelGSS",
+      "followers_url": "https://api.github.com/users/RafaelGSS/followers",
+      "following_url": "https://api.github.com/users/RafaelGSS/following{/other_user}",
+      "gists_url": "https://api.github.com/users/RafaelGSS/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/RafaelGSS/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/RafaelGSS/subscriptions",
+      "organizations_url": "https://api.github.com/users/RafaelGSS/orgs",
+      "repos_url": "https://api.github.com/users/RafaelGSS/repos",
+      "events_url": "https://api.github.com/users/RafaelGSS/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/RafaelGSS/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "aduh95",
+      "id": 14309773,
+      "node_id": "MDQ6VXNlcjE0MzA5Nzcz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14309773?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aduh95",
+      "html_url": "https://github.com/aduh95",
+      "followers_url": "https://api.github.com/users/aduh95/followers",
+      "following_url": "https://api.github.com/users/aduh95/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aduh95/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aduh95/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aduh95/subscriptions",
+      "organizations_url": "https://api.github.com/users/aduh95/orgs",
+      "repos_url": "https://api.github.com/users/aduh95/repos",
+      "events_url": "https://api.github.com/users/aduh95/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aduh95/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "d1be6304159277028c35c997d44d6a7c4229ed69",
+        "url": "https://api.github.com/repos/nodejs/node/commits/d1be6304159277028c35c997d44d6a7c4229ed69",
+        "html_url": "https://github.com/nodejs/node/commit/d1be6304159277028c35c997d44d6a7c4229ed69"
+      }
+    ]
+  },
+  {
+    "sha": "a67dd468913bba8cfcf94110339e9f6537f65ca6",
+    "node_id": "C_kwDOAZ7xs9oAKGE2N2RkNDY4OTEzYmJhOGNmY2Y5NDExMDMzOWU5ZjY1MzdmNjVjYTY",
+    "commit": {
+      "author": {
+        "name": "RafaelGSS",
+        "email": "rafael.nunu@hotmail.com",
+        "date": "2026-06-01T19:48:39Z"
+      },
+      "committer": {
+        "name": "Antoine du Hamel",
+        "email": "duhamelantoine1995@gmail.com",
+        "date": "2026-06-17T16:52:19Z"
+      },
+      "message": "permission: guard pipe open and chmod with net scope\n\nSigned-off-by: RafaelGSS <rafael.nunu@hotmail.com>\nPR-URL: https://github.com/nodejs-private/node-private/pull/885\nReviewed-By: Antoine du Hamel <duhamelantoine1995@gmail.com>\nCVE-ID: CVE-2026-48936\nRefs: https://hackerone.com/reports/3618831",
+      "tree": {
+        "sha": "dc838fbc213e61a3a61698ff0e7bb289cc066888",
+        "url": "https://api.github.com/repos/nodejs/node/git/trees/dc838fbc213e61a3a61698ff0e7bb289cc066888"
+      },
+      "url": "https://api.github.com/repos/nodejs/node/git/commits/a67dd468913bba8cfcf94110339e9f6537f65ca6",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\niJMEABYKADsWIQRb6KP2yKXAHRBsCtggsaOQsWjTVgUCajLQxB0cZHVoYW1lbGFu\ndG9pbmUxOTk1QGdtYWlsLmNvbQAKCRAgsaOQsWjTVoiZAQCMAXbAb2lj8Z9ab6VV\ne+fYrtNrB/d7ylySXdFFCEbskAD8D1VvBJksfXHMhTbV6kvFE6VWqmv4dHWxQMbY\nGvb9Ww4=\n=ud0q\n-----END PGP SIGNATURE-----",
+        "payload": "tree dc838fbc213e61a3a61698ff0e7bb289cc066888\nparent 7057c3f16cee53fbba8b2e1d29fd73db5ed658d4\nauthor RafaelGSS <rafael.nunu@hotmail.com> 1780343319 -0300\ncommitter Antoine du Hamel <duhamelantoine1995@gmail.com> 1781715139 +0200\n\npermission: guard pipe open and chmod with net scope\n\nSigned-off-by: RafaelGSS <rafael.nunu@hotmail.com>\nPR-URL: https://github.com/nodejs-private/node-private/pull/885\nReviewed-By: Antoine du Hamel <duhamelantoine1995@gmail.com>\nCVE-ID: CVE-2026-48936\nRefs: https://hackerone.com/reports/3618831\n",
+        "verified_at": "2026-06-18T04:27:31Z"
+      }
+    },
+    "url": "https://api.github.com/repos/nodejs/node/commits/a67dd468913bba8cfcf94110339e9f6537f65ca6",
+    "html_url": "https://github.com/nodejs/node/commit/a67dd468913bba8cfcf94110339e9f6537f65ca6",
+    "comments_url": "https://api.github.com/repos/nodejs/node/commits/a67dd468913bba8cfcf94110339e9f6537f65ca6/comments",
+    "author": {
+      "login": "RafaelGSS",
+      "id": 26234614,
+      "node_id": "MDQ6VXNlcjI2MjM0NjE0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/26234614?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/RafaelGSS",
+      "html_url": "https://github.com/RafaelGSS",
+      "followers_url": "https://api.github.com/users/RafaelGSS/followers",
+      "following_url": "https://api.github.com/users/RafaelGSS/following{/other_user}",
+      "gists_url": "https://api.github.com/users/RafaelGSS/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/RafaelGSS/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/RafaelGSS/subscriptions",
+      "organizations_url": "https://api.github.com/users/RafaelGSS/orgs",
+      "repos_url": "https://api.github.com/users/RafaelGSS/repos",
+      "events_url": "https://api.github.com/users/RafaelGSS/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/RafaelGSS/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "aduh95",
+      "id": 14309773,
+      "node_id": "MDQ6VXNlcjE0MzA5Nzcz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14309773?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aduh95",
+      "html_url": "https://github.com/aduh95",
+      "followers_url": "https://api.github.com/users/aduh95/followers",
+      "following_url": "https://api.github.com/users/aduh95/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aduh95/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aduh95/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aduh95/subscriptions",
+      "organizations_url": "https://api.github.com/users/aduh95/orgs",
+      "repos_url": "https://api.github.com/users/aduh95/repos",
+      "events_url": "https://api.github.com/users/aduh95/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aduh95/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "7057c3f16cee53fbba8b2e1d29fd73db5ed658d4",
+        "url": "https://api.github.com/repos/nodejs/node/commits/7057c3f16cee53fbba8b2e1d29fd73db5ed658d4",
+        "html_url": "https://github.com/nodejs/node/commit/7057c3f16cee53fbba8b2e1d29fd73db5ed658d4"
+      }
+    ]
+  },
+  {
+    "sha": "bc0b53813e7e849c5aeaefeeaa5b9fc0c6289ee8",
+    "node_id": "C_kwDOAZ7xs9oAKGJjMGI1MzgxM2U3ZTg0OWM1YWVhZWZlZWFhNWI5ZmMwYzYyODllZTg",
+    "commit": {
+      "author": {
+        "name": "Matteo Collina",
+        "email": "hello@matteocollina.com",
+        "date": "2026-03-29T15:42:54Z"
+      },
+      "committer": {
+        "name": "Antoine du Hamel",
+        "email": "duhamelantoine1995@gmail.com",
+        "date": "2026-06-17T16:52:20Z"
+      },
+      "message": "http: fix response queue poisoning in http.Agent\n\nAttach a data guard listener on idle keepAlive sockets in the\nfreeSockets pool. If unsolicited data arrives while the socket\nis idle, destroy it immediately to prevent response queue poisoning.\n\nRefs: https://hackerone.com/reports/3582376\nPR-URL: https://github.com/nodejs-private/node-private/pull/846\nReviewed-By: Antoine du Hamel <duhamelantoine1995@gmail.com>\nCVE-ID: CVE-2026-48931",
+      "tree": {
+        "sha": "488a80445643396c88e462f55edc3e4053df1878",
+        "url": "https://api.github.com/repos/nodejs/node/git/trees/488a80445643396c88e462f55edc3e4053df1878"
+      },
+      "url": "https://api.github.com/repos/nodejs/node/git/commits/bc0b53813e7e849c5aeaefeeaa5b9fc0c6289ee8",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\niJMEABYKADsWIQRb6KP2yKXAHRBsCtggsaOQsWjTVgUCajLQxx0cZHVoYW1lbGFu\ndG9pbmUxOTk1QGdtYWlsLmNvbQAKCRAgsaOQsWjTViUhAPsGZOk7AA66S5tHvdd2\nem3S4uu5XHmJd2dJKfaGACLQTwD9GcgTK59WbuMYdCIze7mFFM4fuBKVP6j0UOIM\nte70awE=\n=N+cf\n-----END PGP SIGNATURE-----",
+        "payload": "tree 488a80445643396c88e462f55edc3e4053df1878\nparent a67dd468913bba8cfcf94110339e9f6537f65ca6\nauthor Matteo Collina <hello@matteocollina.com> 1774798974 +0200\ncommitter Antoine du Hamel <duhamelantoine1995@gmail.com> 1781715140 +0200\n\nhttp: fix response queue poisoning in http.Agent\n\nAttach a data guard listener on idle keepAlive sockets in the\nfreeSockets pool. If unsolicited data arrives while the socket\nis idle, destroy it immediately to prevent response queue poisoning.\n\nRefs: https://hackerone.com/reports/3582376\nPR-URL: https://github.com/nodejs-private/node-private/pull/846\nReviewed-By: Antoine du Hamel <duhamelantoine1995@gmail.com>\nCVE-ID: CVE-2026-48931\n",
+        "verified_at": "2026-06-18T04:27:31Z"
+      }
+    },
+    "url": "https://api.github.com/repos/nodejs/node/commits/bc0b53813e7e849c5aeaefeeaa5b9fc0c6289ee8",
+    "html_url": "https://github.com/nodejs/node/commit/bc0b53813e7e849c5aeaefeeaa5b9fc0c6289ee8",
+    "comments_url": "https://api.github.com/repos/nodejs/node/commits/bc0b53813e7e849c5aeaefeeaa5b9fc0c6289ee8/comments",
+    "author": {
+      "login": "mcollina",
+      "id": 52195,
+      "node_id": "MDQ6VXNlcjUyMTk1",
+      "avatar_url": "https://avatars.githubusercontent.com/u/52195?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/mcollina",
+      "html_url": "https://github.com/mcollina",
+      "followers_url": "https://api.github.com/users/mcollina/followers",
+      "following_url": "https://api.github.com/users/mcollina/following{/other_user}",
+      "gists_url": "https://api.github.com/users/mcollina/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/mcollina/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/mcollina/subscriptions",
+      "organizations_url": "https://api.github.com/users/mcollina/orgs",
+      "repos_url": "https://api.github.com/users/mcollina/repos",
+      "events_url": "https://api.github.com/users/mcollina/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/mcollina/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "aduh95",
+      "id": 14309773,
+      "node_id": "MDQ6VXNlcjE0MzA5Nzcz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14309773?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aduh95",
+      "html_url": "https://github.com/aduh95",
+      "followers_url": "https://api.github.com/users/aduh95/followers",
+      "following_url": "https://api.github.com/users/aduh95/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aduh95/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aduh95/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aduh95/subscriptions",
+      "organizations_url": "https://api.github.com/users/aduh95/orgs",
+      "repos_url": "https://api.github.com/users/aduh95/repos",
+      "events_url": "https://api.github.com/users/aduh95/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aduh95/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "a67dd468913bba8cfcf94110339e9f6537f65ca6",
+        "url": "https://api.github.com/repos/nodejs/node/commits/a67dd468913bba8cfcf94110339e9f6537f65ca6",
+        "html_url": "https://github.com/nodejs/node/commit/a67dd468913bba8cfcf94110339e9f6537f65ca6"
+      }
+    ]
+  },
+  {
+    "sha": "98fbc892119d10ff9b385d35e6ff6e0f6fcc6eff",
+    "node_id": "C_kwDOAZ7xs9oAKDk4ZmJjODkyMTE5ZDEwZmY5YjM4NWQzNWU2ZmY2ZTBmNmZjYzZlZmY",
+    "commit": {
+      "author": {
+        "name": "Filip Skokan",
+        "email": "panva.ip@gmail.com",
+        "date": "2026-05-25T09:09:31Z"
+      },
+      "committer": {
+        "name": "Antoine du Hamel",
+        "email": "duhamelantoine1995@gmail.com",
+        "date": "2026-06-17T16:52:23Z"
+      },
+      "message": "crypto: guard WebCrypto cipher output length\n\nReject WebCrypto cipher operations whose computed output length would\nexceed INT_MAX before passing the length to OpenSSL.\n\nThis avoids signed overflow in the AES and ChaCha20-Poly1305 one-shot\ncipher paths and turns oversized inputs into a clean operation failure.\n\nRefs: https://hackerone.com/reports/3760016\nSigned-off-by: Filip Skokan <panva.ip@gmail.com>\nPR-URL: https://github.com/nodejs-private/node-private/pull/878\nReviewed-By: Antoine du Hamel <duhamelantoine1995@gmail.com>\nCVE-ID: CVE-2026-48933",
+      "tree": {
+        "sha": "14ceb56ff530bd195d4129906ed2cd66c94dde85",
+        "url": "https://api.github.com/repos/nodejs/node/git/trees/14ceb56ff530bd195d4129906ed2cd66c94dde85"
+      },
+      "url": "https://api.github.com/repos/nodejs/node/git/commits/98fbc892119d10ff9b385d35e6ff6e0f6fcc6eff",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\niJIEABYKADsWIQRb6KP2yKXAHRBsCtggsaOQsWjTVgUCajLQyh0cZHVoYW1lbGFu\ndG9pbmUxOTk1QGdtYWlsLmNvbQAKCRAgsaOQsWjTVsy7APjjZjl78LFBbPBb9HYc\n7DJR2xYgL6W9fzcVlviJFm6XAQC/iM0P7t8goOXf7LcZMWwEJ3ktwulhcvcz/Qoa\naQvBAA==\n=IHL0\n-----END PGP SIGNATURE-----",
+        "payload": "tree 14ceb56ff530bd195d4129906ed2cd66c94dde85\nparent bc0b53813e7e849c5aeaefeeaa5b9fc0c6289ee8\nauthor Filip Skokan <panva.ip@gmail.com> 1779700171 +0200\ncommitter Antoine du Hamel <duhamelantoine1995@gmail.com> 1781715143 +0200\n\ncrypto: guard WebCrypto cipher output length\n\nReject WebCrypto cipher operations whose computed output length would\nexceed INT_MAX before passing the length to OpenSSL.\n\nThis avoids signed overflow in the AES and ChaCha20-Poly1305 one-shot\ncipher paths and turns oversized inputs into a clean operation failure.\n\nRefs: https://hackerone.com/reports/3760016\nSigned-off-by: Filip Skokan <panva.ip@gmail.com>\nPR-URL: https://github.com/nodejs-private/node-private/pull/878\nReviewed-By: Antoine du Hamel <duhamelantoine1995@gmail.com>\nCVE-ID: CVE-2026-48933\n",
+        "verified_at": "2026-06-18T04:27:31Z"
+      }
+    },
+    "url": "https://api.github.com/repos/nodejs/node/commits/98fbc892119d10ff9b385d35e6ff6e0f6fcc6eff",
+    "html_url": "https://github.com/nodejs/node/commit/98fbc892119d10ff9b385d35e6ff6e0f6fcc6eff",
+    "comments_url": "https://api.github.com/repos/nodejs/node/commits/98fbc892119d10ff9b385d35e6ff6e0f6fcc6eff/comments",
+    "author": {
+      "login": "panva",
+      "id": 241506,
+      "node_id": "MDQ6VXNlcjI0MTUwNg==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/241506?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/panva",
+      "html_url": "https://github.com/panva",
+      "followers_url": "https://api.github.com/users/panva/followers",
+      "following_url": "https://api.github.com/users/panva/following{/other_user}",
+      "gists_url": "https://api.github.com/users/panva/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/panva/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/panva/subscriptions",
+      "organizations_url": "https://api.github.com/users/panva/orgs",
+      "repos_url": "https://api.github.com/users/panva/repos",
+      "events_url": "https://api.github.com/users/panva/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/panva/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "aduh95",
+      "id": 14309773,
+      "node_id": "MDQ6VXNlcjE0MzA5Nzcz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14309773?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aduh95",
+      "html_url": "https://github.com/aduh95",
+      "followers_url": "https://api.github.com/users/aduh95/followers",
+      "following_url": "https://api.github.com/users/aduh95/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aduh95/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aduh95/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aduh95/subscriptions",
+      "organizations_url": "https://api.github.com/users/aduh95/orgs",
+      "repos_url": "https://api.github.com/users/aduh95/repos",
+      "events_url": "https://api.github.com/users/aduh95/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aduh95/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "bc0b53813e7e849c5aeaefeeaa5b9fc0c6289ee8",
+        "url": "https://api.github.com/repos/nodejs/node/commits/bc0b53813e7e849c5aeaefeeaa5b9fc0c6289ee8",
+        "html_url": "https://github.com/nodejs/node/commit/bc0b53813e7e849c5aeaefeeaa5b9fc0c6289ee8"
+      }
+    ]
+  },
+  {
+    "sha": "c8d3916cee1a3b93e0b200209aaffc2c61e954a7",
+    "node_id": "C_kwDOAZ7xs9oAKGM4ZDM5MTZjZWUxYTNiOTNlMGIyMDAyMDlhYWZmYzJjNjFlOTU0YTc",
+    "commit": {
+      "author": {
+        "name": "Antoine du Hamel",
+        "email": "duhamelantoine1995@gmail.com",
+        "date": "2026-06-17T17:01:37Z"
+      },
+      "committer": {
+        "name": "Antoine du Hamel",
+        "email": "duhamelantoine1995@gmail.com",
+        "date": "2026-06-17T17:15:41Z"
+      },
+      "message": "2026-06-18, Version 26.3.1 (Current)\n\nThis is a security release.\n\nNotable changes:\n\n* (CVE-2026-48618) tls: normalize hostname for server identity checks (Matteo Collina) \u2013 High\n* (CVE-2026-48933) crypto: guard WebCrypto cipher output length (Filip Skokan) \u2013 High\n* (CVE-2026-48615) lib,test: redact proxy credentials in tunnel errors (Matteo Collina) \u2013 Medium\n* (CVE-2026-48619) http2: cap originSet size to prevent unbounded memory growth (Matteo Collina) \u2013 Medium\n* (CVE-2026-48928) tls: fix case-sensitive SNI context matching (Matteo Collina) \u2013 Medium\n* (CVE-2026-48930) dns,net: reject hostnames with embedded NUL bytes (Matteo Collina) \u2013 Medium\n* (CVE-2026-48934) tls: bind reusable sessions to authenticated host (Matteo Collina) \u2013 Medium\n* (CVE-2026-48617) permission: handle process.chdir on writereport (RafaelGSS) \u2013 Low\n* (CVE-2026-48931) http: fix response queue poisoning in http.Agent (Matteo Collina) \u2013 Low\n* (CVE-2026-48935) permission: disable FileHandle utimes with permission model (RafaelGSS) \u2013 Low\n* (CVE-2026-48936) permission: guard pipe open and chmod with net scope (RafaelGSS) \u2013 Low\n\nPR-URL: https://github.com/nodejs-private/node-private/pull/897",
+      "tree": {
+        "sha": "408d35ee971eb28dcdd3efd249a78d17368b0fc6",
+        "url": "https://api.github.com/repos/nodejs/node/git/trees/408d35ee971eb28dcdd3efd249a78d17368b0fc6"
+      },
+      "url": "https://api.github.com/repos/nodejs/node/git/commits/c8d3916cee1a3b93e0b200209aaffc2c61e954a7",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\niJMEABYKADsWIQRb6KP2yKXAHRBsCtggsaOQsWjTVgUCajLWRB0cZHVoYW1lbGFu\ndG9pbmUxOTk1QGdtYWlsLmNvbQAKCRAgsaOQsWjTVpEPAQCjhxdxNIMsE5xNn8hj\nCc3i54xIK0Cb7tVuC2MjYZPxxQD/eTkywBL/kEKsdRYFmUw1bg7Mm/nlkeqt9Gr6\ns2LQZwY=\n=1QSo\n-----END PGP SIGNATURE-----",
+        "payload": "tree 408d35ee971eb28dcdd3efd249a78d17368b0fc6\nparent 98fbc892119d10ff9b385d35e6ff6e0f6fcc6eff\nauthor Antoine du Hamel <duhamelantoine1995@gmail.com> 1781715697 +0200\ncommitter Antoine du Hamel <duhamelantoine1995@gmail.com> 1781716541 +0200\n\n2026-06-18, Version 26.3.1 (Current)\n\nThis is a security release.\n\nNotable changes:\n\n* (CVE-2026-48618) tls: normalize hostname for server identity checks (Matteo Collina) \u2013 High\n* (CVE-2026-48933) crypto: guard WebCrypto cipher output length (Filip Skokan) \u2013 High\n* (CVE-2026-48615) lib,test: redact proxy credentials in tunnel errors (Matteo Collina) \u2013 Medium\n* (CVE-2026-48619) http2: cap originSet size to prevent unbounded memory growth (Matteo Collina) \u2013 Medium\n* (CVE-2026-48928) tls: fix case-sensitive SNI context matching (Matteo Collina) \u2013 Medium\n* (CVE-2026-48930) dns,net: reject hostnames with embedded NUL bytes (Matteo Collina) \u2013 Medium\n* (CVE-2026-48934) tls: bind reusable sessions to authenticated host (Matteo Collina) \u2013 Medium\n* (CVE-2026-48617) permission: handle process.chdir on writereport (RafaelGSS) \u2013 Low\n* (CVE-2026-48931) http: fix response queue poisoning in http.Agent (Matteo Collina) \u2013 Low\n* (CVE-2026-48935) permission: disable FileHandle utimes with permission model (RafaelGSS) \u2013 Low\n* (CVE-2026-48936) permission: guard pipe open and chmod with net scope (RafaelGSS) \u2013 Low\n\nPR-URL: https://github.com/nodejs-private/node-private/pull/897\n",
+        "verified_at": "2026-06-18T04:27:31Z"
+      }
+    },
+    "url": "https://api.github.com/repos/nodejs/node/commits/c8d3916cee1a3b93e0b200209aaffc2c61e954a7",
+    "html_url": "https://github.com/nodejs/node/commit/c8d3916cee1a3b93e0b200209aaffc2c61e954a7",
+    "comments_url": "https://api.github.com/repos/nodejs/node/commits/c8d3916cee1a3b93e0b200209aaffc2c61e954a7/comments",
+    "author": {
+      "login": "aduh95",
+      "id": 14309773,
+      "node_id": "MDQ6VXNlcjE0MzA5Nzcz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14309773?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aduh95",
+      "html_url": "https://github.com/aduh95",
+      "followers_url": "https://api.github.com/users/aduh95/followers",
+      "following_url": "https://api.github.com/users/aduh95/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aduh95/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aduh95/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aduh95/subscriptions",
+      "organizations_url": "https://api.github.com/users/aduh95/orgs",
+      "repos_url": "https://api.github.com/users/aduh95/repos",
+      "events_url": "https://api.github.com/users/aduh95/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aduh95/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "aduh95",
+      "id": 14309773,
+      "node_id": "MDQ6VXNlcjE0MzA5Nzcz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14309773?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aduh95",
+      "html_url": "https://github.com/aduh95",
+      "followers_url": "https://api.github.com/users/aduh95/followers",
+      "following_url": "https://api.github.com/users/aduh95/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aduh95/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aduh95/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aduh95/subscriptions",
+      "organizations_url": "https://api.github.com/users/aduh95/orgs",
+      "repos_url": "https://api.github.com/users/aduh95/repos",
+      "events_url": "https://api.github.com/users/aduh95/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aduh95/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "98fbc892119d10ff9b385d35e6ff6e0f6fcc6eff",
+        "url": "https://api.github.com/repos/nodejs/node/commits/98fbc892119d10ff9b385d35e6ff6e0f6fcc6eff",
+        "html_url": "https://github.com/nodejs/node/commit/98fbc892119d10ff9b385d35e6ff6e0f6fcc6eff"
+      }
+    ]
+  }
+]

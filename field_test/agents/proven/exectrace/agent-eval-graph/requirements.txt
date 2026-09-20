@@ -1,0 +1,5 @@
+# Core
+langgraph>=1.0
+
+# Optional: only needed for the real Claude judge (EVAL_GRAPH_REAL=1)
+anthropic>=0.40

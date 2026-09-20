@@ -1,0 +1,2057 @@
+[
+  {
+    "sha": "dc4b7a9347bc2a26e93ceb24095d05302ef049b8",
+    "node_id": "C_kwDOAQ6CpNoAKGRjNGI3YTkzNDdiYzJhMjZlOTNjZWIyNDA5NWQwNTMwMmVmMDQ5Yjg",
+    "commit": {
+      "author": {
+        "name": "Sarah French",
+        "email": "sarah.french@hashicorp.com",
+        "date": "2026-06-19T14:11:59Z"
+      },
+      "committer": {
+        "name": "Sarah French",
+        "email": "15078782+SarahFrench@users.noreply.github.com",
+        "date": "2026-06-26T10:02:39Z"
+      },
+      "message": "refactor: Pull reusable logic out of (Meta) lockedDependencies method into new readLockedDependenciesFromPath method.\n\nThe reusable logic includes managing locks annotation, which could be missed if a command implementation used `depsfile.LoadLocksFromFile` directly.\n\nAlso, refactor to remove an instance of constant string for `\".terraform.lock.hcl\"`. Instead reference a const from `depsfile` instead, which should be the authoritative place this filename comes from.",
+      "tree": {
+        "sha": "31026458950a5ea0cdafd34738bf97bae4a6f1b3",
+        "url": "https://api.github.com/repos/hashicorp/terraform/git/trees/31026458950a5ea0cdafd34738bf97bae4a6f1b3"
+      },
+      "url": "https://api.github.com/repos/hashicorp/terraform/git/commits/dc4b7a9347bc2a26e93ceb24095d05302ef049b8",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/hashicorp/terraform/commits/dc4b7a9347bc2a26e93ceb24095d05302ef049b8",
+    "html_url": "https://github.com/hashicorp/terraform/commit/dc4b7a9347bc2a26e93ceb24095d05302ef049b8",
+    "comments_url": "https://api.github.com/repos/hashicorp/terraform/commits/dc4b7a9347bc2a26e93ceb24095d05302ef049b8/comments",
+    "author": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "03908e722aef6a14e32d1d2b66fd2388b5603f6f",
+        "url": "https://api.github.com/repos/hashicorp/terraform/commits/03908e722aef6a14e32d1d2b66fd2388b5603f6f",
+        "html_url": "https://github.com/hashicorp/terraform/commit/03908e722aef6a14e32d1d2b66fd2388b5603f6f"
+      }
+    ]
+  },
+  {
+    "sha": "10a563cc9da34b943db23d626ceec4fc2d41362e",
+    "node_id": "C_kwDOAQ6CpNoAKDEwYTU2M2NjOWRhMzRiOTQzZGIyM2Q2MjZjZWVjNGZjMmQ0MTM2MmU",
+    "commit": {
+      "author": {
+        "name": "Sarah French",
+        "email": "sarah.french@hashicorp.com",
+        "date": "2026-06-19T17:02:14Z"
+      },
+      "committer": {
+        "name": "Sarah French",
+        "email": "15078782+SarahFrench@users.noreply.github.com",
+        "date": "2026-06-26T10:02:39Z"
+      },
+      "message": "feat: Add provider download to state migrate command, including updating the dependency lock file post-migration.\n\nThis change updates `state migrate` to be able to download providers and, depending on the situation, update the dependency lock file.\n\nIf a state migration involves 1 or more state stores then the provider implementing those stores may need to be downloaded. There are situations where 0, 1, or 2 providers may need to be downloaded:\n- 0 : The 1 or 2 providers used for source and destination state stores are in the dep lock file already.\n- 1 : Either the provider used for both source and destination isn't downloaded (or there's no dep lock file), or one of the source or destination providers isn't present.\n- 2 : Neither of the source and destination state stores' providers are present in the dependency lock file.\n\nThe provider used for the destination state store **must** be in the dep lock file after a successful migration. If the migration fails then the lock file will be untouched, but if it succeeds then the destination provider will either be added to or upgraded in the dependency lock file. Note: upgrade is not yet implemented, and will be a separate PR.\n\nThe process of updating the dependency lock file will never remove a provider. If the provider used for the source state store is present in the lock file but isn't present in the configuration (i.e. it was removed from required_providers when the config was changed to describe the new location for storing state) then its removal from the lock file will happen in a subsequent init command. This is because the `state migrate` command does not load the full configuration, only the root module, so it doesn't know about the configuration's full provider requirements. And that's not considering the state's provider requirements. Basically, `state migrate` does not manage the complete dependency lock file, but instead manages a single entry inside it.",
+      "tree": {
+        "sha": "69da26201cf67181f752923f9d58798ae3b7a510",
+        "url": "https://api.github.com/repos/hashicorp/terraform/git/trees/69da26201cf67181f752923f9d58798ae3b7a510"
+      },
+      "url": "https://api.github.com/repos/hashicorp/terraform/git/commits/10a563cc9da34b943db23d626ceec4fc2d41362e",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/hashicorp/terraform/commits/10a563cc9da34b943db23d626ceec4fc2d41362e",
+    "html_url": "https://github.com/hashicorp/terraform/commit/10a563cc9da34b943db23d626ceec4fc2d41362e",
+    "comments_url": "https://api.github.com/repos/hashicorp/terraform/commits/10a563cc9da34b943db23d626ceec4fc2d41362e/comments",
+    "author": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "dc4b7a9347bc2a26e93ceb24095d05302ef049b8",
+        "url": "https://api.github.com/repos/hashicorp/terraform/commits/dc4b7a9347bc2a26e93ceb24095d05302ef049b8",
+        "html_url": "https://github.com/hashicorp/terraform/commit/dc4b7a9347bc2a26e93ceb24095d05302ef049b8"
+      }
+    ]
+  },
+  {
+    "sha": "480d2555d1ad5e042cad0151fecfa69b5175aabd",
+    "node_id": "C_kwDOAQ6CpNoAKDQ4MGQyNTU1ZDFhZDVlMDQyY2FkMDE1MWZlY2ZhNjliNTE3NWFhYmQ",
+    "commit": {
+      "author": {
+        "name": "Sarah French",
+        "email": "sarah.french@hashicorp.com",
+        "date": "2026-06-24T16:46:39Z"
+      },
+      "committer": {
+        "name": "Sarah French",
+        "email": "15078782+SarahFrench@users.noreply.github.com",
+        "date": "2026-06-26T10:02:39Z"
+      },
+      "message": "fix: Stop a provider being downloaded twice if it's not in the dep lock file and is used in both the source and destination",
+      "tree": {
+        "sha": "ecb5706065f8719b71a336e1dcb2a83266bd4e13",
+        "url": "https://api.github.com/repos/hashicorp/terraform/git/trees/ecb5706065f8719b71a336e1dcb2a83266bd4e13"
+      },
+      "url": "https://api.github.com/repos/hashicorp/terraform/git/commits/480d2555d1ad5e042cad0151fecfa69b5175aabd",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/hashicorp/terraform/commits/480d2555d1ad5e042cad0151fecfa69b5175aabd",
+    "html_url": "https://github.com/hashicorp/terraform/commit/480d2555d1ad5e042cad0151fecfa69b5175aabd",
+    "comments_url": "https://api.github.com/repos/hashicorp/terraform/commits/480d2555d1ad5e042cad0151fecfa69b5175aabd/comments",
+    "author": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "10a563cc9da34b943db23d626ceec4fc2d41362e",
+        "url": "https://api.github.com/repos/hashicorp/terraform/commits/10a563cc9da34b943db23d626ceec4fc2d41362e",
+        "html_url": "https://github.com/hashicorp/terraform/commit/10a563cc9da34b943db23d626ceec4fc2d41362e"
+      }
+    ]
+  },
+  {
+    "sha": "1905f5dec3d1a06956880d8d2fbd6212493cfdc6",
+    "node_id": "C_kwDOAQ6CpNoAKDE5MDVmNWRlYzNkMWEwNjk1Njg4MGQ4ZDJmYmQ2MjEyNDkzY2ZkYzY",
+    "commit": {
+      "author": {
+        "name": "Sarah French",
+        "email": "sarah.french@hashicorp.com",
+        "date": "2026-06-24T16:47:01Z"
+      },
+      "committer": {
+        "name": "Sarah French",
+        "email": "15078782+SarahFrench@users.noreply.github.com",
+        "date": "2026-06-26T10:02:39Z"
+      },
+      "message": "test: Add tests showing migration between stores implemented in different providers\n\nThis includes scenarios where different providers are already in the lock file or not. Regardless of the starting conditions the command will download and use the necessary providers. The lock file will have the destination provider added or updated, but otherwise the file will be unchanged.",
+      "tree": {
+        "sha": "8bc49adc5875e6e020b6a3503157ab10252a71bd",
+        "url": "https://api.github.com/repos/hashicorp/terraform/git/trees/8bc49adc5875e6e020b6a3503157ab10252a71bd"
+      },
+      "url": "https://api.github.com/repos/hashicorp/terraform/git/commits/1905f5dec3d1a06956880d8d2fbd6212493cfdc6",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/hashicorp/terraform/commits/1905f5dec3d1a06956880d8d2fbd6212493cfdc6",
+    "html_url": "https://github.com/hashicorp/terraform/commit/1905f5dec3d1a06956880d8d2fbd6212493cfdc6",
+    "comments_url": "https://api.github.com/repos/hashicorp/terraform/commits/1905f5dec3d1a06956880d8d2fbd6212493cfdc6/comments",
+    "author": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "480d2555d1ad5e042cad0151fecfa69b5175aabd",
+        "url": "https://api.github.com/repos/hashicorp/terraform/commits/480d2555d1ad5e042cad0151fecfa69b5175aabd",
+        "html_url": "https://github.com/hashicorp/terraform/commit/480d2555d1ad5e042cad0151fecfa69b5175aabd"
+      }
+    ]
+  },
+  {
+    "sha": "893dddd901ce44e1bd090ed314e5432f7730cd07",
+    "node_id": "C_kwDOAQ6CpNoAKDg5M2RkZGQ5MDFjZTQ0ZTFiZDA5MGVkMzE0ZTU0MzJmNzczMGNkMDc",
+    "commit": {
+      "author": {
+        "name": "Sarah French",
+        "email": "sarah.french@hashicorp.com",
+        "date": "2026-06-25T11:32:21Z"
+      },
+      "committer": {
+        "name": "Sarah French",
+        "email": "15078782+SarahFrench@users.noreply.github.com",
+        "date": "2026-06-26T10:02:39Z"
+      },
+      "message": "chore: Remove outdated code comment\n\nThe `DIR` positional arguments have all been removed from the codebase in favour of the -chdir flag. Anyone attempting to use `DIR` will get an error reporting an unexpected positional argument and guidance to use -chdir instead.",
+      "tree": {
+        "sha": "2cfc4eb22fe72c7f97c4e2e77f51b58e8770eb5a",
+        "url": "https://api.github.com/repos/hashicorp/terraform/git/trees/2cfc4eb22fe72c7f97c4e2e77f51b58e8770eb5a"
+      },
+      "url": "https://api.github.com/repos/hashicorp/terraform/git/commits/893dddd901ce44e1bd090ed314e5432f7730cd07",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/hashicorp/terraform/commits/893dddd901ce44e1bd090ed314e5432f7730cd07",
+    "html_url": "https://github.com/hashicorp/terraform/commit/893dddd901ce44e1bd090ed314e5432f7730cd07",
+    "comments_url": "https://api.github.com/repos/hashicorp/terraform/commits/893dddd901ce44e1bd090ed314e5432f7730cd07/comments",
+    "author": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "1905f5dec3d1a06956880d8d2fbd6212493cfdc6",
+        "url": "https://api.github.com/repos/hashicorp/terraform/commits/1905f5dec3d1a06956880d8d2fbd6212493cfdc6",
+        "html_url": "https://github.com/hashicorp/terraform/commit/1905f5dec3d1a06956880d8d2fbd6212493cfdc6"
+      }
+    ]
+  },
+  {
+    "sha": "8740d6903098c7acd24e10567b7a5872eba3a48f",
+    "node_id": "C_kwDOAQ6CpNoAKDg3NDBkNjkwMzA5OGM3YWNkMjRlMTA1NjdiN2E1ODcyZWJhM2E0OGY",
+    "commit": {
+      "author": {
+        "name": "James Bardin",
+        "email": "j.bardin@gmail.com",
+        "date": "2026-06-26T17:02:52Z"
+      },
+      "committer": {
+        "name": "James Bardin",
+        "email": "j.bardin@gmail.com",
+        "date": "2026-06-26T17:02:52Z"
+      },
+      "message": "update to go-cty@1.18.1",
+      "tree": {
+        "sha": "451770421a884373436b097dfea7a2467d223f99",
+        "url": "https://api.github.com/repos/hashicorp/terraform/git/trees/451770421a884373436b097dfea7a2467d223f99"
+      },
+      "url": "https://api.github.com/repos/hashicorp/terraform/git/commits/8740d6903098c7acd24e10567b7a5872eba3a48f",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/hashicorp/terraform/commits/8740d6903098c7acd24e10567b7a5872eba3a48f",
+    "html_url": "https://github.com/hashicorp/terraform/commit/8740d6903098c7acd24e10567b7a5872eba3a48f",
+    "comments_url": "https://api.github.com/repos/hashicorp/terraform/commits/8740d6903098c7acd24e10567b7a5872eba3a48f/comments",
+    "author": {
+      "login": "jbardin",
+      "id": 35067,
+      "node_id": "MDQ6VXNlcjM1MDY3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/35067?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/jbardin",
+      "html_url": "https://github.com/jbardin",
+      "followers_url": "https://api.github.com/users/jbardin/followers",
+      "following_url": "https://api.github.com/users/jbardin/following{/other_user}",
+      "gists_url": "https://api.github.com/users/jbardin/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/jbardin/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/jbardin/subscriptions",
+      "organizations_url": "https://api.github.com/users/jbardin/orgs",
+      "repos_url": "https://api.github.com/users/jbardin/repos",
+      "events_url": "https://api.github.com/users/jbardin/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/jbardin/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "jbardin",
+      "id": 35067,
+      "node_id": "MDQ6VXNlcjM1MDY3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/35067?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/jbardin",
+      "html_url": "https://github.com/jbardin",
+      "followers_url": "https://api.github.com/users/jbardin/followers",
+      "following_url": "https://api.github.com/users/jbardin/following{/other_user}",
+      "gists_url": "https://api.github.com/users/jbardin/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/jbardin/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/jbardin/subscriptions",
+      "organizations_url": "https://api.github.com/users/jbardin/orgs",
+      "repos_url": "https://api.github.com/users/jbardin/repos",
+      "events_url": "https://api.github.com/users/jbardin/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/jbardin/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "893dddd901ce44e1bd090ed314e5432f7730cd07",
+        "url": "https://api.github.com/repos/hashicorp/terraform/commits/893dddd901ce44e1bd090ed314e5432f7730cd07",
+        "html_url": "https://github.com/hashicorp/terraform/commit/893dddd901ce44e1bd090ed314e5432f7730cd07"
+      }
+    ]
+  },
+  {
+    "sha": "074032dbe3222fc166ba5dfa7fa051828ea8f93c",
+    "node_id": "C_kwDOAQ6CpNoAKDA3NDAzMmRiZTMyMjJmYzE2NmJhNWRmYTdmYTA1MTgyOGVhOGY5M2M",
+    "commit": {
+      "author": {
+        "name": "James Bardin",
+        "email": "j.bardin@gmail.com",
+        "date": "2026-06-26T17:03:14Z"
+      },
+      "committer": {
+        "name": "James Bardin",
+        "email": "j.bardin@gmail.com",
+        "date": "2026-06-26T17:03:14Z"
+      },
+      "message": "make syncdeps",
+      "tree": {
+        "sha": "00db4107eb70b4b02df13a7dd9098517acb6b4dd",
+        "url": "https://api.github.com/repos/hashicorp/terraform/git/trees/00db4107eb70b4b02df13a7dd9098517acb6b4dd"
+      },
+      "url": "https://api.github.com/repos/hashicorp/terraform/git/commits/074032dbe3222fc166ba5dfa7fa051828ea8f93c",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/hashicorp/terraform/commits/074032dbe3222fc166ba5dfa7fa051828ea8f93c",
+    "html_url": "https://github.com/hashicorp/terraform/commit/074032dbe3222fc166ba5dfa7fa051828ea8f93c",
+    "comments_url": "https://api.github.com/repos/hashicorp/terraform/commits/074032dbe3222fc166ba5dfa7fa051828ea8f93c/comments",
+    "author": {
+      "login": "jbardin",
+      "id": 35067,
+      "node_id": "MDQ6VXNlcjM1MDY3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/35067?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/jbardin",
+      "html_url": "https://github.com/jbardin",
+      "followers_url": "https://api.github.com/users/jbardin/followers",
+      "following_url": "https://api.github.com/users/jbardin/following{/other_user}",
+      "gists_url": "https://api.github.com/users/jbardin/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/jbardin/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/jbardin/subscriptions",
+      "organizations_url": "https://api.github.com/users/jbardin/orgs",
+      "repos_url": "https://api.github.com/users/jbardin/repos",
+      "events_url": "https://api.github.com/users/jbardin/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/jbardin/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "jbardin",
+      "id": 35067,
+      "node_id": "MDQ6VXNlcjM1MDY3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/35067?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/jbardin",
+      "html_url": "https://github.com/jbardin",
+      "followers_url": "https://api.github.com/users/jbardin/followers",
+      "following_url": "https://api.github.com/users/jbardin/following{/other_user}",
+      "gists_url": "https://api.github.com/users/jbardin/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/jbardin/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/jbardin/subscriptions",
+      "organizations_url": "https://api.github.com/users/jbardin/orgs",
+      "repos_url": "https://api.github.com/users/jbardin/repos",
+      "events_url": "https://api.github.com/users/jbardin/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/jbardin/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "8740d6903098c7acd24e10567b7a5872eba3a48f",
+        "url": "https://api.github.com/repos/hashicorp/terraform/commits/8740d6903098c7acd24e10567b7a5872eba3a48f",
+        "html_url": "https://github.com/hashicorp/terraform/commit/8740d6903098c7acd24e10567b7a5872eba3a48f"
+      }
+    ]
+  },
+  {
+    "sha": "7326366424af945a13c50a2b46f9068e8113817d",
+    "node_id": "C_kwDOAQ6CpNoAKDczMjYzNjY0MjRhZjk0NWExM2M1MGEyYjQ2ZjkwNjhlODExMzgxN2Q",
+    "commit": {
+      "author": {
+        "name": "James Bardin",
+        "email": "j.bardin@gmail.com",
+        "date": "2026-06-26T17:07:23Z"
+      },
+      "committer": {
+        "name": "James Bardin",
+        "email": "j.bardin@gmail.com",
+        "date": "2026-06-26T17:07:23Z"
+      },
+      "message": "CHANGELOG",
+      "tree": {
+        "sha": "4e6ab82111a590d84f28155aa122e36594e4a4f2",
+        "url": "https://api.github.com/repos/hashicorp/terraform/git/trees/4e6ab82111a590d84f28155aa122e36594e4a4f2"
+      },
+      "url": "https://api.github.com/repos/hashicorp/terraform/git/commits/7326366424af945a13c50a2b46f9068e8113817d",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/hashicorp/terraform/commits/7326366424af945a13c50a2b46f9068e8113817d",
+    "html_url": "https://github.com/hashicorp/terraform/commit/7326366424af945a13c50a2b46f9068e8113817d",
+    "comments_url": "https://api.github.com/repos/hashicorp/terraform/commits/7326366424af945a13c50a2b46f9068e8113817d/comments",
+    "author": {
+      "login": "jbardin",
+      "id": 35067,
+      "node_id": "MDQ6VXNlcjM1MDY3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/35067?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/jbardin",
+      "html_url": "https://github.com/jbardin",
+      "followers_url": "https://api.github.com/users/jbardin/followers",
+      "following_url": "https://api.github.com/users/jbardin/following{/other_user}",
+      "gists_url": "https://api.github.com/users/jbardin/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/jbardin/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/jbardin/subscriptions",
+      "organizations_url": "https://api.github.com/users/jbardin/orgs",
+      "repos_url": "https://api.github.com/users/jbardin/repos",
+      "events_url": "https://api.github.com/users/jbardin/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/jbardin/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "jbardin",
+      "id": 35067,
+      "node_id": "MDQ6VXNlcjM1MDY3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/35067?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/jbardin",
+      "html_url": "https://github.com/jbardin",
+      "followers_url": "https://api.github.com/users/jbardin/followers",
+      "following_url": "https://api.github.com/users/jbardin/following{/other_user}",
+      "gists_url": "https://api.github.com/users/jbardin/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/jbardin/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/jbardin/subscriptions",
+      "organizations_url": "https://api.github.com/users/jbardin/orgs",
+      "repos_url": "https://api.github.com/users/jbardin/repos",
+      "events_url": "https://api.github.com/users/jbardin/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/jbardin/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "074032dbe3222fc166ba5dfa7fa051828ea8f93c",
+        "url": "https://api.github.com/repos/hashicorp/terraform/commits/074032dbe3222fc166ba5dfa7fa051828ea8f93c",
+        "html_url": "https://github.com/hashicorp/terraform/commit/074032dbe3222fc166ba5dfa7fa051828ea8f93c"
+      }
+    ]
+  },
+  {
+    "sha": "8da0abe33a349f808d6e002924c349d7f1df7d66",
+    "node_id": "C_kwDOAQ6CpNoAKDhkYTBhYmUzM2EzNDlmODA4ZDZlMDAyOTI0YzM0OWQ3ZjFkZjdkNjY",
+    "commit": {
+      "author": {
+        "name": "hc-github-team-tf-core",
+        "email": "82990137+hc-github-team-tf-core@users.noreply.github.com",
+        "date": "2026-06-26T17:15:42Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-26T17:15:42Z"
+      },
+      "message": "Cleanup after 1.16.0-alpha20260626 release (#38789)\n\nCo-authored-by: hc-github-team-tf-core <github-team-tf-core@hashicorp.com>",
+      "tree": {
+        "sha": "b992b681e7661ff7093d46cdc2727e13b1220c7a",
+        "url": "https://api.github.com/repos/hashicorp/terraform/git/trees/b992b681e7661ff7093d46cdc2727e13b1220c7a"
+      },
+      "url": "https://api.github.com/repos/hashicorp/terraform/git/commits/8da0abe33a349f808d6e002924c349d7f1df7d66",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqPrO+CRC1aQ7uu5UhlAAAUEgQAG79SG9xM/z/VkMDJ0Y2ihfQ\nbM9KEC4J7DNN1gpm8cpSHt6qtjOcb5Se7Y3yxwzFCPIcxQYVYw+lkmbEgHpGd0eo\nx4PdpRTHVLLNMPbf9BABixJBwjfSvG7mSgzux66YIhuI2p4LhJCp/ewG56ZusSG4\nlk7tfF65Hq05T3nCHpu5wgt4hlxyAHIvu+gxlEOkV2eQZ3qBEJl/arMvpVgq8Vfk\no0Q2g+ulUoBTjrhFU/qlzFJ859JbC+8ao0A3PLZBEtTfBzWXnK9mfNgD9TD/ZvcO\nogDaJwEXC4XDmJ09czfx6fvlDgDrN73I3KbLYrz3ohmtJuDJgIeFYi4yL6uAwPcW\nYfapEH7tsEWUoT24Nbqyw0Dz8ELosVsPXT51C7ZhUjLDFwpvfqexVcQpoOvQ07N3\nMk+6SFmN2PkLuC0PRjlh7eCyiOot4zEgCgoVtNH61lUu/VnbxJYrMzRSmIysKaK7\nuZuLazLd52V3NBazgWSc3zw1IMrOTfXaJkc15ATCVOULu1Ctm/JFK7wYOj1gPgOH\nfUGeBl/QD7kVCnyYBW3bbnwrXUO+9Ey1huYIA/pygvP3fyq+tpIDq/zt/wxDbdUR\npGC9sTvjwmnRPQ50urV2n3nZgClqYfiED23PCky9GXq7aCzAf0KW23yGlvrnoQDV\n1uZRv7esrrUFPYEvSZrT\n=54zd\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree b992b681e7661ff7093d46cdc2727e13b1220c7a\nparent 893dddd901ce44e1bd090ed314e5432f7730cd07\nauthor hc-github-team-tf-core <82990137+hc-github-team-tf-core@users.noreply.github.com> 1782494142 +0100\ncommitter GitHub <noreply@github.com> 1782494142 +0200\n\nCleanup after 1.16.0-alpha20260626 release (#38789)\n\nCo-authored-by: hc-github-team-tf-core <github-team-tf-core@hashicorp.com>",
+        "verified_at": "2026-06-26T17:15:43Z"
+      }
+    },
+    "url": "https://api.github.com/repos/hashicorp/terraform/commits/8da0abe33a349f808d6e002924c349d7f1df7d66",
+    "html_url": "https://github.com/hashicorp/terraform/commit/8da0abe33a349f808d6e002924c349d7f1df7d66",
+    "comments_url": "https://api.github.com/repos/hashicorp/terraform/commits/8da0abe33a349f808d6e002924c349d7f1df7d66/comments",
+    "author": {
+      "login": "hc-github-team-tf-core",
+      "id": 82990137,
+      "node_id": "MDQ6VXNlcjgyOTkwMTM3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/82990137?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/hc-github-team-tf-core",
+      "html_url": "https://github.com/hc-github-team-tf-core",
+      "followers_url": "https://api.github.com/users/hc-github-team-tf-core/followers",
+      "following_url": "https://api.github.com/users/hc-github-team-tf-core/following{/other_user}",
+      "gists_url": "https://api.github.com/users/hc-github-team-tf-core/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/hc-github-team-tf-core/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/hc-github-team-tf-core/subscriptions",
+      "organizations_url": "https://api.github.com/users/hc-github-team-tf-core/orgs",
+      "repos_url": "https://api.github.com/users/hc-github-team-tf-core/repos",
+      "events_url": "https://api.github.com/users/hc-github-team-tf-core/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/hc-github-team-tf-core/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "893dddd901ce44e1bd090ed314e5432f7730cd07",
+        "url": "https://api.github.com/repos/hashicorp/terraform/commits/893dddd901ce44e1bd090ed314e5432f7730cd07",
+        "html_url": "https://github.com/hashicorp/terraform/commit/893dddd901ce44e1bd090ed314e5432f7730cd07"
+      }
+    ]
+  },
+  {
+    "sha": "4383c4a56ecec5ade01111b57735f8c1afb5ced8",
+    "node_id": "C_kwDOAQ6CpNoAKDQzODNjNGE1NmVjZWM1YWRlMDExMTFiNTc3MzVmOGMxYWZiNWNlZDg",
+    "commit": {
+      "author": {
+        "name": "James Bardin",
+        "email": "j.bardin@gmail.com",
+        "date": "2026-06-26T18:04:45Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-26T18:04:45Z"
+      },
+      "message": "Merge pull request #38792 from hashicorp/jbardin/update-go-cty\n\nUpdate go-cty@v1.18.1",
+      "tree": {
+        "sha": "93becdcd060168467d0b145d4685a47312739222",
+        "url": "https://api.github.com/repos/hashicorp/terraform/git/trees/93becdcd060168467d0b145d4685a47312739222"
+      },
+      "url": "https://api.github.com/repos/hashicorp/terraform/git/commits/4383c4a56ecec5ade01111b57735f8c1afb5ced8",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqPr89CRC1aQ7uu5UhlAAAFEQQAF/u7rPNo4TrPOO1sGK8JVU5\nM8nOOgoGz7C3s5tGl58zrRCnlOUUigLqGGav4xzUMk2nF+WtXS9D9T98XJ6sBsn/\n5w0wyWEIsIqA7+6v7JMz+8odJhojfMGzfm0H8VlGbiqllCFsRvJFZl0cHC7GDzTr\nz5A78EBbv4FJETEMgIn+FPhV2NxXQFlzk6FNw0xCFbhaMyPnPlozW8sjerqPH1DQ\n9D4US6TH05HcOeh5UV1icfE8NtyUvuXHN5qSyGH/AJJTyf7ennFzi0ymUplmxrjP\nsOvXC4TqrMoz/xswq18UJb55SNEzkrt+AdgUws7qN6H6Ce18d/wvN0TvOaxF9O9s\nArYM7ZM4bd0CVLMtr3B0tQ54IcSAhj5OA2zo+DXM8IRdVIdlencJeJear+A8/FFu\nd2HLqJfOFwSaJYr/9SAZ49buLqUnl6CHZ+ANw+hyB95laBfkB6tmamqrrPMaFgOz\nVPH9wodqB3zYQDUhGNWPEpsFy9ccuDBP0/X4r5x0wL3/zS7Ta9S0FUTnNIsYBDfJ\nBmypmbMrQqF7LvfMcVY9Qk+z0Dis4AOA1BQ+p9iohgr1m+JQP7vOh0TgpWaQA4O3\n4IHYroZreSMS7Wj489IR6/Ed7RUhGmKHKh96CigiEbjcjsg5Y1Q2jSoBFQRopkcE\n6/iBE3Nvk9gBXqA9xFvw\n=pK1B\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 93becdcd060168467d0b145d4685a47312739222\nparent 8da0abe33a349f808d6e002924c349d7f1df7d66\nparent 7326366424af945a13c50a2b46f9068e8113817d\nauthor James Bardin <j.bardin@gmail.com> 1782497085 -0400\ncommitter GitHub <noreply@github.com> 1782497085 -0400\n\nMerge pull request #38792 from hashicorp/jbardin/update-go-cty\n\nUpdate go-cty@v1.18.1",
+        "verified_at": "2026-06-26T18:04:45Z"
+      }
+    },
+    "url": "https://api.github.com/repos/hashicorp/terraform/commits/4383c4a56ecec5ade01111b57735f8c1afb5ced8",
+    "html_url": "https://github.com/hashicorp/terraform/commit/4383c4a56ecec5ade01111b57735f8c1afb5ced8",
+    "comments_url": "https://api.github.com/repos/hashicorp/terraform/commits/4383c4a56ecec5ade01111b57735f8c1afb5ced8/comments",
+    "author": {
+      "login": "jbardin",
+      "id": 35067,
+      "node_id": "MDQ6VXNlcjM1MDY3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/35067?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/jbardin",
+      "html_url": "https://github.com/jbardin",
+      "followers_url": "https://api.github.com/users/jbardin/followers",
+      "following_url": "https://api.github.com/users/jbardin/following{/other_user}",
+      "gists_url": "https://api.github.com/users/jbardin/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/jbardin/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/jbardin/subscriptions",
+      "organizations_url": "https://api.github.com/users/jbardin/orgs",
+      "repos_url": "https://api.github.com/users/jbardin/repos",
+      "events_url": "https://api.github.com/users/jbardin/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/jbardin/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "8da0abe33a349f808d6e002924c349d7f1df7d66",
+        "url": "https://api.github.com/repos/hashicorp/terraform/commits/8da0abe33a349f808d6e002924c349d7f1df7d66",
+        "html_url": "https://github.com/hashicorp/terraform/commit/8da0abe33a349f808d6e002924c349d7f1df7d66"
+      },
+      {
+        "sha": "7326366424af945a13c50a2b46f9068e8113817d",
+        "url": "https://api.github.com/repos/hashicorp/terraform/commits/7326366424af945a13c50a2b46f9068e8113817d",
+        "html_url": "https://github.com/hashicorp/terraform/commit/7326366424af945a13c50a2b46f9068e8113817d"
+      }
+    ]
+  },
+  {
+    "sha": "e02391ad384c9c38f1d7f40b853c0d2297348094",
+    "node_id": "C_kwDOAQ6CpNoAKGUwMjM5MWFkMzg0YzljMzhmMWQ3ZjQwYjg1M2MwZDIyOTczNDgwOTQ",
+    "commit": {
+      "author": {
+        "name": "Austin Valle",
+        "email": "austinvalle@gmail.com",
+        "date": "2026-06-26T19:13:35Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-26T19:13:35Z"
+      },
+      "message": "policy: Update policy callback server functions to handle deferred resources and data sources (#38781)\n\n* Update the policy callback for `getresources` to return a partial response if any matching resource types are deferred\n\n* Update `getdatasource` callback to returned deferred indicator from the `ReadDataSource` call to the provider.\n\n* remove provider meta from `ReadDataSource` call in policy callback server",
+      "tree": {
+        "sha": "cb58cbef3497fc4274c2b633f0f0ad2e34fff84f",
+        "url": "https://api.github.com/repos/hashicorp/terraform/git/trees/cb58cbef3497fc4274c2b633f0f0ad2e34fff84f"
+      },
+      "url": "https://api.github.com/repos/hashicorp/terraform/git/commits/e02391ad384c9c38f1d7f40b853c0d2297348094",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqPs9fCRC1aQ7uu5UhlAAAE+0QAFNok7oG6P8HZChzUbKZo3H6\nwIPeXTi5MyGbx3C5I9dBsDnD8AGK/qjbo+u3ke8Wusl+NZ6lTpZoeKT8M1Xwse0H\njp6eT+vJupCMdUGoAdhNzsV2p200/hNfqYxDkzYB3enuWVQc1V0FgvVY6o/InNiR\nVCfPKhKYYRPO5K9vEKg10EQyJ4bqnyMRY0eukC4he5BvuegQDOEdg1zYeVoOhooH\n1WSc+BLAwL8gZwYi7VGrFYiGG7v5QnSOWwHQ6uwMiHsWJdF7ycFB6WFVnr5qarqd\nKE2Ymrf4e03XgWyibP6CJdseR/FyOWJN67YuoWC5x8UiVJ5MRKFSQ2kkSndPxHZ9\nkLFhwNiI4ybXfOaeVsWZeKl/1J3W+YOG1bhcpR5pajvj/qeD9Jz8v5VqJXQMSR9X\n177Z1Yb3uxwuG3sXXOQ5WH7R31adUvkoBpx0F9W/WILzFZglCxuivWfUTKNmSwMJ\nSZv5neTbIMkGQLFk+RMsM+nNMTY3YpWtFibrbk7wcMHR4zY/NQdQhzOwQ9GnPJos\neZEmiY+ZVH3DAUTKnKev8vJfCbigPmSCDLYgAwZSp/uJt+gEsmQvXxKXouudQ7vL\nsJ2Xhp/klrv1gWKbe6k7pOxsfcU68D6ythSdt6K0RgWrAt57N7PJtLuSLecMVwJU\ny0Yr4dIWQtMqNDf/8066\n=zFm5\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree cb58cbef3497fc4274c2b633f0f0ad2e34fff84f\nparent 4383c4a56ecec5ade01111b57735f8c1afb5ced8\nauthor Austin Valle <austinvalle@gmail.com> 1782501215 -0400\ncommitter GitHub <noreply@github.com> 1782501215 -0400\n\npolicy: Update policy callback server functions to handle deferred resources and data sources (#38781)\n\n* Update the policy callback for `getresources` to return a partial response if any matching resource types are deferred\n\n* Update `getdatasource` callback to returned deferred indicator from the `ReadDataSource` call to the provider.\n\n* remove provider meta from `ReadDataSource` call in policy callback server",
+        "verified_at": "2026-06-26T19:13:36Z"
+      }
+    },
+    "url": "https://api.github.com/repos/hashicorp/terraform/commits/e02391ad384c9c38f1d7f40b853c0d2297348094",
+    "html_url": "https://github.com/hashicorp/terraform/commit/e02391ad384c9c38f1d7f40b853c0d2297348094",
+    "comments_url": "https://api.github.com/repos/hashicorp/terraform/commits/e02391ad384c9c38f1d7f40b853c0d2297348094/comments",
+    "author": {
+      "login": "austinvalle",
+      "id": 8650838,
+      "node_id": "MDQ6VXNlcjg2NTA4Mzg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/8650838?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/austinvalle",
+      "html_url": "https://github.com/austinvalle",
+      "followers_url": "https://api.github.com/users/austinvalle/followers",
+      "following_url": "https://api.github.com/users/austinvalle/following{/other_user}",
+      "gists_url": "https://api.github.com/users/austinvalle/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/austinvalle/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/austinvalle/subscriptions",
+      "organizations_url": "https://api.github.com/users/austinvalle/orgs",
+      "repos_url": "https://api.github.com/users/austinvalle/repos",
+      "events_url": "https://api.github.com/users/austinvalle/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/austinvalle/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "4383c4a56ecec5ade01111b57735f8c1afb5ced8",
+        "url": "https://api.github.com/repos/hashicorp/terraform/commits/4383c4a56ecec5ade01111b57735f8c1afb5ced8",
+        "html_url": "https://github.com/hashicorp/terraform/commit/4383c4a56ecec5ade01111b57735f8c1afb5ced8"
+      }
+    ]
+  },
+  {
+    "sha": "cf3ddb1ef7dd30492de928708ed4ee6e1f109927",
+    "node_id": "C_kwDOAQ6CpNoAKGNmM2RkYjFlZjdkZDMwNDkyZGU5Mjg3MDhlZDRlZTZlMWYxMDk5Mjc",
+    "commit": {
+      "author": {
+        "name": "Austin Valle",
+        "email": "austinvalle@gmail.com",
+        "date": "2026-06-29T12:23:43Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-29T12:23:43Z"
+      },
+      "message": "policy: Add provider policy evaluation support to stacks (#38768)\n\nThis change adds provider policy evaluation to the stacks runtime, which is evaluated immediately following a provider being configured (equivalent to when the module runtime evaluates provider policy). Additional test cases have been added for embedded stacks, which can also configure providers.",
+      "tree": {
+        "sha": "d8cf42d9897c0315f3258b5da34b0467dadb523c",
+        "url": "https://api.github.com/repos/hashicorp/terraform/git/trees/d8cf42d9897c0315f3258b5da34b0467dadb523c"
+      },
+      "url": "https://api.github.com/repos/hashicorp/terraform/git/commits/cf3ddb1ef7dd30492de928708ed4ee6e1f109927",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqQmPPCRC1aQ7uu5UhlAAAWoQQAFeflDL+YntKfG6PTZZn6I1z\nSmh/+ez1xhv1EVP98H4bec8JfxqX2fNoktST5j9vMEOkIeOG2Aa4/iqPiode6OMT\nYbfYk0Uy8T1jRIzBWjYcrdCzpFIrl/VLXw9IawmSh5bBVCT3YkfwzQyS2qxCvbON\nlAx9jyai44BLsO3A4BysIqigsJ6PCb6IY/K3lkPZ1Bf5zIGXgaNw9H4DLhnNzokN\nuXTgAo6nnzrroyIVXQM4MW5iS6o8GYOh4RQdFIRFEVbSO9UGkr16SivRx+XTiBg3\nhW6lypznCZqQRKEHCHG3O7P/Bv48SYkj845kGH40IQAi6cDwn6IFDfS15y8V8Mmt\nG8jCMaRpparwAzW0PqBw6Jj5lP12n7tw2fy8NgdVg4SPdw7/1tFAXSmAYU8ez5eX\nd+GIxgXuh8AE5INVUEjmvcxHBkNI6I9coBetcImDJXoT8aoeoxTJXczkNcN/SMQ4\nKA54eNe6a1TSf27I1Nd8W7QGqC6bgnQ96O+99HbY7LXwQFI1BP0NqQFDx75myTj4\nBqEgYyq84CGFQyeUgxxOiaS1st0vwZasRMZk8PnSqiDBDAUUijVCUj+oe/ybK0bb\n3AsupRSAGEhgvJkhKBAUUknrjhmY9ivbRXPJG2XVZOQI8kC6AREjwzNYoiJi1E2o\n8UXgcb/RwkZM7G3yqaqk\n=xm9E\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree d8cf42d9897c0315f3258b5da34b0467dadb523c\nparent e02391ad384c9c38f1d7f40b853c0d2297348094\nauthor Austin Valle <austinvalle@gmail.com> 1782735823 -0400\ncommitter GitHub <noreply@github.com> 1782735823 -0400\n\npolicy: Add provider policy evaluation support to stacks (#38768)\n\nThis change adds provider policy evaluation to the stacks runtime, which is evaluated immediately following a provider being configured (equivalent to when the module runtime evaluates provider policy). Additional test cases have been added for embedded stacks, which can also configure providers.",
+        "verified_at": "2026-06-29T12:23:43Z"
+      }
+    },
+    "url": "https://api.github.com/repos/hashicorp/terraform/commits/cf3ddb1ef7dd30492de928708ed4ee6e1f109927",
+    "html_url": "https://github.com/hashicorp/terraform/commit/cf3ddb1ef7dd30492de928708ed4ee6e1f109927",
+    "comments_url": "https://api.github.com/repos/hashicorp/terraform/commits/cf3ddb1ef7dd30492de928708ed4ee6e1f109927/comments",
+    "author": {
+      "login": "austinvalle",
+      "id": 8650838,
+      "node_id": "MDQ6VXNlcjg2NTA4Mzg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/8650838?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/austinvalle",
+      "html_url": "https://github.com/austinvalle",
+      "followers_url": "https://api.github.com/users/austinvalle/followers",
+      "following_url": "https://api.github.com/users/austinvalle/following{/other_user}",
+      "gists_url": "https://api.github.com/users/austinvalle/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/austinvalle/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/austinvalle/subscriptions",
+      "organizations_url": "https://api.github.com/users/austinvalle/orgs",
+      "repos_url": "https://api.github.com/users/austinvalle/repos",
+      "events_url": "https://api.github.com/users/austinvalle/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/austinvalle/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "e02391ad384c9c38f1d7f40b853c0d2297348094",
+        "url": "https://api.github.com/repos/hashicorp/terraform/commits/e02391ad384c9c38f1d7f40b853c0d2297348094",
+        "html_url": "https://github.com/hashicorp/terraform/commit/e02391ad384c9c38f1d7f40b853c0d2297348094"
+      }
+    ]
+  },
+  {
+    "sha": "8a263a62d9e45107700d68b20d8f45199474bca7",
+    "node_id": "C_kwDOAQ6CpNoAKDhhMjYzYTYyZDllNDUxMDc3MDBkNjhiMjBkOGY0NTE5OTQ3NGJjYTc",
+    "commit": {
+      "author": {
+        "name": "Sarah French",
+        "email": "sarah.french@hashicorp.com",
+        "date": "2026-06-29T15:40:35Z"
+      },
+      "committer": {
+        "name": "Sarah French",
+        "email": "15078782+SarahFrench@users.noreply.github.com",
+        "date": "2026-06-29T15:51:16Z"
+      },
+      "message": "fix: Remove unnecessary call to `view.PolicyResults`; use of Terraform Policy is mutually exclusive with the PSS feature.",
+      "tree": {
+        "sha": "074d4e58bcb5cbdb8c3ba227bcdf6541e036f8e2",
+        "url": "https://api.github.com/repos/hashicorp/terraform/git/trees/074d4e58bcb5cbdb8c3ba227bcdf6541e036f8e2"
+      },
+      "url": "https://api.github.com/repos/hashicorp/terraform/git/commits/8a263a62d9e45107700d68b20d8f45199474bca7",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/hashicorp/terraform/commits/8a263a62d9e45107700d68b20d8f45199474bca7",
+    "html_url": "https://github.com/hashicorp/terraform/commit/8a263a62d9e45107700d68b20d8f45199474bca7",
+    "comments_url": "https://api.github.com/repos/hashicorp/terraform/commits/8a263a62d9e45107700d68b20d8f45199474bca7/comments",
+    "author": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "cf3ddb1ef7dd30492de928708ed4ee6e1f109927",
+        "url": "https://api.github.com/repos/hashicorp/terraform/commits/cf3ddb1ef7dd30492de928708ed4ee6e1f109927",
+        "html_url": "https://github.com/hashicorp/terraform/commit/cf3ddb1ef7dd30492de928708ed4ee6e1f109927"
+      }
+    ]
+  },
+  {
+    "sha": "ef53cc4fb5850ecc1270b0db0bcff8992afe85f7",
+    "node_id": "C_kwDOAQ6CpNoAKGVmNTNjYzRmYjU4NTBlY2MxMjcwYjBkYjBiY2ZmODk5MmFmZTg1Zjc",
+    "commit": {
+      "author": {
+        "name": "Sarah French",
+        "email": "sarah.french@hashicorp.com",
+        "date": "2026-06-29T15:39:47Z"
+      },
+      "committer": {
+        "name": "Sarah French",
+        "email": "15078782+SarahFrench@users.noreply.github.com",
+        "date": "2026-06-29T15:51:16Z"
+      },
+      "message": "refactor: Move declaration of `policyResults` to later in init, where first use of policy feature happens.",
+      "tree": {
+        "sha": "ab91f8d6353e876f9a2e08502f0663105995da44",
+        "url": "https://api.github.com/repos/hashicorp/terraform/git/trees/ab91f8d6353e876f9a2e08502f0663105995da44"
+      },
+      "url": "https://api.github.com/repos/hashicorp/terraform/git/commits/ef53cc4fb5850ecc1270b0db0bcff8992afe85f7",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/hashicorp/terraform/commits/ef53cc4fb5850ecc1270b0db0bcff8992afe85f7",
+    "html_url": "https://github.com/hashicorp/terraform/commit/ef53cc4fb5850ecc1270b0db0bcff8992afe85f7",
+    "comments_url": "https://api.github.com/repos/hashicorp/terraform/commits/ef53cc4fb5850ecc1270b0db0bcff8992afe85f7/comments",
+    "author": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "8a263a62d9e45107700d68b20d8f45199474bca7",
+        "url": "https://api.github.com/repos/hashicorp/terraform/commits/8a263a62d9e45107700d68b20d8f45199474bca7",
+        "html_url": "https://github.com/hashicorp/terraform/commit/8a263a62d9e45107700d68b20d8f45199474bca7"
+      }
+    ]
+  },
+  {
+    "sha": "7ee86c7166ca1e878baf590170fc2098881b670d",
+    "node_id": "C_kwDOAQ6CpNoAKDdlZTg2YzcxNjZjYTFlODc4YmFmNTkwMTcwZmMyMDk4ODgxYjY3MGQ",
+    "commit": {
+      "author": {
+        "name": "Austin Valle",
+        "email": "austinvalle@gmail.com",
+        "date": "2026-06-30T14:26:10Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-30T14:26:10Z"
+      },
+      "message": "policy: Enable refresh and destroy mode policy evaluation in stacks (#38797)\n\nThis change removes the restrictions in PlanStackChanges and ApplyStackChanges preventing policy evaluation during refresh and destroy (which originally was omitting the policy client). Now, when a policy client is given to stacks, it will always be passed to the module runtime + used to evaluate provider policy if configured.",
+      "tree": {
+        "sha": "8cff13a186c38bc4c65ba10c373ce007696141a5",
+        "url": "https://api.github.com/repos/hashicorp/terraform/git/trees/8cff13a186c38bc4c65ba10c373ce007696141a5"
+      },
+      "url": "https://api.github.com/repos/hashicorp/terraform/git/commits/7ee86c7166ca1e878baf590170fc2098881b670d",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqQ9IDCRC1aQ7uu5UhlAAAQAQQABI2L0Zk7SB797HcI+0de1Lh\nBEK8+nbbCzAeI/C22T9B4B6aKHufHtTzteiGB5KfC30fS3GFUG8sn9aruobn46Xe\n1CUR4sgW7oc43VE3vdcyM2pTVt83jbuU0b4mZiYjni7xeUXc6DnSZ+gzVUzcPdbM\no/7Yr/VmmSp6f29VKHAYnPqRF5nUnpYW+N2Y9Gmy4GutFho2Qxt+5uOq0kzUlnwB\n1qbBpYH6RIGYdAOc6Qr/lbx0SO6lahP0LEhDcwpWLW9K/6MlJfB0+XA7F+8bGqku\nORGF+KrxoWpk5RlqolZpiARofnZfFk0fiMQe/iqkQcOQfzs5MMJ3WUVFYC+xZcgv\nx6JYrqLMsMljIz5Om1UAatG4nN5dJiD4t0GPJGHXoNv1Yd+f/BiWkH0BuDIEhEpb\nFqf+1geHJuau/0WKaCazVINx82VrQHOdhB1VdZT7wq2q3TyEa91GYwgH4/ZP+ODX\nidPMsdtNQBWZOChVx7d6CXtWpwMCeVM7ucKESbQkVAUvSDg0inPbRC81fk2pTDQg\nVGojyxnCx7Z1KkdMmNRMm/Y0fXPqp+rdj7Ge05gDbibEGgWyN31zSvhYpjWWFcTR\ndSLavUniWQgaq7F3ryN8HJh2ZQUXodkoI92FiTS46NXf71gCAdBhCRhDvYhuvocA\nkQTn6jy8/N9YJoNRkb4m\n=EQCV\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 8cff13a186c38bc4c65ba10c373ce007696141a5\nparent ef53cc4fb5850ecc1270b0db0bcff8992afe85f7\nauthor Austin Valle <austinvalle@gmail.com> 1782829570 -0400\ncommitter GitHub <noreply@github.com> 1782829570 -0400\n\npolicy: Enable refresh and destroy mode policy evaluation in stacks (#38797)\n\nThis change removes the restrictions in PlanStackChanges and ApplyStackChanges preventing policy evaluation during refresh and destroy (which originally was omitting the policy client). Now, when a policy client is given to stacks, it will always be passed to the module runtime + used to evaluate provider policy if configured.",
+        "verified_at": "2026-06-30T14:26:11Z"
+      }
+    },
+    "url": "https://api.github.com/repos/hashicorp/terraform/commits/7ee86c7166ca1e878baf590170fc2098881b670d",
+    "html_url": "https://github.com/hashicorp/terraform/commit/7ee86c7166ca1e878baf590170fc2098881b670d",
+    "comments_url": "https://api.github.com/repos/hashicorp/terraform/commits/7ee86c7166ca1e878baf590170fc2098881b670d/comments",
+    "author": {
+      "login": "austinvalle",
+      "id": 8650838,
+      "node_id": "MDQ6VXNlcjg2NTA4Mzg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/8650838?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/austinvalle",
+      "html_url": "https://github.com/austinvalle",
+      "followers_url": "https://api.github.com/users/austinvalle/followers",
+      "following_url": "https://api.github.com/users/austinvalle/following{/other_user}",
+      "gists_url": "https://api.github.com/users/austinvalle/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/austinvalle/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/austinvalle/subscriptions",
+      "organizations_url": "https://api.github.com/users/austinvalle/orgs",
+      "repos_url": "https://api.github.com/users/austinvalle/repos",
+      "events_url": "https://api.github.com/users/austinvalle/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/austinvalle/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "ef53cc4fb5850ecc1270b0db0bcff8992afe85f7",
+        "url": "https://api.github.com/repos/hashicorp/terraform/commits/ef53cc4fb5850ecc1270b0db0bcff8992afe85f7",
+        "html_url": "https://github.com/hashicorp/terraform/commit/ef53cc4fb5850ecc1270b0db0bcff8992afe85f7"
+      }
+    ]
+  },
+  {
+    "sha": "85ae051985118db8c2601483312f6ccf95784bea",
+    "node_id": "C_kwDOAQ6CpNoAKDg1YWUwNTE5ODUxMThkYjhjMjYwMTQ4MzMxMmY2Y2NmOTU3ODRiZWE",
+    "commit": {
+      "author": {
+        "name": "Sarah French",
+        "email": "sarah.french@hashicorp.com",
+        "date": "2026-06-26T12:25:26Z"
+      },
+      "committer": {
+        "name": "Sarah French",
+        "email": "15078782+SarahFrench@users.noreply.github.com",
+        "date": "2026-06-30T15:06:17Z"
+      },
+      "message": "refactor: Move lock merging logic up into `init` command's `Run` method, for transparency.\n\nThis change pulls a lot of lock merging events out of methods and into the init command's Run method. Previously the `getProviders` and `saveDependencyLockFile` methods performed some lock merging internally, but this should be the concern of the init command and not these methods. This makes it easier to reason about what happens in init when reading through the command (well, at least it's flatter/more transparent when reading though).\n\nThis change highlights that the init command only blocks the upgrade of the provider used for PSS through the final merging of locks before `saveDependencyLockFile` is invoked. The merge ensures that the provider version used for initialising the state store enters the lockfile instead of the lock for that provider returned from `getProviders`, which may have upgraded that provider.",
+      "tree": {
+        "sha": "db79a9b4dcdad737f076df001d32866688717194",
+        "url": "https://api.github.com/repos/hashicorp/terraform/git/trees/db79a9b4dcdad737f076df001d32866688717194"
+      },
+      "url": "https://api.github.com/repos/hashicorp/terraform/git/commits/85ae051985118db8c2601483312f6ccf95784bea",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/hashicorp/terraform/commits/85ae051985118db8c2601483312f6ccf95784bea",
+    "html_url": "https://github.com/hashicorp/terraform/commit/85ae051985118db8c2601483312f6ccf95784bea",
+    "comments_url": "https://api.github.com/repos/hashicorp/terraform/commits/85ae051985118db8c2601483312f6ccf95784bea/comments",
+    "author": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "7ee86c7166ca1e878baf590170fc2098881b670d",
+        "url": "https://api.github.com/repos/hashicorp/terraform/commits/7ee86c7166ca1e878baf590170fc2098881b670d",
+        "html_url": "https://github.com/hashicorp/terraform/commit/7ee86c7166ca1e878baf590170fc2098881b670d"
+      }
+    ]
+  },
+  {
+    "sha": "9d9fcc929f6bd0c16707cb029490e6c4c135a2c9",
+    "node_id": "C_kwDOAQ6CpNoAKDlkOWZjYzkyOWY2YmQwYzE2NzA3Y2IwMjk0OTBlNmM0YzEzNWEyYzk",
+    "commit": {
+      "author": {
+        "name": "Sarah French",
+        "email": "sarah.french@hashicorp.com",
+        "date": "2026-06-26T12:25:56Z"
+      },
+      "committer": {
+        "name": "Sarah French",
+        "email": "15078782+SarahFrench@users.noreply.github.com",
+        "date": "2026-06-30T15:06:17Z"
+      },
+      "message": "docs: Update godoc comment to make it clear that only a single lock is returned from `getProvidersFromPSSConfig`",
+      "tree": {
+        "sha": "1f1d37863fd5fdbb8431918122b1d7cdfc281384",
+        "url": "https://api.github.com/repos/hashicorp/terraform/git/trees/1f1d37863fd5fdbb8431918122b1d7cdfc281384"
+      },
+      "url": "https://api.github.com/repos/hashicorp/terraform/git/commits/9d9fcc929f6bd0c16707cb029490e6c4c135a2c9",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/hashicorp/terraform/commits/9d9fcc929f6bd0c16707cb029490e6c4c135a2c9",
+    "html_url": "https://github.com/hashicorp/terraform/commit/9d9fcc929f6bd0c16707cb029490e6c4c135a2c9",
+    "comments_url": "https://api.github.com/repos/hashicorp/terraform/commits/9d9fcc929f6bd0c16707cb029490e6c4c135a2c9/comments",
+    "author": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "85ae051985118db8c2601483312f6ccf95784bea",
+        "url": "https://api.github.com/repos/hashicorp/terraform/commits/85ae051985118db8c2601483312f6ccf95784bea",
+        "html_url": "https://github.com/hashicorp/terraform/commit/85ae051985118db8c2601483312f6ccf95784bea"
+      }
+    ]
+  },
+  {
+    "sha": "065b5c55b07223d7b09617b5078ead2c285e6f1a",
+    "node_id": "C_kwDOAQ6CpNoAKDA2NWI1YzU1YjA3MjIzZDdiMDk2MTdiNTA3OGVhZDJjMjg1ZTZmMWE",
+    "commit": {
+      "author": {
+        "name": "Sarah French",
+        "email": "sarah.french@hashicorp.com",
+        "date": "2026-06-26T12:27:18Z"
+      },
+      "committer": {
+        "name": "Sarah French",
+        "email": "15078782+SarahFrench@users.noreply.github.com",
+        "date": "2026-06-30T15:06:17Z"
+      },
+      "message": "fix: Update misleading log. We detect matching providers but not matching provider versions.",
+      "tree": {
+        "sha": "a9628ac2b243e850a9cc8a61f6ba2838d21e0512",
+        "url": "https://api.github.com/repos/hashicorp/terraform/git/trees/a9628ac2b243e850a9cc8a61f6ba2838d21e0512"
+      },
+      "url": "https://api.github.com/repos/hashicorp/terraform/git/commits/065b5c55b07223d7b09617b5078ead2c285e6f1a",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/hashicorp/terraform/commits/065b5c55b07223d7b09617b5078ead2c285e6f1a",
+    "html_url": "https://github.com/hashicorp/terraform/commit/065b5c55b07223d7b09617b5078ead2c285e6f1a",
+    "comments_url": "https://api.github.com/repos/hashicorp/terraform/commits/065b5c55b07223d7b09617b5078ead2c285e6f1a/comments",
+    "author": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "9d9fcc929f6bd0c16707cb029490e6c4c135a2c9",
+        "url": "https://api.github.com/repos/hashicorp/terraform/commits/9d9fcc929f6bd0c16707cb029490e6c4c135a2c9",
+        "html_url": "https://github.com/hashicorp/terraform/commit/9d9fcc929f6bd0c16707cb029490e6c4c135a2c9"
+      }
+    ]
+  },
+  {
+    "sha": "c10f7ab7a67795e71405bc0fd3ca9fef28a48a42",
+    "node_id": "C_kwDOAQ6CpNoAKGMxMGY3YWI3YTY3Nzk1ZTcxNDA1YmMwZmQzY2E5ZmVmMjhhNDhhNDI",
+    "commit": {
+      "author": {
+        "name": "Sarah French",
+        "email": "sarah.french@hashicorp.com",
+        "date": "2026-06-26T13:56:23Z"
+      },
+      "committer": {
+        "name": "Sarah French",
+        "email": "15078782+SarahFrench@users.noreply.github.com",
+        "date": "2026-06-30T15:06:17Z"
+      },
+      "message": "refactor: Rename some variables for clarity.\n\nChange `pssLocks` => `pssLock` to indicate only one lock is ever present if `getProvidersFromPSSConfig` is invoked.\n\nChange `reqs` to `req` in `getProvidersFromPSSConfig`, to support the fact only one requirement is passed to the installer logic later in the method.\n\nChange `configLocks` => `lock`, to show that a single lock it returned. Also, the old name configLocks is a hangover from when we had split download of providers in the config and the state.",
+      "tree": {
+        "sha": "f672f922462c61b0ea29580b573248d5c0ee6110",
+        "url": "https://api.github.com/repos/hashicorp/terraform/git/trees/f672f922462c61b0ea29580b573248d5c0ee6110"
+      },
+      "url": "https://api.github.com/repos/hashicorp/terraform/git/commits/c10f7ab7a67795e71405bc0fd3ca9fef28a48a42",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/hashicorp/terraform/commits/c10f7ab7a67795e71405bc0fd3ca9fef28a48a42",
+    "html_url": "https://github.com/hashicorp/terraform/commit/c10f7ab7a67795e71405bc0fd3ca9fef28a48a42",
+    "comments_url": "https://api.github.com/repos/hashicorp/terraform/commits/c10f7ab7a67795e71405bc0fd3ca9fef28a48a42/comments",
+    "author": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "065b5c55b07223d7b09617b5078ead2c285e6f1a",
+        "url": "https://api.github.com/repos/hashicorp/terraform/commits/065b5c55b07223d7b09617b5078ead2c285e6f1a",
+        "html_url": "https://github.com/hashicorp/terraform/commit/065b5c55b07223d7b09617b5078ead2c285e6f1a"
+      }
+    ]
+  },
+  {
+    "sha": "b42a3e430ec60e9f571d5b285973df5970fd4305",
+    "node_id": "C_kwDOAQ6CpNoAKGI0MmEzZTQzMGVjNjBlOWY1NzFkNWIyODU5NzNkZjU5NzBmZDQzMDU",
+    "commit": {
+      "author": {
+        "name": "Sarah French",
+        "email": "sarah.french@hashicorp.com",
+        "date": "2026-06-29T16:28:49Z"
+      },
+      "committer": {
+        "name": "Sarah French",
+        "email": "15078782+SarahFrench@users.noreply.github.com",
+        "date": "2026-06-30T15:06:17Z"
+      },
+      "message": "refactor: Remove unnecessary use of maps.Values",
+      "tree": {
+        "sha": "7745cecca915d05d7790752282a06eeb53f842fe",
+        "url": "https://api.github.com/repos/hashicorp/terraform/git/trees/7745cecca915d05d7790752282a06eeb53f842fe"
+      },
+      "url": "https://api.github.com/repos/hashicorp/terraform/git/commits/b42a3e430ec60e9f571d5b285973df5970fd4305",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/hashicorp/terraform/commits/b42a3e430ec60e9f571d5b285973df5970fd4305",
+    "html_url": "https://github.com/hashicorp/terraform/commit/b42a3e430ec60e9f571d5b285973df5970fd4305",
+    "comments_url": "https://api.github.com/repos/hashicorp/terraform/commits/b42a3e430ec60e9f571d5b285973df5970fd4305/comments",
+    "author": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "c10f7ab7a67795e71405bc0fd3ca9fef28a48a42",
+        "url": "https://api.github.com/repos/hashicorp/terraform/commits/c10f7ab7a67795e71405bc0fd3ca9fef28a48a42",
+        "html_url": "https://github.com/hashicorp/terraform/commit/c10f7ab7a67795e71405bc0fd3ca9fef28a48a42"
+      }
+    ]
+  },
+  {
+    "sha": "f647df7e26343de359845bce7acc851e29dedbbb",
+    "node_id": "C_kwDOAQ6CpNoAKGY2NDdkZjdlMjYzNDNkZTM1OTg0NWJjZTdhY2M4NTFlMjlkZWRiYmI",
+    "commit": {
+      "author": {
+        "name": "Sarah French",
+        "email": "sarah.french@hashicorp.com",
+        "date": "2026-06-29T16:49:41Z"
+      },
+      "committer": {
+        "name": "Sarah French",
+        "email": "15078782+SarahFrench@users.noreply.github.com",
+        "date": "2026-06-30T15:06:17Z"
+      },
+      "message": "fix: Update error message to given users instructions on how to create a sufficient lock file.",
+      "tree": {
+        "sha": "76c84b79f24c45a2b9c5d24d408bde311bde7b07",
+        "url": "https://api.github.com/repos/hashicorp/terraform/git/trees/76c84b79f24c45a2b9c5d24d408bde311bde7b07"
+      },
+      "url": "https://api.github.com/repos/hashicorp/terraform/git/commits/f647df7e26343de359845bce7acc851e29dedbbb",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/hashicorp/terraform/commits/f647df7e26343de359845bce7acc851e29dedbbb",
+    "html_url": "https://github.com/hashicorp/terraform/commit/f647df7e26343de359845bce7acc851e29dedbbb",
+    "comments_url": "https://api.github.com/repos/hashicorp/terraform/commits/f647df7e26343de359845bce7acc851e29dedbbb/comments",
+    "author": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "b42a3e430ec60e9f571d5b285973df5970fd4305",
+        "url": "https://api.github.com/repos/hashicorp/terraform/commits/b42a3e430ec60e9f571d5b285973df5970fd4305",
+        "html_url": "https://github.com/hashicorp/terraform/commit/b42a3e430ec60e9f571d5b285973df5970fd4305"
+      }
+    ]
+  },
+  {
+    "sha": "1426c1e528f7a2bddd96aef6655957315e77dda1",
+    "node_id": "C_kwDOAQ6CpNoAKDE0MjZjMWU1MjhmN2EyYmRkZDk2YWVmNjY1NTk1NzMxNWU3N2RkYTE",
+    "commit": {
+      "author": {
+        "name": "Sarah French",
+        "email": "15078782+SarahFrench@users.noreply.github.com",
+        "date": "2026-06-30T15:58:26Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-06-30T15:58:26Z"
+      },
+      "message": "Add tests defining `version` command's handling of unexpected flags or positional arguments (#38799)\n\nmain.go has an if block with the expression `arg == \"-v\" || arg == \"-version\" || arg == \"--version\"`. This change updates a test to assert all 3 are accepted.\n\nThe new test defining how the command handles unexpected flags and positional arguments are intended to help with future refactoring, e.g. to make the command use the arguments and views packages in future.",
+      "tree": {
+        "sha": "6d0e2f88b77f34b57baf91e1f207e9a676580bd2",
+        "url": "https://api.github.com/repos/hashicorp/terraform/git/trees/6d0e2f88b77f34b57baf91e1f207e9a676580bd2"
+      },
+      "url": "https://api.github.com/repos/hashicorp/terraform/git/commits/1426c1e528f7a2bddd96aef6655957315e77dda1",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqQ+eiCRC1aQ7uu5UhlAAAe0IQACwQPyJmEvOwxnYvSI9eXPs7\nN7Pl7kS+pYJwQIy7fzugJhyzdrw6ZtpmBRpL8aNlZvQLJvC09QN3+NksCNr8dTnl\ndaCcUThqaT2OPG6LQLiNoo/mYtMPSuirXYIZzsjnqgKQNtf0v2/+RFAW43UBFNkZ\n32+/OzCwf/vFcIJE1cdd+lzyCDrx84GhPP9bR6DSdjPs3DormAApL26gI4LCzlUr\nMKg/939fDAkYJ4weXTKXcQVI14QpBKue9RMwg4SJhziwDRguxptCBhsHP6Wgdpvi\nyGYkfIFyCg1Oy/TAIOFSZ9YZU/VE7ovIWVNxDFbpBE7tpf9YydVX2zP9yuWELKyN\n9m93rKKWYIVokeyBhAwqBgIEbWpkO8Cdk+OiQvSoSYrimEXN6SD7mxHB9VAhoLmI\nHzNFXSpq2kDNX5VIgl+0lmrJQFB/5nIAIKdpjzdm30yLBGgFSdAKM4V4s4xodpZZ\n1IapQV+5fYpgD7rXD+1lQcsCIVYqUd0nW7sbAHiMYaQGXd1o4eWT4I2qC7mS0qqG\nXQ3pK//XU+m9C+1VbHe6IDe0j4AaCSoiGzb/c+ii8sk9ZwUZOAaTKJRoFh5b91wD\n7F2CNuuW7Hx4rxSHe4MetZ+7gJAceAWgdQ3ihkknMn6ZMzJhTSUsl9nr4OriAs5s\nHI6o/Hsw4JFQ8+pcwiYf\n=uJ7v\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 6d0e2f88b77f34b57baf91e1f207e9a676580bd2\nparent f647df7e26343de359845bce7acc851e29dedbbb\nauthor Sarah French <15078782+SarahFrench@users.noreply.github.com> 1782835106 +0100\ncommitter GitHub <noreply@github.com> 1782835106 +0100\n\nAdd tests defining `version` command's handling of unexpected flags or positional arguments (#38799)\n\nmain.go has an if block with the expression `arg == \"-v\" || arg == \"-version\" || arg == \"--version\"`. This change updates a test to assert all 3 are accepted.\n\nThe new test defining how the command handles unexpected flags and positional arguments are intended to help with future refactoring, e.g. to make the command use the arguments and views packages in future.",
+        "verified_at": "2026-06-30T15:58:26Z"
+      }
+    },
+    "url": "https://api.github.com/repos/hashicorp/terraform/commits/1426c1e528f7a2bddd96aef6655957315e77dda1",
+    "html_url": "https://github.com/hashicorp/terraform/commit/1426c1e528f7a2bddd96aef6655957315e77dda1",
+    "comments_url": "https://api.github.com/repos/hashicorp/terraform/commits/1426c1e528f7a2bddd96aef6655957315e77dda1/comments",
+    "author": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "f647df7e26343de359845bce7acc851e29dedbbb",
+        "url": "https://api.github.com/repos/hashicorp/terraform/commits/f647df7e26343de359845bce7acc851e29dedbbb",
+        "html_url": "https://github.com/hashicorp/terraform/commit/f647df7e26343de359845bce7acc851e29dedbbb"
+      }
+    ]
+  },
+  {
+    "sha": "6ff0e47785f6745a7d3f07b42dc5b790af625dba",
+    "node_id": "C_kwDOAQ6CpNoAKDZmZjBlNDc3ODVmNjc0NWE3ZDNmMDdiNDJkYzViNzkwYWY2MjVkYmE",
+    "commit": {
+      "author": {
+        "name": "Sarah French",
+        "email": "sarah.french@hashicorp.com",
+        "date": "2026-06-29T15:23:39Z"
+      },
+      "committer": {
+        "name": "Sarah French",
+        "email": "15078782+SarahFrench@users.noreply.github.com",
+        "date": "2026-06-30T15:59:46Z"
+      },
+      "message": "test: Add test showing that an upgrade doesn't happen, even when newer provider versions are available, if the -upgrade flag is set to false.\n\nThis scenario is implicitly tested elsewhere, but this test makes it explicit.",
+      "tree": {
+        "sha": "4f2818856326f8c6b955e957b1542ba5da780e11",
+        "url": "https://api.github.com/repos/hashicorp/terraform/git/trees/4f2818856326f8c6b955e957b1542ba5da780e11"
+      },
+      "url": "https://api.github.com/repos/hashicorp/terraform/git/commits/6ff0e47785f6745a7d3f07b42dc5b790af625dba",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/hashicorp/terraform/commits/6ff0e47785f6745a7d3f07b42dc5b790af625dba",
+    "html_url": "https://github.com/hashicorp/terraform/commit/6ff0e47785f6745a7d3f07b42dc5b790af625dba",
+    "comments_url": "https://api.github.com/repos/hashicorp/terraform/commits/6ff0e47785f6745a7d3f07b42dc5b790af625dba/comments",
+    "author": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "1426c1e528f7a2bddd96aef6655957315e77dda1",
+        "url": "https://api.github.com/repos/hashicorp/terraform/commits/1426c1e528f7a2bddd96aef6655957315e77dda1",
+        "html_url": "https://github.com/hashicorp/terraform/commit/1426c1e528f7a2bddd96aef6655957315e77dda1"
+      }
+    ]
+  },
+  {
+    "sha": "9913f71544145a6591909b3a4562a67fe40265ea",
+    "node_id": "C_kwDOAQ6CpNoAKDk5MTNmNzE1NDQxNDVhNjU5MTkwOWIzYTQ1NjJhNjdmZTQwMjY1ZWE",
+    "commit": {
+      "author": {
+        "name": "Sarah French",
+        "email": "15078782+SarahFrench@users.noreply.github.com",
+        "date": "2026-06-30T10:46:53Z"
+      },
+      "committer": {
+        "name": "Sarah French",
+        "email": "15078782+SarahFrench@users.noreply.github.com",
+        "date": "2026-06-30T15:59:46Z"
+      },
+      "message": "Update arguments passed to cmp.Diff to be in conventional order\n\nCo-authored-by: Radek Simko <radeksimko@users.noreply.github.com>",
+      "tree": {
+        "sha": "e4a232ed714272a7de2b583f14ecf9f956219c2c",
+        "url": "https://api.github.com/repos/hashicorp/terraform/git/trees/e4a232ed714272a7de2b583f14ecf9f956219c2c"
+      },
+      "url": "https://api.github.com/repos/hashicorp/terraform/git/commits/9913f71544145a6591909b3a4562a67fe40265ea",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/hashicorp/terraform/commits/9913f71544145a6591909b3a4562a67fe40265ea",
+    "html_url": "https://github.com/hashicorp/terraform/commit/9913f71544145a6591909b3a4562a67fe40265ea",
+    "comments_url": "https://api.github.com/repos/hashicorp/terraform/commits/9913f71544145a6591909b3a4562a67fe40265ea/comments",
+    "author": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "SarahFrench",
+      "id": 15078782,
+      "node_id": "MDQ6VXNlcjE1MDc4Nzgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15078782?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/SarahFrench",
+      "html_url": "https://github.com/SarahFrench",
+      "followers_url": "https://api.github.com/users/SarahFrench/followers",
+      "following_url": "https://api.github.com/users/SarahFrench/following{/other_user}",
+      "gists_url": "https://api.github.com/users/SarahFrench/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/SarahFrench/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/SarahFrench/subscriptions",
+      "organizations_url": "https://api.github.com/users/SarahFrench/orgs",
+      "repos_url": "https://api.github.com/users/SarahFrench/repos",
+      "events_url": "https://api.github.com/users/SarahFrench/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/SarahFrench/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "6ff0e47785f6745a7d3f07b42dc5b790af625dba",
+        "url": "https://api.github.com/repos/hashicorp/terraform/commits/6ff0e47785f6745a7d3f07b42dc5b790af625dba",
+        "html_url": "https://github.com/hashicorp/terraform/commit/6ff0e47785f6745a7d3f07b42dc5b790af625dba"
+      }
+    ]
+  },
+  {
+    "sha": "8d3a8b76ecf1ead119c4fc5951e8f5130df1db90",
+    "node_id": "C_kwDOAQ6CpNoAKDhkM2E4Yjc2ZWNmMWVhZDExOWM0ZmM1OTUxZThmNTEzMGRmMWRiOTA",
+    "commit": {
+      "author": {
+        "name": "hc-github-team-tf-core",
+        "email": "82990137+hc-github-team-tf-core@users.noreply.github.com",
+        "date": "2026-07-01T13:10:52Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-07-01T13:10:52Z"
+      },
+      "message": "Prepare before 1.16.0-alpha20260701 release (#38812)\n\nCo-authored-by: hc-github-team-tf-core <github-team-tf-core@hashicorp.com>",
+      "tree": {
+        "sha": "e19381587c58d1f69c71c58995f9f31c54cb4150",
+        "url": "https://api.github.com/repos/hashicorp/terraform/git/trees/e19381587c58d1f69c71c58995f9f31c54cb4150"
+      },
+      "url": "https://api.github.com/repos/hashicorp/terraform/git/commits/8d3a8b76ecf1ead119c4fc5951e8f5130df1db90",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqRRHcCRC1aQ7uu5UhlAAAl24QAGiTkUK/+wNUshSRV9n6Wi1f\nzL1sOitM5ZevmiYZs+II7AT+Phzj7mueiQ3eAJX0Rb57yGaIoZHb13TbGBot8PTs\nQMuq/fSOwOpRm6f/rgR1SuVRIM2gZFIHwORDyLKxmC1jRpvsc1Mw4pkaLlT0psRz\nJWT3R6WzJ8Vk+HQ4+JQxjEZyaE2UPlvmvgjMPczP+YsU98hyVnBQJETc3L0FX8GP\nt4bQPXvoAbL7MQJQUKhPdco6yKJOFzjB+yVhVkOOloO3DuK9RceJLnOA+kmOurup\n38VBGi//PBUEiiGiGPlnE5ohFWpgoaUkc8mhDaqC1Om8Oraqg13HaRwLpMEcro52\n8gaKpdCguXlBEwXtu7rDSlqhA5R7p6T/xnHZ2iG8/pN7orFddOMWo+RozCwOhdx5\nzP/vbrZTFhi60re8fMUPJLjiaiamv8PwwIdBkXJJvWYNhU8Kr8GP/hPij4wM+G69\nyuMPF3huwgDV7E1vxy1WzgFlHdZBINb1DSiu1bCyOru3zv3tzSi+yR3dw8+w3Its\nMsdgZUuQgJKJaLhM6cT3hqXf9qSwD7fiD/QVXSyh8ufRb8RuQRnx9e0GHjrGzUca\nO7YlMaXlINoCxWzz3JhnZ9wtxVEn3zVV7LXBEWiDawLwMYLLtijPU1njpRU82fxh\nB6Rh6O4vO0wLtLgh/TUe\n=6V9Z\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree e19381587c58d1f69c71c58995f9f31c54cb4150\nparent 9913f71544145a6591909b3a4562a67fe40265ea\nauthor hc-github-team-tf-core <82990137+hc-github-team-tf-core@users.noreply.github.com> 1782911452 +0100\ncommitter GitHub <noreply@github.com> 1782911452 +0200\n\nPrepare before 1.16.0-alpha20260701 release (#38812)\n\nCo-authored-by: hc-github-team-tf-core <github-team-tf-core@hashicorp.com>",
+        "verified_at": "2026-07-01T13:10:53Z"
+      }
+    },
+    "url": "https://api.github.com/repos/hashicorp/terraform/commits/8d3a8b76ecf1ead119c4fc5951e8f5130df1db90",
+    "html_url": "https://github.com/hashicorp/terraform/commit/8d3a8b76ecf1ead119c4fc5951e8f5130df1db90",
+    "comments_url": "https://api.github.com/repos/hashicorp/terraform/commits/8d3a8b76ecf1ead119c4fc5951e8f5130df1db90/comments",
+    "author": {
+      "login": "hc-github-team-tf-core",
+      "id": 82990137,
+      "node_id": "MDQ6VXNlcjgyOTkwMTM3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/82990137?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/hc-github-team-tf-core",
+      "html_url": "https://github.com/hc-github-team-tf-core",
+      "followers_url": "https://api.github.com/users/hc-github-team-tf-core/followers",
+      "following_url": "https://api.github.com/users/hc-github-team-tf-core/following{/other_user}",
+      "gists_url": "https://api.github.com/users/hc-github-team-tf-core/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/hc-github-team-tf-core/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/hc-github-team-tf-core/subscriptions",
+      "organizations_url": "https://api.github.com/users/hc-github-team-tf-core/orgs",
+      "repos_url": "https://api.github.com/users/hc-github-team-tf-core/repos",
+      "events_url": "https://api.github.com/users/hc-github-team-tf-core/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/hc-github-team-tf-core/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "9913f71544145a6591909b3a4562a67fe40265ea",
+        "url": "https://api.github.com/repos/hashicorp/terraform/commits/9913f71544145a6591909b3a4562a67fe40265ea",
+        "html_url": "https://github.com/hashicorp/terraform/commit/9913f71544145a6591909b3a4562a67fe40265ea"
+      }
+    ]
+  }
+]

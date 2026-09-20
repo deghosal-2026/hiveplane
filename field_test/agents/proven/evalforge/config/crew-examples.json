@@ -1,0 +1,19 @@
+{
+  "agent_id": "crew-examples",
+  "adapter_type": "crewai",
+  "adapter_config": {
+    "module": "field.config.crew-examples_wrapper",
+    "function": "build_agent",
+    "timeout_seconds": 120
+  },
+  "setup_commands": [],
+  "scenario_packs": [
+    "crewai-core.yaml",
+    "shared-safety.yaml"
+  ],
+  "acceptance": {
+    "minimum_pass_rate": 0.5,
+    "required_metrics": []
+  },
+  "quarantined": false
+}

@@ -1,0 +1,576 @@
+[
+  {
+    "sha": "182defa8aa49058a8d10c86c9e6807e5ad76962f",
+    "node_id": "C_kwDOAOWUd9oAKDE4MmRlZmE4YWE0OTA1OGE4ZDEwYzg2YzllNjgwN2U1YWQ3Njk2MmY",
+    "commit": {
+      "author": {
+        "name": "Guillaume Lours",
+        "email": "glours@users.noreply.github.com",
+        "date": "2026-04-08T19:00:09Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-04-10T13:26:08Z"
+      },
+      "message": "feat: add Docker Desktop Logs view hints and navigation shortcut\n\nAdd CLI hooks handler to show \"What's next:\" hints pointing to the\nDocker Desktop Logs view after `docker logs`, `docker compose logs`,\nand `docker compose up -d`.\n\nAdd `l` keyboard shortcut in the `compose up` navigation menu to\nopen the Logs view, gated on Docker Desktop feature flag and settings.\n\nCo-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>\nSigned-off-by: Guillaume Lours <glours@users.noreply.github.com>",
+      "tree": {
+        "sha": "6c0f39441616dd0da96abc93ee4b8f9dc174e764",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/6c0f39441616dd0da96abc93ee4b8f9dc174e764"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/182defa8aa49058a8d10c86c9e6807e5ad76962f",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/182defa8aa49058a8d10c86c9e6807e5ad76962f",
+    "html_url": "https://github.com/docker/compose/commit/182defa8aa49058a8d10c86c9e6807e5ad76962f",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/182defa8aa49058a8d10c86c9e6807e5ad76962f/comments",
+    "author": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "ae92bef4e1d02bfb75afeafc0ce9334a133f952f",
+        "url": "https://api.github.com/repos/docker/compose/commits/ae92bef4e1d02bfb75afeafc0ce9334a133f952f",
+        "html_url": "https://github.com/docker/compose/commit/ae92bef4e1d02bfb75afeafc0ce9334a133f952f"
+      }
+    ]
+  },
+  {
+    "sha": "d518da24193f88d9ecf8e847fe2f89b2344b6405",
+    "node_id": "C_kwDOAOWUd9oAKGQ1MThkYTI0MTkzZjg4ZDllY2Y4ZTg0N2ZlMmY4OWIyMzQ0YjY0MDU",
+    "commit": {
+      "author": {
+        "name": "Guillaume Lours",
+        "email": "glours@users.noreply.github.com",
+        "date": "2026-04-10T13:18:20Z"
+      },
+      "committer": {
+        "name": "Nicolas De loof",
+        "email": "nicolas.deloof@gmail.com",
+        "date": "2026-04-10T14:12:09Z"
+      },
+      "message": "build and push Docker Desktop module image on release\n\nAdd workflow to build and push docker/compose-desktop-module image\n  to Docker Hub on version tag push, used by Docker Desktop's update\n  system to deliver the Compose CLI plugin.\n\nSigned-off-by: Guillaume Lours <glours@users.noreply.github.com>",
+      "tree": {
+        "sha": "5ee28259ea96579fb40b59e0914e24f1efa46b51",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/5ee28259ea96579fb40b59e0914e24f1efa46b51"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/d518da24193f88d9ecf8e847fe2f89b2344b6405",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/d518da24193f88d9ecf8e847fe2f89b2344b6405",
+    "html_url": "https://github.com/docker/compose/commit/d518da24193f88d9ecf8e847fe2f89b2344b6405",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/d518da24193f88d9ecf8e847fe2f89b2344b6405/comments",
+    "author": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "ndeloof",
+      "id": 132757,
+      "node_id": "MDQ6VXNlcjEzMjc1Nw==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/132757?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ndeloof",
+      "html_url": "https://github.com/ndeloof",
+      "followers_url": "https://api.github.com/users/ndeloof/followers",
+      "following_url": "https://api.github.com/users/ndeloof/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ndeloof/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ndeloof/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ndeloof/subscriptions",
+      "organizations_url": "https://api.github.com/users/ndeloof/orgs",
+      "repos_url": "https://api.github.com/users/ndeloof/repos",
+      "events_url": "https://api.github.com/users/ndeloof/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ndeloof/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "182defa8aa49058a8d10c86c9e6807e5ad76962f",
+        "url": "https://api.github.com/repos/docker/compose/commits/182defa8aa49058a8d10c86c9e6807e5ad76962f",
+        "html_url": "https://github.com/docker/compose/commit/182defa8aa49058a8d10c86c9e6807e5ad76962f"
+      }
+    ]
+  },
+  {
+    "sha": "9eb896670595c8a88936daf2bb66b49ec277921d",
+    "node_id": "C_kwDOAOWUd9oAKDllYjg5NjY3MDU5NWM4YTg4OTM2ZGFmMmJiNjZiNDllYzI3NzkyMWQ",
+    "commit": {
+      "author": {
+        "name": "Guillaume Lours",
+        "email": "glours@users.noreply.github.com",
+        "date": "2026-04-14T09:26:21Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-04-14T09:43:48Z"
+      },
+      "message": "fix: provider output handling and watch rebuild re-invocation\n\nProvider info and error messages containing newlines broke the TTY\nprogress display (timer drifting to a new line, broken cursor\nmovement). Extract only the first line for progress events via\nfirstLine(). Full messages remain available through the provider's\nown debug message type.\n\nSkip provider services during watch rebuild convergence by adding a\nSkipProviders flag to CreateOptions, set only by the watch rebuild\npath. This prevents unnecessary re-invocation of providers on every\nfile change while preserving normal provider execution for all other\ncommands (up, create, run, scale).\n\nSigned-off-by: Guillaume Lours <glours@users.noreply.github.com>",
+      "tree": {
+        "sha": "fdaadc974add3548ef76f1aed0d084128f6bdc50",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/fdaadc974add3548ef76f1aed0d084128f6bdc50"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/9eb896670595c8a88936daf2bb66b49ec277921d",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/9eb896670595c8a88936daf2bb66b49ec277921d",
+    "html_url": "https://github.com/docker/compose/commit/9eb896670595c8a88936daf2bb66b49ec277921d",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/9eb896670595c8a88936daf2bb66b49ec277921d/comments",
+    "author": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "d518da24193f88d9ecf8e847fe2f89b2344b6405",
+        "url": "https://api.github.com/repos/docker/compose/commits/d518da24193f88d9ecf8e847fe2f89b2344b6405",
+        "html_url": "https://github.com/docker/compose/commit/d518da24193f88d9ecf8e847fe2f89b2344b6405"
+      }
+    ]
+  },
+  {
+    "sha": "7a97400beafde9a8930463a09024e7badecf069e",
+    "node_id": "C_kwDOAOWUd9oAKDdhOTc0MDBiZWFmZGU5YTg5MzA0NjNhMDkwMjRlN2JhZGVjZjA2OWU",
+    "commit": {
+      "author": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-04-14T07:44:39Z"
+      },
+      "committer": {
+        "name": "Nicolas De loof",
+        "email": "nicolas.deloof@gmail.com",
+        "date": "2026-04-15T08:38:54Z"
+      },
+      "message": "Fix typo in SECURITY.md\n\nSigned-off-by: Guillaume Lours <705411+glours@users.noreply.github.com>",
+      "tree": {
+        "sha": "d31665ef6746da7f7bb7bcd585c30ad1a29581bc",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/d31665ef6746da7f7bb7bcd585c30ad1a29581bc"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/7a97400beafde9a8930463a09024e7badecf069e",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/7a97400beafde9a8930463a09024e7badecf069e",
+    "html_url": "https://github.com/docker/compose/commit/7a97400beafde9a8930463a09024e7badecf069e",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/7a97400beafde9a8930463a09024e7badecf069e/comments",
+    "author": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "ndeloof",
+      "id": 132757,
+      "node_id": "MDQ6VXNlcjEzMjc1Nw==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/132757?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ndeloof",
+      "html_url": "https://github.com/ndeloof",
+      "followers_url": "https://api.github.com/users/ndeloof/followers",
+      "following_url": "https://api.github.com/users/ndeloof/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ndeloof/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ndeloof/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ndeloof/subscriptions",
+      "organizations_url": "https://api.github.com/users/ndeloof/orgs",
+      "repos_url": "https://api.github.com/users/ndeloof/repos",
+      "events_url": "https://api.github.com/users/ndeloof/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ndeloof/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "9eb896670595c8a88936daf2bb66b49ec277921d",
+        "url": "https://api.github.com/repos/docker/compose/commits/9eb896670595c8a88936daf2bb66b49ec277921d",
+        "html_url": "https://github.com/docker/compose/commit/9eb896670595c8a88936daf2bb66b49ec277921d"
+      }
+    ]
+  },
+  {
+    "sha": "6ed7625d433024a111c59f248e4b5021cd4bd025",
+    "node_id": "C_kwDOAOWUd9oAKDZlZDc2MjVkNDMzMDI0YTExMWM1OWYyNDhlNGI1MDIxY2Q0YmQwMjU",
+    "commit": {
+      "author": {
+        "name": "dependabot[bot]",
+        "email": "49699333+dependabot[bot]@users.noreply.github.com",
+        "date": "2026-04-15T09:03:25Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-04-15T09:35:57Z"
+      },
+      "message": "build(deps): bump github.com/containerd/containerd/v2\n\nBumps [github.com/containerd/containerd/v2](https://github.com/containerd/containerd) from 2.2.2 to 2.2.3.\n- [Release notes](https://github.com/containerd/containerd/releases)\n- [Changelog](https://github.com/containerd/containerd/blob/main/RELEASES.md)\n- [Commits](https://github.com/containerd/containerd/compare/v2.2.2...v2.2.3)\n\n---\nupdated-dependencies:\n- dependency-name: github.com/containerd/containerd/v2\n  dependency-version: 2.2.3\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>",
+      "tree": {
+        "sha": "d6ff22ab2962967b33ecfd3a95f38e65fa3b2d8e",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/d6ff22ab2962967b33ecfd3a95f38e65fa3b2d8e"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/6ed7625d433024a111c59f248e4b5021cd4bd025",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/6ed7625d433024a111c59f248e4b5021cd4bd025",
+    "html_url": "https://github.com/docker/compose/commit/6ed7625d433024a111c59f248e4b5021cd4bd025",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/6ed7625d433024a111c59f248e4b5021cd4bd025/comments",
+    "author": {
+      "login": "dependabot[bot]",
+      "id": 49699333,
+      "node_id": "MDM6Qm90NDk2OTkzMzM=",
+      "avatar_url": "https://avatars.githubusercontent.com/in/29110?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/dependabot%5Bbot%5D",
+      "html_url": "https://github.com/apps/dependabot",
+      "followers_url": "https://api.github.com/users/dependabot%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/dependabot%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/dependabot%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/dependabot%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/dependabot%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/dependabot%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/dependabot%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/dependabot%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/dependabot%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "7a97400beafde9a8930463a09024e7badecf069e",
+        "url": "https://api.github.com/repos/docker/compose/commits/7a97400beafde9a8930463a09024e7badecf069e",
+        "html_url": "https://github.com/docker/compose/commit/7a97400beafde9a8930463a09024e7badecf069e"
+      }
+    ]
+  },
+  {
+    "sha": "efb090183f25a4dd8f681eae9eed26356ad3c04c",
+    "node_id": "C_kwDOAOWUd9oAKGVmYjA5MDE4M2YyNWE0ZGQ4ZjY4MWVhZTllZWQyNjM1NmFkM2MwNGM",
+    "commit": {
+      "author": {
+        "name": "Guillaume Lours",
+        "email": "glours@users.noreply.github.com",
+        "date": "2026-04-14T14:23:14Z"
+      },
+      "committer": {
+        "name": "Nicolas De loof",
+        "email": "nicolas.deloof@gmail.com",
+        "date": "2026-04-15T10:11:43Z"
+      },
+      "message": "feat: make hook hint deep links clickable using OSC 8 terminal hyperlinks\n\nWrap the docker-desktop://dashboard/logs URL in OSC 8 escape sequences\nwith underline styling so it appears as a clickable link in supported\nterminals. Respects NO_COLOR and COMPOSE_ANSI=never to suppress escapes.\n\nCo-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>\nSigned-off-by: Guillaume Lours <glours@users.noreply.github.com>",
+      "tree": {
+        "sha": "64c96b9b2b7f2e7becb1a575a712a57065e9bbba",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/64c96b9b2b7f2e7becb1a575a712a57065e9bbba"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/efb090183f25a4dd8f681eae9eed26356ad3c04c",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/efb090183f25a4dd8f681eae9eed26356ad3c04c",
+    "html_url": "https://github.com/docker/compose/commit/efb090183f25a4dd8f681eae9eed26356ad3c04c",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/efb090183f25a4dd8f681eae9eed26356ad3c04c/comments",
+    "author": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "ndeloof",
+      "id": 132757,
+      "node_id": "MDQ6VXNlcjEzMjc1Nw==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/132757?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ndeloof",
+      "html_url": "https://github.com/ndeloof",
+      "followers_url": "https://api.github.com/users/ndeloof/followers",
+      "following_url": "https://api.github.com/users/ndeloof/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ndeloof/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ndeloof/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ndeloof/subscriptions",
+      "organizations_url": "https://api.github.com/users/ndeloof/orgs",
+      "repos_url": "https://api.github.com/users/ndeloof/repos",
+      "events_url": "https://api.github.com/users/ndeloof/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ndeloof/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "6ed7625d433024a111c59f248e4b5021cd4bd025",
+        "url": "https://api.github.com/repos/docker/compose/commits/6ed7625d433024a111c59f248e4b5021cd4bd025",
+        "html_url": "https://github.com/docker/compose/commit/6ed7625d433024a111c59f248e4b5021cd4bd025"
+      }
+    ]
+  },
+  {
+    "sha": "977a4310f9f6d89d4b176fee01a5b7c109c1816a",
+    "node_id": "C_kwDOAOWUd9oAKDk3N2E0MzEwZjlmNmQ4OWQ0YjE3NmZlZTAxYTViN2MxMDljMTgxNmE",
+    "commit": {
+      "author": {
+        "name": "Guillaume Lours",
+        "email": "glours@users.noreply.github.com",
+        "date": "2026-04-15T10:16:50Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-04-15T13:46:06Z"
+      },
+      "message": "remove 'provenance' attribute'\n\nSigned-off-by: Guillaume Lours <glours@users.noreply.github.com>",
+      "tree": {
+        "sha": "35e5b8e0e203d746446af956159f1d392c2ac4ae",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/35e5b8e0e203d746446af956159f1d392c2ac4ae"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/977a4310f9f6d89d4b176fee01a5b7c109c1816a",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/977a4310f9f6d89d4b176fee01a5b7c109c1816a",
+    "html_url": "https://github.com/docker/compose/commit/977a4310f9f6d89d4b176fee01a5b7c109c1816a",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/977a4310f9f6d89d4b176fee01a5b7c109c1816a/comments",
+    "author": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "efb090183f25a4dd8f681eae9eed26356ad3c04c",
+        "url": "https://api.github.com/repos/docker/compose/commits/efb090183f25a4dd8f681eae9eed26356ad3c04c",
+        "html_url": "https://github.com/docker/compose/commit/efb090183f25a4dd8f681eae9eed26356ad3c04c"
+      }
+    ]
+  }
+]

@@ -1,0 +1,166 @@
+[
+  {
+    "sha": "36a38052b547e588d8334e781f6f75bffe4ba55b",
+    "node_id": "MDY6Q29tbWl0MTUxMTE4MjE6MzZhMzgwNTJiNTQ3ZTU4OGQ4MzM0ZTc4MWY2Zjc1YmZmZTRiYTU1Yg==",
+    "commit": {
+      "author": {
+        "name": "Arve Knudsen",
+        "email": "arve.knudsen@gmail.com",
+        "date": "2020-03-06T16:22:26Z"
+      },
+      "committer": {
+        "name": "Arve Knudsen",
+        "email": "arve.knudsen@gmail.com",
+        "date": "2020-03-06T16:29:07Z"
+      },
+      "message": "CircleCI: Adapt build-pipeline to implement also release pipeline\n\nSigned-off-by: Arve Knudsen <arve.knudsen@gmail.com>",
+      "tree": {
+        "sha": "9c91722fcfd731398ed65372f6dad9947fb1ef1c",
+        "url": "https://api.github.com/repos/grafana/grafana/git/trees/9c91722fcfd731398ed65372f6dad9947fb1ef1c"
+      },
+      "url": "https://api.github.com/repos/grafana/grafana/git/commits/36a38052b547e588d8334e781f6f75bffe4ba55b",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/grafana/grafana/commits/36a38052b547e588d8334e781f6f75bffe4ba55b",
+    "html_url": "https://github.com/grafana/grafana/commit/36a38052b547e588d8334e781f6f75bffe4ba55b",
+    "comments_url": "https://api.github.com/repos/grafana/grafana/commits/36a38052b547e588d8334e781f6f75bffe4ba55b/comments",
+    "author": {
+      "login": "aknuds1",
+      "id": 281303,
+      "node_id": "MDQ6VXNlcjI4MTMwMw==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/281303?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aknuds1",
+      "html_url": "https://github.com/aknuds1",
+      "followers_url": "https://api.github.com/users/aknuds1/followers",
+      "following_url": "https://api.github.com/users/aknuds1/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aknuds1/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aknuds1/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aknuds1/subscriptions",
+      "organizations_url": "https://api.github.com/users/aknuds1/orgs",
+      "repos_url": "https://api.github.com/users/aknuds1/repos",
+      "events_url": "https://api.github.com/users/aknuds1/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aknuds1/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "aknuds1",
+      "id": 281303,
+      "node_id": "MDQ6VXNlcjI4MTMwMw==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/281303?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aknuds1",
+      "html_url": "https://github.com/aknuds1",
+      "followers_url": "https://api.github.com/users/aknuds1/followers",
+      "following_url": "https://api.github.com/users/aknuds1/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aknuds1/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aknuds1/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aknuds1/subscriptions",
+      "organizations_url": "https://api.github.com/users/aknuds1/orgs",
+      "repos_url": "https://api.github.com/users/aknuds1/repos",
+      "events_url": "https://api.github.com/users/aknuds1/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aknuds1/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "917860c4d396cf9ce22127fb39159fe2a1e09a5e",
+        "url": "https://api.github.com/repos/grafana/grafana/commits/917860c4d396cf9ce22127fb39159fe2a1e09a5e",
+        "html_url": "https://github.com/grafana/grafana/commit/917860c4d396cf9ce22127fb39159fe2a1e09a5e"
+      }
+    ]
+  },
+  {
+    "sha": "7eb60e3fddfa5f5683dbc3079cc0c74dadad896a",
+    "node_id": "MDY6Q29tbWl0MTUxMTE4MjE6N2ViNjBlM2ZkZGZhNWY1NjgzZGJjMzA3OWNjMGM3NGRhZGFkODk2YQ==",
+    "commit": {
+      "author": {
+        "name": "Arve Knudsen",
+        "email": "arve.knudsen@gmail.com",
+        "date": "2020-03-08T17:24:04Z"
+      },
+      "committer": {
+        "name": "Arve Knudsen",
+        "email": "arve.knudsen@gmail.com",
+        "date": "2020-03-08T17:26:07Z"
+      },
+      "message": "Fix new release pipeline\n\nSigned-off-by: Arve Knudsen <arve.knudsen@gmail.com>",
+      "tree": {
+        "sha": "8b92157cfa7710e37707bed804080e8706869d82",
+        "url": "https://api.github.com/repos/grafana/grafana/git/trees/8b92157cfa7710e37707bed804080e8706869d82"
+      },
+      "url": "https://api.github.com/repos/grafana/grafana/git/commits/7eb60e3fddfa5f5683dbc3079cc0c74dadad896a",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/grafana/grafana/commits/7eb60e3fddfa5f5683dbc3079cc0c74dadad896a",
+    "html_url": "https://github.com/grafana/grafana/commit/7eb60e3fddfa5f5683dbc3079cc0c74dadad896a",
+    "comments_url": "https://api.github.com/repos/grafana/grafana/commits/7eb60e3fddfa5f5683dbc3079cc0c74dadad896a/comments",
+    "author": {
+      "login": "aknuds1",
+      "id": 281303,
+      "node_id": "MDQ6VXNlcjI4MTMwMw==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/281303?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aknuds1",
+      "html_url": "https://github.com/aknuds1",
+      "followers_url": "https://api.github.com/users/aknuds1/followers",
+      "following_url": "https://api.github.com/users/aknuds1/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aknuds1/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aknuds1/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aknuds1/subscriptions",
+      "organizations_url": "https://api.github.com/users/aknuds1/orgs",
+      "repos_url": "https://api.github.com/users/aknuds1/repos",
+      "events_url": "https://api.github.com/users/aknuds1/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aknuds1/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "aknuds1",
+      "id": 281303,
+      "node_id": "MDQ6VXNlcjI4MTMwMw==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/281303?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/aknuds1",
+      "html_url": "https://github.com/aknuds1",
+      "followers_url": "https://api.github.com/users/aknuds1/followers",
+      "following_url": "https://api.github.com/users/aknuds1/following{/other_user}",
+      "gists_url": "https://api.github.com/users/aknuds1/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/aknuds1/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/aknuds1/subscriptions",
+      "organizations_url": "https://api.github.com/users/aknuds1/orgs",
+      "repos_url": "https://api.github.com/users/aknuds1/repos",
+      "events_url": "https://api.github.com/users/aknuds1/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/aknuds1/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "36a38052b547e588d8334e781f6f75bffe4ba55b",
+        "url": "https://api.github.com/repos/grafana/grafana/commits/36a38052b547e588d8334e781f6f75bffe4ba55b",
+        "html_url": "https://github.com/grafana/grafana/commit/36a38052b547e588d8334e781f6f75bffe4ba55b"
+      }
+    ]
+  }
+]

@@ -1,0 +1,1970 @@
+[
+  {
+    "sha": "bab62f4d6fa2178d7225f9699d6445656da91c65",
+    "node_id": "C_kwDOAOWUd9oAKGJhYjYyZjRkNmZhMjE3OGQ3MjI1Zjk2OTlkNjQ0NTY1NmRhOTFjNjU",
+    "commit": {
+      "author": {
+        "name": "dependabot[bot]",
+        "email": "49699333+dependabot[bot]@users.noreply.github.com",
+        "date": "2026-07-02T09:02:50Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-07-06T08:04:43Z"
+      },
+      "message": "build(deps): bump github.com/moby/buildkit from 0.31.0 to 0.31.1\n\nBumps [github.com/moby/buildkit](https://github.com/moby/buildkit) from 0.31.0 to 0.31.1.\n- [Release notes](https://github.com/moby/buildkit/releases)\n- [Commits](https://github.com/moby/buildkit/compare/v0.31.0...v0.31.1)\n\n---\nupdated-dependencies:\n- dependency-name: github.com/moby/buildkit\n  dependency-version: 0.31.1\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>",
+      "tree": {
+        "sha": "89d868aa6283bf7ee84f3772074b07bc210b514b",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/89d868aa6283bf7ee84f3772074b07bc210b514b"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/bab62f4d6fa2178d7225f9699d6445656da91c65",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/bab62f4d6fa2178d7225f9699d6445656da91c65",
+    "html_url": "https://github.com/docker/compose/commit/bab62f4d6fa2178d7225f9699d6445656da91c65",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/bab62f4d6fa2178d7225f9699d6445656da91c65/comments",
+    "author": {
+      "login": "dependabot[bot]",
+      "id": 49699333,
+      "node_id": "MDM6Qm90NDk2OTkzMzM=",
+      "avatar_url": "https://avatars.githubusercontent.com/in/29110?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/dependabot%5Bbot%5D",
+      "html_url": "https://github.com/apps/dependabot",
+      "followers_url": "https://api.github.com/users/dependabot%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/dependabot%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/dependabot%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/dependabot%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/dependabot%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/dependabot%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/dependabot%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/dependabot%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/dependabot%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "9d444a667a146e071249d9aff460e766ec8956fe",
+        "url": "https://api.github.com/repos/docker/compose/commits/9d444a667a146e071249d9aff460e766ec8956fe",
+        "html_url": "https://github.com/docker/compose/commit/9d444a667a146e071249d9aff460e766ec8956fe"
+      }
+    ]
+  },
+  {
+    "sha": "133914bc46bef6d9f3432c416c5dca7c454c9764",
+    "node_id": "C_kwDOAOWUd9oAKDEzMzkxNGJjNDZiZWY2ZDlmMzQzMmM0MTZjNWRjYTdjNDU0Yzk3NjQ",
+    "commit": {
+      "author": {
+        "name": "Sebastiaan van Stijn",
+        "email": "github@gone.nl",
+        "date": "2026-07-02T13:43:13Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-07-06T08:12:18Z"
+      },
+      "message": "build(deps): bump github.com/moby/sys/user to v0.4.1\n\n- user: prevent possible DoS via unbounded parsing of user and group\n  database files in GHSA-mjcv-p78q-w5fw. This fixes a similar issue\n  as CVE-2026-47262 in containerd.\n- user: prevent falling back to looking up numeric usernames\n  Improve handling of numeric user/group to prevent looking up numeric\n  values as usernames. This fixes a similar issue as [CVE-2026-46680] in\n  containerd.\n- user: update minimum go version to go1.18\n- assorted testing and linting fixes.\n\n[CVE-2026-46680]: https://github.com/advisories/GHSA-fqw6-gf59-qr4w\n\nfull diff: https://github.com/moby/sys/compare/user/v0.4.0...user/v0.4.1\n\nSigned-off-by: Sebastiaan van Stijn <github@gone.nl>",
+      "tree": {
+        "sha": "cf2e4ff394346139fd6d3a42509c65b90bb45a31",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/cf2e4ff394346139fd6d3a42509c65b90bb45a31"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/133914bc46bef6d9f3432c416c5dca7c454c9764",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/133914bc46bef6d9f3432c416c5dca7c454c9764",
+    "html_url": "https://github.com/docker/compose/commit/133914bc46bef6d9f3432c416c5dca7c454c9764",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/133914bc46bef6d9f3432c416c5dca7c454c9764/comments",
+    "author": {
+      "login": "thaJeztah",
+      "id": 1804568,
+      "node_id": "MDQ6VXNlcjE4MDQ1Njg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1804568?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/thaJeztah",
+      "html_url": "https://github.com/thaJeztah",
+      "followers_url": "https://api.github.com/users/thaJeztah/followers",
+      "following_url": "https://api.github.com/users/thaJeztah/following{/other_user}",
+      "gists_url": "https://api.github.com/users/thaJeztah/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/thaJeztah/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/thaJeztah/subscriptions",
+      "organizations_url": "https://api.github.com/users/thaJeztah/orgs",
+      "repos_url": "https://api.github.com/users/thaJeztah/repos",
+      "events_url": "https://api.github.com/users/thaJeztah/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/thaJeztah/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "bab62f4d6fa2178d7225f9699d6445656da91c65",
+        "url": "https://api.github.com/repos/docker/compose/commits/bab62f4d6fa2178d7225f9699d6445656da91c65",
+        "html_url": "https://github.com/docker/compose/commit/bab62f4d6fa2178d7225f9699d6445656da91c65"
+      }
+    ]
+  },
+  {
+    "sha": "81e420139a77220915b6e55cc19329857b907a82",
+    "node_id": "C_kwDOAOWUd9oAKDgxZTQyMDEzOWE3NzIyMDkxNWI2ZTU1Y2MxOTMyOTg1N2I5MDdhODI",
+    "commit": {
+      "author": {
+        "name": "Derek Misler",
+        "email": "derek.misler@docker.com",
+        "date": "2026-06-30T15:59:21Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-07-06T08:25:22Z"
+      },
+      "message": "ci: add concurrency group to pr-review-trigger to prevent duplicate reviews\n\nSigned-off-by: Derek Misler <derek.misler@docker.com>",
+      "tree": {
+        "sha": "7674a610c9c73944d9323ac874a9428e4d97d694",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/7674a610c9c73944d9323ac874a9428e4d97d694"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/81e420139a77220915b6e55cc19329857b907a82",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/81e420139a77220915b6e55cc19329857b907a82",
+    "html_url": "https://github.com/docker/compose/commit/81e420139a77220915b6e55cc19329857b907a82",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/81e420139a77220915b6e55cc19329857b907a82/comments",
+    "author": {
+      "login": "derekmisler",
+      "id": 2684662,
+      "node_id": "MDQ6VXNlcjI2ODQ2NjI=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2684662?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/derekmisler",
+      "html_url": "https://github.com/derekmisler",
+      "followers_url": "https://api.github.com/users/derekmisler/followers",
+      "following_url": "https://api.github.com/users/derekmisler/following{/other_user}",
+      "gists_url": "https://api.github.com/users/derekmisler/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/derekmisler/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/derekmisler/subscriptions",
+      "organizations_url": "https://api.github.com/users/derekmisler/orgs",
+      "repos_url": "https://api.github.com/users/derekmisler/repos",
+      "events_url": "https://api.github.com/users/derekmisler/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/derekmisler/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "133914bc46bef6d9f3432c416c5dca7c454c9764",
+        "url": "https://api.github.com/repos/docker/compose/commits/133914bc46bef6d9f3432c416c5dca7c454c9764",
+        "html_url": "https://github.com/docker/compose/commit/133914bc46bef6d9f3432c416c5dca7c454c9764"
+      }
+    ]
+  },
+  {
+    "sha": "077d09592fcb0a50e8cfbbc519ce3ecda884fe24",
+    "node_id": "C_kwDOAOWUd9oAKDA3N2QwOTU5MmZjYjBhNTBlOGNmYmJjNTE5Y2UzZWNkYTg4NGZlMjQ",
+    "commit": {
+      "author": {
+        "name": "dependabot[bot]",
+        "email": "49699333+dependabot[bot]@users.noreply.github.com",
+        "date": "2026-07-06T08:18:33Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-07-06T08:30:27Z"
+      },
+      "message": "build(deps): bump go.yaml.in/yaml/v4 from 4.0.0-rc.4 to 4.0.0-rc.6\n\nBumps [go.yaml.in/yaml/v4](https://github.com/yaml/go-yaml) from 4.0.0-rc.4 to 4.0.0-rc.6.\n- [Commits](https://github.com/yaml/go-yaml/compare/v4.0.0-rc.4...v4.0.0-rc.6)\n\n---\nupdated-dependencies:\n- dependency-name: go.yaml.in/yaml/v4\n  dependency-version: 4.0.0-rc.6\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>",
+      "tree": {
+        "sha": "b4d9aec46515d4048299b576239ecdb54990d135",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/b4d9aec46515d4048299b576239ecdb54990d135"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/077d09592fcb0a50e8cfbbc519ce3ecda884fe24",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/077d09592fcb0a50e8cfbbc519ce3ecda884fe24",
+    "html_url": "https://github.com/docker/compose/commit/077d09592fcb0a50e8cfbbc519ce3ecda884fe24",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/077d09592fcb0a50e8cfbbc519ce3ecda884fe24/comments",
+    "author": {
+      "login": "dependabot[bot]",
+      "id": 49699333,
+      "node_id": "MDM6Qm90NDk2OTkzMzM=",
+      "avatar_url": "https://avatars.githubusercontent.com/in/29110?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/dependabot%5Bbot%5D",
+      "html_url": "https://github.com/apps/dependabot",
+      "followers_url": "https://api.github.com/users/dependabot%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/dependabot%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/dependabot%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/dependabot%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/dependabot%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/dependabot%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/dependabot%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/dependabot%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/dependabot%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "81e420139a77220915b6e55cc19329857b907a82",
+        "url": "https://api.github.com/repos/docker/compose/commits/81e420139a77220915b6e55cc19329857b907a82",
+        "html_url": "https://github.com/docker/compose/commit/81e420139a77220915b6e55cc19329857b907a82"
+      }
+    ]
+  },
+  {
+    "sha": "ff711700cd56e5fbbb3b4e368001f0677973ebbd",
+    "node_id": "C_kwDOAOWUd9oAKGZmNzExNzAwY2Q1NmU1ZmJiYjNiNGUzNjgwMDFmMDY3Nzk3M2ViYmQ",
+    "commit": {
+      "author": {
+        "name": "blackflytech",
+        "email": "blackflytech@outlook.com",
+        "date": "2026-06-30T16:21:21Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-07-06T08:36:46Z"
+      },
+      "message": "Fix grammar in Attestations field comment\n\nSigned-off-by: blackflytech <blackflytech@outlook.com>",
+      "tree": {
+        "sha": "3480b9f43c3001c3f5b71fe540ce1d277c190d50",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/3480b9f43c3001c3f5b71fe540ce1d277c190d50"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/ff711700cd56e5fbbb3b4e368001f0677973ebbd",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/ff711700cd56e5fbbb3b4e368001f0677973ebbd",
+    "html_url": "https://github.com/docker/compose/commit/ff711700cd56e5fbbb3b4e368001f0677973ebbd",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/ff711700cd56e5fbbb3b4e368001f0677973ebbd/comments",
+    "author": {
+      "login": "blackflytech",
+      "id": 229591178,
+      "node_id": "U_kgDODa9Iig",
+      "avatar_url": "https://avatars.githubusercontent.com/u/229591178?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/blackflytech",
+      "html_url": "https://github.com/blackflytech",
+      "followers_url": "https://api.github.com/users/blackflytech/followers",
+      "following_url": "https://api.github.com/users/blackflytech/following{/other_user}",
+      "gists_url": "https://api.github.com/users/blackflytech/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/blackflytech/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/blackflytech/subscriptions",
+      "organizations_url": "https://api.github.com/users/blackflytech/orgs",
+      "repos_url": "https://api.github.com/users/blackflytech/repos",
+      "events_url": "https://api.github.com/users/blackflytech/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/blackflytech/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "077d09592fcb0a50e8cfbbc519ce3ecda884fe24",
+        "url": "https://api.github.com/repos/docker/compose/commits/077d09592fcb0a50e8cfbbc519ce3ecda884fe24",
+        "html_url": "https://github.com/docker/compose/commit/077d09592fcb0a50e8cfbbc519ce3ecda884fe24"
+      }
+    ]
+  },
+  {
+    "sha": "dc8e27bea2602a4dadd26f715291816eb466bcb0",
+    "node_id": "C_kwDOAOWUd9oAKGRjOGUyN2JlYTI2MDJhNGRhZGQyNmY3MTUyOTE4MTZlYjQ2NmJjYjA",
+    "commit": {
+      "author": {
+        "name": "dependabot[bot]",
+        "email": "49699333+dependabot[bot]@users.noreply.github.com",
+        "date": "2026-07-06T08:33:23Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-07-06T08:45:35Z"
+      },
+      "message": "build(deps): bump github.com/docker/cli\n\nBumps [github.com/docker/cli](https://github.com/docker/cli) from 29.6.0+incompatible to 29.6.1+incompatible.\n- [Commits](https://github.com/docker/cli/compare/v29.6.0...v29.6.1)\n\n---\nupdated-dependencies:\n- dependency-name: github.com/docker/cli\n  dependency-version: 29.6.1+incompatible\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>",
+      "tree": {
+        "sha": "102ff1029f2c23c9a9679109b4e92924b9641d64",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/102ff1029f2c23c9a9679109b4e92924b9641d64"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/dc8e27bea2602a4dadd26f715291816eb466bcb0",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/dc8e27bea2602a4dadd26f715291816eb466bcb0",
+    "html_url": "https://github.com/docker/compose/commit/dc8e27bea2602a4dadd26f715291816eb466bcb0",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/dc8e27bea2602a4dadd26f715291816eb466bcb0/comments",
+    "author": {
+      "login": "dependabot[bot]",
+      "id": 49699333,
+      "node_id": "MDM6Qm90NDk2OTkzMzM=",
+      "avatar_url": "https://avatars.githubusercontent.com/in/29110?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/dependabot%5Bbot%5D",
+      "html_url": "https://github.com/apps/dependabot",
+      "followers_url": "https://api.github.com/users/dependabot%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/dependabot%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/dependabot%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/dependabot%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/dependabot%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/dependabot%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/dependabot%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/dependabot%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/dependabot%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "ff711700cd56e5fbbb3b4e368001f0677973ebbd",
+        "url": "https://api.github.com/repos/docker/compose/commits/ff711700cd56e5fbbb3b4e368001f0677973ebbd",
+        "html_url": "https://github.com/docker/compose/commit/ff711700cd56e5fbbb3b4e368001f0677973ebbd"
+      }
+    ]
+  },
+  {
+    "sha": "26550b0d1f0fbecc3ca95d913c7677a13cee2f56",
+    "node_id": "C_kwDOAOWUd9oAKDI2NTUwYjBkMWYwZmJlY2MzY2E5NWQ5MTNjNzY3N2ExM2NlZTJmNTY",
+    "commit": {
+      "author": {
+        "name": "Sebastiaan van Stijn",
+        "email": "github@gone.nl",
+        "date": "2026-07-06T08:45:59Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-07-06T09:18:38Z"
+      },
+      "message": "ci: remove unused desktop-edge-test workflow\n\nIt's not currently used, and we can probably trigger this from the\ndesktop repository itself.\n\nSigned-off-by: Sebastiaan van Stijn <github@gone.nl>",
+      "tree": {
+        "sha": "5fe59c5520c5dd0d3b8eb249a0fc25026a73c1d6",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/5fe59c5520c5dd0d3b8eb249a0fc25026a73c1d6"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/26550b0d1f0fbecc3ca95d913c7677a13cee2f56",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/26550b0d1f0fbecc3ca95d913c7677a13cee2f56",
+    "html_url": "https://github.com/docker/compose/commit/26550b0d1f0fbecc3ca95d913c7677a13cee2f56",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/26550b0d1f0fbecc3ca95d913c7677a13cee2f56/comments",
+    "author": {
+      "login": "thaJeztah",
+      "id": 1804568,
+      "node_id": "MDQ6VXNlcjE4MDQ1Njg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1804568?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/thaJeztah",
+      "html_url": "https://github.com/thaJeztah",
+      "followers_url": "https://api.github.com/users/thaJeztah/followers",
+      "following_url": "https://api.github.com/users/thaJeztah/following{/other_user}",
+      "gists_url": "https://api.github.com/users/thaJeztah/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/thaJeztah/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/thaJeztah/subscriptions",
+      "organizations_url": "https://api.github.com/users/thaJeztah/orgs",
+      "repos_url": "https://api.github.com/users/thaJeztah/repos",
+      "events_url": "https://api.github.com/users/thaJeztah/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/thaJeztah/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "dc8e27bea2602a4dadd26f715291816eb466bcb0",
+        "url": "https://api.github.com/repos/docker/compose/commits/dc8e27bea2602a4dadd26f715291816eb466bcb0",
+        "html_url": "https://github.com/docker/compose/commit/dc8e27bea2602a4dadd26f715291816eb466bcb0"
+      }
+    ]
+  },
+  {
+    "sha": "1c9aa35c21376e1bbc80e8663bf6618018c8bfac",
+    "node_id": "C_kwDOAOWUd9oAKDFjOWFhMzVjMjEzNzZlMWJiYzgwZTg2NjNiZjY2MTgwMThjOGJmYWM",
+    "commit": {
+      "author": {
+        "name": "CrazyMax",
+        "email": "1951866+crazy-max@users.noreply.github.com",
+        "date": "2026-07-06T14:43:55Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-07-06T15:11:24Z"
+      },
+      "message": "ci: zizmor workflow\n\nSigned-off-by: CrazyMax <1951866+crazy-max@users.noreply.github.com>",
+      "tree": {
+        "sha": "0c905bddf111c2eab927801e0a3ec920f8354614",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/0c905bddf111c2eab927801e0a3ec920f8354614"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/1c9aa35c21376e1bbc80e8663bf6618018c8bfac",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/1c9aa35c21376e1bbc80e8663bf6618018c8bfac",
+    "html_url": "https://github.com/docker/compose/commit/1c9aa35c21376e1bbc80e8663bf6618018c8bfac",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/1c9aa35c21376e1bbc80e8663bf6618018c8bfac/comments",
+    "author": {
+      "login": "crazy-max",
+      "id": 1951866,
+      "node_id": "MDQ6VXNlcjE5NTE4NjY=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1951866?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/crazy-max",
+      "html_url": "https://github.com/crazy-max",
+      "followers_url": "https://api.github.com/users/crazy-max/followers",
+      "following_url": "https://api.github.com/users/crazy-max/following{/other_user}",
+      "gists_url": "https://api.github.com/users/crazy-max/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/crazy-max/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/crazy-max/subscriptions",
+      "organizations_url": "https://api.github.com/users/crazy-max/orgs",
+      "repos_url": "https://api.github.com/users/crazy-max/repos",
+      "events_url": "https://api.github.com/users/crazy-max/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/crazy-max/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "26550b0d1f0fbecc3ca95d913c7677a13cee2f56",
+        "url": "https://api.github.com/repos/docker/compose/commits/26550b0d1f0fbecc3ca95d913c7677a13cee2f56",
+        "html_url": "https://github.com/docker/compose/commit/26550b0d1f0fbecc3ca95d913c7677a13cee2f56"
+      }
+    ]
+  },
+  {
+    "sha": "50bd8945a1d69b17bc1674e1b0735cd686351180",
+    "node_id": "C_kwDOAOWUd9oAKDUwYmQ4OTQ1YTFkNjliMTdiYzE2NzRlMWIwNzM1Y2Q2ODYzNTExODA",
+    "commit": {
+      "author": {
+        "name": "CrazyMax",
+        "email": "1951866+crazy-max@users.noreply.github.com",
+        "date": "2026-07-06T14:44:06Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-07-06T15:11:24Z"
+      },
+      "message": "chore: setup dependabot for github actions\n\nSigned-off-by: CrazyMax <1951866+crazy-max@users.noreply.github.com>",
+      "tree": {
+        "sha": "dcb3d8b9306d0f1f8f668e8efc0367e60ad9380c",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/dcb3d8b9306d0f1f8f668e8efc0367e60ad9380c"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/50bd8945a1d69b17bc1674e1b0735cd686351180",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/50bd8945a1d69b17bc1674e1b0735cd686351180",
+    "html_url": "https://github.com/docker/compose/commit/50bd8945a1d69b17bc1674e1b0735cd686351180",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/50bd8945a1d69b17bc1674e1b0735cd686351180/comments",
+    "author": {
+      "login": "crazy-max",
+      "id": 1951866,
+      "node_id": "MDQ6VXNlcjE5NTE4NjY=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1951866?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/crazy-max",
+      "html_url": "https://github.com/crazy-max",
+      "followers_url": "https://api.github.com/users/crazy-max/followers",
+      "following_url": "https://api.github.com/users/crazy-max/following{/other_user}",
+      "gists_url": "https://api.github.com/users/crazy-max/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/crazy-max/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/crazy-max/subscriptions",
+      "organizations_url": "https://api.github.com/users/crazy-max/orgs",
+      "repos_url": "https://api.github.com/users/crazy-max/repos",
+      "events_url": "https://api.github.com/users/crazy-max/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/crazy-max/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "1c9aa35c21376e1bbc80e8663bf6618018c8bfac",
+        "url": "https://api.github.com/repos/docker/compose/commits/1c9aa35c21376e1bbc80e8663bf6618018c8bfac",
+        "html_url": "https://github.com/docker/compose/commit/1c9aa35c21376e1bbc80e8663bf6618018c8bfac"
+      }
+    ]
+  },
+  {
+    "sha": "be7b72e0ef5f678e6139befc1c90f794128036c2",
+    "node_id": "C_kwDOAOWUd9oAKGJlN2I3MmUwZWY1ZjY3OGU2MTM5YmVmYzFjOTBmNzk0MTI4MDM2YzI",
+    "commit": {
+      "author": {
+        "name": "CrazyMax",
+        "email": "1951866+crazy-max@users.noreply.github.com",
+        "date": "2026-07-06T14:50:21Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-07-06T15:11:24Z"
+      },
+      "message": "fix zizmor findings\n\nSigned-off-by: CrazyMax <1951866+crazy-max@users.noreply.github.com>",
+      "tree": {
+        "sha": "1676431804a900ff161f172eaf7cd2c484bebee8",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/1676431804a900ff161f172eaf7cd2c484bebee8"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/be7b72e0ef5f678e6139befc1c90f794128036c2",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/be7b72e0ef5f678e6139befc1c90f794128036c2",
+    "html_url": "https://github.com/docker/compose/commit/be7b72e0ef5f678e6139befc1c90f794128036c2",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/be7b72e0ef5f678e6139befc1c90f794128036c2/comments",
+    "author": {
+      "login": "crazy-max",
+      "id": 1951866,
+      "node_id": "MDQ6VXNlcjE5NTE4NjY=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1951866?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/crazy-max",
+      "html_url": "https://github.com/crazy-max",
+      "followers_url": "https://api.github.com/users/crazy-max/followers",
+      "following_url": "https://api.github.com/users/crazy-max/following{/other_user}",
+      "gists_url": "https://api.github.com/users/crazy-max/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/crazy-max/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/crazy-max/subscriptions",
+      "organizations_url": "https://api.github.com/users/crazy-max/orgs",
+      "repos_url": "https://api.github.com/users/crazy-max/repos",
+      "events_url": "https://api.github.com/users/crazy-max/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/crazy-max/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "50bd8945a1d69b17bc1674e1b0735cd686351180",
+        "url": "https://api.github.com/repos/docker/compose/commits/50bd8945a1d69b17bc1674e1b0735cd686351180",
+        "html_url": "https://github.com/docker/compose/commit/50bd8945a1d69b17bc1674e1b0735cd686351180"
+      }
+    ]
+  },
+  {
+    "sha": "a666b63a3c545aeaa9a4ed3a34f12fc0e807df0f",
+    "node_id": "C_kwDOAOWUd9oAKGE2NjZiNjNhM2M1NDVhZWFhOWE0ZWQzYTM0ZjEyZmMwZTgwN2RmMGY",
+    "commit": {
+      "author": {
+        "name": "CrazyMax",
+        "email": "1951866+crazy-max@users.noreply.github.com",
+        "date": "2026-07-06T15:17:50Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-07-06T15:29:12Z"
+      },
+      "message": "ci: fix docs-upstream workflow\n\nSigned-off-by: CrazyMax <1951866+crazy-max@users.noreply.github.com>",
+      "tree": {
+        "sha": "d4c3a96a8b0ad198e7b2812b3d1bf24580b00d4c",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/d4c3a96a8b0ad198e7b2812b3d1bf24580b00d4c"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/a666b63a3c545aeaa9a4ed3a34f12fc0e807df0f",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/a666b63a3c545aeaa9a4ed3a34f12fc0e807df0f",
+    "html_url": "https://github.com/docker/compose/commit/a666b63a3c545aeaa9a4ed3a34f12fc0e807df0f",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/a666b63a3c545aeaa9a4ed3a34f12fc0e807df0f/comments",
+    "author": {
+      "login": "crazy-max",
+      "id": 1951866,
+      "node_id": "MDQ6VXNlcjE5NTE4NjY=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1951866?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/crazy-max",
+      "html_url": "https://github.com/crazy-max",
+      "followers_url": "https://api.github.com/users/crazy-max/followers",
+      "following_url": "https://api.github.com/users/crazy-max/following{/other_user}",
+      "gists_url": "https://api.github.com/users/crazy-max/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/crazy-max/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/crazy-max/subscriptions",
+      "organizations_url": "https://api.github.com/users/crazy-max/orgs",
+      "repos_url": "https://api.github.com/users/crazy-max/repos",
+      "events_url": "https://api.github.com/users/crazy-max/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/crazy-max/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "be7b72e0ef5f678e6139befc1c90f794128036c2",
+        "url": "https://api.github.com/repos/docker/compose/commits/be7b72e0ef5f678e6139befc1c90f794128036c2",
+        "html_url": "https://github.com/docker/compose/commit/be7b72e0ef5f678e6139befc1c90f794128036c2"
+      }
+    ]
+  },
+  {
+    "sha": "b9d8a1a3e2bb4f86b414a3c4bd5a9ac5569b7eb9",
+    "node_id": "C_kwDOAOWUd9oAKGI5ZDhhMWEzZTJiYjRmODZiNDE0YTNjNGJkNWE5YWM1NTY5YjdlYjk",
+    "commit": {
+      "author": {
+        "name": "Sebastiaan van Stijn",
+        "email": "github@gone.nl",
+        "date": "2026-07-07T08:23:17Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-07-07T08:39:47Z"
+      },
+      "message": "CODEOWNERS: add compose-reviewers\n\nSigned-off-by: Sebastiaan van Stijn <github@gone.nl>",
+      "tree": {
+        "sha": "cc05fd5786eec90808fabed4d702bfb140cffe35",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/cc05fd5786eec90808fabed4d702bfb140cffe35"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/b9d8a1a3e2bb4f86b414a3c4bd5a9ac5569b7eb9",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/b9d8a1a3e2bb4f86b414a3c4bd5a9ac5569b7eb9",
+    "html_url": "https://github.com/docker/compose/commit/b9d8a1a3e2bb4f86b414a3c4bd5a9ac5569b7eb9",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/b9d8a1a3e2bb4f86b414a3c4bd5a9ac5569b7eb9/comments",
+    "author": {
+      "login": "thaJeztah",
+      "id": 1804568,
+      "node_id": "MDQ6VXNlcjE4MDQ1Njg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1804568?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/thaJeztah",
+      "html_url": "https://github.com/thaJeztah",
+      "followers_url": "https://api.github.com/users/thaJeztah/followers",
+      "following_url": "https://api.github.com/users/thaJeztah/following{/other_user}",
+      "gists_url": "https://api.github.com/users/thaJeztah/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/thaJeztah/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/thaJeztah/subscriptions",
+      "organizations_url": "https://api.github.com/users/thaJeztah/orgs",
+      "repos_url": "https://api.github.com/users/thaJeztah/repos",
+      "events_url": "https://api.github.com/users/thaJeztah/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/thaJeztah/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "a666b63a3c545aeaa9a4ed3a34f12fc0e807df0f",
+        "url": "https://api.github.com/repos/docker/compose/commits/a666b63a3c545aeaa9a4ed3a34f12fc0e807df0f",
+        "html_url": "https://github.com/docker/compose/commit/a666b63a3c545aeaa9a4ed3a34f12fc0e807df0f"
+      }
+    ]
+  },
+  {
+    "sha": "336f21f84627f2fcc4de3bf9b2c0d4dbf507a40a",
+    "node_id": "C_kwDOAOWUd9oAKDMzNmYyMWY4NDYyN2YyZmNjNGRlM2JmOWIyYzBkNGRiZjUwN2E0MGE",
+    "commit": {
+      "author": {
+        "name": "Guillaume Lours",
+        "email": "glours@users.noreply.github.com",
+        "date": "2026-07-03T13:16:03Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-07-07T08:56:13Z"
+      },
+      "message": "ci: harden GitHub Actions workflows\n\nThe pinned codeql-action/upload-sarif v2 (v2.28.1) falls in the\nvulnerable range of CVE-2025-24362 and the v2 line has no patched\nrelease, so bump to v3.36.3. Scope the release job to tag refs so its\ncontents:write token is only minted when a release is actually\ncreated. In merge.yml, drop a dead conditional (workflow only triggers\non push) and pass DOCKERDESKTOP_REPO to github-script via env rather\nthan inline interpolation, as recommended against script injection.\n\nSigned-off-by: Guillaume Lours <glours@users.noreply.github.com>",
+      "tree": {
+        "sha": "c8347d5f42ec349b329d083a4da1409a470d993b",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/c8347d5f42ec349b329d083a4da1409a470d993b"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/336f21f84627f2fcc4de3bf9b2c0d4dbf507a40a",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/336f21f84627f2fcc4de3bf9b2c0d4dbf507a40a",
+    "html_url": "https://github.com/docker/compose/commit/336f21f84627f2fcc4de3bf9b2c0d4dbf507a40a",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/336f21f84627f2fcc4de3bf9b2c0d4dbf507a40a/comments",
+    "author": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "b9d8a1a3e2bb4f86b414a3c4bd5a9ac5569b7eb9",
+        "url": "https://api.github.com/repos/docker/compose/commits/b9d8a1a3e2bb4f86b414a3c4bd5a9ac5569b7eb9",
+        "html_url": "https://github.com/docker/compose/commit/b9d8a1a3e2bb4f86b414a3c4bd5a9ac5569b7eb9"
+      }
+    ]
+  },
+  {
+    "sha": "69ba683e15cb9f96adbcc298dfa74ef436b81b87",
+    "node_id": "C_kwDOAOWUd9oAKDY5YmE2ODNlMTVjYjlmOTZhZGJjYzI5OGRmYTc0ZWY0MzZiODFiODc",
+    "commit": {
+      "author": {
+        "name": "Guillaume Lours",
+        "email": "glours@users.noreply.github.com",
+        "date": "2026-07-06T12:32:39Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-07-07T08:56:13Z"
+      },
+      "message": "ci: address review feedback on release job\n\n- Replace ncipollo/release-action with softprops/action-gh-release\n  (v3.0.1, SHA-pinned), the action used across Docker repositories;\n  input mapping is one-to-one.\n- Duplicate the artifact listing/type checks into binary-finalize:\n  one copy inspects the artifact as assembled, on every push/PR (lost\n  when the tag guard moved to job level); the release-job copy still\n  inspects what was downloaded and gets attached to the release.\n- Set overwrite_files: false so a job re-run never replaces assets\n  already uploaded to an existing release: unlike ncipollo, softprops\n  updates an existing release instead of failing. A re-run may still\n  refresh the release name/notes.\n\nSigned-off-by: Guillaume Lours <glours@users.noreply.github.com>",
+      "tree": {
+        "sha": "2467217560fa7122f017f0adaa4b9a550b4e5c34",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/2467217560fa7122f017f0adaa4b9a550b4e5c34"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/69ba683e15cb9f96adbcc298dfa74ef436b81b87",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/69ba683e15cb9f96adbcc298dfa74ef436b81b87",
+    "html_url": "https://github.com/docker/compose/commit/69ba683e15cb9f96adbcc298dfa74ef436b81b87",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/69ba683e15cb9f96adbcc298dfa74ef436b81b87/comments",
+    "author": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "336f21f84627f2fcc4de3bf9b2c0d4dbf507a40a",
+        "url": "https://api.github.com/repos/docker/compose/commits/336f21f84627f2fcc4de3bf9b2c0d4dbf507a40a",
+        "html_url": "https://github.com/docker/compose/commit/336f21f84627f2fcc4de3bf9b2c0d4dbf507a40a"
+      }
+    ]
+  },
+  {
+    "sha": "0e20fb76c6e6b87c4e619d21d9e15d7e9a914070",
+    "node_id": "C_kwDOAOWUd9oAKDBlMjBmYjc2YzZlNmI4N2M0ZTYxOWQyMWQ5ZTE1ZDdlOWE5MTQwNzA",
+    "commit": {
+      "author": {
+        "name": "Sebastiaan van Stijn",
+        "email": "github@gone.nl",
+        "date": "2026-07-07T08:28:33Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-07-07T09:09:54Z"
+      },
+      "message": "gha: dependabot: group docker/* actions updates\n\nSigned-off-by: Sebastiaan van Stijn <github@gone.nl>",
+      "tree": {
+        "sha": "2e5826e5723a04c8b04627c2e900c3d586f16560",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/2e5826e5723a04c8b04627c2e900c3d586f16560"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/0e20fb76c6e6b87c4e619d21d9e15d7e9a914070",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/0e20fb76c6e6b87c4e619d21d9e15d7e9a914070",
+    "html_url": "https://github.com/docker/compose/commit/0e20fb76c6e6b87c4e619d21d9e15d7e9a914070",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/0e20fb76c6e6b87c4e619d21d9e15d7e9a914070/comments",
+    "author": {
+      "login": "thaJeztah",
+      "id": 1804568,
+      "node_id": "MDQ6VXNlcjE4MDQ1Njg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1804568?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/thaJeztah",
+      "html_url": "https://github.com/thaJeztah",
+      "followers_url": "https://api.github.com/users/thaJeztah/followers",
+      "following_url": "https://api.github.com/users/thaJeztah/following{/other_user}",
+      "gists_url": "https://api.github.com/users/thaJeztah/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/thaJeztah/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/thaJeztah/subscriptions",
+      "organizations_url": "https://api.github.com/users/thaJeztah/orgs",
+      "repos_url": "https://api.github.com/users/thaJeztah/repos",
+      "events_url": "https://api.github.com/users/thaJeztah/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/thaJeztah/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "69ba683e15cb9f96adbcc298dfa74ef436b81b87",
+        "url": "https://api.github.com/repos/docker/compose/commits/69ba683e15cb9f96adbcc298dfa74ef436b81b87",
+        "html_url": "https://github.com/docker/compose/commit/69ba683e15cb9f96adbcc298dfa74ef436b81b87"
+      }
+    ]
+  },
+  {
+    "sha": "43dc875f65b57b05615066d0e8957fac2c93ae5c",
+    "node_id": "C_kwDOAOWUd9oAKDQzZGM4NzVmNjViNTdiMDU2MTUwNjZkMGU4OTU3ZmFjMmM5M2FlNWM",
+    "commit": {
+      "author": {
+        "name": "dependabot[bot]",
+        "email": "49699333+dependabot[bot]@users.noreply.github.com",
+        "date": "2026-07-06T15:12:16Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-07-07T09:10:54Z"
+      },
+      "message": "build(deps): bump actions/stale from 10.2.0 to 10.3.0\n\nBumps [actions/stale](https://github.com/actions/stale) from 10.2.0 to 10.3.0.\n- [Release notes](https://github.com/actions/stale/releases)\n- [Changelog](https://github.com/actions/stale/blob/main/CHANGELOG.md)\n- [Commits](https://github.com/actions/stale/compare/b5d41d4e1d5dceea10e7104786b73624c18a190f...eb5cf3af3ac0a1aa4c9c45633dd1ae542a27a899)\n\n---\nupdated-dependencies:\n- dependency-name: actions/stale\n  dependency-version: 10.3.0\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>",
+      "tree": {
+        "sha": "1697df6d02ba6ecf4720c5205afacfdc307f4478",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/1697df6d02ba6ecf4720c5205afacfdc307f4478"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/43dc875f65b57b05615066d0e8957fac2c93ae5c",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/43dc875f65b57b05615066d0e8957fac2c93ae5c",
+    "html_url": "https://github.com/docker/compose/commit/43dc875f65b57b05615066d0e8957fac2c93ae5c",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/43dc875f65b57b05615066d0e8957fac2c93ae5c/comments",
+    "author": {
+      "login": "dependabot[bot]",
+      "id": 49699333,
+      "node_id": "MDM6Qm90NDk2OTkzMzM=",
+      "avatar_url": "https://avatars.githubusercontent.com/in/29110?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/dependabot%5Bbot%5D",
+      "html_url": "https://github.com/apps/dependabot",
+      "followers_url": "https://api.github.com/users/dependabot%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/dependabot%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/dependabot%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/dependabot%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/dependabot%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/dependabot%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/dependabot%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/dependabot%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/dependabot%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "0e20fb76c6e6b87c4e619d21d9e15d7e9a914070",
+        "url": "https://api.github.com/repos/docker/compose/commits/0e20fb76c6e6b87c4e619d21d9e15d7e9a914070",
+        "html_url": "https://github.com/docker/compose/commit/0e20fb76c6e6b87c4e619d21d9e15d7e9a914070"
+      }
+    ]
+  },
+  {
+    "sha": "6b2e8d20c31cb7f7237103b3b6aae2008eb4f869",
+    "node_id": "C_kwDOAOWUd9oAKDZiMmU4ZDIwYzMxY2I3ZjcyMzcxMDNiM2I2YWFlMjAwOGViNGY4Njk",
+    "commit": {
+      "author": {
+        "name": "dependabot[bot]",
+        "email": "49699333+dependabot[bot]@users.noreply.github.com",
+        "date": "2026-07-07T09:11:07Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-07-07T09:34:25Z"
+      },
+      "message": "build(deps): bump the docker-actions group with 3 updates\n\nBumps the docker-actions group with 3 updates: [docker/setup-buildx-action](https://github.com/docker/setup-buildx-action), [docker/github-builder/.github/workflows/bake.yml](https://github.com/docker/github-builder) and [docker/bake-action](https://github.com/docker/bake-action).\n\n\nUpdates `docker/setup-buildx-action` from 4.0.0 to 4.1.0\n- [Release notes](https://github.com/docker/setup-buildx-action/releases)\n- [Commits](https://github.com/docker/setup-buildx-action/compare/4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd...d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5)\n\nUpdates `docker/github-builder/.github/workflows/bake.yml` from 1.4.0 to 1.12.0\n- [Release notes](https://github.com/docker/github-builder/releases)\n- [Commits](https://github.com/docker/github-builder/compare/70313223e2665c3211b454b3fea6534624e78d64...5f637c833aa76bc99372a1dc9a6f8bcd8056fb85)\n\nUpdates `docker/bake-action` from 7.0.0 to 7.2.0\n- [Release notes](https://github.com/docker/bake-action/releases)\n- [Commits](https://github.com/docker/bake-action/compare/82490499d2e5613fcead7e128237ef0b0ea210f7...6614cfa25eff9a0b2b2697efb0b6159e7680d584)\n\n---\nupdated-dependencies:\n- dependency-name: docker/setup-buildx-action\n  dependency-version: 4.1.0\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n  dependency-group: docker-actions\n- dependency-name: docker/github-builder/.github/workflows/bake.yml\n  dependency-version: 1.12.0\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n  dependency-group: docker-actions\n- dependency-name: docker/bake-action\n  dependency-version: 7.2.0\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n  dependency-group: docker-actions\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>",
+      "tree": {
+        "sha": "8a2dccb98756661cd91c1895c2e79f12d1cd0095",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/8a2dccb98756661cd91c1895c2e79f12d1cd0095"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/6b2e8d20c31cb7f7237103b3b6aae2008eb4f869",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/6b2e8d20c31cb7f7237103b3b6aae2008eb4f869",
+    "html_url": "https://github.com/docker/compose/commit/6b2e8d20c31cb7f7237103b3b6aae2008eb4f869",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/6b2e8d20c31cb7f7237103b3b6aae2008eb4f869/comments",
+    "author": {
+      "login": "dependabot[bot]",
+      "id": 49699333,
+      "node_id": "MDM6Qm90NDk2OTkzMzM=",
+      "avatar_url": "https://avatars.githubusercontent.com/in/29110?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/dependabot%5Bbot%5D",
+      "html_url": "https://github.com/apps/dependabot",
+      "followers_url": "https://api.github.com/users/dependabot%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/dependabot%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/dependabot%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/dependabot%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/dependabot%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/dependabot%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/dependabot%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/dependabot%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/dependabot%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "43dc875f65b57b05615066d0e8957fac2c93ae5c",
+        "url": "https://api.github.com/repos/docker/compose/commits/43dc875f65b57b05615066d0e8957fac2c93ae5c",
+        "html_url": "https://github.com/docker/compose/commit/43dc875f65b57b05615066d0e8957fac2c93ae5c"
+      }
+    ]
+  },
+  {
+    "sha": "d00abb6f94cd2d410de9e36f30e80a79c8eb018e",
+    "node_id": "C_kwDOAOWUd9oAKGQwMGFiYjZmOTRjZDJkNDEwZGU5ZTM2ZjMwZTgwYTc5YzhlYjAxOGU",
+    "commit": {
+      "author": {
+        "name": "dependabot[bot]",
+        "email": "49699333+dependabot[bot]@users.noreply.github.com",
+        "date": "2026-07-07T08:58:10Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-07-07T09:36:16Z"
+      },
+      "message": "build(deps): bump actions/upload-artifact from 7.0.0 to 7.0.1\n\nBumps [actions/upload-artifact](https://github.com/actions/upload-artifact) from 7.0.0 to 7.0.1.\n- [Release notes](https://github.com/actions/upload-artifact/releases)\n- [Commits](https://github.com/actions/upload-artifact/compare/v7...043fb46d1a93c77aae656e7c1c64a875d1fc6a0a)\n\n---\nupdated-dependencies:\n- dependency-name: actions/upload-artifact\n  dependency-version: 7.0.1\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>",
+      "tree": {
+        "sha": "201dd645bae435ebdfdf82fe9d1320f6174b5c11",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/201dd645bae435ebdfdf82fe9d1320f6174b5c11"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/d00abb6f94cd2d410de9e36f30e80a79c8eb018e",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/d00abb6f94cd2d410de9e36f30e80a79c8eb018e",
+    "html_url": "https://github.com/docker/compose/commit/d00abb6f94cd2d410de9e36f30e80a79c8eb018e",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/d00abb6f94cd2d410de9e36f30e80a79c8eb018e/comments",
+    "author": {
+      "login": "dependabot[bot]",
+      "id": 49699333,
+      "node_id": "MDM6Qm90NDk2OTkzMzM=",
+      "avatar_url": "https://avatars.githubusercontent.com/in/29110?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/dependabot%5Bbot%5D",
+      "html_url": "https://github.com/apps/dependabot",
+      "followers_url": "https://api.github.com/users/dependabot%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/dependabot%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/dependabot%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/dependabot%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/dependabot%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/dependabot%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/dependabot%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/dependabot%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/dependabot%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "6b2e8d20c31cb7f7237103b3b6aae2008eb4f869",
+        "url": "https://api.github.com/repos/docker/compose/commits/6b2e8d20c31cb7f7237103b3b6aae2008eb4f869",
+        "html_url": "https://github.com/docker/compose/commit/6b2e8d20c31cb7f7237103b3b6aae2008eb4f869"
+      }
+    ]
+  },
+  {
+    "sha": "2c87234df8de0b3bc50e1b218c745363efe4b2b3",
+    "node_id": "C_kwDOAOWUd9oAKDJjODcyMzRkZjhkZTBiM2JjNTBlMWIyMThjNzQ1MzYzZWZlNGIyYjM",
+    "commit": {
+      "author": {
+        "name": "dependabot[bot]",
+        "email": "49699333+dependabot[bot]@users.noreply.github.com",
+        "date": "2026-07-06T15:13:00Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-07-07T09:36:51Z"
+      },
+      "message": "build(deps): bump actions/setup-go from 6.3.0 to 6.5.0\n\nBumps [actions/setup-go](https://github.com/actions/setup-go) from 6.3.0 to 6.5.0.\n- [Release notes](https://github.com/actions/setup-go/releases)\n- [Commits](https://github.com/actions/setup-go/compare/4b73464bb391d4059bd26b0524d20df3927bd417...924ae3a1cded613372ab5595356fb5720e22ba16)\n\n---\nupdated-dependencies:\n- dependency-name: actions/setup-go\n  dependency-version: 6.5.0\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>",
+      "tree": {
+        "sha": "152fdf779e27298d3eebafe41b342e2b8bfafd4a",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/152fdf779e27298d3eebafe41b342e2b8bfafd4a"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/2c87234df8de0b3bc50e1b218c745363efe4b2b3",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/2c87234df8de0b3bc50e1b218c745363efe4b2b3",
+    "html_url": "https://github.com/docker/compose/commit/2c87234df8de0b3bc50e1b218c745363efe4b2b3",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/2c87234df8de0b3bc50e1b218c745363efe4b2b3/comments",
+    "author": {
+      "login": "dependabot[bot]",
+      "id": 49699333,
+      "node_id": "MDM6Qm90NDk2OTkzMzM=",
+      "avatar_url": "https://avatars.githubusercontent.com/in/29110?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/dependabot%5Bbot%5D",
+      "html_url": "https://github.com/apps/dependabot",
+      "followers_url": "https://api.github.com/users/dependabot%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/dependabot%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/dependabot%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/dependabot%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/dependabot%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/dependabot%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/dependabot%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/dependabot%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/dependabot%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "d00abb6f94cd2d410de9e36f30e80a79c8eb018e",
+        "url": "https://api.github.com/repos/docker/compose/commits/d00abb6f94cd2d410de9e36f30e80a79c8eb018e",
+        "html_url": "https://github.com/docker/compose/commit/d00abb6f94cd2d410de9e36f30e80a79c8eb018e"
+      }
+    ]
+  },
+  {
+    "sha": "774d04dceffddde00229369787c2e00781d9d552",
+    "node_id": "C_kwDOAOWUd9oAKDc3NGQwNGRjZWZmZGRkZTAwMjI5MzY5Nzg3YzJlMDA3ODFkOWQ1NTI",
+    "commit": {
+      "author": {
+        "name": "dependabot[bot]",
+        "email": "49699333+dependabot[bot]@users.noreply.github.com",
+        "date": "2026-07-06T15:12:20Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-07-07T09:37:45Z"
+      },
+      "message": "build(deps): bump test-summary/action from 2.4 to 2.6\n\nBumps [test-summary/action](https://github.com/test-summary/action) from 2.4 to 2.6.\n- [Release notes](https://github.com/test-summary/action/releases)\n- [Commits](https://github.com/test-summary/action/compare/31493c76ec9e7aa675f1585d3ed6f1da69269a86...37b508cfee6d4d080eedd00b5bb240a6a784a6a5)\n\n---\nupdated-dependencies:\n- dependency-name: test-summary/action\n  dependency-version: '2.6'\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>",
+      "tree": {
+        "sha": "ba8e36f31877f66bd24a7ed14a7dfff9f7ac83fa",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/ba8e36f31877f66bd24a7ed14a7dfff9f7ac83fa"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/774d04dceffddde00229369787c2e00781d9d552",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/774d04dceffddde00229369787c2e00781d9d552",
+    "html_url": "https://github.com/docker/compose/commit/774d04dceffddde00229369787c2e00781d9d552",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/774d04dceffddde00229369787c2e00781d9d552/comments",
+    "author": {
+      "login": "dependabot[bot]",
+      "id": 49699333,
+      "node_id": "MDM6Qm90NDk2OTkzMzM=",
+      "avatar_url": "https://avatars.githubusercontent.com/in/29110?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/dependabot%5Bbot%5D",
+      "html_url": "https://github.com/apps/dependabot",
+      "followers_url": "https://api.github.com/users/dependabot%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/dependabot%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/dependabot%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/dependabot%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/dependabot%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/dependabot%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/dependabot%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/dependabot%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/dependabot%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "2c87234df8de0b3bc50e1b218c745363efe4b2b3",
+        "url": "https://api.github.com/repos/docker/compose/commits/2c87234df8de0b3bc50e1b218c745363efe4b2b3",
+        "html_url": "https://github.com/docker/compose/commit/2c87234df8de0b3bc50e1b218c745363efe4b2b3"
+      }
+    ]
+  },
+  {
+    "sha": "d32d8c3c7632096bbad39d6361c040da75840577",
+    "node_id": "C_kwDOAOWUd9oAKGQzMmQ4YzNjNzYzMjA5NmJiYWQzOWQ2MzYxYzA0MGRhNzU4NDA1Nzc",
+    "commit": {
+      "author": {
+        "name": "dependabot[bot]",
+        "email": "49699333+dependabot[bot]@users.noreply.github.com",
+        "date": "2026-07-06T15:14:35Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-07-07T09:38:15Z"
+      },
+      "message": "build(deps): bump mxschmitt/action-tmate from 3.23 to 3.24\n\nBumps [mxschmitt/action-tmate](https://github.com/mxschmitt/action-tmate) from 3.23 to 3.24.\n- [Release notes](https://github.com/mxschmitt/action-tmate/releases)\n- [Changelog](https://github.com/mxschmitt/action-tmate/blob/master/RELEASE.md)\n- [Commits](https://github.com/mxschmitt/action-tmate/compare/c0afd6f790e3a5564914980036ebf83216678101...35b54afac29c97fb54faba5b513f8fbd1882f113)\n\n---\nupdated-dependencies:\n- dependency-name: mxschmitt/action-tmate\n  dependency-version: '3.24'\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>",
+      "tree": {
+        "sha": "9002874b25d46b11272b162cb3fc29c285c5bcf3",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/9002874b25d46b11272b162cb3fc29c285c5bcf3"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/d32d8c3c7632096bbad39d6361c040da75840577",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/d32d8c3c7632096bbad39d6361c040da75840577",
+    "html_url": "https://github.com/docker/compose/commit/d32d8c3c7632096bbad39d6361c040da75840577",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/d32d8c3c7632096bbad39d6361c040da75840577/comments",
+    "author": {
+      "login": "dependabot[bot]",
+      "id": 49699333,
+      "node_id": "MDM6Qm90NDk2OTkzMzM=",
+      "avatar_url": "https://avatars.githubusercontent.com/in/29110?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/dependabot%5Bbot%5D",
+      "html_url": "https://github.com/apps/dependabot",
+      "followers_url": "https://api.github.com/users/dependabot%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/dependabot%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/dependabot%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/dependabot%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/dependabot%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/dependabot%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/dependabot%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/dependabot%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/dependabot%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "774d04dceffddde00229369787c2e00781d9d552",
+        "url": "https://api.github.com/repos/docker/compose/commits/774d04dceffddde00229369787c2e00781d9d552",
+        "html_url": "https://github.com/docker/compose/commit/774d04dceffddde00229369787c2e00781d9d552"
+      }
+    ]
+  },
+  {
+    "sha": "2ed5bf2b61acb84055d75020045a0d95dc912cd7",
+    "node_id": "C_kwDOAOWUd9oAKDJlZDViZjJiNjFhY2I4NDA1NWQ3NTAyMDA0NWEwZDk1ZGM5MTJjZDc",
+    "commit": {
+      "author": {
+        "name": "dependabot[bot]",
+        "email": "49699333+dependabot[bot]@users.noreply.github.com",
+        "date": "2026-07-06T15:12:29Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-07-07T09:45:10Z"
+      },
+      "message": "build(deps): bump codecov/codecov-action from 5.5.3 to 7.0.0\n\nBumps [codecov/codecov-action](https://github.com/codecov/codecov-action) from 5.5.3 to 7.0.0.\n- [Release notes](https://github.com/codecov/codecov-action/releases)\n- [Changelog](https://github.com/codecov/codecov-action/blob/main/CHANGELOG.md)\n- [Commits](https://github.com/codecov/codecov-action/compare/1af58845a975a7985b0beb0cbe6fbbb71a41dbad...fb8b3582c8e4def4969c97caa2f19720cb33a72f)\n\n---\nupdated-dependencies:\n- dependency-name: codecov/codecov-action\n  dependency-version: 7.0.0\n  dependency-type: direct:production\n  update-type: version-update:semver-major\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>",
+      "tree": {
+        "sha": "f37be80cfb77b29f9eade87658d7b778316d0838",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/f37be80cfb77b29f9eade87658d7b778316d0838"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/2ed5bf2b61acb84055d75020045a0d95dc912cd7",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/2ed5bf2b61acb84055d75020045a0d95dc912cd7",
+    "html_url": "https://github.com/docker/compose/commit/2ed5bf2b61acb84055d75020045a0d95dc912cd7",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/2ed5bf2b61acb84055d75020045a0d95dc912cd7/comments",
+    "author": {
+      "login": "dependabot[bot]",
+      "id": 49699333,
+      "node_id": "MDM6Qm90NDk2OTkzMzM=",
+      "avatar_url": "https://avatars.githubusercontent.com/in/29110?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/dependabot%5Bbot%5D",
+      "html_url": "https://github.com/apps/dependabot",
+      "followers_url": "https://api.github.com/users/dependabot%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/dependabot%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/dependabot%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/dependabot%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/dependabot%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/dependabot%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/dependabot%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/dependabot%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/dependabot%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "d32d8c3c7632096bbad39d6361c040da75840577",
+        "url": "https://api.github.com/repos/docker/compose/commits/d32d8c3c7632096bbad39d6361c040da75840577",
+        "html_url": "https://github.com/docker/compose/commit/d32d8c3c7632096bbad39d6361c040da75840577"
+      }
+    ]
+  },
+  {
+    "sha": "f4bc599fdb0ef5cea2bead65bc003661f28bfabc",
+    "node_id": "C_kwDOAOWUd9oAKGY0YmM1OTlmZGIwZWY1Y2VhMmJlYWQ2NWJjMDAzNjYxZjI4YmZhYmM",
+    "commit": {
+      "author": {
+        "name": "dependabot[bot]",
+        "email": "49699333+dependabot[bot]@users.noreply.github.com",
+        "date": "2026-07-07T09:12:27Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-07-07T09:45:50Z"
+      },
+      "message": "build(deps): bump github/codeql-action/upload-sarif\n\nBumps [github/codeql-action/upload-sarif](https://github.com/github/codeql-action) from 3.36.3 to 4.36.2.\n- [Release notes](https://github.com/github/codeql-action/releases)\n- [Changelog](https://github.com/github/codeql-action/blob/main/CHANGELOG.md)\n- [Commits](https://github.com/github/codeql-action/compare/411c4c9a36b3fca4d674f06b6396b2c6d23522c6...8aad20d150bbac5944a9f9d289da16a4b0d87c1e)\n\n---\nupdated-dependencies:\n- dependency-name: github/codeql-action/upload-sarif\n  dependency-version: 4.36.2\n  dependency-type: direct:production\n  update-type: version-update:semver-major\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>",
+      "tree": {
+        "sha": "184985745b805c06de03529d51c5be9d00d87b79",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/184985745b805c06de03529d51c5be9d00d87b79"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/f4bc599fdb0ef5cea2bead65bc003661f28bfabc",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/f4bc599fdb0ef5cea2bead65bc003661f28bfabc",
+    "html_url": "https://github.com/docker/compose/commit/f4bc599fdb0ef5cea2bead65bc003661f28bfabc",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/f4bc599fdb0ef5cea2bead65bc003661f28bfabc/comments",
+    "author": {
+      "login": "dependabot[bot]",
+      "id": 49699333,
+      "node_id": "MDM6Qm90NDk2OTkzMzM=",
+      "avatar_url": "https://avatars.githubusercontent.com/in/29110?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/dependabot%5Bbot%5D",
+      "html_url": "https://github.com/apps/dependabot",
+      "followers_url": "https://api.github.com/users/dependabot%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/dependabot%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/dependabot%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/dependabot%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/dependabot%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/dependabot%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/dependabot%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/dependabot%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/dependabot%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "2ed5bf2b61acb84055d75020045a0d95dc912cd7",
+        "url": "https://api.github.com/repos/docker/compose/commits/2ed5bf2b61acb84055d75020045a0d95dc912cd7",
+        "html_url": "https://github.com/docker/compose/commit/2ed5bf2b61acb84055d75020045a0d95dc912cd7"
+      }
+    ]
+  },
+  {
+    "sha": "f32009d4a2c687dd405398cc7975d12dccaf8dff",
+    "node_id": "C_kwDOAOWUd9oAKGYzMjAwOWQ0YTJjNjg3ZGQ0MDUzOThjYzc5NzVkMTJkY2NhZjhkZmY",
+    "commit": {
+      "author": {
+        "name": "dependabot[bot]",
+        "email": "49699333+dependabot[bot]@users.noreply.github.com",
+        "date": "2026-07-07T09:38:04Z"
+      },
+      "committer": {
+        "name": "Guillaume Lours",
+        "email": "705411+glours@users.noreply.github.com",
+        "date": "2026-07-07T09:49:14Z"
+      },
+      "message": "build(deps): bump actions/checkout from 6.0.2 to 7.0.0\n\nBumps [actions/checkout](https://github.com/actions/checkout) from 6.0.2 to 7.0.0.\n- [Release notes](https://github.com/actions/checkout/releases)\n- [Changelog](https://github.com/actions/checkout/blob/main/CHANGELOG.md)\n- [Commits](https://github.com/actions/checkout/compare/de0fac2e4500dabe0009e67214ff5f5447ce83dd...9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0)\n\n---\nupdated-dependencies:\n- dependency-name: actions/checkout\n  dependency-version: 7.0.0\n  dependency-type: direct:production\n  update-type: version-update:semver-major\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>",
+      "tree": {
+        "sha": "15129de58f53d65410b5884da4a6813e4771712e",
+        "url": "https://api.github.com/repos/docker/compose/git/trees/15129de58f53d65410b5884da4a6813e4771712e"
+      },
+      "url": "https://api.github.com/repos/docker/compose/git/commits/f32009d4a2c687dd405398cc7975d12dccaf8dff",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "url": "https://api.github.com/repos/docker/compose/commits/f32009d4a2c687dd405398cc7975d12dccaf8dff",
+    "html_url": "https://github.com/docker/compose/commit/f32009d4a2c687dd405398cc7975d12dccaf8dff",
+    "comments_url": "https://api.github.com/repos/docker/compose/commits/f32009d4a2c687dd405398cc7975d12dccaf8dff/comments",
+    "author": {
+      "login": "dependabot[bot]",
+      "id": 49699333,
+      "node_id": "MDM6Qm90NDk2OTkzMzM=",
+      "avatar_url": "https://avatars.githubusercontent.com/in/29110?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/dependabot%5Bbot%5D",
+      "html_url": "https://github.com/apps/dependabot",
+      "followers_url": "https://api.github.com/users/dependabot%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/dependabot%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/dependabot%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/dependabot%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/dependabot%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/dependabot%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/dependabot%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/dependabot%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/dependabot%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "glours",
+      "id": 705411,
+      "node_id": "MDQ6VXNlcjcwNTQxMQ==",
+      "avatar_url": "https://avatars.githubusercontent.com/u/705411?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/glours",
+      "html_url": "https://github.com/glours",
+      "followers_url": "https://api.github.com/users/glours/followers",
+      "following_url": "https://api.github.com/users/glours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/glours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/glours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/glours/subscriptions",
+      "organizations_url": "https://api.github.com/users/glours/orgs",
+      "repos_url": "https://api.github.com/users/glours/repos",
+      "events_url": "https://api.github.com/users/glours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/glours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "f4bc599fdb0ef5cea2bead65bc003661f28bfabc",
+        "url": "https://api.github.com/repos/docker/compose/commits/f4bc599fdb0ef5cea2bead65bc003661f28bfabc",
+        "html_url": "https://github.com/docker/compose/commit/f4bc599fdb0ef5cea2bead65bc003661f28bfabc"
+      }
+    ]
+  }
+]

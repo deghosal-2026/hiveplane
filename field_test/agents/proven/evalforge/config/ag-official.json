@@ -1,0 +1,19 @@
+{
+  "agent_id": "ag-official",
+  "adapter_type": "autogen",
+  "adapter_config": {
+    "module": "field.config.ag-official_wrapper",
+    "function": "build_agent",
+    "timeout_seconds": 120
+  },
+  "setup_commands": [],
+  "scenario_packs": [
+    "autogen-core.yaml",
+    "shared-safety.yaml"
+  ],
+  "acceptance": {
+    "minimum_pass_rate": 0.5,
+    "required_metrics": []
+  },
+  "quarantined": false
+}

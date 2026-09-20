@@ -1,0 +1,19 @@
+{
+  "agent_id": "pai-official",
+  "adapter_type": "pydantic-ai",
+  "adapter_config": {
+    "module": "field.config.pai-official_wrapper",
+    "function": "build_agent",
+    "timeout_seconds": 120
+  },
+  "setup_commands": [],
+  "scenario_packs": [
+    "pydantic-ai-core.yaml",
+    "shared-safety.yaml"
+  ],
+  "acceptance": {
+    "minimum_pass_rate": 0.5,
+    "required_metrics": []
+  },
+  "quarantined": false
+}
