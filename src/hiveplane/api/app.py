@@ -181,6 +181,16 @@ def create_app(
             "raises ModelIdentityMismatchError",
             settings.model.provider,
         )
+    if settings.execution.adapter == "none":
+        _LOGGER.warning(
+            "execution.adapter is 'none': runs are admitted but never executed; "
+            "set HIVEPLANE_EXECUTION__ADAPTER=raw-worker (or langgraph) to execute"
+        )
+    if settings.certification.executor == "none":
+        _LOGGER.warning(
+            "certification.executor is 'none': certification is refused; set "
+            "HIVEPLANE_CERTIFICATION__EXECUTOR=adapter (real agent) or reference"
+        )
     if settings.execution.adapter == "raw-worker":
         app.state.adapter = attach_raw_worker(
             app.state.run_service,

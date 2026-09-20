@@ -37,6 +37,28 @@ def test_adapter_is_off_by_default() -> None:
     assert create_app().state.adapter is None
 
 
+def test_disabled_adapter_warns_at_startup(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    with caplog.at_level("WARNING", logger="hiveplane.api.app"):
+        create_app()
+
+    assert any(
+        "execution.adapter is 'none'" in record.message for record in caplog.records
+    )
+
+
+def test_unconfigured_certification_executor_warns_at_startup(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    with caplog.at_level("WARNING", logger="hiveplane.api.app"):
+        create_app()
+
+    assert any(
+        "certification.executor is 'none'" in record.message for record in caplog.records
+    )
+
+
 def test_adapter_is_enabled_by_config(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

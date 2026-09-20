@@ -89,8 +89,22 @@ def test_compose_api_selects_postgres_store_and_raw_worker_adapter() -> None:
     services = _load("docker-compose.yml")["services"]
     environment = services["api"]["environment"]
 
-    assert environment["HIVEPLANE_EXECUTION__ADAPTER"] == "raw-worker"
+    assert (
+        environment["HIVEPLANE_EXECUTION__ADAPTER"]
+        == "${HIVEPLANE_EXECUTION__ADAPTER:-raw-worker}"
+    )
     assert environment["HIVEPLANE_EXECUTION__STORE"] == "postgres"
+    assert "HIVEPLANE_CERTIFICATION__EXECUTOR" in environment, (
+        "compose must map the certification executor so the stack certifies"
+    )
+    assert "adapter" in environment["HIVEPLANE_CERTIFICATION__EXECUTOR"]
+
+
+def test_env_profiles_enable_execution_and_certification() -> None:
+    for profile in (".env.ci", ".env.local", ".env.cloud"):
+        text = (_ROOT / profile).read_text(encoding="utf-8")
+        assert "HIVEPLANE_EXECUTION__ADAPTER=raw-worker" in text, profile
+        assert "HIVEPLANE_CERTIFICATION__EXECUTOR=adapter" in text, profile
 
 
 def test_compose_api_moves_off_the_omlx_port() -> None:

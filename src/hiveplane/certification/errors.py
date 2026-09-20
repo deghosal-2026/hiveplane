@@ -33,6 +33,7 @@ class ExecutorNotConfiguredError(CertificationError):
     def __init__(self) -> None:
         super().__init__(
             "no benchmark executor is configured; set "
-            "HIVEPLANE_CERTIFICATION__EXECUTOR=reference for local demos or install a "
-            "runtime adapter"
+            "HIVEPLANE_CERTIFICATION__EXECUTOR=adapter to certify with the real "
+            "agent through the runtime adapter, or =reference for the corpus "
+            "self-check (local demos only)"
         )
