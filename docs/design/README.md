@@ -39,6 +39,7 @@ Design docs for HivePlane — organized by subsystem and PRD.
 | D17 | [llm-provider-design.md](llm-provider-design.md) | LLM provider seam (local/cloud/fake), agent invocation, runtime model identity |
 | D18 | [durable-resume-design.md](durable-resume-design.md) | Startup recovery and restart-resume for paused/running runs |
 | D19 | [benchmark-execution-design.md](benchmark-execution-design.md) | Adapter-backed certification: execute the real agent against the corpus |
+| D20 | [corpus-fixture-coupling.md](corpus-fixture-coupling.md) | Corpus ↔ fixture ↔ model coupling: deterministic task contracts, replay keying, benchmark auto-approval, negative proof |
 
 ## Cross-Cutting
 
