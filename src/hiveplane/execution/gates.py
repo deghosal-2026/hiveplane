@@ -11,7 +11,7 @@ from collections.abc import Callable
 from datetime import UTC, datetime
 from typing import Protocol
 
-from hiveplane.core.approval import ApprovalRecord
+from hiveplane.core.approval import ApprovalRecord, ApprovalStatus
 from hiveplane.core.decision import (
     ActionClass,
     DecisionOutcome,
@@ -179,6 +179,16 @@ class ApprovalRequests(Protocol):
         reason: str,
         action_class: ActionClass | None = None,
     ) -> ApprovalRecord: ...
+
+    def list(
+        self,
+        *,
+        status: ApprovalStatus | None = None,
+        workload: str | None = None,
+        run_id: str | None = None,
+    ) -> list[ApprovalRecord]:
+        """List approvals, optionally filtered (used for approved re-dispatch)."""
+        ...
 
 
 class SandboxRuntime(Protocol):

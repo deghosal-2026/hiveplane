@@ -75,7 +75,7 @@ Run three real, LLM-backed agents through the certified control loop and produce
 - [ ] #111 — Implement startup recovery & durable resume (S8 unblocked)
 - [ ] #122 — Durable LangGraph checkpoint (replace InMemorySaver)
 - [ ] #124 — Trace story renders model-call spans
-- [ ] #129 — Approval flow must re-dispatch the escalated tool call on resume
+- [x] #129 — Approval flow must re-dispatch the escalated tool call on resume
 - [ ] #130 — Real readiness probe (/readyz checks stores, migrations, adapter)
 - [ ] #131 — Tool seeding script and CLI (register tools referenced by workloads)
 

@@ -1,8 +1,8 @@
 # D15: Result Fan-out Service Design
 
 > Status: partial (v0.1.0). Slack and generic-webhook transports are implemented. Teams, Jira,
-> and GitHub PR comments are v0.2.0. Approval re-dispatch is not yet implemented (#129), so
-> `approval.resolved` can fire before the underlying work completes.
+> and GitHub PR comments are v0.2.0. Approval re-dispatch is implemented (#129), so
+> `approval.resolved` reflects work that actually completes.
 
 ## Implementation Status (v0.1.0)
 
@@ -11,14 +11,15 @@
 | Slack + generic webhook delivery | Implemented (`SlackTransport`, `WebhookTransport`) | — |
 | Retry ladder / delivery records | Implemented (per `FanOutService`) | — |
 | Teams / Jira / GitHub PR comment | Not implemented (v0.2.0) | — |
-| Approval re-dispatch | Not implemented — approve resumes the run but the escalated tool call is not re-executed | #129 |
+| Approval re-dispatch | Implemented (#129) — on approval + resume the escalated call executes through the boundary (raw-worker re-drives; LangGraph re-drives the graph) | — |
 | Durable delivery records / cert + attestation links | Depend on durable stores (#126) and persistent keypair (#125) | — |
 
 ### Prerequisites for meaningful fan-out
 
 - durable certification/attestation storage (#126) and a persistent signing keypair (#125), so
   attestation links resolve and verify;
-- a working approval re-dispatch loop (#129), so `approval.resolved` reflects completed work;
+- a working approval re-dispatch loop (#129 — implemented), so `approval.resolved` reflects
+  completed work;
 - real tool execution (#116), so `approval.requested` corresponds to a real tool call.
 
 ## Problem
@@ -68,7 +69,7 @@ The fan-out service listens for events from multiple subsystems:
 | Run Lifecycle (D2) | `run.escalated` | Run paused for human approval |
 | Run Lifecycle (D2) | `run.cancelled` | Run cancelled by operator |
 | Policy Engine (D4) | `approval.requested` | A tool call or action requires approval |
-| Policy Engine (D4) | `approval.resolved` | An approval was approved or denied. **Note:** approval resolution resumes the run but does not yet re-dispatch the escalated tool call (#129) — the work may still be incomplete when this fires |
+| Policy Engine (D4) | `approval.resolved` | An approval was approved or denied. On approve the escalated call is re-dispatched (#129), so the run completes the work it paused on |
 | WorkerContext / LLM Provider | `llm.provider_error` | A model call failed at the provider |
 | WorkerContext / LLM Provider | `llm.model_mismatch` | Runtime model identity ≠ attestation identity (T11) |
 | Certification (D10) | `certification.quarantined` | Agent auto-quarantined due to drift |

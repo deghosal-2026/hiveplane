@@ -422,7 +422,9 @@ each one only depends on seams already defined.
   Required before any execution-path item can be exercised end-to-end.
 - **Durable resume** — pause/resume across process restarts; current pause/resume is in-memory
   only (#106, #111).
-- **Approval re-dispatch** — escalated tool calls are not re-dispatched after approval (#129).
+- **Approval re-dispatch** — implemented (#129): on approve + resume the escalated call is
+  re-dispatched through the boundary (raw-worker re-drives the entrypoint; LangGraph re-drives
+  the graph) and the run completes.
 - **Trigger ingestion / auto-start** — `trigger_origin` is accepted and persisted,
   but webhook/alert/PR/cron ingestion and dedup are a separate effort.
 - **Certification benchmark execution** — the gate, engine, and attestations ship in v0.1.0, but

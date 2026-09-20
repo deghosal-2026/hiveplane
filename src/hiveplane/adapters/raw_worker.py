@@ -61,6 +61,8 @@ class RawWorkerAdapter:
         self._entries: dict[str, Entrypoint] = {}
         self._states: dict[str, RunState] = {}
         self._controls: dict[str, RunControl] = {}
+        self._contexts: dict[str, RunContext] = {}
+        self._escalated: dict[str, bool] = {}
         self._tool_calls: dict[str, list[ToolCallResult]] = {}
         self._usage: dict[str, UsageReport | None] = {}
 
@@ -77,6 +79,8 @@ class RawWorkerAdapter:
         with self._lock:
             self._states[context.run.id] = RunState.RUNNING
             self._controls[context.run.id] = control
+            self._contexts[context.run.id] = context
+            self._escalated[context.run.id] = False
             self._tool_calls[context.run.id] = []
             self._usage[context.run.id] = None
         self._spawner(
@@ -92,7 +96,28 @@ class RawWorkerAdapter:
         return True
 
     def resume(self, run_id: str) -> bool:
-        """Clear a pause request."""
+        """Clear a pause request, or re-drive a run that escalated (#129).
+
+        A raw worker cannot resume mid-flight, so a run that died on a tool
+        escalation is executed again; the escalated call now carries an
+        approved approval record and executes against the configured executor.
+        """
+        if self._escalated.get(run_id):
+            context = self._contexts.get(run_id)
+            if context is None:
+                return False
+            with self._lock:
+                self._escalated[run_id] = False
+                self._states[run_id] = RunState.RUNNING
+            entry = self._entry(context.workload)
+            run_control = self._controls[run_id]
+            run_control.resume()  # clear the pause the escalation set
+            self._spawner(
+                telemetry.propagate_context(
+                    lambda: self._execute(entry, context, run_control)
+                )
+            )
+            return True
         control = self._controls.get(run_id)
         if control is None:
             return False
@@ -147,6 +172,8 @@ class RawWorkerAdapter:
                 return
             except ToolCallEscalatedError:
                 active.set_attribute("outcome", "escalated")
+                with self._lock:
+                    self._escalated[run.id] = True
                 self._reporter.record_event(
                     run.id, EventType.OPERATOR_ACTION, "adapter", detail="tool call escalated"
                 )

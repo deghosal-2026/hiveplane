@@ -16,6 +16,7 @@ from typing import Protocol
 from pydantic import BaseModel, ConfigDict, Field
 
 from hiveplane import metrics, telemetry
+from hiveplane.core.approval import ApprovalRecord, ApprovalStatus
 from hiveplane.core.decision import (
     ActionClass,
     DataSensitivity,
@@ -169,14 +170,23 @@ class ToolGateway:
         if decision.outcome is DecisionOutcome.BLOCK_INJECTION:
             return self._result(run_id, request, ToolCallOutcome.BLOCKED_INJECTION, decision)
         if decision.outcome is DecisionOutcome.ESCALATE:
-            approval_id = self._escalate(run, workload.name, decision, request)
-            return self._result(
-                run_id,
-                request,
-                ToolCallOutcome.ESCALATED,
-                decision,
-                approval_id=approval_id,
-            )
+            granted = self._granted_approval(run_id, decision.rule)
+            if granted is not None:
+                # Re-dispatch (M23, #129): the operator already approved this
+                # call, so execute it and attach the approval record instead of
+                # escalating again.
+                approval_id: str | None = granted.approval_id
+            else:
+                approval_id = self._escalate(run, workload.name, decision, request)
+                return self._result(
+                    run_id,
+                    request,
+                    ToolCallOutcome.ESCALATED,
+                    decision,
+                    approval_id=approval_id,
+                )
+        else:
+            approval_id = None
 
         egress = self._check_egress(run_id, workload, request)
         if egress is not None:
@@ -204,7 +214,17 @@ class ToolGateway:
             decision,
             shaped_output=shaped,
             egress_checked=request.host is not None,
+            approval_id=approval_id,
         )
+
+    def _granted_approval(self, run_id: str, rule: str) -> ApprovalRecord | None:
+        """Return an approved approval for this run and rule, if any (#129)."""
+        if self._approvals is None:
+            return None
+        for record in self._approvals.list(status=ApprovalStatus.APPROVED, run_id=run_id):
+            if record.rule == rule:
+                return record
+        return None
 
     def _escalate(
         self,

@@ -89,6 +89,7 @@ class LangGraphAdapter:
         self._states: dict[str, RunState] = {}
         self._usage: dict[str, UsageReport | None] = {}
         self._interrupted: dict[str, bool] = {}
+        self._escalated: dict[str, bool] = {}
 
     def register(self, workload: AgentWorkload) -> None:
         """Load and cache a workload's compiled graph, rejecting other adapters."""
@@ -123,6 +124,7 @@ class LangGraphAdapter:
             self._sessions[context.run.id] = (context, ctx, control)
             self._usage[context.run.id] = None
             self._interrupted[context.run.id] = False
+            self._escalated[context.run.id] = False
         self._spawner(
             telemetry.propagate_context(
                 lambda: self._drive(graph, context, ctx, dict(context.run.task))
@@ -138,11 +140,25 @@ class LangGraphAdapter:
         return True
 
     def resume(self, run_id: str) -> bool:
-        """Resume a cooperatively paused run or re-drive an interrupted graph."""
+        """Resume a paused run: review interrupt, cooperative pause, or escalation."""
         session = self._sessions.get(run_id)
         if session is None:
             return False
         context, ctx, control = session
+        if self._escalated.get(run_id):
+            # Re-dispatch (#129): the escalated tool call carries an approved
+            # approval now, so drive the graph again from its initial task.
+            graph = self._graph(context.workload)
+            with self._lock:
+                self._escalated[run_id] = False
+                self._states[run_id] = RunState.RUNNING
+            control.resume()  # clear the pause the escalation set
+            self._spawner(
+                telemetry.propagate_context(
+                    lambda: self._drive(graph, context, ctx, dict(context.run.task))
+                )
+            )
+            return True
         if self._interrupted.get(run_id):
             command = self._command_factory(resume=True)
             graph = self._graph(context.workload)
@@ -204,6 +220,11 @@ class LangGraphAdapter:
                 return
             except ToolCallEscalatedError:
                 active.set_attribute("outcome", "escalated")
+                # The gateway already paused the run at the service level; only
+                # record internal state so resume() re-drives (#129).
+                with self._lock:
+                    self._escalated[run.id] = True
+                    self._states[run.id] = RunState.PAUSED
                 self._reporter.record_event(
                     run.id, EventType.OPERATOR_ACTION, "adapter", detail="tool call escalated"
                 )

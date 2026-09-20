@@ -371,10 +371,12 @@ class RunService:
         if action is InterventionAction.RESUME:
             if run.state is not RunState.PAUSED:
                 raise RunNotIntervenableError(run_id, action.value)
+            # Transition first (#129): a re-driven run may complete inline, and a
+            # terminal state must never be followed by a state change.
+            resumed = self.transition(run_id, RunState.RUNNING, actor=actor)
             self._executor.resume(run_id)
             self._append_event(run_id, EventType.OPERATOR_ACTION, actor, detail=action.value)
             self._record_intervention_latency(run)
-            resumed = self.transition(run_id, RunState.RUNNING, actor=actor)
             self._record_audit(actor, action.value, run_id)
             return resumed
         self._executor.cancel(run_id)

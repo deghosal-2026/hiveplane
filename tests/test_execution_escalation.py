@@ -69,6 +69,16 @@ class _Approvals:
             requested_at=_clock(),
         )
 
+    def list(
+        self,
+        *,
+        status: object | None = None,
+        workload: str | None = None,
+        run_id: str | None = None,
+    ) -> list[ApprovalRecord]:
+        """No approvals are granted in these tests."""
+        return []
+
 
 class _Recorder:
     def __init__(self) -> None:
