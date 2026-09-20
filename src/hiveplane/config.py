@@ -173,6 +173,14 @@ class ModelSettings(BaseModel):
             return {}
         return value
 
+    @field_validator("default_model", mode="before")
+    @classmethod
+    def _empty_default_model_becomes_none(cls, value: object) -> object:
+        """Treat an unset env var as no default model."""
+        if value == "":
+            return None
+        return value
+
 
 class Settings(BaseSettings):
     """Root settings object; instantiate via :func:`get_settings`."""

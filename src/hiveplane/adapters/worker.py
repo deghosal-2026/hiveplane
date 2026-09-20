@@ -259,9 +259,17 @@ class WorkerContext:
         if self._run.model_identity is not None:
             return self._run.model_identity
         identity = self._workload.spec.model.identity
-        if identity is None:
+        if identity is not None:
+            return canonical_model_identity(identity)
+        # Convenience fallback for local/CI smoke runs (M23, #142); production
+        # admission still requires a manifest-bound identity (certification
+        # binds to it, T11).
+        from hiveplane.config import get_settings
+
+        default_model = get_settings().model.default_model
+        if default_model is None:
             return None
-        return canonical_model_identity(identity)
+        return validate_model_identity(default_model)
 
     def _record_identity_mismatch(self, expected: str, actual: str) -> None:
         metrics.get_metrics().record_model_swap_block(workload=self._workload.name)

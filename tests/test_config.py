@@ -189,6 +189,24 @@ def test_model_aliases_tolerate_an_empty_env_value(
     assert settings.model.model_aliases == {}
 
 
+def test_default_model_tolerates_an_empty_env_value(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("HIVEPLANE_MODEL__DEFAULT_MODEL", "")
+
+    settings = Settings()
+
+    assert settings.model.default_model is None
+
+
+def test_default_model_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("HIVEPLANE_MODEL__DEFAULT_MODEL", "omlx/qwen2.5-7b-instruct/4bit")
+
+    settings = Settings()
+
+    assert settings.model.default_model == "omlx/qwen2.5-7b-instruct/4bit"
+
+
 def test_signing_key_file_defaults_to_none() -> None:
     settings = Settings()
 

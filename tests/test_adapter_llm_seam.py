@@ -224,3 +224,35 @@ def test_complete_falls_back_to_manifest_identity(
     result = ctx.complete("summarize this")
 
     assert result.model_identity == "openai/gpt-4o/2024-08-06"
+
+
+def test_complete_falls_back_to_the_configured_default_model(
+    make_manifest: Callable[..., AgentWorkload],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from hiveplane.config import get_settings
+
+    monkeypatch.setenv("HIVEPLANE_MODEL__DEFAULT_MODEL", "omlx/qwen2.5-7b-instruct/4bit")
+    get_settings.cache_clear()
+    try:
+        reporter = _Reporter()
+        workload = make_manifest(
+            model={"strategy": "tiered", "identity": None},
+            certification=None,
+        )
+
+        result = WorkerContext(
+            run=_run(model_identity=None),
+            workload=workload,
+            sandbox=True,
+            tools=_Tools(),  # type: ignore[arg-type]
+            reporter=reporter,
+            control=RunControl(),
+            tool_calls=[],
+            clock=lambda: _NOW,
+            provider=FakeProvider(),
+        ).complete("summarize this")
+
+        assert result.model_identity == "omlx/qwen2.5-7b-instruct/4bit"
+    finally:
+        get_settings.cache_clear()
