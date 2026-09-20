@@ -150,13 +150,15 @@ def create_app(
     policy_engine = PolicyEngine(policy_pack_store)
     approval_service = ApprovalService(build_approval_store(settings))
     budget_store = build_budget_store(settings)
-    budget_service = BudgetService(budget_store, CostTable())
+    cost_table = CostTable()
+    budget_service = BudgetService(budget_store, cost_table)
     sandbox_manager = InMemorySandboxManager()
     app.state.policy_pack_store = policy_pack_store
     app.state.policy_engine = policy_engine
     app.state.approval_service = approval_service
     app.state.budget_store = budget_store
     app.state.budget_service = budget_service
+    app.state.cost_table = cost_table
     app.state.sandbox_manager = sandbox_manager
     app.state.run_service = run_service or build_run_service(
         registry, policy_engine, approval_service, budget_service, sandbox_manager
@@ -181,11 +183,17 @@ def create_app(
         )
     if settings.execution.adapter == "raw-worker":
         app.state.adapter = attach_raw_worker(
-            app.state.run_service, app.state.tool_gateway, provider=provider
+            app.state.run_service,
+            app.state.tool_gateway,
+            provider=provider,
+            cost_table=cost_table,
         )
     elif settings.execution.adapter == "langgraph":
         app.state.adapter = attach_langgraph(
-            app.state.run_service, app.state.tool_gateway, provider=provider
+            app.state.run_service,
+            app.state.tool_gateway,
+            provider=provider,
+            cost_table=cost_table,
         )
     else:
         app.state.adapter = None

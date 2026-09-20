@@ -8,6 +8,7 @@ from hiveplane.adapters.base import AdapterRunExecutor
 from hiveplane.adapters.langgraph import LangGraphAdapter
 from hiveplane.adapters.loader import EntrypointLoader
 from hiveplane.adapters.raw_worker import RawWorkerAdapter, Spawner
+from hiveplane.budget.pricing import CostTable
 from hiveplane.config import get_settings
 from hiveplane.core.fanout import FanOutType
 from hiveplane.execution.admission import AdmissionPipeline
@@ -128,6 +129,7 @@ def attach_raw_worker(
     root: str | Path | None = None,
     spawner: Spawner | None = None,
     provider: LLMProvider | None = None,
+    cost_table: CostTable | None = None,
 ) -> RawWorkerAdapter:
     """Build the raw-worker adapter and bind it as the run service's executor."""
     settings = get_settings()
@@ -137,6 +139,7 @@ def attach_raw_worker(
         EntrypointLoader(root=root or settings.execution.entrypoints_root),
         spawner=spawner,
         provider=provider,
+        cost_table=cost_table,
     )
     run_service.attach_executor(AdapterRunExecutor(adapter))
     return adapter
@@ -149,6 +152,7 @@ def attach_langgraph(
     root: str | Path | None = None,
     spawner: Spawner | None = None,
     provider: LLMProvider | None = None,
+    cost_table: CostTable | None = None,
 ) -> LangGraphAdapter:
     """Build the LangGraph adapter and bind it as the run service's executor (M23, #135)."""
     settings = get_settings()
@@ -158,6 +162,7 @@ def attach_langgraph(
         EntrypointLoader(root=root or settings.execution.entrypoints_root),
         spawner=spawner,
         provider=provider,
+        cost_table=cost_table,
     )
     run_service.attach_executor(AdapterRunExecutor(adapter))
     return adapter

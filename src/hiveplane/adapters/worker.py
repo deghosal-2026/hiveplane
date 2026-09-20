@@ -23,6 +23,7 @@ from hiveplane.adapters.errors import (
     ToolCallEscalatedError,
 )
 from hiveplane.adapters.reporter import RunReporter
+from hiveplane.budget.pricing import CostTable
 from hiveplane.core.decision import ActionClass, DataSensitivity
 from hiveplane.core.event import EventType
 from hiveplane.core.run import Run, RunState
@@ -51,6 +52,11 @@ def _default_provider() -> LLMProvider:
     from hiveplane.llm.factory import build_provider
 
     return build_provider()
+
+
+#: Shared pricing table for seams that receive none (same DEFAULT_PRICES as the
+#: budget service; M23, #139).
+_DEFAULT_COST_TABLE = CostTable()
 
 
 class RunControl:
@@ -114,6 +120,7 @@ class WorkerContext:
         tool_calls: list[ToolCallResult],
         clock: Callable[[], datetime],
         provider: LLMProvider | None = None,
+        cost_table: CostTable | None = None,
     ) -> None:
         self._run = run
         self._workload = workload
@@ -124,6 +131,7 @@ class WorkerContext:
         self._tool_calls = tool_calls
         self._clock = clock
         self._provider = provider
+        self._cost_table = cost_table or _DEFAULT_COST_TABLE
 
     @property
     def run_id(self) -> str:
@@ -220,14 +228,17 @@ class WorkerContext:
             active.set_attribute("model_identity", canonical)
             active.set_attribute("input_tokens", response.usage.input_tokens)
             active.set_attribute("output_tokens", response.usage.output_tokens)
-            active.set_attribute("cost_usd", 0.0)
+            cost = self._cost_table.price(
+                canonical, response.usage.input_tokens, response.usage.output_tokens
+            )
+            active.set_attribute("cost_usd", cost)
             active.set_attribute("finish_reason", response.finish_reason)
         report = UsageReport(
             run_id=self._run.id,
             input_tokens=response.usage.input_tokens,
             output_tokens=response.usage.output_tokens,
             tool_calls=0,
-            cost_usd=0.0,
+            cost_usd=cost,
             timestamp=self._clock(),
             model_identity=canonical,
         )

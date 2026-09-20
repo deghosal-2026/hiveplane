@@ -26,6 +26,7 @@ from hiveplane.adapters.graph import CompiledGraph
 from hiveplane.adapters.loader import EntrypointLoader
 from hiveplane.adapters.reporter import RunReporter
 from hiveplane.adapters.worker import RunControl, WorkerContext
+from hiveplane.budget.pricing import CostTable
 from hiveplane.core.event import EventType
 from hiveplane.core.run import RunState
 from hiveplane.core.spec import RuntimeAdapter
@@ -72,6 +73,7 @@ class LangGraphAdapter:
         spawner: Spawner | None = None,
         command_factory: Callable[..., Any] | None = None,
         provider: LLMProvider | None = None,
+        cost_table: CostTable | None = None,
     ) -> None:
         self._reporter = reporter
         self._tools = tools
@@ -80,6 +82,7 @@ class LangGraphAdapter:
         self._spawner = spawner or _thread_spawner
         self._command_factory: Callable[..., Any] = command_factory or _require_command
         self._provider = provider
+        self._cost_table = cost_table
         self._lock = threading.Lock()
         self._graphs: dict[str, CompiledGraph] = {}
         self._sessions: dict[str, tuple[RunContext, WorkerContext, RunControl]] = {}
@@ -113,6 +116,7 @@ class LangGraphAdapter:
             tool_calls=[],
             clock=self._clock,
             provider=self._provider,
+            cost_table=self._cost_table,
         )
         with self._lock:
             self._states[context.run.id] = RunState.RUNNING

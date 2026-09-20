@@ -17,6 +17,7 @@ from hiveplane.adapters.errors import (
 from hiveplane.adapters.loader import Entrypoint, EntrypointLoader
 from hiveplane.adapters.reporter import RunReporter
 from hiveplane.adapters.worker import RunControl, WorkerContext
+from hiveplane.budget.pricing import CostTable
 from hiveplane.core.event import EventType
 from hiveplane.core.run import RunState
 from hiveplane.core.spec import RuntimeAdapter
@@ -47,6 +48,7 @@ class RawWorkerAdapter:
         clock: Callable[[], datetime] | None = None,
         spawner: Spawner | None = None,
         provider: LLMProvider | None = None,
+        cost_table: CostTable | None = None,
     ) -> None:
         self._reporter = reporter
         self._tools = tools
@@ -54,6 +56,7 @@ class RawWorkerAdapter:
         self._clock = clock or (lambda: datetime.now(UTC))
         self._spawner = spawner or _thread_spawner
         self._provider = provider
+        self._cost_table = cost_table
         self._lock = threading.Lock()
         self._entries: dict[str, Entrypoint] = {}
         self._states: dict[str, RunState] = {}
@@ -134,6 +137,7 @@ class RawWorkerAdapter:
             tool_calls=tool_calls,
             clock=self._clock,
             provider=self._provider,
+            cost_table=self._cost_table,
         )
         with telemetry.span("execution", run=run, workload=context.workload) as active:
             try:

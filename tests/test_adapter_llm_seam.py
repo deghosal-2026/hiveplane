@@ -119,8 +119,83 @@ def test_complete_emits_model_call_span(
     assert attributes["model_identity"] == "openai/gpt-4o/2024-08-06"
     assert attributes["input_tokens"] > 0
     assert attributes["output_tokens"] > 0
-    assert attributes["cost_usd"] == 0.0
+    assert attributes["cost_usd"] > 0.0
     assert attributes["finish_reason"] == "stop"
+
+
+def test_complete_reports_the_priced_cost(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    reporter = _Reporter()
+    ctx = _context(make_manifest, provider=FakeProvider(), reporter=reporter)
+
+    ctx.complete("summarize this")
+
+    assert reporter.usage[0].cost_usd > 0.0
+
+
+def test_complete_prices_local_identities_at_zero(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    reporter = _Reporter()
+    ctx = _context(
+        make_manifest,
+        provider=FakeProvider(),
+        reporter=reporter,
+        run=_run(model_identity="omlx/qwen2.5-7b-instruct/4bit"),
+    )
+
+    ctx.complete("summarize this")
+
+    assert reporter.usage[0].cost_usd == 0.0
+
+
+def test_complete_fails_on_an_unpriced_cloud_identity(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    from hiveplane.budget.errors import UnknownModelPriceError
+
+    ctx = _context(
+        make_manifest,
+        provider=FakeProvider(),
+        reporter=_Reporter(),
+        run=_run(model_identity="openai/unknown-model/1"),
+    )
+
+    with pytest.raises(UnknownModelPriceError):
+        ctx.complete("summarize this")
+
+
+def test_complete_uses_the_injected_cost_table(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    from hiveplane.budget.pricing import CostTable, ModelPrice
+
+    expensive = CostTable(
+        {"openai/gpt-4o/2024-08-06": ModelPrice(input_per_1k=10.0, output_per_1k=10.0)}
+    )
+    reporter = _Reporter()
+    ctx = WorkerContext(
+        run=_run(),
+        workload=make_manifest(),
+        sandbox=True,
+        tools=_Tools(),  # type: ignore[arg-type]
+        reporter=reporter,
+        control=RunControl(),
+        tool_calls=[],
+        clock=lambda: _NOW,
+        provider=FakeProvider(),
+        cost_table=expensive,
+    )
+
+    ctx.complete("summarize this")
+
+    cheap = CostTable().price(
+        "openai/gpt-4o/2024-08-06",
+        reporter.usage[0].input_tokens,
+        reporter.usage[0].output_tokens,
+    )
+    assert reporter.usage[0].cost_usd > cheap
 
 
 def test_model_identity_mismatch_raises_and_records_security_event(
