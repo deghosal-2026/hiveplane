@@ -9,12 +9,20 @@ from typing import Any
 import examples.repo_agent as repo_agent
 import pytest
 
-from hiveplane.llm.fake import FakeProvider
+from hiveplane.llm.fake import FakeProvider, replay_key
 from hiveplane.llm.models import (
     CompletionRequest,
     CompletionResult,
     Message,
 )
+
+
+def _replay_entry(
+    model_identity: str, messages: list[Message], content: str
+) -> dict[str, str]:
+    """Build a one-entry replay map keyed on the full request (M23, #137)."""
+    request = CompletionRequest(messages=list(messages), model=model_identity)
+    return {replay_key(request): content}
 
 
 class _FakeCtx:
@@ -58,16 +66,23 @@ class _FakeCtx:
 
 
 def test_repo_agent_returns_structured_risk() -> None:
+    tool_text = json.dumps({"pull_requests": [{"number": 412}]})
+    task: dict[str, Any] = {"pr": {"title": "Fix typo in README"}}
+    messages = [
+        Message(role="system", content=f"Open pull requests: {tool_text}"),
+        Message(role="system", content=f"Pull request under review: {json.dumps(task)}"),
+        Message(role="user", content=repo_agent.CLASSIFY_PROMPT),
+    ]
     provider = FakeProvider(
-        replay={
-            repo_agent.CLASSIFY_PROMPT: json.dumps(
-                {"risk": "low", "summary": "docs-only change"}
-            )
-        }
+        replay=_replay_entry(
+            "openai/gpt-4o/2024-08-06",
+            messages,
+            json.dumps({"risk": "low", "summary": "docs-only change"}),
+        )
     )
-    ctx = _FakeCtx(provider, tool_text=json.dumps({"pull_requests": [{"number": 412}]}))
+    ctx = _FakeCtx(provider, tool_text=tool_text)
 
-    result = repo_agent.run({"pr": {"title": "Fix typo in README"}}, ctx)  # type: ignore[arg-type]
+    result = repo_agent.run(task, ctx)  # type: ignore[arg-type]
 
     assert result == {"risk": "low", "summary": "docs-only change"}
     assert ctx.tool_ids[0][0] == "mcp.github.list_pull_requests"
@@ -75,7 +90,14 @@ def test_repo_agent_returns_structured_risk() -> None:
 
 
 def test_repo_agent_tolerates_non_json_completion() -> None:
-    provider = FakeProvider(replay={repo_agent.CLASSIFY_PROMPT: "medium"})
+    messages = [
+        Message(role="system", content="Open pull requests: {}"),
+        Message(role="system", content="Pull request under review: {}"),
+        Message(role="user", content=repo_agent.CLASSIFY_PROMPT),
+    ]
+    provider = FakeProvider(
+        replay=_replay_entry("openai/gpt-4o/2024-08-06", messages, "medium")
+    )
     ctx = _FakeCtx(provider, tool_text="{}")
 
     result = repo_agent.run({}, ctx)  # type: ignore[arg-type]
@@ -88,14 +110,23 @@ def test_docs_agent_drafts_with_model() -> None:
     import examples.docs_agent as docs_agent
     from langgraph.types import Command
 
+    task: dict[str, Any] = {"issue": "README"}
+    messages = [
+        Message(role="system", content=f"Task: {json.dumps(task)}"),
+        Message(role="user", content=docs_agent.DRAFT_PROMPT),
+    ]
     provider = FakeProvider(
-        replay={docs_agent.DRAFT_PROMPT: json.dumps({"draft": "new docs section"})}
+        replay=_replay_entry(
+            "openai/gpt-4o/2024-08-06",
+            messages,
+            json.dumps({"draft": "new docs section"}),
+        )
     )
     ctx = _FakeCtx(provider, tool_text="{}")
     config: Any = {"configurable": {"thread_id": "docs-run-1", "hiveplane_ctx": ctx}}
     graph: Any = docs_agent.graph
 
-    chunks = list(graph.stream({"task": {"issue": "README"}}, config, stream_mode="values"))
+    chunks = list(graph.stream({"task": task}, config, stream_mode="values"))
 
     assert any("__interrupt__" in chunk for chunk in chunks)
     assert ctx.checkpoints >= 1
@@ -110,16 +141,23 @@ def test_docs_agent_drafts_with_model() -> None:
 def test_incident_agent_triages_alert() -> None:
     import examples.incident_agent as incident_agent
 
+    tool_text = json.dumps({"result": []})
+    task: dict[str, Any] = {"alert": {"service": "db"}}
+    messages = [
+        Message(role="system", content=f"Alert: {json.dumps(task)}"),
+        Message(role="system", content=f"Metrics: {tool_text}"),
+        Message(role="user", content=incident_agent.TRIAGE_PROMPT),
+    ]
     provider = FakeProvider(
-        replay={
-            incident_agent.TRIAGE_PROMPT: json.dumps(
-                {"severity": "critical", "summary": "database unavailable"}
-            )
-        }
+        replay=_replay_entry(
+            "openai/gpt-4o/2024-08-06",
+            messages,
+            json.dumps({"severity": "critical", "summary": "database unavailable"}),
+        )
     )
-    ctx = _FakeCtx(provider, tool_text=json.dumps({"result": []}))
+    ctx = _FakeCtx(provider, tool_text=tool_text)
 
-    result = incident_agent.run({"alert": {"service": "db"}}, ctx)  # type: ignore[arg-type]
+    result = incident_agent.run(task, ctx)  # type: ignore[arg-type]
 
     assert result == {"severity": "critical", "summary": "database unavailable"}
     assert [tool_id for tool_id, _ in ctx.tool_ids] == [

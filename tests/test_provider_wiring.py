@@ -26,7 +26,8 @@ from hiveplane.execution.models import DeliveryRecord
 from hiveplane.execution.service import RunService
 from hiveplane.execution.store import InMemoryRunStore
 from hiveplane.execution.wiring import attach_raw_worker, build_tool_gateway
-from hiveplane.llm.fake import FakeProvider
+from hiveplane.llm.fake import FakeProvider, replay_key
+from hiveplane.llm.models import CompletionRequest, Message
 from hiveplane.llm.openai import OpenAICompatibleProvider
 from hiveplane.policy.engine import PolicyEngine
 from hiveplane.policy.packs import InMemoryPolicyPackStore
@@ -106,8 +107,12 @@ def test_worker_completes_through_the_wired_provider(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
+    request = CompletionRequest(
+        messages=[Message(role="user", content="ping")],
+        model="openai/gpt-4o/2024-08-06",
+    )
     replay = tmp_path / "replay.json"
-    replay.write_text(json.dumps({"ping": "pong"}), encoding="utf-8")
+    replay.write_text(json.dumps({replay_key(request): "pong"}), encoding="utf-8")
     monkeypatch.setenv("HIVEPLANE_MODEL__REPLAY_FILE", str(replay))
     (tmp_path / "seam_worker.py").write_text(
         "def run(task, ctx):\n"

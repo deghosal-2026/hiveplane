@@ -10,7 +10,7 @@ from pydantic import SecretStr
 
 from hiveplane.config import ModelSettings, Settings
 from hiveplane.llm.factory import build_provider
-from hiveplane.llm.fake import FakeProvider
+from hiveplane.llm.fake import FakeProvider, ReplayMissingError, replay_key
 from hiveplane.llm.models import CompletionRequest, Message
 from hiveplane.llm.openai import OpenAICompatibleProvider
 
@@ -52,14 +52,31 @@ def test_cloud_provider_requires_api_key() -> None:
 
 
 def test_fake_provider_loads_replay_file(tmp_path: Path) -> None:
+    request = CompletionRequest(
+        messages=[Message(role="user", content="hello")], model="fake/echo/1"
+    )
     replay_file = tmp_path / "replay.json"
-    replay_file.write_text(json.dumps({"hello": "risk: low"}))
+    replay_file.write_text(json.dumps({replay_key(request): "risk: low"}))
 
     provider = build_provider(
         Settings(model=ModelSettings(provider="fake", replay_file=str(replay_file)))
     )
-    response = provider.complete(
-        CompletionRequest(messages=[Message(role="user", content="hello")], model="fake/echo/1")
-    )
+    response = provider.complete(request)
 
     assert response.content == "risk: low"
+
+
+def test_fake_provider_replay_file_requires_a_matching_entry(tmp_path: Path) -> None:
+    replay_file = tmp_path / "replay.json"
+    replay_file.write_text(json.dumps({"not-a-request-key": "risk: low"}))
+
+    provider = build_provider(
+        Settings(model=ModelSettings(provider="fake", replay_file=str(replay_file)))
+    )
+
+    with pytest.raises(ReplayMissingError):
+        provider.complete(
+            CompletionRequest(
+                messages=[Message(role="user", content="hello")], model="fake/echo/1"
+            )
+        )
