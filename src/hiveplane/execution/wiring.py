@@ -22,6 +22,7 @@ from hiveplane.execution.gates import (
 )
 from hiveplane.execution.service import RunService
 from hiveplane.execution.store import InMemoryRunStore, JsonFileRunStore, RunStore
+from hiveplane.execution.tool_executor import FixtureToolExecutor
 from hiveplane.execution.tools import ToolGateway
 from hiveplane.persistence.audit import AuditLog, InMemoryAuditLog
 from hiveplane.persistence.base import create_engine_from_settings
@@ -96,13 +97,25 @@ def build_tool_gateway(
     run_service: RunService,
     approvals: ApprovalRequests | None,
 ) -> ToolGateway:
-    """Build the tool-call boundary over the live run service."""
+    """Build the tool-call boundary over the live run service.
+
+    Tool calls without a caller-provided output are served from the configured
+    fixture store so agents never fabricate tool data (M23, #134). An empty
+    ``tool_fixtures`` setting disables the executor (caller output only).
+    """
+    settings = get_settings()
+    executor: FixtureToolExecutor | None = (
+        FixtureToolExecutor(settings.execution.tool_fixtures)
+        if settings.execution.tool_fixtures
+        else None
+    )
     return ToolGateway(
         registry_service,
         policy_gate,
         run_service,
         shaping=ShapingPipeline(InjectionScanner()),
         approvals=approvals,
+        executor=executor,
     )
 
 

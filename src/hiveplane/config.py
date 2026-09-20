@@ -14,6 +14,8 @@ from typing import Literal
 from pydantic import BaseModel, Field, SecretStr, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from hiveplane.execution.tool_executor import DEFAULT_TOOL_FIXTURES
+
 ENV_PREFIX = "HIVEPLANE_"
 ENV_NESTED_DELIMITER = "__"
 
@@ -130,6 +132,7 @@ class ExecutionSettings(BaseModel):
     data_dir: str = ".hiveplane/runs"
     entrypoints_root: str = "."
     adapter: Literal["none", "raw-worker"] = "none"
+    tool_fixtures: str = DEFAULT_TOOL_FIXTURES
 
 
 class FanoutSettings(BaseModel):
