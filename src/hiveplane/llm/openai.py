@@ -1,8 +1,10 @@
-"""OpenAI-compatible provider for local (Ollama/OMLX) and cloud endpoints (M23, #107)."""
+"""OpenAI-compatible provider for local (OMLX) and cloud endpoints (M23, #107, #141)."""
 
 from __future__ import annotations
 
 import json
+import time
+import urllib.error
 import urllib.request
 from collections.abc import Callable
 from typing import Any
@@ -16,6 +18,16 @@ from hiveplane.llm.models import (
 #: Posts a JSON payload and returns the decoded JSON response.
 Transport = Callable[[str, dict[str, Any], dict[str, str]], dict[str, Any]]
 
+#: Per-attempt backoff base for transient failures (seconds).
+_RETRY_BACKOFF_S = 0.05
+
+
+def _is_retryable(exc: BaseException) -> bool:
+    """Retry connection errors and 5xx/429; never retry other 4xx responses."""
+    if isinstance(exc, urllib.error.HTTPError):
+        return exc.code >= 500 or exc.code == 429
+    return True
+
 
 def _urllib_transport(
     url: str, payload: dict[str, Any], headers: dict[str, str], timeout_s: float
@@ -28,7 +40,12 @@ def _urllib_transport(
 
 
 class OpenAICompatibleProvider:
-    """Calls an OpenAI-compatible ``/chat/completions`` endpoint."""
+    """Calls an OpenAI-compatible ``/chat/completions`` endpoint.
+
+    Transient transport failures (connection errors, 5xx, 429) are retried up
+    to ``max_retries`` times with linear backoff (M23, #141); a permanent HTTP
+    error surfaces immediately so the run fails with an attributed reason.
+    """
 
     def __init__(
         self,
@@ -38,6 +55,7 @@ class OpenAICompatibleProvider:
         model_aliases: dict[str, str] | None = None,
         transport: Transport | None = None,
         timeout_s: float = 60.0,
+        max_retries: int = 2,
     ) -> None:
         self._base_url = base_url.rstrip("/")
         self._api_key = api_key
@@ -47,6 +65,7 @@ class OpenAICompatibleProvider:
             canonical: served for served, canonical in self._aliases.items()
         }
         self._timeout_s = timeout_s
+        self._max_retries = max_retries
         self._transport: Transport = transport or (
             lambda url, payload, headers: _urllib_transport(
                 url, payload, headers, timeout_s
@@ -66,7 +85,7 @@ class OpenAICompatibleProvider:
         if self._api_key is not None:
             headers["Authorization"] = f"Bearer {self._api_key}"
 
-        data = self._transport(f"{self._base_url}/chat/completions", payload, headers)
+        data = self._send(f"{self._base_url}/chat/completions", payload, headers)
         choice = data["choices"][0]
         usage = data.get("usage", {})
         reported = str(data.get("model", request.model))
@@ -79,3 +98,16 @@ class OpenAICompatibleProvider:
             ),
             finish_reason=str(choice.get("finish_reason", "stop")),
         )
+
+    def _send(
+        self, url: str, payload: dict[str, Any], headers: dict[str, str]
+    ) -> dict[str, Any]:
+        """POST the payload, retrying transient transport failures."""
+        for attempt in range(self._max_retries + 1):
+            try:
+                return self._transport(url, payload, headers)
+            except Exception as exc:
+                if not _is_retryable(exc) or attempt == self._max_retries:
+                    raise
+                time.sleep(_RETRY_BACKOFF_S * (attempt + 1))
+        raise AssertionError("unreachable")  # pragma: no cover

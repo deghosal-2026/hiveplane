@@ -29,6 +29,7 @@ def _build(model: ModelSettings) -> LLMProvider:
             base_url=model.base_url,
             model_aliases=model.model_aliases,
             timeout_s=model.timeout_s,
+            max_retries=model.max_retries,
         )
     if model.api_key is None:
         raise ValueError("model.api_key is required when provider is 'cloud'")
@@ -37,6 +38,7 @@ def _build(model: ModelSettings) -> LLMProvider:
         api_key=model.api_key.get_secret_value(),
         model_aliases=model.model_aliases,
         timeout_s=model.timeout_s,
+        max_retries=model.max_retries,
     )
 
 

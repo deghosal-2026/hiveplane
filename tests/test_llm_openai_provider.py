@@ -1,14 +1,22 @@
-"""Tests for the OpenAI-compatible provider (local + cloud) (M23, #107)."""
+"""Tests for the OpenAI-compatible provider (local + cloud) (M23, #107, #141)."""
 
 from __future__ import annotations
 
 import json
 import threading
+import urllib.error
+from email.message import Message as _HeaderMessage
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from typing import Any
 
+import pytest
+
 from hiveplane.llm.models import CompletionRequest, Message
 from hiveplane.llm.openai import OpenAICompatibleProvider
+
+#: The transport raises the provider's own retryable error type; tests use it
+#: to distinguish retryable (5xx/connection) from permanent (4xx) failures.
+_HTTPError = urllib.error.HTTPError
 
 
 def _request(model: str = "gpt-4o-2024-08-06") -> CompletionRequest:
@@ -105,6 +113,63 @@ def test_request_model_maps_canonical_identity_to_the_served_name() -> None:
 
     assert captured["payload"]["model"] == "mlx-community/Qwen2.5-7B-Instruct-4bit"
     assert response.model_identity == "omlx/qwen2.5-7b-instruct/4bit"
+
+
+def test_transient_failure_is_retried() -> None:
+    attempts = {"n": 0}
+
+    def flaky(url: str, payload: dict[str, Any], headers: dict[str, str]) -> dict[str, Any]:
+        attempts["n"] += 1
+        if attempts["n"] == 1:
+            raise RuntimeError("connection reset")
+        return _openai_response()
+
+    provider = OpenAICompatibleProvider(
+        base_url="http://127.0.0.1:8000/v1", max_retries=2, transport=flaky
+    )
+
+    response = provider.complete(_request())
+
+    assert response.content == "hi"
+    assert attempts["n"] == 2
+
+
+def test_persistent_failure_raises_after_max_retries() -> None:
+    attempts = {"n": 0}
+
+    def always_fails(
+        url: str, payload: dict[str, Any], headers: dict[str, str]
+    ) -> dict[str, Any]:
+        attempts["n"] += 1
+        raise RuntimeError("connection reset")
+
+    provider = OpenAICompatibleProvider(
+        base_url="http://127.0.0.1:8000/v1", max_retries=2, transport=always_fails
+    )
+
+    with pytest.raises(RuntimeError, match="connection reset"):
+        provider.complete(_request())
+
+    assert attempts["n"] == 3  # initial attempt + 2 retries
+
+
+def test_no_retry_on_http_400() -> None:
+    attempts = {"n": 0}
+
+    def bad_request(
+        url: str, payload: dict[str, Any], headers: dict[str, str]
+    ) -> dict[str, Any]:
+        attempts["n"] += 1
+        raise _HTTPError(url, 400, "invalid request", _HeaderMessage(), None)
+
+    provider = OpenAICompatibleProvider(
+        base_url="http://127.0.0.1:8000/v1", max_retries=3, transport=bad_request
+    )
+
+    with pytest.raises(_HTTPError):
+        provider.complete(_request())
+
+    assert attempts["n"] == 1
 
 
 def test_default_transport_posts_and_parses() -> None:
