@@ -350,7 +350,7 @@ docker compose ps
 docker compose down
 ```
 
-Services: API (`:8000`), Operator UI (`:3001`), PostgreSQL (`:5432`), Redis (`:6379`), OpenTelemetry Collector (`:4317` gRPC / `:4318` HTTP), Tempo (`:3200`), Prometheus (`:9090`), Grafana (`:3000`). Every service has a healthcheck.
+Services: API (`:8100`), Operator UI (`:3001`), PostgreSQL (`:5432`), Redis (`:6379`), OpenTelemetry Collector (`:4317` gRPC / `:4318` HTTP), Tempo (`:3200`), Prometheus (`:9090`), Grafana (`:3000`). Every service has a healthcheck. Host port 8000 is reserved for a local OMLX (`mlx_lm.server`) endpoint.
 
 ### Configuration
 

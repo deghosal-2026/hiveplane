@@ -51,9 +51,9 @@ The field test covers six phases:
 ### Prerequisites
 
 ```bash
-# CI (deterministic, no secrets) or local (Ollama):
+# CI (deterministic, no secrets) or local (OMLX on the host, port 8000):
 docker compose --profile ci up -d        # fake provider
-# or: docker compose --profile local up -d   # local LLM
+# or: docker compose --env-file .env.local up -d   # OMLX via host.docker.internal
 pip install -e ".[dev]"
 ```
 

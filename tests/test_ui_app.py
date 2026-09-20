@@ -82,7 +82,7 @@ def test_healthz_reports_ok() -> None:
 def test_default_client_uses_configured_api_url() -> None:
     app = create_ui_app()
 
-    assert app.state.control_plane.base_url == "http://localhost:8000"
+    assert app.state.control_plane.base_url == "http://localhost:8100"
 
 
 def test_control_plane_error_renders_502_page() -> None:

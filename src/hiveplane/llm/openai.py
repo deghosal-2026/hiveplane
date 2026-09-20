@@ -42,6 +42,10 @@ class OpenAICompatibleProvider:
         self._base_url = base_url.rstrip("/")
         self._api_key = api_key
         self._aliases = dict(model_aliases or {})
+        # Reverse view: canonical bound identity -> name the server can serve.
+        self._request_models = {
+            canonical: served for served, canonical in self._aliases.items()
+        }
         self._timeout_s = timeout_s
         self._transport: Transport = transport or (
             lambda url, payload, headers: _urllib_transport(
@@ -52,7 +56,7 @@ class OpenAICompatibleProvider:
     def complete(self, request: CompletionRequest) -> CompletionResponse:
         """Invoke the endpoint and return a provider-neutral response."""
         payload: dict[str, Any] = {
-            "model": request.model,
+            "model": self._request_models.get(request.model, request.model),
             "messages": [message.model_dump() for message in request.messages],
             "temperature": request.temperature,
         }

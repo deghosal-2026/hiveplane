@@ -33,6 +33,9 @@ def test_local_and_fake_models_price_at_zero() -> None:
     table = CostTable()
 
     assert table.price("local/qwen2.5/7b", input_tokens=1000, output_tokens=500) == 0.0
+    assert table.price(
+        "omlx/qwen2.5-7b-instruct/4bit", input_tokens=1000, output_tokens=500
+    ) == 0.0
     assert table.price("fake/echo/1", input_tokens=1000, output_tokens=500) == 0.0
 
 

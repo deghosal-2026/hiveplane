@@ -84,7 +84,7 @@ existing `HIVEPLANE_<SECTION>__<FIELD>` convention:
 | Env var | Default | Meaning |
 |---------|---------|---------|
 | `HIVEPLANE_MODEL__PROVIDER` | `fake` | `local` \| `cloud` \| `fake` |
-| `HIVEPLANE_MODEL__BASE_URL` | provider default | OpenAI-compatible base URL (e.g. `http://ollama:11434/v1`) |
+| `HIVEPLANE_MODEL__BASE_URL` | provider default | OpenAI-compatible base URL (e.g. OMLX on the host: `http://host.docker.internal:8000/v1`; native runs: `http://127.0.0.1:8000/v1` — host port 8000 is reserved for OMLX) |
 | `HIVEPLANE_MODEL__API_KEY` | none | Secret; required for `cloud` |
 | `HIVEPLANE_MODEL__DEFAULT_MODEL` | none | Fallback canonical identity when a manifest omits one |
 | `HIVEPLANE_MODEL__TIMEOUT_S` | `60` | Per-call timeout |

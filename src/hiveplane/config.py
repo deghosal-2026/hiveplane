@@ -148,9 +148,9 @@ class FanoutSettings(BaseModel):
 class UiSettings(BaseModel):
     """Operator UI settings (M22)."""
 
-    api_url: str = "http://localhost:8000"
+    api_url: str = "http://localhost:8100"
     host: str = "0.0.0.0"
-    port: int = Field(default=8000, ge=1, le=65535)
+    port: int = Field(default=3001, ge=1, le=65535)
 
 
 class ModelSettings(BaseModel):

@@ -154,7 +154,7 @@ services:
       HIVEPLANE_FANOUT__SLACK_WEBHOOK_URL: ${HIVEPLANE_FANOUT__SLACK_WEBHOOK_URL:-}
       HIVEPLANE_FANOUT__GENERIC_WEBHOOK_URL: ${HIVEPLANE_FANOUT__GENERIC_WEBHOOK_URL:-}
     ports:
-      - "${API_PORT:-8000}:8000"
+      - "${API_PORT:-8100}:8000"
     depends_on:
       postgres:
         condition: service_healthy
@@ -198,22 +198,10 @@ services:
       retries: 10
     restart: unless-stopped
 
-  # Local LLM backend (OpenAI-compatible). Enable with --profile local and
-  # point the API at it with HIVEPLANE_MODEL__BASE_URL=http://ollama:11434/v1.
-  ollama:
-    image: ollama/ollama:latest
-    profiles: ["local"]
-    ports:
-      - "${OLLAMA_PORT:-11434}:11434"
-    volumes:
-      - ollama-data:/root/.ollama
-    healthcheck:
-      test: ["CMD-SHELL", "ollama list >/dev/null 2>&1 || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 20s
-    restart: unless-stopped
+  # Local LLM backend: OMLX (mlx_lm.server) runs on the HOST at
+  # http://127.0.0.1:8000/v1 — host port 8000 is reserved for it. Containers
+  # reach it via http://host.docker.internal:8000/v1 (see .env.local), so there
+  # is no compose service here on purpose.
 
   # Captures fan-out deliveries for the docker field test. Enable with
   # --profile test and point the API at it with
@@ -249,5 +237,4 @@ volumes:
   tempo-data:
   prometheus-data:
   grafana-data:
-  ollama-data:
   webhook-sink-data:

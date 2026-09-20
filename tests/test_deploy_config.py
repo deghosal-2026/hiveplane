@@ -93,12 +93,31 @@ def test_compose_api_selects_postgres_store_and_raw_worker_adapter() -> None:
     assert environment["HIVEPLANE_EXECUTION__STORE"] == "postgres"
 
 
+def test_compose_api_moves_off_the_omlx_port() -> None:
+    services = _load("docker-compose.yml")["services"]
+    api = services["api"]
+
+    host_mapping = str(api["ports"][0])
+    assert host_mapping.startswith("${API_PORT:-8100}") or "8100" in host_mapping, (
+        f"api host port must default to 8100, got {host_mapping!r}"
+    )
+    assert host_mapping.endswith(":8000")
+
+
 def test_compose_defines_llm_provider_profiles() -> None:
     services = _load("docker-compose.yml")["services"]
 
-    assert "local" in services["ollama"]["profiles"]
-    assert any("11434" in str(port) for port in services["ollama"]["ports"])
     assert "test" in services["webhook-sink"]["profiles"]
+
+
+def test_no_compose_service_binds_host_port_8000() -> None:
+    """Host port 8000 is reserved for the local OMLX server (field test, M23)."""
+    services = _load("docker-compose.yml")["services"]
+
+    for name, service in services.items():
+        for port in service.get("ports", []):
+            host_port = str(port).split(":")[0]
+            assert host_port != "8000", f"{name} binds host port 8000 (reserved for OMLX)"
 
 
 def test_env_profiles_set_llm_provider_defaults() -> None:
@@ -109,11 +128,12 @@ def test_env_profiles_set_llm_provider_defaults() -> None:
     assert "HIVEPLANE_MODEL__PROVIDER=fake" in ci
 
     assert "HIVEPLANE_MODEL__PROVIDER=local" in local
-    assert "HIVEPLANE_MODEL__BASE_URL=http://ollama:11434/v1" in local
+    assert "HIVEPLANE_MODEL__BASE_URL=http://host.docker.internal:8000/v1" in local
     assert (
-        '{"qwen2.5:7b": "local/qwen2.5/7b"}' in local
-    ), "local profile must alias the served Ollama tag to the canonical identity"
-    assert "HIVEPLANE_MODEL__DEFAULT_MODEL=local/qwen2.5/7b" in local
+        '{"mlx-community/Qwen2.5-7B-Instruct-4bit": "omlx/qwen2.5-7b-instruct/4bit"}'
+        in local
+    ), "local profile must alias the OMLX-served model to the canonical identity"
+    assert "HIVEPLANE_MODEL__DEFAULT_MODEL=omlx/qwen2.5-7b-instruct/4bit" in local
 
     assert "HIVEPLANE_MODEL__PROVIDER=cloud" in cloud
     assert "HIVEPLANE_MODEL__BASE_URL=https://api.openai.com/v1" in cloud

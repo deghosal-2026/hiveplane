@@ -157,7 +157,7 @@ def submit(
     model_identity: Annotated[
         str | None, typer.Option("--model-identity", help="Model identity to pin the run to.")
     ] = None,
-    api_url: ApiUrl = "http://localhost:8000",
+    api_url: ApiUrl = "http://localhost:8100",
 ) -> None:
     """Submit a run for admission and print its id and state."""
     try:
@@ -197,7 +197,7 @@ def certify(
         str | None,
         typer.Option("--model-identity", help="Model identity to pin the benchmark to."),
     ] = None,
-    api_url: ApiUrl = "http://localhost:8000",
+    api_url: ApiUrl = "http://localhost:8100",
 ) -> None:
     """Run a workload's benchmark corpus and certify the result."""
     payload: dict[str, Any] = {"workload": workload, "target_context": context}
@@ -223,7 +223,7 @@ def certify(
 def certs_list(
     workload: Annotated[str | None, typer.Option("--workload")] = None,
     status: Annotated[str | None, typer.Option("--status")] = None,
-    api_url: ApiUrl = "http://localhost:8000",
+    api_url: ApiUrl = "http://localhost:8100",
 ) -> None:
     """List certification records."""
     query = urlencode(
@@ -251,7 +251,7 @@ def certs_list(
 @certs_app.command("show")
 def certs_show(
     certification_id: Annotated[str, typer.Argument(help="Certification id.")],
-    api_url: ApiUrl = "http://localhost:8000",
+    api_url: ApiUrl = "http://localhost:8100",
 ) -> None:
     """Show a certification record, including its attestation."""
     status_code, body = _request(
@@ -271,7 +271,7 @@ def certs_show(
 def certs_compare(
     before_id: Annotated[str, typer.Argument(help="Earlier certification id.")],
     after_id: Annotated[str, typer.Argument(help="Later certification id.")],
-    api_url: ApiUrl = "http://localhost:8000",
+    api_url: ApiUrl = "http://localhost:8100",
 ) -> None:
     """Compare two certifications and show the per-task regression diff."""
     url = f"{api_url.rstrip('/')}/certifications/compare/{before_id}/{after_id}"
@@ -300,7 +300,7 @@ def certs_compare(
 def runs_list(
     workload: Annotated[str | None, typer.Option("--workload", help="Filter by workload.")] = None,
     state: Annotated[str | None, typer.Option("--state", help="Filter by run state.")] = None,
-    api_url: ApiUrl = "http://localhost:8000",
+    api_url: ApiUrl = "http://localhost:8100",
 ) -> None:
     """List runs, optionally filtered by workload and state."""
     query = urlencode(
@@ -319,7 +319,7 @@ def runs_list(
 @runs_app.command("show")
 def runs_show(
     run_id: Annotated[str, typer.Argument(help="Run id.")],
-    api_url: ApiUrl = "http://localhost:8000",
+    api_url: ApiUrl = "http://localhost:8100",
 ) -> None:
     """Show a run in full, as JSON."""
     status_code, body = _request("GET", f"{api_url.rstrip('/')}/runs/{run_id}")
@@ -342,7 +342,7 @@ def _intervene(action: str, run_id: str, api_url: str) -> None:
 @runs_app.command("pause")
 def runs_pause(
     run_id: Annotated[str, typer.Argument(help="Run id.")],
-    api_url: ApiUrl = "http://localhost:8000",
+    api_url: ApiUrl = "http://localhost:8100",
 ) -> None:
     """Pause a running run."""
     _intervene("pause", run_id, api_url)
@@ -351,7 +351,7 @@ def runs_pause(
 @runs_app.command("resume")
 def runs_resume(
     run_id: Annotated[str, typer.Argument(help="Run id.")],
-    api_url: ApiUrl = "http://localhost:8000",
+    api_url: ApiUrl = "http://localhost:8100",
 ) -> None:
     """Resume a paused run."""
     _intervene("resume", run_id, api_url)
@@ -360,7 +360,7 @@ def runs_resume(
 @runs_app.command("stop")
 def runs_stop(
     run_id: Annotated[str, typer.Argument(help="Run id.")],
-    api_url: ApiUrl = "http://localhost:8000",
+    api_url: ApiUrl = "http://localhost:8100",
 ) -> None:
     """Stop a run."""
     _intervene("stop", run_id, api_url)
@@ -373,7 +373,7 @@ def runs_stop(
 def approvals_list(
     status: Annotated[str | None, typer.Option("--status", help="Filter by status.")] = None,
     workload: Annotated[str | None, typer.Option("--workload", help="Filter by workload.")] = None,
-    api_url: ApiUrl = "http://localhost:8000",
+    api_url: ApiUrl = "http://localhost:8100",
 ) -> None:
     """List approval requests, optionally filtered."""
     query = urlencode(
@@ -413,7 +413,7 @@ def approvals_approve(
     approval_id: Annotated[str, typer.Argument(help="Approval id.")],
     operator: Annotated[str, typer.Option("--operator", help="Operator resolving the approval.")],
     reason: Annotated[str | None, typer.Option("--reason", help="Decision rationale.")] = None,
-    api_url: ApiUrl = "http://localhost:8000",
+    api_url: ApiUrl = "http://localhost:8100",
 ) -> None:
     """Approve a request and let the run continue."""
     _decide("approve", approval_id, operator, reason, api_url)
@@ -424,7 +424,7 @@ def approvals_deny(
     approval_id: Annotated[str, typer.Argument(help="Approval id.")],
     operator: Annotated[str, typer.Option("--operator", help="Operator resolving the approval.")],
     reason: Annotated[str | None, typer.Option("--reason", help="Decision rationale.")] = None,
-    api_url: ApiUrl = "http://localhost:8000",
+    api_url: ApiUrl = "http://localhost:8100",
 ) -> None:
     """Deny a request and fail the run."""
     _decide("deny", approval_id, operator, reason, api_url)
@@ -436,7 +436,7 @@ def approvals_deny(
 @triggers_app.command("list")
 def triggers_list(
     workload: Annotated[str, typer.Option("--workload", help="Workload name.")],
-    api_url: ApiUrl = "http://localhost:8000",
+    api_url: ApiUrl = "http://localhost:8100",
 ) -> None:
     """List trigger rules stored for a workload."""
     url = f"{api_url.rstrip('/')}/workloads/{workload}/triggers"
@@ -456,7 +456,7 @@ def triggers_add(
             "--file", exists=True, dir_okay=False, readable=True, help="Trigger YAML/JSON."
         ),
     ],
-    api_url: ApiUrl = "http://localhost:8000",
+    api_url: ApiUrl = "http://localhost:8100",
 ) -> None:
     """Add a trigger rule to a workload from a YAML or JSON document."""
     try:
@@ -484,7 +484,7 @@ def tools_list(
     mcp_server: Annotated[
         str | None, typer.Option("--mcp-server", help="Filter by MCP server.")
     ] = None,
-    api_url: ApiUrl = "http://localhost:8000",
+    api_url: ApiUrl = "http://localhost:8100",
 ) -> None:
     """List registered MCP tools."""
     query = urlencode(
@@ -508,7 +508,7 @@ def tools_add(
             "--file", exists=True, dir_okay=False, readable=True, help="Tool YAML/JSON."
         ),
     ],
-    api_url: ApiUrl = "http://localhost:8000",
+    api_url: ApiUrl = "http://localhost:8100",
 ) -> None:
     """Register an MCP tool from a YAML or JSON document."""
     try:

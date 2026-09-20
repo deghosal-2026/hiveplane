@@ -43,12 +43,12 @@ Layered build (target):
 | `tempo` | 3200 | trace storage |
 | `prometheus` | 9090 | metrics |
 | `grafana` | 3000 | dashboards |
-| `api` | 8000 | control plane |
+| `api` | 8100 | control plane (host port 8000 is reserved for OMLX) |
 | `ui` | 3001 | operator UI |
-| `ollama` *(profile: local)* | 11434 | local LLM (OpenAI-compatible) |
+| *(no service)* | — | OMLX runs on the **host** at `127.0.0.1:8000/v1`; containers reach it via `host.docker.internal:8000/v1` |
 | `webhook-sink` *(profile: test)* | 8081 | captures Slack/generic webhook deliveries |
 
-Profiles: `ci` (fake provider), `local` (Ollama), `cloud` (OpenAI). See §6.
+Profiles: `ci` (fake provider), `local` (OMLX on the host), `cloud` (OpenAI). See §6.
 
 ## 3. Layered Test Matrix
 
@@ -114,11 +114,13 @@ Dummy data rules:
 
 ## 5. Local LLMs
 
-**Yes — local LLMs are exercised, via an Ollama service in the `local` compose profile.**
+**Yes — local LLMs are exercised, via OMLX (`mlx_lm.server`) running on the host.**
 
-- Provider `local` targets an OpenAI-compatible endpoint (`http://ollama:11434/v1`).
+- Provider `local` targets an OpenAI-compatible endpoint: containers reach the host OMLX at
+  `http://host.docker.internal:8000/v1` (native control-plane runs use `127.0.0.1:8000/v1`).
+- **Host port 8000 is reserved for OMLX** — no HivePlane service binds it (API maps to 8100).
 - Model identity uses the canonical `provider/family/version` form (e.g.
-  `local/qwen2.5/7b`), priced at zero in the budget table.
+  `omlx/qwen2.5-7b-instruct/4bit`), priced at zero in the budget table.
 - The fake/replay provider is used for CI (no network, no secrets, deterministic).
 - Cloud (OpenAI) is optional and only run when `OPENAI_API_KEY` is present.
 
@@ -130,7 +132,7 @@ The model actually used is reported by the provider and checked against the cert
 | Profile | Provider | Endpoint | Secrets | Determinism | Used by |
 |---------|----------|----------|---------|-------------|---------|
 | `ci` | `fake` | in-process | none | fully deterministic | nightly + PR CI |
-| `local` | `local` | `ollama:11434` | none | temperature 0 | local field test |
+| `local` | `local` | OMLX `host.docker.internal:8000` | none | temperature 0 | local field test |
 | `cloud` | `cloud` | `api.openai.com` | `OPENAI_API_KEY` | temperature 0 | optional cloud validation |
 
 ## 7. Execution

@@ -85,6 +85,28 @@ def test_model_identity_is_canonicalized_from_response() -> None:
     assert response.model_identity == "openai/gpt-4o/2024-08-06"
 
 
+def test_request_model_maps_canonical_identity_to_the_served_name() -> None:
+    """A locally-served model has a servable name, not the canonical identity."""
+    captured: dict[str, Any] = {}
+
+    def transport(url: str, payload: dict[str, Any], headers: dict[str, str]) -> dict[str, Any]:
+        captured.update(payload=payload)
+        return _openai_response("mlx-community/Qwen2.5-7B-Instruct-4bit")
+
+    provider = OpenAICompatibleProvider(
+        base_url="http://127.0.0.1:8000/v1",
+        model_aliases={
+            "mlx-community/Qwen2.5-7B-Instruct-4bit": "omlx/qwen2.5-7b-instruct/4bit"
+        },
+        transport=transport,
+    )
+
+    response = provider.complete(_request("omlx/qwen2.5-7b-instruct/4bit"))
+
+    assert captured["payload"]["model"] == "mlx-community/Qwen2.5-7B-Instruct-4bit"
+    assert response.model_identity == "omlx/qwen2.5-7b-instruct/4bit"
+
+
 def test_default_transport_posts_and_parses() -> None:
     received: dict[str, Any] = {}
 

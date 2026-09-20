@@ -131,7 +131,7 @@ the provider and checked against the certification binding (T11); a mismatch blo
 | Environment | Provider | Endpoint | Secrets | Determinism |
 |-------------|----------|----------|---------|-------------|
 | CI / nightly | `fake` (replay) | in-process | none | fully deterministic |
-| Local field test | `local` (Ollama/OMLX) | `ollama:11434/v1` | none | temperature 0 |
+| Local field test | `local` (OMLX) | `host.docker.internal:8000/v1` (native: `127.0.0.1:8000/v1`) | none | temperature 0 |
 | Cloud validation (optional) | `cloud` (OpenAI) | `api.openai.com` | `OPENAI_API_KEY` | temperature 0 |
 
 - At least one workload must run on **local** and at least one on **cloud** (when a key is
@@ -139,10 +139,14 @@ the provider and checked against the certification binding (T11); a mismatch blo
 - `spec.model.identity` in each manifest must match the provider actually used.
 - **Model aliases are required for real providers**: the server-reported model name must map to
   the canonical identity the run is bound to via `HIVEPLANE_MODEL__MODEL_ALIASES` (cloud:
-  `gpt-4o-2024-08-06` → `openai/gpt-4o/2024-08-06`; local: the served Ollama tag → the local
-  canonical identity, e.g. `qwen2.5:7b` → `local/qwen2.5/7b`, and certify with
-  `--model-identity local/qwen2.5/7b`). Without a matching alias every model call raises
-  `ModelIdentityMismatchError` — the T11 model-swap defense firing on legitimate calls.
+  `gpt-4o-2024-08-06` → `openai/gpt-4o/2024-08-06`; local OMLX: the served model tag → the local
+  canonical identity, e.g. `mlx-community/Qwen2.5-7B-Instruct-4bit` →
+  `omlx/qwen2.5-7b-instruct/4bit`, and certify with `--model-identity omlx/qwen2.5-7b-instruct/4bit`).
+  The provider also maps the bound identity back to the served name on request. Without a
+  matching alias every model call raises `ModelIdentityMismatchError` — the T11 model-swap
+  defense firing on legitimate calls.
+- **Host port 8000 is reserved for OMLX.** The control-plane API maps to host port 8100
+  (`API_PORT`) and the UI to 3001; no HivePlane service binds 8000.
 - Local/fake models are priced at zero in the budget table; cloud models use real prices.
 
 See [D17: LLM Provider Design](../../design/llm-provider-design.md) (#104).

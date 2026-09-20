@@ -10,8 +10,8 @@ from hiveplane.config import Settings, get_settings
 def test_ui_settings_defaults() -> None:
     settings = Settings()
 
-    assert settings.ui.api_url == "http://localhost:8000"
-    assert settings.ui.port == 8000
+    assert settings.ui.api_url == "http://localhost:8100"
+    assert settings.ui.port == 3001
 
 
 def test_ui_settings_env_override(monkeypatch: pytest.MonkeyPatch) -> None:

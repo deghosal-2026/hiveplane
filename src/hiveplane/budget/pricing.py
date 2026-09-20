@@ -25,7 +25,7 @@ DEFAULT_PRICES: dict[str, ModelPrice] = {
 }
 
 #: Identities under these prefixes incur no cost (local and fake providers).
-ZERO_COST_PREFIXES: tuple[str, ...] = ("local/", "fake/")
+ZERO_COST_PREFIXES: tuple[str, ...] = ("local/", "fake/", "omlx/")
 
 
 class CostTable:
