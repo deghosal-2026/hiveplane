@@ -131,7 +131,7 @@ class ExecutionSettings(BaseModel):
     store: Literal["memory", "json", "postgres"] = "json"
     data_dir: str = ".hiveplane/runs"
     entrypoints_root: str = "."
-    adapter: Literal["none", "raw-worker"] = "none"
+    adapter: Literal["none", "raw-worker", "langgraph"] = "none"
     tool_fixtures: str = DEFAULT_TOOL_FIXTURES
 
 

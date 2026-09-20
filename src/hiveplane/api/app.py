@@ -53,7 +53,12 @@ from hiveplane.execution.errors import (
     RunNotIntervenableError,
 )
 from hiveplane.execution.service import RunService
-from hiveplane.execution.wiring import attach_raw_worker, build_run_service, build_tool_gateway
+from hiveplane.execution.wiring import (
+    attach_langgraph,
+    attach_raw_worker,
+    build_run_service,
+    build_tool_gateway,
+)
 from hiveplane.persistence.migrate import run_migrations
 from hiveplane.policy.approvals import ApprovalService
 from hiveplane.policy.engine import PolicyEngine
@@ -158,11 +163,12 @@ def create_app(
     app.state.tool_gateway = build_tool_gateway(
         registry, policy_engine, app.state.run_service, approval_service
     )
-    app.state.adapter = (
-        attach_raw_worker(app.state.run_service, app.state.tool_gateway)
-        if settings.execution.adapter == "raw-worker"
-        else None
-    )
+    if settings.execution.adapter == "raw-worker":
+        app.state.adapter = attach_raw_worker(app.state.run_service, app.state.tool_gateway)
+    elif settings.execution.adapter == "langgraph":
+        app.state.adapter = attach_langgraph(app.state.run_service, app.state.tool_gateway)
+    else:
+        app.state.adapter = None
     if certification_coordinator is None and registry_service is None:
         certification_coordinator = _build_certification_coordinator(
             registry, private_key, app.state.run_service, settings

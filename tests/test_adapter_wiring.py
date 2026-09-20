@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 
+from hiveplane.adapters.langgraph import LangGraphAdapter
 from hiveplane.adapters.raw_worker import RawWorkerAdapter
 from hiveplane.api.app import create_app
 from hiveplane.budget.pricing import CostTable
@@ -19,7 +20,7 @@ from hiveplane.execution.admission import AdmissionPipeline
 from hiveplane.execution.models import DeliveryRecord
 from hiveplane.execution.service import RunService
 from hiveplane.execution.store import InMemoryRunStore
-from hiveplane.execution.wiring import attach_raw_worker, build_tool_gateway
+from hiveplane.execution.wiring import attach_langgraph, attach_raw_worker, build_tool_gateway
 from hiveplane.policy.engine import PolicyEngine
 from hiveplane.policy.packs import InMemoryPolicyPackStore
 from hiveplane.registry.service import RegistryService
@@ -43,6 +44,15 @@ def test_adapter_is_enabled_by_config(
     get_settings.cache_clear()
     app = create_app()
     assert isinstance(app.state.adapter, RawWorkerAdapter)
+
+
+def test_langgraph_adapter_is_enabled_by_config(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("HIVEPLANE_EXECUTION__ADAPTER", "langgraph")
+    get_settings.cache_clear()
+    app = create_app()
+    assert isinstance(app.state.adapter, LangGraphAdapter)
 
 
 class _FanOut:
@@ -100,3 +110,36 @@ def test_attach_raw_worker_completes_a_run(
     assert completed.state is RunState.COMPLETED
     assert completed.result == {"ok": True}
     assert completed.cost_usd > 0.0
+
+
+def test_attach_langgraph_completes_a_run(
+    make_manifest: Callable[..., AgentWorkload], tmp_path: Path
+) -> None:
+    (tmp_path / "stub_graph.py").write_text(
+        "class _Graph:\n"
+        "    def stream(self, payload, config, *, stream_mode='values'):\n"
+        "        yield {'state': 'done'}\n"
+        "    def get_state(self, config):\n"
+        "        return type('Snap', (), {'next': (), 'values': {'out': 'ok'}})()\n"
+        "graph = _Graph()\n",
+        encoding="utf-8",
+    )
+    workload = make_manifest(
+        name="agent-1",
+        runtime={"adapter": "langgraph", "entrypoint": "stub_graph:graph"},
+    )
+    service, registry, policy = _service(workload)
+    gateway = build_tool_gateway(registry, policy, service, approvals=None)
+    adapter = attach_langgraph(service, gateway, root=tmp_path, spawner=lambda work: work())
+    assert isinstance(adapter, LangGraphAdapter)
+
+    run = service.submit(
+        workload="agent-1",
+        caller="cli",
+        context=AdmissionContext.SANDBOX,
+        model_identity="openai/gpt-4o/2024-08-06",
+    )
+    service.start(run.id, actor="cli")
+    completed = service.get(run.id)
+    assert completed.state is RunState.COMPLETED
+    assert completed.result == {"out": "ok"}

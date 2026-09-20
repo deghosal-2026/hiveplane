@@ -61,7 +61,7 @@ Run three real, LLM-backed agents through the certified control loop and produce
 - [x] #98 — Field test corpus (docs-agent + incident-agent corpora; ≥5 deterministic tasks each; negative tasks)
 - [x] #123 — Corpus-fixture coupling spec (decides the #137 replay-keying scheme and the #140 corpus/agent reconciliation) → [D20](../../design/corpus-fixture-coupling.md)
 - [ ] #134 — Wire `FixtureToolExecutor` into the production `ToolGateway` (agents get real tool data)
-- [ ] #135 — Wire `LangGraphAdapter` into the app (`attach_langgraph` + settings selector; docs-agent can run)
+- [x] #135 — Wire `LangGraphAdapter` into the app (`attach_langgraph` + settings selector; docs-agent can run)
 - [ ] #136 — Wire the configured LLM provider into the adapters at startup (fail fast on misconfig)
 - [ ] #137 — Fix `FakeProvider` replay keying (full request, not last user message) and ship replay fixtures (blocks #109)
 - [ ] #138 — Configure `model_aliases` so real-LLM calls don't raise `ModelIdentityMismatchError`

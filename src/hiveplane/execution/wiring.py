@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from hiveplane.adapters.base import AdapterRunExecutor
+from hiveplane.adapters.langgraph import LangGraphAdapter
 from hiveplane.adapters.loader import EntrypointLoader
 from hiveplane.adapters.raw_worker import RawWorkerAdapter, Spawner
 from hiveplane.config import get_settings
@@ -129,6 +130,25 @@ def attach_raw_worker(
     """Build the raw-worker adapter and bind it as the run service's executor."""
     settings = get_settings()
     adapter = RawWorkerAdapter(
+        run_service,
+        tool_gateway,
+        EntrypointLoader(root=root or settings.execution.entrypoints_root),
+        spawner=spawner,
+    )
+    run_service.attach_executor(AdapterRunExecutor(adapter))
+    return adapter
+
+
+def attach_langgraph(
+    run_service: RunService,
+    tool_gateway: ToolGateway,
+    *,
+    root: str | Path | None = None,
+    spawner: Spawner | None = None,
+) -> LangGraphAdapter:
+    """Build the LangGraph adapter and bind it as the run service's executor (M23, #135)."""
+    settings = get_settings()
+    adapter = LangGraphAdapter(
         run_service,
         tool_gateway,
         EntrypointLoader(root=root or settings.execution.entrypoints_root),
