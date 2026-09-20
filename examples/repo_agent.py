@@ -37,7 +37,7 @@ def _parse(content: str) -> tuple[str, str]:
 
 
 def run(task: dict[str, Any], ctx: WorkerContext) -> dict[str, Any]:
-    """List open pull requests and classify the change risk with the model."""
+    """List open pull requests, classify the change risk, and flag high risk."""
     pulls = ctx.tool_call("mcp.github.list_pull_requests", host="api.github.com")
     completion = ctx.complete(
         [
@@ -47,4 +47,8 @@ def run(task: dict[str, Any], ctx: WorkerContext) -> dict[str, Any]:
         ]
     )
     risk, summary = _parse(completion.content)
+    if risk == "high":
+        # Governance step (D20 repo-agent contract): flag high-risk changes for
+        # human review through the boundary instead of acting on them.
+        ctx.tool_call("mcp.github.create_pr_comment", host="api.github.com")
     return {"risk": risk, "summary": summary}

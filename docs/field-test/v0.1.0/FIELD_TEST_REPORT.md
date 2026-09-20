@@ -29,8 +29,8 @@ _To be completed._
 
 | Workload | Benchmark Corpus | Pass Rate | Critical Failures | p99 Latency (s) | Attestation Signed | Status |
 |----------|-----------------|-----------|-------------------|-----------------|-------------------|--------|
-| repo-agent | corpora/repo-agent/v1 | — | — | — | — | — |
-| docs-agent | corpora/docs-agent/v1 | — | — | — | — | — |
+| repo-agent | corpora/repo-agent/v2 | — | — | — | — | — |
+| docs-agent | corpora/docs-agent/v2 | — | — | — | — | — |
 | incident-agent | corpora/incident-agent/v1 | — | — | — | — | — |
 
 ## Certification Gate Tests

@@ -23,7 +23,7 @@ Part 3 is complete. `hiveplane.certification` now provides:
   `GET /certifications/{id}`, and `GET /certifications/compare/{v1}/{v2}`.
 - CLI — `hiveplane certify <workload>` and `hiveplane certs list|show|compare`.
 
-The demo corpus (`examples/corpora/repo-agent/v1`) certifies the repo-agent
+The demo corpus (`examples/corpora/repo-agent/v2`) certifies the repo-agent
 workload end-to-end. Follow-ons: `rubric`/`custom`/`schema_match` checks,
 sandbox-hosted benchmark execution, drift detection (Part 10/health), and
 `hiveplane init` corpus scaffolding (#53, M21).

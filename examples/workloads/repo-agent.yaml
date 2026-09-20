@@ -21,7 +21,7 @@ spec:
       family: gpt-4o
       version: "2024-08-06"
   certification:
-    benchmark_corpus: corpora/repo-agent/v1
+    benchmark_corpus: corpora/repo-agent/v2
     staging_threshold: 0.80
     production_threshold: 0.90
     no_critical_failures: true

@@ -38,7 +38,8 @@ def test_committed_replay_satisfies_every_corpus_task() -> None:
     covered = 0
     for workload in generator.WORKLOADS:
         manifest = generator.load_manifest(generator.WORKLOADS_DIR / f"{workload}.yaml")
-        corpus = generator.load_corpus(generator.CORPORA_DIR / workload / "v1")
+        corpus_dir = generator.CORPORA_DIR / workload / generator.CORPUS_DIRS[workload]
+        corpus = generator.load_corpus(corpus_dir)
         model = generator.canonical_model_identity(manifest.spec.model.identity)
         for task in corpus.tasks:
             ctx = generator.CaptureContext(

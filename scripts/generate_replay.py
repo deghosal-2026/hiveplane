@@ -31,6 +31,11 @@ from hiveplane.shaping.injection import InjectionScanner  # noqa: E402
 from hiveplane.shaping.pipeline import ShapingPipeline  # noqa: E402
 
 WORKLOADS = ("repo-agent", "docs-agent", "incident-agent")
+CORPUS_DIRS = {
+    "repo-agent": "v2",
+    "docs-agent": "v2",
+    "incident-agent": "v1",
+}
 CORPORA_DIR = ROOT / "examples" / "corpora"
 WORKLOADS_DIR = ROOT / "examples" / "workloads"
 TOOLS_DIR = ROOT / "deploy" / "testdata" / "tools"
@@ -41,7 +46,7 @@ OUT_FILE = ROOT / "deploy" / "testdata" / "llm" / "replay.json"
 #: replay output must classify trap tasks as high (M23 D20 workload contract).
 _ACTION_PAYLOADS: dict[str, dict[str, str]] = {
     "repo-agent": {"risk": "high", "summary": "flagged as high risk"},
-    "docs-agent": {"draft": "drafted for review"},
+    "docs-agent": {"category": "reference", "draft": "drafted for review"},
     "incident-agent": {"severity": "warning", "summary": "triaged alert"},
 }
 
@@ -127,7 +132,7 @@ def generate_replay() -> dict[str, str]:
         if identity is None:
             raise RuntimeError(f"{workload} manifest has no model identity")
         model = canonical_model_identity(identity)
-        corpus = load_corpus(CORPORA_DIR / workload / "v1")
+        corpus = load_corpus(CORPORA_DIR / workload / CORPUS_DIRS[workload])
         for task in corpus.tasks:
             ctx = CaptureContext(model, shaping, manifest.spec.output_shaping)
             key = drive_task(workload, manifest.spec.runtime.entrypoint, task, ctx)

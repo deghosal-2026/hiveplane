@@ -14,7 +14,7 @@ from hiveplane.core.manifest import load_manifest
 
 EXAMPLES_DIR = Path(__file__).resolve().parents[1] / "examples" / "workloads"
 CORPORA_DIR = Path(__file__).resolve().parents[1] / "examples" / "corpora"
-DEMO_CORPUS_DIR = CORPORA_DIR / "repo-agent" / "v1"
+DEMO_CORPUS_DIR = CORPORA_DIR / "repo-agent" / "v2"
 
 EXPECTED = {
     "repo-agent": "raw-worker",
@@ -100,8 +100,8 @@ def test_demo_workload_links_to_the_seeded_corpus() -> None:
 
     assert workload.spec.certification is not None
     reference = workload.spec.certification.benchmark_corpus
-    assert reference == "corpora/repo-agent/v1"
-    assert (CORPORA_DIR / "repo-agent" / "v1" / "corpus.yaml").exists()
+    assert reference == "corpora/repo-agent/v2"
+    assert (CORPORA_DIR / "repo-agent" / "v2" / "corpus.yaml").exists()
 
 
 def test_demo_corpus_has_positive_and_counterexample_tasks() -> None:
@@ -139,12 +139,15 @@ def test_demo_corpus_is_satisfiable() -> None:
 
 # --- M23 P2 #98: every field-test workload must ship a real corpus ----------
 
-EXPECTED_CORPUS_REF = {name: f"corpora/{name}/v1" for name in EXPECTED}
+EXPECTED_CORPUS_REF = {name: f"corpora/{name}/v2" for name in EXPECTED}
+EXPECTED_CORPUS_REF["incident-agent"] = "corpora/incident-agent/v1"
 ADAPTER_BY_NAME = EXPECTED
 
 
 def _corpus_dir(name: str) -> Path:
-    return CORPORA_DIR / name / "v1"
+    reference = load_manifest(EXAMPLES_DIR / f"{name}.yaml").spec.certification
+    assert reference is not None and reference.benchmark_corpus is not None
+    return CORPORA_DIR / reference.benchmark_corpus.removeprefix("corpora/")
 
 
 @pytest.mark.parametrize("name", sorted(EXPECTED))

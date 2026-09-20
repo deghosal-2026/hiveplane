@@ -70,7 +70,7 @@ version, so a corpus change cannot silently re-use an old certification. Bump
 ```python
 from hiveplane.certification.corpus import load_corpus
 
-corpus = load_corpus("corpora/repo-agent/v1")  # dir or corpus.yaml path
+corpus = load_corpus("corpora/repo-agent/v2")  # dir or corpus.yaml path
 print(corpus.id, corpus.version, len(corpus.tasks))
 ```
 
