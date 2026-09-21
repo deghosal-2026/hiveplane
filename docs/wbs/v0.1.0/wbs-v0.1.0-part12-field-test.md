@@ -1,6 +1,6 @@
 # WBS v0.1.0 — Part 12: Field Test
 
-**Milestone:** M23 · **Issues:** #56-#59, #92-#144 (31 closed; 22 open) · **Phases:** P0-P7
+**Milestone:** M23 · **Issues:** #56-#59, #92-#144 (33 closed; 20 open) · **Phases:** P0-P7
 
 ## Goal
 
@@ -93,7 +93,7 @@ Run three real, LLM-backed agents through the certified control loop and produce
 **Issues:** [#131](https://github.com/deghosal-2026/hiveplane/issues/131) · [#129](https://github.com/deghosal-2026/hiveplane/issues/129) · [#109](https://github.com/deghosal-2026/hiveplane/issues/109)
 
 - [x] #131 — Tool seeding script and CLI (register tools referenced by workloads) — `registry/seeding.py` + `hiveplane tools seed` + `scripts/seed-tools.sh`; every example workload registers after seeding
-- [x] #129 — Approval flow must re-dispatch the escalated tool call on resume — `0ead92d` (issue still OPEN on GitHub; close after verifying)
+- [x] #129 — Approval flow must re-dispatch the escalated tool call on resume — `0ead92d` (closed)
 - [ ] #109 — Adapter-backed benchmark certification (execute real agents against corpora; `EXECUTOR=adapter`; depends on #117, #131, #129, #134, #137, #140) — **resolves the incident-agent destructive-ack contract above first**
 
 **Exit:** all three workloads certify at production threshold with the real agent in the loop; a deliberately regressed agent (wrong model / bad prompt / injection-fooled) fails at least one critical task.
