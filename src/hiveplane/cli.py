@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import urllib.error
 import urllib.request
+from http import HTTPStatus
 from pathlib import Path
 from typing import Annotated, Any
 from urllib.parse import urlencode
@@ -16,6 +17,7 @@ from pydantic import ValidationError
 from hiveplane.core.manifest import ManifestError, load_manifest
 from hiveplane.core.triggers import TriggerRule
 from hiveplane.registry.models import ToolRegistration
+from hiveplane.registry.seeding import derive_tool_registrations
 from hiveplane.registry.service import RegistryService
 from hiveplane.registry.store import InMemoryRegistryStore
 
@@ -523,6 +525,61 @@ def tools_add(
         _fail("add tool", status_code, body)
     data = json.loads(body)
     typer.secho(f"OK: registered {data['tool_id']}", fg=typer.colors.GREEN)
+
+
+@tools_app.command("seed")
+def tools_seed(
+    workloads_dir: Annotated[
+        Path,
+        typer.Option(
+            "--workloads-dir",
+            help="Directory of AgentWorkload manifests whose allowed tools are seeded.",
+        ),
+    ] = Path("examples/workloads"),
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Register every tool referenced by the workload manifests in a directory (M23, #131).
+
+    Registration is idempotent: a tool already in the registry (HTTP 409) is
+    reported as present rather than failing, so the command is safe to re-run.
+    """
+    if not workloads_dir.is_dir():
+        typer.secho(f"{workloads_dir}: not a directory", fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=1)
+    manifests = [
+        path
+        for path in sorted(workloads_dir.iterdir())
+        if path.suffix in (".yaml", ".yml") and path.is_file()
+    ]
+    registrations: list[ToolRegistration] = []
+    for path in manifests:
+        try:
+            workload = load_manifest(path)
+        except ManifestError as exc:
+            typer.secho(f"{path}: {exc}", fg=typer.colors.RED, err=True)
+            raise typer.Exit(code=1) from exc
+        registrations.extend(derive_tool_registrations(workload))
+
+    registered: list[str] = []
+    existing: list[str] = []
+    for registration in registrations:
+        status_code, body = _request(
+            "POST",
+            f"{api_url.rstrip('/')}/tools",
+            registration.model_dump(mode="json"),
+        )
+        if status_code == HTTPStatus.CREATED:
+            registered.append(registration.tool_id)
+            typer.secho(f"registered {registration.tool_id}", fg=typer.colors.GREEN)
+        elif status_code == HTTPStatus.CONFLICT:
+            existing.append(registration.tool_id)
+            typer.secho(f"present    {registration.tool_id}", fg=typer.colors.YELLOW)
+        else:
+            _fail("seed tools", status_code, body)
+    typer.secho(
+        f"OK: {len(registered)} registered, {len(existing)} already present",
+        fg=typer.colors.GREEN,
+    )
 
 
 # --------------------------------------------------------------------------- #

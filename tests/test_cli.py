@@ -845,3 +845,89 @@ def test_tools_list_without_filters(monkeypatch: Any) -> None:
     result = runner.invoke(app, ["tools", "list"])
 
     assert result.exit_code == 0
+
+
+def _seed_manifest() -> dict[str, Any]:
+    manifest = _manifest()
+    manifest["spec"]["tools"] = {
+        "allow": [
+            {"tool_id": "mcp.github.read_issue", "trust_level": "read_only"},
+            {"tool_id": "mcp.github.create_pr", "trust_level": "destructive",
+             "require_approval": True},
+        ]
+    }
+    return manifest
+
+
+def test_tools_seed_registers_every_allowed_tool(
+    monkeypatch: Any, tmp_path: Path
+) -> None:
+    workloads = tmp_path / "workloads"
+    workloads.mkdir()
+    (workloads / "repo-agent.yaml").write_text(yaml.safe_dump(_seed_manifest()))
+    posted: list[dict[str, Any]] = []
+
+    def fake_request(
+        method: str, url: str, payload: dict[str, Any] | None = None
+    ) -> tuple[int, str]:
+        assert url.endswith("/tools")
+        posted.append(dict(payload or {}))
+        return 201, json.dumps({"tool_id": (payload or {}).get("tool_id", "")})
+
+    monkeypatch.setattr("hiveplane.cli._request", fake_request)
+
+    result = runner.invoke(app, ["tools", "seed", "--workloads-dir", str(workloads)])
+
+    assert result.exit_code == 0, result.output
+    assert {entry["tool_id"] for entry in posted} == {
+        "mcp.github.read_issue",
+        "mcp.github.create_pr",
+    }
+    assert posted[0]["mcp_server"] == "github"
+    assert "mcp.github.read_issue" in result.output
+
+
+def test_tools_seed_treats_conflicts_as_already_present(
+    monkeypatch: Any, tmp_path: Path
+) -> None:
+    workloads = tmp_path / "workloads"
+    workloads.mkdir()
+    (workloads / "repo-agent.yaml").write_text(yaml.safe_dump(_seed_manifest()))
+    calls = {"n": 0}
+
+    def fake_request(
+        method: str, url: str, payload: dict[str, Any] | None = None
+    ) -> tuple[int, str]:
+        calls["n"] += 1
+        if calls["n"] == 1:
+            return 201, json.dumps({"tool_id": (payload or {}).get("tool_id", "")})
+        return 409, json.dumps({"detail": "already exists"})
+
+    monkeypatch.setattr("hiveplane.cli._request", fake_request)
+
+    result = runner.invoke(app, ["tools", "seed", "--workloads-dir", str(workloads)])
+
+    assert result.exit_code == 0, result.output
+    assert "mcp.github.read_issue" in result.output
+    assert "mcp.github.create_pr" in result.output
+
+
+def test_tools_seed_reports_api_failure(monkeypatch: Any, tmp_path: Path) -> None:
+    workloads = tmp_path / "workloads"
+    workloads.mkdir()
+    (workloads / "repo-agent.yaml").write_text(yaml.safe_dump(_seed_manifest()))
+    monkeypatch.setattr(
+        "hiveplane.cli._request", lambda method, url, payload=None: (500, "boom")
+    )
+
+    result = runner.invoke(app, ["tools", "seed", "--workloads-dir", str(workloads)])
+
+    assert result.exit_code == 1
+
+
+def test_tools_seed_requires_a_workloads_dir(tmp_path: Path) -> None:
+    result = runner.invoke(
+        app, ["tools", "seed", "--workloads-dir", str(tmp_path / "missing")]
+    )
+
+    assert result.exit_code == 1
