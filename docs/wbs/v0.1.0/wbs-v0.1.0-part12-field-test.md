@@ -1,12 +1,12 @@
 # WBS v0.1.0 — Part 12: Field Test
 
-**Milestone:** M23 · **Issues:** #56-#59, #92-#144 (33 open; P0-P1 + #98 closed) · **Phases:** P0-P4
+**Milestone:** M23 · **Issues:** #56-#59, #92-#144 (31 closed; 22 open) · **Phases:** P0-P7
 
 ## Goal
 
 Run three real, LLM-backed agents through the certified control loop and produce evidence for every v0.1.0 release gate.
 
-> **Re-planning note (2026-09-19).** The original M23 (#56-#59) assumed the WBS had shipped LLM integration, real agent execution in certification, sandbox cap enforcement, and durable resume. A PRD/design-vs-code audit found none of these exist: agents are canned stubs, certification uses a `ReferenceExecutor` stand-in, resource caps are not wired into the adapter path, and nothing reconnects runs after a control-plane restart. A second deep review found three more architectural gaps: `WorkerContext` has no LLM invocation seam (#115), `ToolGateway` doesn't execute tools — the agent fabricates the output (#116), and the certification `TaskExecutor` protocol is disconnected from `RawWorkerAdapter` (#117). M23 was therefore re-planned into five phases; design docs and enabling implementations (P0-P2) precede the docker test track (P3) and the field test itself (P4).
+> **Re-planning note (2026-09-19, updated 2026-09-21).** The original M23 (#56-#59) assumed the WBS had shipped LLM integration, real agent execution in certification, sandbox cap enforcement, and durable resume. A PRD/design-vs-code audit found none of these exist: agents are canned stubs, certification uses a `ReferenceExecutor` stand-in, resource caps are not wired into the adapter path, and nothing reconnects runs after a control-plane restart. A second deep review found three more architectural gaps: `WorkerContext` has no LLM invocation seam (#115), `ToolGateway` doesn't execute tools — the agent fabricates the output (#116), and the certification `TaskExecutor` protocol is disconnected from `RawWorkerAdapter` (#117). M23 was therefore re-planned into phases; design docs and enabling implementations (P0-P1) and the real-LLM audit chain (P2a-P2c) precede the remaining control-loop hardening (P2d), the docker test track (P3), and the field test itself (P4). Issues are ordered by dependency below; each row is the next actionable item after the one above it.
 
 ---
 
@@ -54,57 +54,87 @@ Run three real, LLM-backed agents through the certified control loop and produce
 
 ### P2 — Control-Loop Hardening
 
-**Issues:** [#98](https://github.com/deghosal-2026/hiveplane/issues/98) · [#109](https://github.com/deghosal-2026/hiveplane/issues/109) · [#110](https://github.com/deghosal-2026/hiveplane/issues/110) · [#111](https://github.com/deghosal-2026/hiveplane/issues/111) · [#122](https://github.com/deghosal-2026/hiveplane/issues/122) · [#123](https://github.com/deghosal-2026/hiveplane/issues/123) · [#124](https://github.com/deghosal-2026/hiveplane/issues/124) · [#129](https://github.com/deghosal-2026/hiveplane/issues/129) · [#130](https://github.com/deghosal-2026/hiveplane/issues/130) · [#131](https://github.com/deghosal-2026/hiveplane/issues/131) · [#134](https://github.com/deghosal-2026/hiveplane/issues/134) · [#135](https://github.com/deghosal-2026/hiveplane/issues/135) · [#136](https://github.com/deghosal-2026/hiveplane/issues/136) · [#137](https://github.com/deghosal-2026/hiveplane/issues/137) · [#138](https://github.com/deghosal-2026/hiveplane/issues/138) · [#139](https://github.com/deghosal-2026/hiveplane/issues/139) · [#140](https://github.com/deghosal-2026/hiveplane/issues/140) · [#141](https://github.com/deghosal-2026/hiveplane/issues/141) · [#142](https://github.com/deghosal-2026/hiveplane/issues/142) · [#144](https://github.com/deghosal-2026/hiveplane/issues/144)
+> **Real-LLM field-test audit (2026-09-20).** A design-vs-code audit of the LLM provider, adapters, wiring, and certification path found that the three example agents and the provider classes exist but have never run end-to-end through the real app path with a real or replay provider. The audit opened #134–#144 for the untracked gaps. P2 is split into four dependency-ordered sub-phases below: wiring fixes (P2a), corpus/provider reconciliation (P2b), the real certification thesis (P2c), and the remaining control-loop hardening (P2d). Each row is the next actionable item after the one above it.
 
-> **Real-LLM field-test audit (2026-09-20).** A design-vs-code audit of the LLM provider, adapters, wiring, and certification path found that the three example agents and the provider classes exist but have never run end-to-end through the real app path with a real or replay provider. The audit opened #134–#144 for the untracked gaps: the `FixtureToolExecutor` and `LangGraphAdapter` are not wired into production (`#134`, `#135`); the provider is not constructed at startup (`#136`); the `FakeProvider` keys replay on the last user message only, so it cannot vary output per corpus task and blocks deterministic CI certification (`#137`); `model_aliases` is unconfigured so every real-LLM call raises `ModelIdentityMismatchError` (`#138`); model-call cost is hardcoded to `0.0` so budget-by-USD cannot trip on model spend (`#139`); the corpora don't match real agent behavior — incident-agent can't complete a positive task and negative tasks require unimplemented actions (`#140`); `max_retries` and `default_model` are dead settings (`#141`, `#142`); and the adapter/certification executor default to "off" silently (`#144`). `#143` (P3) covers the missing `deploy/testdata` copy in the Docker image. These precede #109: real certification is impossible until the agents can actually run.
+#### P2a — Wiring fixes (the audit chain)
+
+**Issues:** [#134](https://github.com/deghosal-2026/hiveplane/issues/134) · [#135](https://github.com/deghosal-2026/hiveplane/issues/135) · [#136](https://github.com/deghosal-2026/hiveplane/issues/136) · [#137](https://github.com/deghosal-2026/hiveplane/issues/137) · [#138](https://github.com/deghosal-2026/hiveplane/issues/138) · [#139](https://github.com/deghosal-2026/hiveplane/issues/139) · [#141](https://github.com/deghosal-2026/hiveplane/issues/141) · [#142](https://github.com/deghosal-2026/hiveplane/issues/142) · [#144](https://github.com/deghosal-2026/hiveplane/issues/144)
+
+- [x] #134 — Wire `FixtureToolExecutor` into the production `ToolGateway` (agents get real tool data) — `412a393`
+- [x] #135 — Wire `LangGraphAdapter` into the app (`attach_langgraph` + settings selector; docs-agent can run) — `1bab1d3`
+- [x] #136 — Wire the configured LLM provider into the adapters at startup (fail fast on misconfig) — `696ad83`
+- [x] #137 — Fix `FakeProvider` replay keying (full request, not last user message) and ship replay fixtures (blocks #109) — `20ecfef`
+- [x] #138 — Configure `model_aliases` so real-LLM calls don't raise `ModelIdentityMismatchError` — `23dd65d`
+- [x] #139 — Price model calls through `CostTable` (`cost_usd` is hardcoded to 0.0) — `e8fa6e0`
+- [x] #141 — Implement LLM provider retry/timeout from `ModelSettings` (`max_retries` is a dead setting) — `27a2ffb`
+- [x] #142 — Use `ModelSettings.default_model` as fallback when no model identity is bound — `f200405`
+- [x] #144 — Fail fast on disabled adapter/certification executor instead of silently no-op'ing — `2af724c`
+
+**Status:** Complete. All P2a issues closed. These precede #109 — real certification is impossible until the agents can actually run end-to-end.
+
+**Exit:** the control plane, on a fresh `docker compose up` with the CI/local profile, executes runs and certifies via the adapter executor; agents receive fixture tool data, the provider is built at startup, replay is keyed per task, and disabled adapters are loud.
+
+#### P2b — Corpus & provider reconciliation
+
+**Issues:** [#98](https://github.com/deghosal-2026/hiveplane/issues/98) · [#123](https://github.com/deghosal-2026/hiveplane/issues/123) · [#140](https://github.com/deghosal-2026/hiveplane/issues/140)
 
 - [x] #98 — Field test corpus (docs-agent + incident-agent corpora; ≥5 deterministic tasks each; negative tasks)
 - [x] #123 — Corpus-fixture coupling spec (decides the #137 replay-keying scheme and the #140 corpus/agent reconciliation) → [D20](../../design/corpus-fixture-coupling.md)
-- [ ] #134 — Wire `FixtureToolExecutor` into the production `ToolGateway` (agents get real tool data)
-- [x] #135 — Wire `LangGraphAdapter` into the app (`attach_langgraph` + settings selector; docs-agent can run)
-- [x] #136 — Wire the configured LLM provider into the adapters at startup (fail fast on misconfig)
-- [x] #137 — Fix `FakeProvider` replay keying (full request, not last user message) and ship replay fixtures (blocks #109)
-- [x] #138 — Configure `model_aliases` so real-LLM calls don't raise `ModelIdentityMismatchError`
-- [x] #139 — Price model calls through `CostTable` (`cost_usd` is hardcoded to 0.0)
-- [ ] #140 — Reconcile corpora with real agent behavior (incident-agent can't complete; negative tasks require unimplemented actions)
-- [ ] #141 — Implement LLM provider retry/timeout from `ModelSettings` (`max_retries` is a dead setting)
-- [ ] #142 — Use `ModelSettings.default_model` as fallback when no model identity is bound
-- [ ] #144 — Fail fast on disabled adapter/certification executor instead of silently no-op'ing
-- [ ] #109 — Adapter-backed benchmark certification (execute real agents against corpora; `EXECUTOR=adapter`; depends on #117, #134, #137, #140)
-- [ ] #110 — Wire sandbox resource caps into the adapter execution path (RLIMIT_AS/CPU + wall-clock watchdog)
-- [ ] #111 — Implement startup recovery & durable resume (S8 unblocked)
-- [ ] #122 — Durable LangGraph checkpoint (replace InMemorySaver)
-- [ ] #124 — Trace story renders model-call spans
-- [x] #129 — Approval flow must re-dispatch the escalated tool call on resume
-- [ ] #130 — Real readiness probe (/readyz checks stores, migrations, adapter)
-- [ ] #131 — Tool seeding script and CLI (register tools referenced by workloads)
+- [x] #140 — Reconcile corpora with real agent behavior (incident-agent can't complete; negative tasks require unimplemented actions) — `a5e2a57`
 
-**Exit:** all three workloads certify at production threshold with the real agent in the loop; caps demonstrably kill seeded hogs; a paused run resumes after control-plane restart.
+**Status:** Complete. All P2b issues closed.
+
+> ⚠️ **Open contract risk to carry into #109.** `examples/incident_agent.py:43` calls `pagerduty.acknowledge` as `ActionClass.DESTRUCTIVE` → escalates → the run aborts before `ctx.complete()`. #140 left incident-agent at corpus `v1` and the agent unchanged. The destructive-ack-in-sandbox behavior must be decided as the first step of #109 (allow destructive tools in sandbox context, adjust the agent, or adjust the corpus) or every incident-agent positive task fails certification.
+
+**Exit:** every corpus task is satisfiable by its real agent; a deliberately broken agent provably fails at least one critical task (benchmark is not theater).
+
+#### P2c — Real certification (the thesis)
+
+**Issues:** [#131](https://github.com/deghosal-2026/hiveplane/issues/131) · [#129](https://github.com/deghosal-2026/hiveplane/issues/129) · [#109](https://github.com/deghosal-2026/hiveplane/issues/109)
+
+- [x] #131 — Tool seeding script and CLI (register tools referenced by workloads) — `registry/seeding.py` + `hiveplane tools seed` + `scripts/seed-tools.sh`; every example workload registers after seeding
+- [x] #129 — Approval flow must re-dispatch the escalated tool call on resume — `0ead92d` (issue still OPEN on GitHub; close after verifying)
+- [ ] #109 — Adapter-backed benchmark certification (execute real agents against corpora; `EXECUTOR=adapter`; depends on #117, #131, #129, #134, #137, #140) — **resolves the incident-agent destructive-ack contract above first**
+
+**Exit:** all three workloads certify at production threshold with the real agent in the loop; a deliberately regressed agent (wrong model / bad prompt / injection-fooled) fails at least one critical task.
+
+#### P2d — Remaining control-loop hardening
+
+**Issues:** [#110](https://github.com/deghosal-2026/hiveplane/issues/110) · [#111](https://github.com/deghosal-2026/hiveplane/issues/111) · [#122](https://github.com/deghosal-2026/hiveplane/issues/122) · [#124](https://github.com/deghosal-2026/hiveplane/issues/124) · [#130](https://github.com/deghosal-2026/hiveplane/issues/130)
+
+- [ ] #110 — Wire sandbox resource caps into the adapter execution path (RLIMIT_AS/CPU + wall-clock watchdog) — S6; independent of #109
+- [ ] #111 — Implement startup recovery & durable resume (S8 unblocked; depends on closed design #106)
+- [ ] #122 — Durable LangGraph checkpoint (replace InMemorySaver) — **after #111**; S8 for docs-agent specifically
+- [ ] #124 — Trace story renders model-call spans (observability; independent)
+- [ ] #130 — Real readiness probe (`/readyz` checks stores, migrations, adapter; independent; #144 surfaced it as the disabled-adapter surface)
+
+**Exit:** caps demonstrably kill seeded hogs; a paused run resumes after control-plane restart; the trace story shows model calls; `/readyz` is honest.
 
 ### P3 — Docker Test Track
 
-**Issues:** [#93](https://github.com/deghosal-2026/hiveplane/issues/93) · [#94](https://github.com/deghosal-2026/hiveplane/issues/94) · [#95](https://github.com/deghosal-2026/hiveplane/issues/95) · [#96](https://github.com/deghosal-2026/hiveplane/issues/96) · [#59](https://github.com/deghosal-2026/hiveplane/issues/59) · [#143](https://github.com/deghosal-2026/hiveplane/issues/143)
+**Issues:** [#143](https://github.com/deghosal-2026/hiveplane/issues/143) · [#93](https://github.com/deghosal-2026/hiveplane/issues/93) · [#94](https://github.com/deghosal-2026/hiveplane/issues/94) · [#95](https://github.com/deghosal-2026/hiveplane/issues/95) · [#96](https://github.com/deghosal-2026/hiveplane/issues/96) · [#59](https://github.com/deghosal-2026/hiveplane/issues/59)
 
-- [ ] #93 — Docker test cases, dummy data, and setup (layered `tests/docker/`, `deploy/testdata/`, Ollama + fake-webhook compose profile)
-- [ ] #143 — Copy `deploy/testdata` into the Docker image (fixtures + replay files missing in container)
-- [ ] #94 — Docker test execution (one-command runner, structured results, CI exit codes)
-- [ ] #95 — Scenario screenshots for user guide (`docs/field-test/v0.1.0/screenshots/<scenario-id>/<step>-<name>.png`, regenerable)
-- [ ] #96 — Docker test results summary (`DOCKER_TEST_REPORT.md`)
-- [ ] #59 — Nightly simulator + CI regression harness (keeps evidence fresh)
+- [ ] #143 — Copy `deploy/testdata` into the Docker image (fixtures + replay files missing in container) — **first:** nothing below works without fixtures in-container
+- [ ] #93 — Docker test cases, dummy data, and setup (layered `tests/docker/`, `deploy/testdata/`, Ollama + fake-webhook compose profile) — needs #143
+- [ ] #94 — Docker test execution (one-command runner, structured results, CI exit codes) — needs #93 + #143
+- [ ] #95 — Scenario screenshots for user guide (`docs/field-test/v0.1.0/screenshots/<scenario-id>/<step>-<name>.png`, regenerable) — needs #94
+- [ ] #96 — Docker test results summary (`DOCKER_TEST_REPORT.md`) — needs #94
+- [ ] #59 — Nightly simulator + CI regression harness (keeps evidence fresh; needs #94) — #103 closed as a duplicate of this
 
 **Exit:** one command runs the full Docker test pass; screenshots regenerate deterministically; nightly CI green.
 
 ### P4 — Field Test & Release Evidence
 
-**Issues:** [#99](https://github.com/deghosal-2026/hiveplane/issues/99) · [#56](https://github.com/deghosal-2026/hiveplane/issues/56) · [#57](https://github.com/deghosal-2026/hiveplane/issues/57) · [#58](https://github.com/deghosal-2026/hiveplane/issues/58) · [#100](https://github.com/deghosal-2026/hiveplane/issues/100) · [#101](https://github.com/deghosal-2026/hiveplane/issues/101) · [#102](https://github.com/deghosal-2026/hiveplane/issues/102)
+**Issues:** [#99](https://github.com/deghosal-2026/hiveplane/issues/99) · [#121](https://github.com/deghosal-2026/hiveplane/issues/121) · [#56](https://github.com/deghosal-2026/hiveplane/issues/56) · [#57](https://github.com/deghosal-2026/hiveplane/issues/57) · [#58](https://github.com/deghosal-2026/hiveplane/issues/58) · [#100](https://github.com/deghosal-2026/hiveplane/issues/100) · [#101](https://github.com/deghosal-2026/hiveplane/issues/101) · [#102](https://github.com/deghosal-2026/hiveplane/issues/102)
 
-- [ ] #99 — Field test setup (seed scripts, env wiring, one-command bring-up)
-- [ ] #56 — Define and register three real workloads
-- [ ] #57 — Certification and governance field scenarios
-- [ ] #58 — Lifecycle, intervention, fan-out, and report
-- [ ] #100 — Field test execution (S1-S9 with evidence: run IDs, attestations, logs, screenshots)
-- [ ] #101 — Field test report (populate `FIELD_TEST_REPORT.md`; A1-A20 evidence)
-- [ ] #102 — Field test learnings and takeaways
+- [ ] #99 — Field test setup (seed scripts, env wiring, one-command bring-up) — needs the P3 stack working
+- [ ] #121 — Seeded demo script (register → certify → run → intervene → deliver; deterministic, fake provider) — bring-up helper
+- [ ] #56 — Define and register three real workloads — the subjects of the test
+- [ ] #57 — Certification and governance field scenarios (S1-S5)
+- [ ] #58 — Lifecycle, intervention, fan-out, and report (S5-S9)
+- [ ] #100 — Field test execution (S1-S9 with evidence: run IDs, attestations, logs, screenshots) — needs #56, #57, #58
+- [ ] #101 — Field test report (populate `FIELD_TEST_REPORT.md`; A1-A20 evidence) — needs #100
+- [ ] #102 — Field test learnings and takeaways — needs #100
 
 **Exit:** every scenario reproduces deterministically; `FIELD_TEST_REPORT.md` published with release-gate evidence.
 
@@ -114,14 +144,14 @@ Run three real, LLM-backed agents through the certified control loop and produce
 
 | # | Scenario | Evidence required | Enabled by |
 |---|----------|-------------------|------------|
-| S1 | Certify all three agents via benchmark | attestations signed + verified on read | P2 (#109), P1 (#107, #108) |
+| S1 | Certify all three agents via benchmark | attestations signed + verified on read | P2c (#109), P1 (#107, #108) |
 | S2 | Uncertified agent attempts production | refused with specific error | existing admission gate |
 | S3 | Model-swap (cert on A, run on B) | blocked | P0/P1 (#104, #107) |
 | S4 | Seeded manifest change regresses | promotion gate blocks, diff produced | existing workflow (#105 review) |
 | S5 | Over-budget run | blocked/escalated | existing budget service (+#107 pricing) |
-| S6 | Destructive tool call | sandbox caps + approval required | P2 (#110) |
+| S6 | Destructive tool call | sandbox caps + approval required | P2d (#110), P2c (#129 approve path) |
 | S7 | Large tool output | shaped before reaching agent | existing shaping pipeline |
-| S8 | Pause → restart control plane → resume | context intact | P2 (#111) |
+| S8 | Pause → restart control plane → resume | context intact | P2d (#111, #122) |
 | S9 | Result fan-out | delivered to Slack + webhook | existing fan-out (+#93 fake receivers) |
 
 **Done when:** every scenario reproduces deterministically, `FIELD_TEST_REPORT.md` is published, and the nightly simulator + CI harness keep the evidence fresh.
@@ -132,19 +162,38 @@ Run three real, LLM-backed agents through the certified control loop and produce
 
 ```
 P0 (Design & Planning)
-  ├─> P1 (LLM & Agent Enablement)
-  │       └─> P2 (Control-Loop Hardening)
-  │               └─> P3 (Docker Test Track)
-  │                       └─> P4 (Field Test & Release Evidence) ─> Part 13 (Release)
+  └─> P1 (LLM & Agent Enablement)
+        └─> P2 (Control-Loop Hardening)
+              ├─> P2a (Wiring fixes — the audit chain)        [complete]
+              ├─> P2b (Corpus & provider reconciliation)      [complete]
+              ├─> P2c (Real certification — the thesis)
+              │       #131 ─> #129 ─> #109
+              │       (#109 first resolves the incident-agent
+              │        destructive-ack contract from P2b)
+              └─> P2d (Remaining hardening)
+                      #110 (S6 caps)        ─ independent
+                      #111 ─> #122 (S8)     ─ recovery then checkpoint
+                      #124 (trace story)    ─ independent
+                      #130 (/readyz)        ─ independent
+                    └─> P3 (Docker Test Track)
+                            #143 ─> #93 ─> #94 ─> {#95, #96, #59}
+                              └─> P4 (Field Test & Release Evidence)
+                                    #99 ─> #121 ─> #56 ─> #57 ─> #58
+                                          └─> #100 ─> {#101, #102}
+                                      └─> Part 13 (Release)
   └─ #114 feeds every phase (WBS/docs stay in sync)
 ```
 
-- #104 → #107 → #115 (LLM seam) → #108 (real agents) → #117 (bridge) → #109 (real certification)
-- #116 (tool executor) unblocks #108 and #117 — agents need real tool data to reason about
-- #106 → #111 (durable design → recovery)
-- #112, #113 run in parallel with the LLM track
-- #92/#97 (plans) are written in P0 and executed in P3/P4
-- **Real-LLM audit chain (2026-09-20):** #123 (coupling spec) decides the #137 replay-keying scheme and the #140 corpus/agent reconciliation → #134 (wire fixtures) + #135 (wire LangGraph) + #136 (wire provider) + #138 (aliases) + #139 (pricing) + #141/#142 (provider robustness) + #144 (fail-fast defaults) precede #109 — real certification is impossible until the agents can actually run end-to-end. #143 (P3) ships the fixtures into the image.
+### Edge-level dependency chains
+
+- **LLM track:** #104 → #107 → #115 (LLM seam) → #108 (real agents) → #117 (bridge) → #109 (real certification)
+- **Tool data:** #116 (tool executor) unblocks #108 and #117 — agents need real tool data to reason about; #134 wires it; #131 seeds the registry so admission accepts tool calls
+- **Approval path:** #129 (re-dispatch on resume) unblocks the incident-agent destructive `ack` and S6's approve-then-complete
+- **Durability:** #106 (design) → #111 (recovery) → #122 (durable LangGraph checkpoint, docs-agent S8)
+- **Containers:** #112, #113 run in parallel with the LLM track; #143 ships the fixtures into the image
+- **Test plans:** #92/#97 are written in P0 and executed in P3/P4
+- **Real-LLM audit chain (2026-09-20):** #123 (coupling spec) decides the #137 replay-keying scheme and the #140 corpus/agent reconciliation → #134 + #135 + #136 + #138 + #139 + #141/#142 + #144 (all closed, P2a/P2b) precede #109 — real certification is impossible until the agents can actually run end-to-end. #143 (P3) ships the fixtures into the image.
+- **#109 open risk:** `examples/incident_agent.py:43` calls `pagerduty.acknowledge` as `DESTRUCTIVE` → escalates → run aborts before `ctx.complete()`. Decide (allow destructive in sandbox / adjust agent / adjust corpus) as the first step of #109, or every incident-agent positive task fails certification.
 
 ---
 

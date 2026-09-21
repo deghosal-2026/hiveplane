@@ -8,7 +8,7 @@
 
 > **Milestone exit gate:** Every milestone must pass the [exit gate](#milestone-exit-gate) before the next begins.
 > **Issue tracking:** All work is tracked on GitHub. Milestones M1-M24 mirror the parts below; issues carry the `[0.1.0]` prefix and are grouped by milestone.
-> **Progress:** Parts 1-11 complete and M22 complete (M1-M22, #2-#55, #82-#91) — 87/112 issues closed. M23 re-planned into phases P0-P4; **P0 (Design & Planning) and P1 (LLM & Agent Enablement) complete; #98 (P2 field-test corpus) closed.** A real-LLM field-test audit (2026-09-20) opened #134-#144 for untracked wiring/determinism gaps (FixtureToolExecutor & LangGraphAdapter not wired into production; FakeProvider can't vary output per task; model_aliases/cost/retry/default_model unconfigured; corpora don't match agent behavior) — tracked in P2 (#134-#142, #144) and P3 (#143). **34 open issues remain** (P2-P4 + M24). M23-M24 remain.
+> **Progress:** Parts 1-11 complete and M22 complete (M1-M22, #2-#55, #82-#91) — 87/112 issues closed. M23 re-planned into phases P0-P4 (P2 split into ordered sub-phases P2a-P2d). **P0 (Design & Planning), P1 (LLM & Agent Enablement), P2a (Wiring fixes — the audit chain, #134-#139/#141/#142/#144) and P2b (Corpus & provider reconciliation, #98/#123/#140) complete; #129 done in code (`0ead92d`, issue open pending close).** **22 open issues remain** across P2c (real certification: #131, #109), P2d (hardening: #110, #111, #122, #124, #130), P3 (Docker: #143, #93, #94, #95, #96, #59) and P4 (field test: #99, #121, #56, #57, #58, #100, #101, #102), plus M24. M23-M24 remain.
 
 ---
 
