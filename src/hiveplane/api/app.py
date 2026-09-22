@@ -23,6 +23,8 @@ from hiveplane.api.certifications import router as certifications_router
 from hiveplane.api.policy import router as policy_router
 from hiveplane.api.registry import router as registry_router
 from hiveplane.api.runs import router as runs_router
+from hiveplane.api.sandbox_channel import SandboxChannel
+from hiveplane.api.sandbox_channel import router as sandbox_router
 from hiveplane.api.spend import router as spend_router
 from hiveplane.budget.errors import MissingModelIdentityError, UnknownModelPriceError
 from hiveplane.budget.pricing import CostTable
@@ -161,6 +163,7 @@ def create_app(
     app.state.budget_service = budget_service
     app.state.cost_table = cost_table
     app.state.sandbox_manager = sandbox_manager
+    app.state.sandbox_channel = SandboxChannel()
     app.state.run_service = run_service or build_run_service(
         registry, policy_engine, approval_service, budget_service, sandbox_manager
     )
@@ -283,6 +286,7 @@ def create_app(
     app.include_router(policy_router)
     app.include_router(approvals_router)
     app.include_router(certifications_router)
+    app.include_router(sandbox_router)
     app.include_router(spend_router)
     return app
 
