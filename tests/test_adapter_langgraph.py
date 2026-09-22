@@ -163,3 +163,27 @@ def test_interrupt_pauses_the_run(make_manifest: Callable[..., AgentWorkload]) -
     adapter.submit(_context(make_manifest(adapter="langgraph")))
     assert reporter.transitions == [(RunState.PAUSED, None)]
     assert adapter.status("run-1") is RunState.PAUSED
+
+
+class _CapturingGraph(_Graph):
+    def __init__(self, snapshot: _Snapshot) -> None:
+        super().__init__([], snapshot)
+        self.payload: object | None = None
+
+    def stream(
+        self, payload: object, config: dict[str, Any], *, stream_mode: str = "values"
+    ) -> Iterator[dict[str, Any]]:
+        self.payload = payload
+        yield from ()
+
+
+def test_submit_passes_the_run_task_wrapped_under_task(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    graph = _CapturingGraph(_Snapshot((), {"result": {"ok": True}}))
+    adapter = _adapter(graph, _Reporter())
+    workload = make_manifest(adapter="langgraph")
+    run = _run(task={"issue": "Document the certification CLI"})
+    adapter.submit(RunContext(run=run, workload=workload, sandbox=True))
+
+    assert graph.payload == {"task": {"issue": "Document the certification CLI"}}

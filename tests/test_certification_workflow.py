@@ -25,7 +25,7 @@ from hiveplane.certification.models import (
     TargetContext,
     Thresholds,
 )
-from hiveplane.certification.runner import ReferenceExecutor
+from hiveplane.certification.runner import ReferenceExecutor, TaskExecutor
 from hiveplane.certification.service import CertificationService
 from hiveplane.certification.signing import generate_keypair
 from hiveplane.certification.store import InMemoryCertificationStore
@@ -158,7 +158,10 @@ def _write_corpus(directory: Path, tasks: list[dict[str, Any]]) -> Path:
 
 
 def _setup(
-    make_manifest: Callable[..., AgentWorkload], corpora_dir: Path
+    make_manifest: Callable[..., AgentWorkload],
+    corpora_dir: Path,
+    *,
+    executor_factory: Callable[[str, str | None], TaskExecutor] | None = None,
 ) -> tuple[RegistryService, CertificationService, CertificationCoordinator]:
     private_key, public_key = generate_keypair()
     registry = RegistryService(
@@ -196,6 +199,7 @@ def _setup(
         service,
         InMemoryCertificationStore(),
         executor=ReferenceExecutor(),
+        executor_factory=executor_factory,
         corpora_dir=corpora_dir,
         environment=_ENV,
         clock=lambda: _FIXED_NOW,
@@ -219,6 +223,37 @@ def test_coordinator_certifies_and_records(
     assert record.benchmark_result.aggregate.total == 2
     assert record.benchmark_result.aggregate.passed == 2
     assert coordinator.store.get(record.record_id) is not None
+
+
+def test_coordinator_builds_the_executor_per_workload(
+    make_manifest: Callable[..., AgentWorkload], tmp_path: Path
+) -> None:
+    corpora_dir = _write_corpus(tmp_path, _TASKS)
+    calls: list[tuple[str, str | None]] = []
+
+    def factory(workload: str, model_identity: str | None) -> TaskExecutor:
+        calls.append((workload, model_identity))
+        return ReferenceExecutor()
+
+    _, _, coordinator = _setup(make_manifest, corpora_dir, executor_factory=factory)
+
+    record = coordinator.certify("repo-agent", target_context=TargetContext.STAGING)
+
+    assert calls == [("repo-agent", "openai/gpt-4o/2024-08-06")]
+    assert record.benchmark_result.aggregate.passed == 2
+
+
+def test_coordinator_passes_a_none_identity_when_unpinned(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    from hiveplane.certification.workflow import _pinned_identity
+
+    unpinned = make_manifest(name="agent-x", model={"strategy": "router"}, certification=None)
+    pinned = make_manifest(name="agent-y")
+
+    assert _pinned_identity(unpinned, None) is None
+    assert _pinned_identity(pinned, None) == "openai/gpt-4o/2024-08-06"
+    assert _pinned_identity(pinned, "openai/gpt-4o/2024-08-06") == "openai/gpt-4o/2024-08-06"
 
 
 def test_coordinator_promotes_to_certified(

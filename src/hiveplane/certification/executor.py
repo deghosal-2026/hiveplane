@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import time
 from collections.abc import Callable
+from typing import Protocol
 
 from hiveplane.certification.errors import CertificationError
 from hiveplane.certification.models import BenchmarkTask
@@ -20,6 +21,7 @@ from hiveplane.certification.runner import (
     UnconfiguredTaskExecutor,
 )
 from hiveplane.config import Settings
+from hiveplane.core.approval import ApprovalRecord, ApprovalStatus
 from hiveplane.core.event import EventType
 from hiveplane.core.run import AdmissionContext, Run, RunState
 from hiveplane.execution.models import InterventionAction
@@ -27,6 +29,31 @@ from hiveplane.execution.service import RunService
 from hiveplane.registry.service import RegistryService
 
 _TERMINAL = (RunState.COMPLETED, RunState.FAILED, RunState.CANCELLED)
+
+#: Operator name and reason recorded when the benchmark approves its own pause.
+BENCHMARK_OPERATOR = "benchmark"
+AUTO_APPROVAL_REASON = "benchmark auto-approval (sandboxed run)"
+
+
+class ApprovalDecider(Protocol):
+    """The approval operations the benchmark needs to resolve its own pauses."""
+
+    def list(
+        self,
+        *,
+        status: ApprovalStatus | None = None,
+        workload: str | None = None,
+        run_id: str | None = None,
+    ) -> list[ApprovalRecord]: ...
+
+    def decide(
+        self,
+        approval_id: str,
+        *,
+        status: ApprovalStatus,
+        operator: str,
+        reason: str | None = None,
+    ) -> ApprovalRecord: ...
 
 
 class MissingPinnedModelError(CertificationError):
@@ -51,6 +78,7 @@ class AdapterTaskExecutor:
         model_identity: str | None,
         timeout_s: float = 30.0,
         poll_interval_s: float = 0.05,
+        approvals: ApprovalDecider | None = None,
         sleep: Callable[[float], None] | None = None,
     ) -> None:
         self._run_service = run_service
@@ -59,6 +87,7 @@ class AdapterTaskExecutor:
         self._model_identity = model_identity
         self._timeout_s = timeout_s
         self._poll_interval_s = poll_interval_s
+        self._approvals = approvals
         self._sleep = sleep or time.sleep
 
     def execute(self, task: BenchmarkTask) -> TaskExecution:
@@ -100,9 +129,32 @@ class AdapterTaskExecutor:
         deadline = time.monotonic() + min(self._timeout_s, timeout_s)
         current = self._run_service.get(run_id)
         while current.state not in _TERMINAL and time.monotonic() < deadline:
+            if current.state is RunState.PAUSED:
+                self._resolve_pause(run_id)
             self._sleep(self._poll_interval_s)
             current = self._run_service.get(run_id)
         return current
+
+    def _resolve_pause(self, run_id: str) -> None:
+        """Auto-approve pending approvals and resume, so the benchmark completes (D20).
+
+        Benchmark runs are sandboxed and tools execute against fixtures, so
+        approving a destructive call has no real side effect; the full governance
+        path (escalation, approval record, re-dispatch, audit) still executes.
+        """
+        if self._approvals is not None:
+            for record in self._approvals.list(
+                status=ApprovalStatus.PENDING, run_id=run_id
+            ):
+                self._approvals.decide(
+                    record.approval_id,
+                    status=ApprovalStatus.APPROVED,
+                    operator=BENCHMARK_OPERATOR,
+                    reason=AUTO_APPROVAL_REASON,
+                )
+        self._run_service.intervene(
+            run_id, InterventionAction.RESUME, actor=BENCHMARK_OPERATOR
+        )
 
 
 def build_task_executor(
@@ -112,6 +164,7 @@ def build_task_executor(
     *,
     workload: str = "",
     model_identity: str | None = None,
+    approvals: ApprovalDecider | None = None,
 ) -> TaskExecutor:
     """Build the benchmark executor selected by settings.
 
@@ -126,6 +179,7 @@ def build_task_executor(
             registry,
             workload=workload,
             model_identity=model_identity,
+            approvals=approvals,
         )
     if selected == "reference":
         return ReferenceExecutor()

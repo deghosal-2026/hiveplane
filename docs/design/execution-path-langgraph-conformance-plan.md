@@ -1387,7 +1387,9 @@ Applied while executing this plan; the committed code is the source of truth.
 - The conformance `_service` must register the allowed tool (`registry.register_tool(ToolRecord(...))`)
   before `registry.create(workload)`, because the registry validates the manifest's allow-list
   against the tool catalog.
-- The LangGraph conformance graph receives the run's task as its top-level input, so its node reads
-  `state.get("hold")` (not `state["task"]["hold"]`).
+- The LangGraph conformance graph receives the run's task wrapped under a `task` key
+  (`graph.stream({"task": <run task>}, config)`), so its node reads `state["task"]["hold"]`
+  (not top-level `state["hold"]`). This matches the real docs-agent example, which reads
+  `state.get("task", {})`, and the replay generator, both of which use the wrapped form.
 - Scenario module names are suffixed with a counter so re-imports in separate tests do not collide
   in `sys.modules`.

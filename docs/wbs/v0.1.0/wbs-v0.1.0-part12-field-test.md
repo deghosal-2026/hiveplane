@@ -1,6 +1,6 @@
 # WBS v0.1.0 — Part 12: Field Test
 
-**Milestone:** M23 · **Issues:** #56-#59, #92-#144 (33 closed; 20 open) · **Phases:** P0-P7
+**Milestone:** M23 · **Issues:** #56-#59, #92-#144 (34 closed; 19 open) · **Phases:** P0-P7
 
 ## Goal
 
@@ -84,7 +84,7 @@ Run three real, LLM-backed agents through the certified control loop and produce
 
 **Status:** Complete. All P2b issues closed.
 
-> ⚠️ **Open contract risk to carry into #109.** `examples/incident_agent.py:43` calls `pagerduty.acknowledge` as `ActionClass.DESTRUCTIVE` → escalates → the run aborts before `ctx.complete()`. #140 left incident-agent at corpus `v1` and the agent unchanged. The destructive-ack-in-sandbox behavior must be decided as the first step of #109 (allow destructive tools in sandbox context, adjust the agent, or adjust the corpus) or every incident-agent positive task fails certification.
+> ✅ **Contract risk resolved by #109.** `examples/incident_agent.py:43` calls `pagerduty.acknowledge` as `ActionClass.DESTRUCTIVE`. The `PolicyEngine` short-circuits to `ALLOW` in the `SANDBOX` context (`engine.py`, sandbox.allow) **before** the destructive-escalation branch, so the benchmark (which always runs in `SANDBOX`) approves the ack inline — no pause. The `AdapterTaskExecutor` also **auto-approves** any pause it observes (D20), which covers the docs-agent `review_gate` `__interrupt__` and any approval-gated escalation. Deny stays manual (S6 field-test action). Proven by `tests/test_certification_adapter_e2e.py`.
 
 **Exit:** every corpus task is satisfiable by its real agent; a deliberately broken agent provably fails at least one critical task (benchmark is not theater).
 
@@ -94,7 +94,9 @@ Run three real, LLM-backed agents through the certified control loop and produce
 
 - [x] #131 — Tool seeding script and CLI (register tools referenced by workloads) — `registry/seeding.py` + `hiveplane tools seed` + `scripts/seed-tools.sh`; every example workload registers after seeding
 - [x] #129 — Approval flow must re-dispatch the escalated tool call on resume — `0ead92d` (closed)
-- [ ] #109 — Adapter-backed benchmark certification (execute real agents against corpora; `EXECUTOR=adapter`; depends on #117, #131, #129, #134, #137, #140) — **resolves the incident-agent destructive-ack contract above first**
+- [x] #109 — Adapter-backed benchmark certification (execute real agents against corpora; `EXECUTOR=adapter`). Three workloads certify at production threshold via the real path; a regressed agent fails a critical task. Also adds: `DispatchingAdapter` + `HIVEPLANE_EXECUTION__ADAPTER=auto` (routes raw-worker and langgraph workloads in one stack), benchmark auto-approval in `AdapterTaskExecutor` (D20), per-workload certification executor factory, and a `LangGraphAdapter` fix so the run task reaches the graph under the `task` key (D20) plus a `Command` factory bug fix. Verified by `tests/test_certification_adapter_e2e.py`, `tests/test_benchmark_auto_approval.py`, `tests/test_adapter_dispatch.py`.
+
+**Status:** Complete. All P2c issues closed.
 
 **Exit:** all three workloads certify at production threshold with the real agent in the loop; a deliberately regressed agent (wrong model / bad prompt / injection-fooled) fails at least one critical task.
 
@@ -193,7 +195,7 @@ P0 (Design & Planning)
 - **Containers:** #112, #113 run in parallel with the LLM track; #143 ships the fixtures into the image
 - **Test plans:** #92/#97 are written in P0 and executed in P3/P4
 - **Real-LLM audit chain (2026-09-20):** #123 (coupling spec) decides the #137 replay-keying scheme and the #140 corpus/agent reconciliation → #134 + #135 + #136 + #138 + #139 + #141/#142 + #144 (all closed, P2a/P2b) precede #109 — real certification is impossible until the agents can actually run end-to-end. #143 (P3) ships the fixtures into the image.
-- **#109 open risk:** `examples/incident_agent.py:43` calls `pagerduty.acknowledge` as `DESTRUCTIVE` → escalates → run aborts before `ctx.complete()`. Decide (allow destructive in sandbox / adjust agent / adjust corpus) as the first step of #109, or every incident-agent positive task fails certification.
+- **#109 (closed):** destructive `ack` is allowed inline in the `SANDBOX` context (policy `sandbox.allow` precedes the escalation branch), and the executor auto-approves any pause (D20). #109 also adds `DispatchingAdapter` + `HIVEPLANE_EXECUTION__ADAPTER=auto` so raw-worker and langgraph workloads run in one stack, a per-workload certification executor factory, and the `LangGraphAdapter` `task`-key / `Command`-factory fixes.
 
 ---
 

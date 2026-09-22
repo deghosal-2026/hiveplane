@@ -8,7 +8,7 @@ endpoints arrive in later milestones.
 from __future__ import annotations
 
 import logging
-from collections.abc import AsyncIterator
+from collections.abc import AsyncIterator, Callable
 from contextlib import asynccontextmanager
 from importlib import import_module
 from typing import Any, cast
@@ -54,6 +54,7 @@ from hiveplane.execution.errors import (
 )
 from hiveplane.execution.service import RunService
 from hiveplane.execution.wiring import (
+    attach_auto_adapters,
     attach_langgraph,
     attach_raw_worker,
     build_run_service,
@@ -205,11 +206,19 @@ def create_app(
             provider=provider,
             cost_table=cost_table,
         )
+    elif settings.execution.adapter == "auto":
+        app.state.adapter = attach_auto_adapters(
+            app.state.run_service,
+            app.state.tool_gateway,
+            provider=provider,
+            cost_table=cost_table,
+        )
+        app.state.adapters = app.state.adapter.adapters
     else:
         app.state.adapter = None
     if certification_coordinator is None and registry_service is None:
         certification_coordinator = _build_certification_coordinator(
-            registry, private_key, app.state.run_service, settings
+            registry, private_key, app.state.run_service, settings, approval_service
         )
     app.state.certification_coordinator = certification_coordinator
 
@@ -283,6 +292,7 @@ def _build_certification_coordinator(
     private_key: Ed25519PrivateKey,
     run_service: RunService,
     settings: Settings,
+    approvals: ApprovalService | None = None,
 ) -> CertificationCoordinator:
     """Build the default certification coordinator from settings."""
     cert = settings.certification
@@ -302,32 +312,60 @@ def _build_certification_coordinator(
         private_key=private_key,
         environment=environment,
     )
+    executor, executor_factory = _select_task_executor(
+        settings, run_service, registry, approvals
+    )
     return CertificationCoordinator(
         registry,
         service,
         build_certification_store(settings),
-        executor=_select_task_executor(settings, run_service, registry),
+        executor=executor,
+        executor_factory=executor_factory,
         corpora_dir=cert.corpora_dir,
         environment=environment,
     )
 
 
 def _select_task_executor(
-    settings: Settings, run_service: RunService, registry: RegistryService
-) -> TaskExecutor:
-    """Choose the certification task executor (adapter factory when available)."""
+    settings: Settings,
+    run_service: RunService,
+    registry: RegistryService,
+    approvals: ApprovalService | None = None,
+) -> tuple[TaskExecutor, Callable[[str, str | None], TaskExecutor] | None]:
+    """Choose the certification task executor.
+
+    The ``adapter`` executor needs the workload and pinned model identity, which
+    are only known when a certification runs, so it is returned as a factory
+    rather than a single instance (M23, #109).
+    """
     if settings.certification.executor == "reference":
-        return ReferenceExecutor()
+        return ReferenceExecutor(), None
     if settings.certification.executor == "adapter":
         factory = _adapter_executor_factory()
         if factory is not None:
-            return cast("TaskExecutor", factory(settings, run_service, registry))
+
+            def _build(
+                workload: str, model_identity: str | None
+            ) -> TaskExecutor:
+                return cast(
+                    "TaskExecutor",
+                    factory(
+                        settings,
+                        run_service,
+                        registry,
+                        workload=workload,
+                        model_identity=model_identity,
+                        approvals=approvals,
+                    ),
+                )
+
+            return UnconfiguredTaskExecutor(), _build
         _LOGGER.warning(
             "certification executor 'adapter' is configured but "
             "hiveplane.certification.executor.build_task_executor is unavailable; "
             "falling back to the unconfigured executor"
         )
-    return UnconfiguredTaskExecutor()
+    return UnconfiguredTaskExecutor(), None
 
 
 def _adapter_executor_factory() -> Any | None:

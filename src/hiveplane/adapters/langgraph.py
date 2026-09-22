@@ -52,6 +52,12 @@ def _require_command() -> Callable[..., Any]:
     return Command
 
 
+def _build_command(**kwargs: Any) -> Any:
+    """Build a LangGraph ``Command`` lazily, so the extra is only needed on resume."""
+    command = _require_command()
+    return command(**kwargs)
+
+
 def _thread_spawner(work: Callable[[], None]) -> None:
     threading.Thread(target=work, daemon=True).start()
 
@@ -80,7 +86,7 @@ class LangGraphAdapter:
         self._loader = loader
         self._clock = clock or (lambda: datetime.now(UTC))
         self._spawner = spawner or _thread_spawner
-        self._command_factory: Callable[..., Any] = command_factory or _require_command
+        self._command_factory: Callable[..., Any] = command_factory or _build_command
         self._provider = provider
         self._cost_table = cost_table
         self._lock = threading.Lock()
@@ -127,7 +133,7 @@ class LangGraphAdapter:
             self._escalated[context.run.id] = False
         self._spawner(
             telemetry.propagate_context(
-                lambda: self._drive(graph, context, ctx, dict(context.run.task))
+                lambda: self._drive(graph, context, ctx, {"task": dict(context.run.task)})
             )
         )
 
@@ -155,7 +161,9 @@ class LangGraphAdapter:
             control.resume()  # clear the pause the escalation set
             self._spawner(
                 telemetry.propagate_context(
-                    lambda: self._drive(graph, context, ctx, dict(context.run.task))
+                    lambda: self._drive(
+                        graph, context, ctx, {"task": dict(context.run.task)}
+                    )
                 )
             )
             return True

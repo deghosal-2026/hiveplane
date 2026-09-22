@@ -4,13 +4,15 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from hiveplane.adapters.base import AdapterRunExecutor
+from hiveplane.adapters.base import Adapter, AdapterRunExecutor
+from hiveplane.adapters.dispatch import DispatchingAdapter
 from hiveplane.adapters.langgraph import LangGraphAdapter
 from hiveplane.adapters.loader import EntrypointLoader
 from hiveplane.adapters.raw_worker import RawWorkerAdapter, Spawner
 from hiveplane.budget.pricing import CostTable
 from hiveplane.config import get_settings
 from hiveplane.core.fanout import FanOutType
+from hiveplane.core.spec import RuntimeAdapter
 from hiveplane.execution.admission import AdmissionPipeline
 from hiveplane.execution.fanout import FanOutService, SlackTransport, WebhookTransport
 from hiveplane.execution.gates import (
@@ -122,6 +124,27 @@ def build_tool_gateway(
     )
 
 
+def build_raw_worker(
+    run_service: RunService,
+    tool_gateway: ToolGateway,
+    *,
+    root: str | Path | None = None,
+    spawner: Spawner | None = None,
+    provider: LLMProvider | None = None,
+    cost_table: CostTable | None = None,
+) -> RawWorkerAdapter:
+    """Build a raw-worker adapter without binding it to the run service."""
+    settings = get_settings()
+    return RawWorkerAdapter(
+        run_service,
+        tool_gateway,
+        EntrypointLoader(root=root or settings.execution.entrypoints_root),
+        spawner=spawner,
+        provider=provider,
+        cost_table=cost_table,
+    )
+
+
 def attach_raw_worker(
     run_service: RunService,
     tool_gateway: ToolGateway,
@@ -132,8 +155,30 @@ def attach_raw_worker(
     cost_table: CostTable | None = None,
 ) -> RawWorkerAdapter:
     """Build the raw-worker adapter and bind it as the run service's executor."""
+    adapter = build_raw_worker(
+        run_service,
+        tool_gateway,
+        root=root,
+        spawner=spawner,
+        provider=provider,
+        cost_table=cost_table,
+    )
+    run_service.attach_executor(AdapterRunExecutor(adapter))
+    return adapter
+
+
+def build_langgraph(
+    run_service: RunService,
+    tool_gateway: ToolGateway,
+    *,
+    root: str | Path | None = None,
+    spawner: Spawner | None = None,
+    provider: LLMProvider | None = None,
+    cost_table: CostTable | None = None,
+) -> LangGraphAdapter:
+    """Build a LangGraph adapter without binding it to the run service."""
     settings = get_settings()
-    adapter = RawWorkerAdapter(
+    return LangGraphAdapter(
         run_service,
         tool_gateway,
         EntrypointLoader(root=root or settings.execution.entrypoints_root),
@@ -141,8 +186,6 @@ def attach_raw_worker(
         provider=provider,
         cost_table=cost_table,
     )
-    run_service.attach_executor(AdapterRunExecutor(adapter))
-    return adapter
 
 
 def attach_langgraph(
@@ -155,14 +198,46 @@ def attach_langgraph(
     cost_table: CostTable | None = None,
 ) -> LangGraphAdapter:
     """Build the LangGraph adapter and bind it as the run service's executor (M23, #135)."""
-    settings = get_settings()
-    adapter = LangGraphAdapter(
+    adapter = build_langgraph(
         run_service,
         tool_gateway,
-        EntrypointLoader(root=root or settings.execution.entrypoints_root),
+        root=root,
         spawner=spawner,
         provider=provider,
         cost_table=cost_table,
     )
     run_service.attach_executor(AdapterRunExecutor(adapter))
     return adapter
+
+
+def attach_auto_adapters(
+    run_service: RunService,
+    tool_gateway: ToolGateway,
+    *,
+    root: str | Path | None = None,
+    spawner: Spawner | None = None,
+    provider: LLMProvider | None = None,
+    cost_table: CostTable | None = None,
+) -> DispatchingAdapter:
+    """Build every adapter and attach a dispatcher that routes by workload (M23, #109)."""
+    adapters: dict[RuntimeAdapter, Adapter] = {
+        RuntimeAdapter.RAW_WORKER: build_raw_worker(
+            run_service,
+            tool_gateway,
+            root=root,
+            spawner=spawner,
+            provider=provider,
+            cost_table=cost_table,
+        ),
+        RuntimeAdapter.LANGGRAPH: build_langgraph(
+            run_service,
+            tool_gateway,
+            root=root,
+            spawner=spawner,
+            provider=provider,
+            cost_table=cost_table,
+        ),
+    }
+    dispatcher = DispatchingAdapter(adapters)
+    run_service.attach_executor(AdapterRunExecutor(dispatcher))
+    return dispatcher

@@ -81,7 +81,7 @@ def release(run_id):
 
 
 class S(TypedDict, total=False):
-    hold: bool
+    task: dict
     done: bool
 
 
@@ -89,7 +89,7 @@ def work(state: S, config: RunnableConfig) -> S:
     ctx = config["configurable"]["hiveplane_ctx"]
     ctx.tool_call("mcp.t.read", host="api.example.com", output="payload")
     ctx.report_usage(input_tokens=100, output_tokens=50)
-    if state.get("hold"):
+    if state.get("task", {}).get("hold"):
         _HELD.setdefault(ctx.run_id, threading.Event()).set()
         _RELEASE.setdefault(ctx.run_id, threading.Event()).wait(10.0)
         ctx.checkpoint()

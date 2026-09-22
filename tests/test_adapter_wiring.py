@@ -77,6 +77,23 @@ def test_langgraph_adapter_is_enabled_by_config(
     assert isinstance(app.state.adapter, LangGraphAdapter)
 
 
+def test_auto_adapter_builds_a_dispatcher(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from hiveplane.adapters.dispatch import DispatchingAdapter
+    from hiveplane.core.spec import RuntimeAdapter
+
+    monkeypatch.setenv("HIVEPLANE_EXECUTION__ADAPTER", "auto")
+    get_settings.cache_clear()
+    app = create_app()
+
+    assert isinstance(app.state.adapter, DispatchingAdapter)
+    assert set(app.state.adapters) == {
+        RuntimeAdapter.RAW_WORKER,
+        RuntimeAdapter.LANGGRAPH,
+    }
+
+
 class _FanOut:
     def notify(self, run: Run, workload: AgentWorkload) -> list[DeliveryRecord]:
         return []

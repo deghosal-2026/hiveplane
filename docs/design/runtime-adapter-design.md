@@ -233,6 +233,22 @@ See [D18: Durable Resume Design](durable-resume-design.md) (#106).
 - **langgraph** — a compiled graph example. Wraps LangGraph's execution model behind the adapter
   contract; currently uses `InMemorySaver` (durable checkpointer pending #122).
 
+### Adapter selection and dispatch (M23, #109)
+
+`HIVEPLANE_EXECUTION__ADAPTER` selects the run executor bound to the `RunService`:
+
+| Value | Behavior |
+|-------|----------|
+| `none` (default) | No adapter; runs are admitted but never executed (fail-fast warning at startup). |
+| `raw-worker` | Bind only the raw-worker adapter. |
+| `langgraph` | Bind only the LangGraph adapter. |
+| `auto` | Build **both** adapters and bind a `DispatchingAdapter` that routes each run to the adapter named by `workload.spec.runtime.adapter`, remembering the owner per run for `pause`/`resume`/`cancel`/`status`/`usage`. |
+
+The v0.1.0 field test uses `auto` so raw-worker workloads (repo-agent, incident-agent) and the
+langgraph workload (docs-agent) run in one stack. The LangGraph adapter hands the run's task to the
+graph under the `task` key (`graph.stream({"task": <run task>}, config)`), so a node reads
+`state.get("task")` — matching the docs-agent example and the replay generator.
+
 ## Conformance Suite
 
 Every adapter must pass the following conformance tests:

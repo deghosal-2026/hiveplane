@@ -8,7 +8,7 @@
 
 > **Milestone exit gate:** Every milestone must pass the [exit gate](#milestone-exit-gate) before the next begins.
 > **Issue tracking:** All work is tracked on GitHub. Milestones M1-M24 mirror the parts below; issues carry the `[0.1.0]` prefix and are grouped by milestone.
-> **Progress:** Parts 1-11 complete and M22 complete (M1-M22, #2-#55, #82-#91) — 87/112 issues closed. M23 re-planned into phases P0-P4 (P2 split into ordered sub-phases P2a-P2d). **P0 (Design & Planning), P1 (LLM & Agent Enablement), P2a (Wiring fixes — the audit chain, #134-#139/#141/#142/#144), P2b (Corpus & provider reconciliation, #98/#123/#140), and P2c-in-progress (#131 tool seeding, #129 approval re-dispatch) are done.** **20 open issues remain** across P2c (real certification: #109), P2d (hardening: #110, #111, #122, #124, #130), P3 (Docker: #143, #93, #94, #95, #96, #59) and P4 (field test: #99, #121, #56, #57, #58, #100, #101, #102), plus M24. M23-M24 remain.
+> **Progress:** Parts 1-11 complete and M22 complete (M1-M22, #2-#55, #82-#91) — 87/112 issues closed. M23 re-planned into phases P0-P4 (P2 split into ordered sub-phases P2a-P2d). **P0 (Design & Planning), P1 (LLM & Agent Enablement), P2a (Wiring fixes — the audit chain, #134-#139/#141/#142/#144), P2b (Corpus & provider reconciliation, #98/#123/#140), and P2c (Real certification, #131/#129/#109) are done — all three example workloads now certify at production threshold through the real adapter path.** **19 open issues remain** across P2d (hardening: #110, #111, #122, #124, #130), P3 (Docker: #143, #93, #94, #95, #96, #59) and P4 (field test: #99, #121, #56, #57, #58, #100, #101, #102), plus M24. M23-M24 remain.
 
 ---
 

@@ -46,6 +46,7 @@ class CertificationCoordinator:
         executor: TaskExecutor,
         corpora_dir: str | Path,
         environment: Environment,
+        executor_factory: Callable[[str, str | None], TaskExecutor] | None = None,
         benchmark_version: str = BENCHMARK_VERSION,
         clock: Callable[[], datetime] | None = None,
     ) -> None:
@@ -53,6 +54,7 @@ class CertificationCoordinator:
         self._service = service
         self._store = store
         self._executor = executor
+        self._executor_factory = executor_factory
         self._corpora_dir = Path(corpora_dir)
         self._environment = environment
         self._benchmark_version = benchmark_version
@@ -112,9 +114,15 @@ class CertificationCoordinator:
         if not reference:
             raise CorpusError(f"workload {workload!r} has no benchmark_corpus configured")
         corpus = load_corpus(self._resolve_corpus_path(reference))
+        pinned = _pinned_identity(record.manifest, model_identity)
+        executor = (
+            self._executor_factory(workload, pinned)
+            if self._executor_factory is not None
+            else self._executor
+        )
         runner = BenchmarkRunner(
-            self._executor,
-            model_identity=model_identity or _model_identity(record.manifest),
+            executor,
+            model_identity=pinned or "unspecified",
             benchmark_version=self._benchmark_version,
             environment=self._environment,
             clock=self._clock,
@@ -187,8 +195,16 @@ class CertificationCoordinator:
         )
 
 
-def _model_identity(manifest: AgentWorkload) -> str:
+def _pinned_identity(manifest: AgentWorkload, override: str | None) -> str | None:
+    """Return the canonical pinned model identity, or None when unpinned.
+
+    An explicit ``override`` (e.g. from the CLI) wins; otherwise the manifest's
+    structured identity is canonicalized. ``None`` means the benchmark has no
+    pinned model and the adapter executor will refuse to run (D19).
+    """
+    if override is not None:
+        return override
     identity = manifest.spec.model.identity
     if identity is None:
-        return "unspecified"
+        return None
     return canonical_model_identity(identity)
