@@ -1,20 +1,25 @@
 # D11: Execution Sandbox Design
 
 > Status: draft. The design targets container/cgroup isolation. **v0.1.0 ships process-level
-> enforcement only, and it is not yet wired into the adapter path** — the runtime adapter runs
-> the agent entrypoint on an in-process daemon thread, and `InMemorySandboxManager` records
-> bookkeeping and a `sandbox_id` without applying caps. Tracked by #110.
+> enforcement** (M23, #110): a sandboxed run executes in a capped subprocess that reaches the
+> control-plane boundary over the token-guarded sandbox channel. Container/cgroup isolation and
+> network namespaces remain deferred beyond v0.1.0.
 
 ## Implementation Status (v0.1.0)
 
 | Capability | Current state | Tracked by |
 |------------|---------------|------------|
 | Sandbox manager bookkeeping (provision/destroy/status/reap) | Implemented (`InMemorySandboxManager`) | — |
-| Process-level caps (`RLIMIT_AS`, `RLIMIT_CPU`, wall-clock watchdog, ephemeral workdir) | Code exists (`sandbox/manager.py`) but is **not in the adapter path** | #110 |
-| Adapter runs inside sandbox | **No** — runs in-process on a daemon thread | #110 |
-| Container/cgroup isolation, network namespaces | Deferred beyond v0.1.0 | — |
+| Process-level caps (`RLIMIT_AS`, `RLIMIT_CPU`, wall-clock watchdog, ephemeral workdir) | Implemented in the adapter path (`SubprocessSpawner` + child self-limiting) | #110 |
+| Adapter runs inside sandbox | **Yes** — `sandbox_mode=subprocess` runs the agent in `hiveplane.execution.subprocess_worker`; the in-process thread spawner is the test escape hatch | #110 |
+| Tool/model routing from the sandbox | Localhost-HTTP `SandboxChannel` (per-run token; tool→`ToolGateway`, model→provider seam, usage/result/failure) | #110 |
 | Egress enforcement | Tool-call-boundary string check only (`EgressGuard`); no network namespace | #110 |
 | Sandbox survival across restart / interaction with durable resume | Unspecified | #111 |
+
+> **Platform note.** `RLIMIT_AS` memory caps can only be lowered below the process's current
+> address space on Linux; macOS forbids it (`current limit exceeds maximum limit`). The child
+> therefore applies the cap best-effort (Linux/Docker enforces it; macOS logs a warning and runs
+> uncapped). The wall-clock watchdog is enforced by the spawner on every platform.
 
 The container-oriented sections below are the target design. Read them with the caveat above.
 
