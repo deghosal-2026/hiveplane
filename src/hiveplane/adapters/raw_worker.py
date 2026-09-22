@@ -6,6 +6,8 @@ import threading
 from collections.abc import Callable
 from contextlib import suppress
 from datetime import UTC, datetime
+from pathlib import Path
+from typing import TYPE_CHECKING
 
 from hiveplane import telemetry
 from hiveplane.adapters.errors import (
@@ -25,8 +27,16 @@ from hiveplane.core.usage import UsageReport
 from hiveplane.core.workload import AgentWorkload
 from hiveplane.execution.errors import IllegalTransitionError
 from hiveplane.execution.models import RunContext
+from hiveplane.execution.sandbox_spec import SandboxWorkerSpec, worker_command
 from hiveplane.execution.tools import ToolCallResult, ToolGateway
 from hiveplane.llm.provider import LLMProvider
+
+if TYPE_CHECKING:
+    from hiveplane.api.sandbox_channel import SandboxChannel
+    from hiveplane.execution.subprocess_spawner import SpawnOutcome, SubprocessSpawner
+
+#: Terminal run states; a subprocess run is reconciled only if still live.
+_TERMINAL = (RunState.COMPLETED, RunState.FAILED, RunState.CANCELLED)
 
 #: Runs a unit of work; the default spawns a daemon thread.
 Spawner = Callable[[Callable[[], None]], None]
@@ -49,6 +59,11 @@ class RawWorkerAdapter:
         spawner: Spawner | None = None,
         provider: LLMProvider | None = None,
         cost_table: CostTable | None = None,
+        root: str | Path | None = None,
+        sandbox_channel: SandboxChannel | None = None,
+        base_url: str | None = None,
+        subprocess_spawner: SubprocessSpawner | None = None,
+        sandbox_mode: str = "in-process",
     ) -> None:
         self._reporter = reporter
         self._tools = tools
@@ -57,6 +72,11 @@ class RawWorkerAdapter:
         self._spawner = spawner or _thread_spawner
         self._provider = provider
         self._cost_table = cost_table
+        self._root = str(root) if root is not None else "."
+        self._sandbox_channel = sandbox_channel
+        self._base_url = base_url
+        self._subprocess_spawner = subprocess_spawner
+        self._sandbox_mode = sandbox_mode
         self._lock = threading.Lock()
         self._entries: dict[str, Entrypoint] = {}
         self._states: dict[str, RunState] = {}
@@ -66,6 +86,61 @@ class RawWorkerAdapter:
         self._tool_calls: dict[str, list[ToolCallResult]] = {}
         self._usage: dict[str, UsageReport | None] = {}
 
+    def _subprocess_enabled(self, context: RunContext) -> bool:
+        """Whether this run executes in the capped subprocess (#110)."""
+        return (
+            self._sandbox_mode == "subprocess"
+            and context.sandbox
+            and self._sandbox_channel is not None
+            and self._base_url is not None
+            and self._subprocess_spawner is not None
+        )
+
+    def _subprocess_execute(self, context: RunContext) -> None:
+        """Run the entrypoint in a capped child that routes through the channel."""
+        run = context.run
+        assert self._sandbox_channel is not None
+        assert self._base_url is not None
+        assert self._subprocess_spawner is not None
+        token = self._sandbox_channel.mint(run.id)
+        sandbox = context.workload.spec.sandbox
+        caps = sandbox.resource_caps if sandbox is not None else None
+        spec = SandboxWorkerSpec(
+            run_id=run.id,
+            entrypoint=context.workload.spec.runtime.entrypoint,
+            task=dict(run.task),
+            base_url=self._base_url,
+            token=token,
+            root=self._root,
+            resource_caps=caps,
+        )
+        command = worker_command(spec)
+        spawner = self._subprocess_spawner
+
+        def _launch() -> None:
+            outcome = spawner.launch(command, caps)
+            self._reconcile(run.id, outcome)
+
+        threading.Thread(
+            target=telemetry.propagate_context(_launch), daemon=True
+        ).start()
+
+    def _reconcile(self, run_id: str, outcome: SpawnOutcome) -> None:
+        """Fail a run whose child died or exited without reporting a terminal state."""
+        run = self._reporter.get(run_id)
+        if run.state not in _TERMINAL:
+            reason = outcome.failure_reason or "subprocess exited without reporting"
+            with suppress(IllegalTransitionError):
+                self._reporter.transition(
+                    run_id,
+                    RunState.FAILED,
+                    actor="sandbox",
+                    detail=reason,
+                    failure_reason=reason,
+                )
+            with self._lock:
+                self._states[run_id] = RunState.FAILED
+
     def register(self, workload: AgentWorkload) -> None:
         """Load and cache a workload's entrypoint, rejecting other adapters."""
         if workload.spec.runtime.adapter is not RuntimeAdapter.RAW_WORKER:
@@ -73,7 +148,7 @@ class RawWorkerAdapter:
         self._entries[workload.name] = self._loader.load(workload.spec.runtime.entrypoint)
 
     def submit(self, context: RunContext) -> None:
-        """Start the workload on the configured spawner and return immediately."""
+        """Start the workload (in-process or in the capped subprocess)."""
         entry = self._entry(context.workload)
         control = RunControl()
         with self._lock:
@@ -83,6 +158,9 @@ class RawWorkerAdapter:
             self._escalated[context.run.id] = False
             self._tool_calls[context.run.id] = []
             self._usage[context.run.id] = None
+        if self._subprocess_enabled(context):
+            self._subprocess_execute(context)
+            return
         self._spawner(
             telemetry.propagate_context(lambda: self._execute(entry, context, control))
         )

@@ -12,15 +12,14 @@ from __future__ import annotations
 import shutil
 import subprocess
 import tempfile
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Callable
 
 from pydantic import BaseModel, ConfigDict
 
 from hiveplane.core.sandbox import ResourceCaps
-from hiveplane.sandbox.manager import _limit_process  # noqa: SLF001
+from hiveplane.sandbox.manager import _limit_process
 
 
 class SpawnOutcome(BaseModel):
@@ -31,6 +30,7 @@ class SpawnOutcome(BaseModel):
     exit_code: int | None = None
     timed_out: bool = False
     failure_reason: str | None = None
+    stderr: str | None = None
 
 
 class SubprocessSpawner:
@@ -48,13 +48,17 @@ class SubprocessSpawner:
     ) -> SpawnOutcome:
         """Run ``command`` under the caps and return the outcome."""
         wall_clock = caps.wall_clock_s if caps is not None else 300
-        if workdir is not None:
-            return self._run(list(command), caps, Path(workdir), wall_clock, cleanup=False)
-        scratch = Path(tempfile.mkdtemp(prefix="hiveplane-sandbox-"))
+        scratch = (
+            Path(workdir)
+            if workdir is not None
+            else Path(tempfile.mkdtemp(prefix="hiveplane-sandbox-"))
+        )
+        cleanup = workdir is None
         try:
-            return self._run(list(command), caps, scratch, wall_clock, cleanup=True)
+            return self._run(list(command), caps, scratch, wall_clock)
         finally:
-            shutil.rmtree(scratch, ignore_errors=True)
+            if cleanup:
+                shutil.rmtree(scratch, ignore_errors=True)
 
     def _run(
         self,
@@ -62,8 +66,6 @@ class SubprocessSpawner:
         caps: ResourceCaps | None,
         scratch: Path,
         wall_clock: int,
-        *,
-        cleanup: bool,
     ) -> SpawnOutcome:
         try:
             completed = subprocess.run(
@@ -79,6 +81,14 @@ class SubprocessSpawner:
                 exit_code=exit_code,
                 timed_out=False,
                 failure_reason=None if exit_code == 0 else f"exit_code_{exit_code}",
+                stderr=completed.stderr.decode("utf-8", "replace") or None,
             )
-        except subprocess.TimeoutExpired:
-            return SpawnOutcome(exit_code=None, timed_out=True, failure_reason="timeout")
+        except subprocess.TimeoutExpired as exc:
+            stderr = exc.stderr
+            text = stderr.decode("utf-8", "replace") if isinstance(stderr, bytes) else stderr
+            return SpawnOutcome(
+                exit_code=None,
+                timed_out=True,
+                failure_reason="timeout",
+                stderr=text or None,
+            )

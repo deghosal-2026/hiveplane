@@ -9,10 +9,12 @@ from hiveplane.adapters.dispatch import DispatchingAdapter
 from hiveplane.adapters.langgraph import LangGraphAdapter
 from hiveplane.adapters.loader import EntrypointLoader
 from hiveplane.adapters.raw_worker import RawWorkerAdapter, Spawner
+from hiveplane.api.sandbox_channel import SandboxChannel
 from hiveplane.budget.pricing import CostTable
 from hiveplane.config import get_settings
 from hiveplane.core.fanout import FanOutType
 from hiveplane.core.spec import RuntimeAdapter
+from hiveplane.execution.subprocess_spawner import SubprocessSpawner
 from hiveplane.execution.admission import AdmissionPipeline
 from hiveplane.execution.fanout import FanOutService, SlackTransport, WebhookTransport
 from hiveplane.execution.gates import (
@@ -132,6 +134,10 @@ def build_raw_worker(
     spawner: Spawner | None = None,
     provider: LLMProvider | None = None,
     cost_table: CostTable | None = None,
+    sandbox_channel: SandboxChannel | None = None,
+    base_url: str | None = None,
+    subprocess_spawner: SubprocessSpawner | None = None,
+    sandbox_mode: str = "in-process",
 ) -> RawWorkerAdapter:
     """Build a raw-worker adapter without binding it to the run service."""
     settings = get_settings()
@@ -142,6 +148,11 @@ def build_raw_worker(
         spawner=spawner,
         provider=provider,
         cost_table=cost_table,
+        root=root or settings.execution.entrypoints_root,
+        sandbox_channel=sandbox_channel,
+        base_url=base_url,
+        subprocess_spawner=subprocess_spawner,
+        sandbox_mode=sandbox_mode or settings.execution.sandbox_mode,
     )
 
 
@@ -153,6 +164,10 @@ def attach_raw_worker(
     spawner: Spawner | None = None,
     provider: LLMProvider | None = None,
     cost_table: CostTable | None = None,
+    sandbox_channel: SandboxChannel | None = None,
+    base_url: str | None = None,
+    subprocess_spawner: SubprocessSpawner | None = None,
+    sandbox_mode: str = "in-process",
 ) -> RawWorkerAdapter:
     """Build the raw-worker adapter and bind it as the run service's executor."""
     adapter = build_raw_worker(
@@ -162,6 +177,10 @@ def attach_raw_worker(
         spawner=spawner,
         provider=provider,
         cost_table=cost_table,
+        sandbox_channel=sandbox_channel,
+        base_url=base_url,
+        subprocess_spawner=subprocess_spawner,
+        sandbox_mode=sandbox_mode,
     )
     run_service.attach_executor(AdapterRunExecutor(adapter))
     return adapter
@@ -218,6 +237,10 @@ def attach_auto_adapters(
     spawner: Spawner | None = None,
     provider: LLMProvider | None = None,
     cost_table: CostTable | None = None,
+    sandbox_channel: SandboxChannel | None = None,
+    base_url: str | None = None,
+    subprocess_spawner: SubprocessSpawner | None = None,
+    sandbox_mode: str = "in-process",
 ) -> DispatchingAdapter:
     """Build every adapter and attach a dispatcher that routes by workload (M23, #109)."""
     adapters: dict[RuntimeAdapter, Adapter] = {
@@ -228,6 +251,10 @@ def attach_auto_adapters(
             spawner=spawner,
             provider=provider,
             cost_table=cost_table,
+            sandbox_channel=sandbox_channel,
+            base_url=base_url,
+            subprocess_spawner=subprocess_spawner,
+            sandbox_mode=sandbox_mode,
         ),
         RuntimeAdapter.LANGGRAPH: build_langgraph(
             run_service,

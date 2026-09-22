@@ -55,6 +55,7 @@ from hiveplane.execution.errors import (
     RunNotIntervenableError,
 )
 from hiveplane.execution.service import RunService
+from hiveplane.execution.subprocess_spawner import SubprocessSpawner
 from hiveplane.execution.wiring import (
     attach_auto_adapters,
     attach_langgraph,
@@ -201,6 +202,10 @@ def create_app(
             app.state.tool_gateway,
             provider=provider,
             cost_table=cost_table,
+            sandbox_channel=app.state.sandbox_channel,
+            base_url=settings.execution.base_url,
+            subprocess_spawner=SubprocessSpawner(),
+            sandbox_mode=settings.execution.sandbox_mode,
         )
     elif settings.execution.adapter == "langgraph":
         app.state.adapter = attach_langgraph(
@@ -215,6 +220,10 @@ def create_app(
             app.state.tool_gateway,
             provider=provider,
             cost_table=cost_table,
+            sandbox_channel=app.state.sandbox_channel,
+            base_url=settings.execution.base_url,
+            subprocess_spawner=SubprocessSpawner(),
+            sandbox_mode=settings.execution.sandbox_mode,
         )
         app.state.adapters = app.state.adapter.adapters
     else:

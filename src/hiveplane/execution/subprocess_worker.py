@@ -12,6 +12,8 @@ from __future__ import annotations
 import argparse
 import json
 import resource
+import sys
+import traceback
 import urllib.error
 import urllib.request
 from collections.abc import Callable
@@ -20,8 +22,6 @@ from typing import TYPE_CHECKING, Any, cast
 
 if TYPE_CHECKING:
     from hiveplane.adapters.worker import WorkerContext
-
-from pydantic import BaseModel, ConfigDict, Field, JsonValue
 
 from hiveplane.adapters.errors import (
     RunCancelledError,
@@ -33,34 +33,38 @@ from hiveplane.adapters.errors import (
 from hiveplane.adapters.loader import EntrypointLoader
 from hiveplane.core.decision import ActionClass, DataSensitivity
 from hiveplane.core.sandbox import ResourceCaps
+from hiveplane.execution.sandbox_spec import SandboxWorkerSpec
 from hiveplane.execution.tools import ToolCallOutcome, ToolCallResult
 from hiveplane.llm.models import CompletionResult, Message
 
+_RUN_TOKEN_HEADER = "X-HivePlane-Run-Token"
+
+__all__ = [
+    "HttpWorkerContext",
+    "SandboxWorkerSpec",
+    "Transport",
+    "main",
+    "run_worker",
+]
+
 #: A transport that performs an HTTP call and returns (status, json body).
-Transport = Callable[[str, str, dict[str, Any] | None], tuple[int, dict[str, Any]]]
-
-
-class SandboxWorkerSpec(BaseModel):
-    """Everything the child needs to run one sandboxed agent task."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    run_id: str = Field(min_length=1)
-    entrypoint: str = Field(min_length=1)
-    task: dict[str, JsonValue] = Field(default_factory=dict)
-    base_url: str = Field(min_length=1)
-    token: str = Field(min_length=1)
-    root: str = "."
-    resource_caps: ResourceCaps | None = None
+Transport = Callable[
+    [str, str, dict[str, Any] | None, dict[str, str] | None],
+    tuple[int, dict[str, Any]],
+]
 
 
 def _default_transport(
-    method: str, url: str, payload: dict[str, Any] | None
+    method: str,
+    url: str,
+    payload: dict[str, Any] | None,
+    headers: dict[str, str] | None = None,
 ) -> tuple[int, dict[str, Any]]:
     data = json.dumps(payload).encode("utf-8") if payload is not None else None
-    request = urllib.request.Request(
-        url, data=data, headers={"Content-Type": "application/json"}, method=method
-    )
+    all_headers = {"Content-Type": "application/json"}
+    if headers is not None:
+        all_headers.update(headers)
+    request = urllib.request.Request(url, data=data, headers=all_headers, method=method)
     try:
         with urllib.request.urlopen(request, timeout=60) as response:
             return response.status, json.loads(response.read().decode("utf-8") or "{}")
@@ -81,6 +85,7 @@ class HttpWorkerContext:
     ) -> None:
         self._base_url = base_url.rstrip("/")
         self._run_id = run_id
+        self._token = token
         self._transport = transport or _default_transport
 
     @property
@@ -91,13 +96,17 @@ class HttpWorkerContext:
         return f"{self._base_url}/internal/sandbox/{self._run_id}/{path}"
 
     def _post(self, path: str, payload: dict[str, Any] | None) -> dict[str, Any]:
-        status, data = self._transport("POST", self._url(path), payload)
+        status, data = self._transport(
+            "POST", self._url(path), payload, {_RUN_TOKEN_HEADER: self._token}
+        )
         if status >= 400:
             raise WorkerError(f"sandbox channel {path!r} failed: {status} {data}")
         return data
 
     def _get(self, path: str) -> dict[str, Any]:
-        status, data = self._transport("GET", self._url(path), None)
+        status, data = self._transport(
+            "GET", self._url(path), None, {_RUN_TOKEN_HEADER: self._token}
+        )
         if status >= 400:
             raise WorkerError(f"sandbox channel {path!r} failed: {status} {data}")
         return data
@@ -186,15 +195,19 @@ def _safe_post(
     transport = transport or _default_transport
     url = f"{spec.base_url.rstrip('/')}/internal/sandbox/{spec.run_id}/{path}"
     with suppress(Exception):
-        transport("POST", url, payload)
+        transport("POST", url, payload, {_RUN_TOKEN_HEADER: spec.token})
 
 
 def _apply_resource_limits(caps: ResourceCaps | None) -> None:
     """Apply RLIMIT_AS / RLIMIT_CPU in this (child) process before the agent runs.
 
-    The cap is set after the interpreter has started, so it must be at least the
-    current address-space baseline; a subsequent allocation that exceeds it then
-    fails (MemoryError on macOS, SIGKILL/SIGSEGV on Linux), failing the run.
+    The cap is best-effort: on platforms where the current address space already
+    exceeds the requested ceiling (notably macOS, where the inherited virtual
+    address space is enormous and cannot be lowered), the limit is skipped with a
+    warning so the run still executes. On Linux/Docker the limit applies and a
+    subsequent allocation that exceeds it fails (MemoryError/SIGKILL), failing the
+    run. RLIMIT_CPU is a secondary cap; the spawner's wall-clock watchdog is the
+    primary one.
     """
     if caps is None:
         return
@@ -202,7 +215,10 @@ def _apply_resource_limits(caps: ResourceCaps | None) -> None:
         limit = caps.memory_mb * 1024 * 1024
         resource.setrlimit(resource.RLIMIT_AS, (limit, limit))
     except (ValueError, OSError) as exc:
-        raise WorkerError(f"cannot apply memory cap: {exc}") from exc
+        sys.stderr.write(
+            f"warning: could not apply RLIMIT_AS={caps.memory_mb}MB: {exc}; "
+            "running uncapped (caps are enforced on Linux/Docker)\n"
+        )
     try:
         cpu = max(1, caps.wall_clock_s)
         resource.setrlimit(resource.RLIMIT_CPU, (cpu, cpu))
@@ -214,11 +230,8 @@ def run_worker(
     spec: SandboxWorkerSpec, *, transport: Transport | None = None
 ) -> int:
     """Run the entrypoint in this process and report the outcome to the boundary."""
-    try:
+    with suppress(Exception):
         _apply_resource_limits(spec.resource_caps)
-    except WorkerError as exc:
-        _safe_post(spec, transport, "failure", {"reason": str(exc)})
-        return 1
     entry = EntrypointLoader(root=spec.root).load(spec.entrypoint)
     ctx = HttpWorkerContext(
         base_url=spec.base_url, run_id=spec.run_id, token=spec.token, transport=transport
@@ -226,6 +239,7 @@ def run_worker(
     try:
         result = entry(spec.task, cast("WorkerContext", ctx))
     except Exception as exc:
+        traceback.print_exc()
         _safe_post(
             spec,
             transport,

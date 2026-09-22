@@ -52,14 +52,18 @@ def _model_result() -> dict:
 
 class _FakeTransport:
     def __init__(self) -> None:
-        self.calls: list[tuple[str, str, dict | None]] = []
+        self.calls: list[tuple[str, str, dict | None, dict | None]] = []
         self.tool_result: dict = _tool_result(ToolCallOutcome.ALLOWED)
         self.model_result: dict = _model_result()
 
     def __call__(
-        self, method: str, url: str, payload: dict | None
+        self,
+        method: str,
+        url: str,
+        payload: dict | None,
+        headers: dict | None = None,
     ) -> tuple[int, dict]:
-        self.calls.append((method, url, payload))
+        self.calls.append((method, url, payload, headers))
         if url.endswith("/tool-call"):
             return 200, self.tool_result
         if url.endswith("/model"):
@@ -83,7 +87,7 @@ def test_tool_call_returns_the_governed_result() -> None:
 
     assert result.outcome is ToolCallOutcome.ALLOWED
     assert result.shaped_output is not None and result.shaped_output.text == "{}"
-    method, url, payload = transport.calls[0]
+    method, url, payload, _ = transport.calls[0]
     assert method == "POST"
     assert url.endswith(f"/internal/sandbox/{_RUN}/tool-call")
     assert payload is not None and payload["tool_id"] == "mcp.t.read"
@@ -106,7 +110,7 @@ def test_complete_invokes_the_model_seam() -> None:
 
     assert result.content == "hi"
     assert result.usage.total_tokens == 5
-    _, url, payload = transport.calls[0]
+    _, url, payload, _ = transport.calls[0]
     assert url.endswith(f"/internal/sandbox/{_RUN}/model")
     assert payload is not None and payload["messages"] == [
         {"role": "user", "content": "hello"}
@@ -166,11 +170,11 @@ def test_checkpoint_stops_when_cancelled(tmp_path: Path) -> None:
     transport = _FakeTransport()
 
     def cancelled_control(
-        method: str, url: str, payload: dict | None
+        method: str, url: str, payload: dict | None, headers: dict | None = None
     ) -> tuple[int, dict]:
         if url.endswith("/control"):
             return 200, {"state": "cancelled", "paused": False, "cancelled": True}
-        return transport(method, url, payload)
+        return transport(method, url, payload, headers)
 
     ctx = HttpWorkerContext(
         base_url=_BASE, run_id=_RUN, token="tok", transport=cancelled_control
