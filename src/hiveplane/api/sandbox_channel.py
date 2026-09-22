@@ -85,6 +85,14 @@ class UsageRequest(BaseModel):
     cost_usd: float = Field(default=0.0, ge=0.0)
 
 
+class FailureRequest(BaseModel):
+    """A reported agent failure, failing the run server-side."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    reason: str = Field(default="")
+
+
 def _require_token(request: Request, run_id: str) -> None:
     channel = request.app.state.sandbox_channel
     token = request.headers.get(_RUN_TOKEN_HEADER)
@@ -184,6 +192,18 @@ def sandbox_result(
     run_service: RunService = request.app.state.run_service
     return run_service.transition(
         run_id, RunState.COMPLETED, actor="adapter", result=payload.result
+    )
+
+
+@router.post("/{run_id}/failure", response_model=Run)
+def sandbox_failure(
+    run_id: Annotated[str, Path], payload: FailureRequest, request: Request
+) -> Run:
+    """Fail the run with the reported reason."""
+    _require_token(request, run_id)
+    run_service: RunService = request.app.state.run_service
+    return run_service.fail(
+        run_id, actor="adapter", reason=payload.reason or "agent failed"
     )
 
 

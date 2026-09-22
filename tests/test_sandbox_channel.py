@@ -135,3 +135,17 @@ def test_control_endpoint_reports_state() -> None:
     assert response.status_code == 200
     assert response.json()["state"] == RunState.RUNNING.value
     assert response.json()["cancelled"] is False
+
+
+def test_failure_endpoint_fails_the_run() -> None:
+    client, run_id, channel = _app()
+    token = channel.mint(run_id)
+
+    response = client.post(
+        f"/internal/sandbox/{run_id}/failure",
+        headers={_TOKEN: token},
+        json={"reason": "RuntimeError: boom"},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["state"] == RunState.FAILED.value
