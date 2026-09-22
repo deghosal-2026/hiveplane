@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import resource
 import urllib.error
 import urllib.request
 from collections.abc import Callable
@@ -31,6 +32,7 @@ from hiveplane.adapters.errors import (
 )
 from hiveplane.adapters.loader import EntrypointLoader
 from hiveplane.core.decision import ActionClass, DataSensitivity
+from hiveplane.core.sandbox import ResourceCaps
 from hiveplane.execution.tools import ToolCallOutcome, ToolCallResult
 from hiveplane.llm.models import CompletionResult, Message
 
@@ -49,6 +51,7 @@ class SandboxWorkerSpec(BaseModel):
     base_url: str = Field(min_length=1)
     token: str = Field(min_length=1)
     root: str = "."
+    resource_caps: ResourceCaps | None = None
 
 
 def _default_transport(
@@ -186,10 +189,36 @@ def _safe_post(
         transport("POST", url, payload)
 
 
+def _apply_resource_limits(caps: ResourceCaps | None) -> None:
+    """Apply RLIMIT_AS / RLIMIT_CPU in this (child) process before the agent runs.
+
+    The cap is set after the interpreter has started, so it must be at least the
+    current address-space baseline; a subsequent allocation that exceeds it then
+    fails (MemoryError on macOS, SIGKILL/SIGSEGV on Linux), failing the run.
+    """
+    if caps is None:
+        return
+    try:
+        limit = caps.memory_mb * 1024 * 1024
+        resource.setrlimit(resource.RLIMIT_AS, (limit, limit))
+    except (ValueError, OSError) as exc:
+        raise WorkerError(f"cannot apply memory cap: {exc}") from exc
+    try:
+        cpu = max(1, caps.wall_clock_s)
+        resource.setrlimit(resource.RLIMIT_CPU, (cpu, cpu))
+    except (ValueError, OSError):
+        pass
+
+
 def run_worker(
     spec: SandboxWorkerSpec, *, transport: Transport | None = None
 ) -> int:
     """Run the entrypoint in this process and report the outcome to the boundary."""
+    try:
+        _apply_resource_limits(spec.resource_caps)
+    except WorkerError as exc:
+        _safe_post(spec, transport, "failure", {"reason": str(exc)})
+        return 1
     entry = EntrypointLoader(root=spec.root).load(spec.entrypoint)
     ctx = HttpWorkerContext(
         base_url=spec.base_url, run_id=spec.run_id, token=spec.token, transport=transport
