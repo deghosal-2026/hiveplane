@@ -1,0 +1,11 @@
+{
+  "scenario": "over-budget",
+  "workload": "repo-agent",
+  "context": "production",
+  "per_run_usd": 0.01,
+  "usage": {
+    "input_tokens": 20000,
+    "output_tokens": 10000,
+    "model_identity": "openai/gpt-4o/2024-08-06"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "scenario": "destructive-call",
+  "workload": "incident-agent",
+  "tool_id": "pagerduty.acknowledge",
+  "action_class": "destructive",
+  "require_approval": true,
+  "arguments": {
+    "incident_id": "INC-12345"
+  }
+}

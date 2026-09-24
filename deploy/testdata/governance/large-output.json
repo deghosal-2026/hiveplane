@@ -1,0 +1,7 @@
+{
+  "scenario": "large-output",
+  "workload": "docs-agent",
+  "tool_id": "mcp.github.read_issue",
+  "max_bytes": 32768,
+  "output_bytes": 262144
+}

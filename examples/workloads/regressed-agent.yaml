@@ -1,0 +1,79 @@
+apiVersion: hiveplane/v1
+kind: AgentWorkload
+metadata:
+  name: regressed-agent
+  owner: platform-team
+  team: platform
+  description: S4 negative fixture — deliberately wrong agent the promotion gate must block.
+  labels:
+    environment: production
+    criticality: high
+spec:
+  runtime:
+    adapter: raw-worker
+    entrypoint: examples.regressed_agent:run
+  model:
+    strategy: tiered
+    identity:
+      provider: openai
+      family: gpt-4o
+      version: "2024-08-06"
+  certification:
+    benchmark_corpus: corpora/repo-agent/v2
+    staging_threshold: 0.80
+    production_threshold: 0.90
+    no_critical_failures: true
+    latency_budget_ms: 30000
+    re_cert_interval: 14d
+    status: uncertified
+  tools:
+    allow:
+      - tool_id: mcp.github.list_pull_requests
+        trust_level: read_only
+      - tool_id: mcp.github.read_issue
+        trust_level: read_only
+    deny:
+      - mcp.github.delete_repo
+    # NOTE: parsed for forward-compatibility; MCP transport is not enforced until v0.2.0 (#116).
+    mcp_servers:
+      - name: github-tools
+        endpoint: http://mcp-fabric/github
+    default_trust: read_only
+  budget:
+    per_run_usd: 0.50
+    per_day_usd: 5.00
+    per_team_usd: 50.00
+  approvals:
+    required_for:
+      - production_write
+    contact: "#platform-oncall"
+    auto_escalate_after: 300s
+  # NOTE: parsed for forward-compatibility; trigger ingestion is not implemented until v0.2.0.
+  triggers:
+    - type: github_pr
+      events: [opened]
+      match:
+        paths: ["src/**"]
+  sandbox:
+    enabled: true
+    resource_caps:
+      memory_mb: 512
+      cpu_cores: 1.0
+      wall_clock_s: 300
+    egress:
+      allow: ["api.github.com"]
+      deny: ["169.254.169.254"]
+      mode: restricted
+    filesystem: isolated
+  output_shaping:
+    max_bytes: 16384
+    truncate_strategy: tail
+    injection_scan: true
+  fan_out:
+    on_failed:
+      - type: slack
+        channel: "#platform-oncall"
+    always_include: [trace_link, attestation_link]
+  observability:
+    contract: standard
+    trace_sampling: 1.0
