@@ -80,9 +80,44 @@ def test_dockerfile_copies_examples_and_installs_langgraph_extra() -> None:
     dockerfile = (_ROOT / "Dockerfile").read_text(encoding="utf-8")
 
     assert "COPY examples" in dockerfile, "image must copy examples/ for entrypoints"
+    assert "COPY deploy/testdata" in dockerfile, (
+        "image must copy deploy/testdata/ so tool + replay fixtures resolve (#143)"
+    )
     assert "langgraph" in dockerfile, "image must install the langgraph extra"
     assert "HIVEPLANE_EXECUTION__ENTRYPOINTS_ROOT" in dockerfile
     assert "/app" in dockerfile
+
+
+def test_deploy_testdata_ships_replay_and_tool_fixtures() -> None:
+    testdata = _ROOT / "deploy" / "testdata"
+
+    assert (testdata / "llm" / "replay.json").is_file(), "replay fixture missing"
+    tools = sorted((testdata / "tools").glob("*.json"))
+    assert tools, "no tool fixtures in deploy/testdata/tools"
+
+
+def test_compose_api_persists_graph_checkpoints() -> None:
+    compose = _load("docker-compose.yml")
+    api = compose["services"]["api"]
+
+    assert any(
+        str(volume).startswith("checkpoint-data:") for volume in api.get("volumes", [])
+    ), "api must mount a durable volume for LangGraph checkpoints (#122)"
+    assert "HIVEPLANE_EXECUTION__CHECKPOINT_PATH" in api["environment"], (
+        "api must set the checkpoint path so paused runs survive recreate (#122)"
+    )
+    assert "checkpoint-data" in compose["volumes"], "checkpoint-data volume must be declared"
+
+
+def test_no_compose_service_provides_a_local_llm() -> None:
+    """OMLX runs on the host; no compose service may be the local LLM backend."""
+    services = _load("docker-compose.yml")["services"]
+
+    for name, service in services.items():
+        image = str(service.get("image", "")).lower()
+        assert "ollama" not in image and "mlx" not in image, (
+            f"{name} unexpectedly provides a local LLM; OMLX must run on the host"
+        )
 
 
 def test_compose_api_selects_postgres_store_and_auto_adapter() -> None:
@@ -144,10 +179,9 @@ def test_env_profiles_set_llm_provider_defaults() -> None:
     assert "HIVEPLANE_MODEL__PROVIDER=local" in local
     assert "HIVEPLANE_MODEL__BASE_URL=http://host.docker.internal:8000/v1" in local
     assert (
-        '{"mlx-community/Qwen2.5-7B-Instruct-4bit": "omlx/qwen2.5-7b-instruct/4bit"}'
-        in local
+        '{"Qwen3.5-4B-4bit": "omlx/qwen3.5-4b/4bit"}' in local
     ), "local profile must alias the OMLX-served model to the canonical identity"
-    assert "HIVEPLANE_MODEL__DEFAULT_MODEL=omlx/qwen2.5-7b-instruct/4bit" in local
+    assert "HIVEPLANE_MODEL__DEFAULT_MODEL=omlx/qwen3.5-4b/4bit" in local
 
     assert "HIVEPLANE_MODEL__PROVIDER=cloud" in cloud
     assert "HIVEPLANE_MODEL__BASE_URL=https://api.openai.com/v1" in cloud

@@ -1,14 +1,15 @@
 name: hiveplane
 
-# Compose profiles select the optional LLM backends:
+# Compose profiles select the optional backends:
 #   --profile ci      fake/replay provider, hermetic (no network, no secrets)
-#   --profile local   ollama service at http://ollama:11434/v1 (see .env.local)
+#   --profile local   local provider; OMLX (mlx_lm.server) runs on the HOST
+#                     (no container service); see .env.local
 #   --profile cloud   OpenAI at https://api.openai.com/v1 (see .env.cloud)
 #   --profile test    webhook-sink captures Slack/generic webhook deliveries
 #
 # Provider selection comes from the env file; combine the two:
 #   docker compose --env-file .env.ci    --profile ci    up -d
-#   docker compose --env-file .env.local --profile local up -d
+#   docker compose --env-file .env.local --profile local --profile test up -d
 #   docker compose --env-file .env.cloud --profile cloud up -d
 
 services:
