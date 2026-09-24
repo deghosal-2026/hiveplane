@@ -1,0 +1,476 @@
+tempo-1    | level=warn ts=2026-09-24T02:03:50.703205302Z caller=modules.go:302 msg="Worker address is empty in single binary mode. Attempting automatic worker configuration. If queries are unresponsive consider configuring the worker explicitly." address=127.0.0.1:9095
+tempo-1    | level=warn ts=2026-09-24T02:03:50.70416651Z caller=wal.go:94 msg="unowned file entry ignored during wal replay" file=blocks err=null
+tempo-1    | ts=2026-09-24T02:03:50Z level=warn msg="Using the 0.0.0.0 address exposes this server to every network interface, which may facilitate Denial of Service attacks. Enable the feature gate to change the default and remove this warning." component=tempo documentation=https://github.com/open-telemetry/opentelemetry-collector/blob/main/docs/security-best-practices.md#safeguards-against-denial-of-service-attacks feature gate ID=component.UseLocalHostAsDefaultHost
+tempo-1    | ts=2026-09-24T02:03:50Z level=warn msg="Using the 0.0.0.0 address exposes this server to every network interface, which may facilitate Denial of Service attacks. Enable the feature gate to change the default and remove this warning." component=tempo documentation=https://github.com/open-telemetry/opentelemetry-collector/blob/main/docs/security-best-practices.md#safeguards-against-denial-of-service-attacks feature gate ID=component.UseLocalHostAsDefaultHost
+tempo-1    | level=warn ts=2026-09-24T02:03:55.710727305Z caller=server.go:2171 trace_id_unsampled=460f05af91af6e40 msg="GET /metrics 973.25µs, error: write tcp [::1]:3200->[::1]:34240: write: broken pipe ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+tempo-1    | level=warn ts=2026-09-24T02:04:05.723225337Z caller=server.go:2171 trace_id_unsampled=78b1df3907a8fb7a msg="GET /metrics 596.042µs, error: write tcp [::1]:3200->[::1]:52262: write: connection reset by peer ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+tempo-1    | level=warn ts=2026-09-24T02:04:15.746411133Z caller=server.go:2171 trace_id_unsampled=68b0ba66d6cf0d57 msg="GET /metrics 897.166µs, error: write tcp [::1]:3200->[::1]:55048: write: connection reset by peer ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+tempo-1    | level=warn ts=2026-09-24T02:04:25.769710638Z caller=server.go:2171 trace_id_unsampled=496214e30639487e msg="GET /metrics 867.958µs, error: write tcp [::1]:3200->[::1]:43066: write: connection reset by peer ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+tempo-1    | level=warn ts=2026-09-24T02:04:35.79358492Z caller=server.go:2171 trace_id_unsampled=06ac60953471816c msg="GET /metrics 597.917µs, error: write tcp [::1]:3200->[::1]:57966: write: connection reset by peer ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+ui-1       | INFO:     Started server process [1]
+ui-1       | INFO:     Waiting for application startup.
+ui-1       | INFO:     Application startup complete.
+ui-1       | INFO:     Uvicorn running on http://0.0.0.0:3001 (Press CTRL+C to quit)
+ui-1       | INFO:     127.0.0.1:33738 - "GET /healthz HTTP/1.1" 200 OK
+ui-1       | INFO:     127.0.0.1:44714 - "GET /healthz HTTP/1.1" 200 OK
+ui-1       | INFO:     127.0.0.1:55278 - "GET /healthz HTTP/1.1" 200 OK
+ui-1       | INFO:     127.0.0.1:60452 - "GET /healthz HTTP/1.1" 200 OK
+ui-1       | INFO:     127.0.0.1:60424 - "GET /healthz HTTP/1.1" 200 OK
+ui-1       | INFO:     127.0.0.1:34596 - "GET /healthz HTTP/1.1" 200 OK
+ui-1       | INFO:     127.0.0.1:52370 - "GET /healthz HTTP/1.1" 200 OK
+ui-1       | INFO:     127.0.0.1:49344 - "GET /healthz HTTP/1.1" 200 OK
+ui-1       | INFO:     192.168.65.1:57008 - "GET / HTTP/1.1" 200 OK
+ui-1       | INFO:     127.0.0.1:32932 - "GET /healthz HTTP/1.1" 200 OK
+ui-1       | INFO:     127.0.0.1:39370 - "GET /healthz HTTP/1.1" 200 OK
+ui-1       | INFO:     127.0.0.1:48818 - "GET /healthz HTTP/1.1" 200 OK
+ui-1       | INFO:     127.0.0.1:53056 - "GET /healthz HTTP/1.1" 200 OK
+ui-1       | INFO:     127.0.0.1:48894 - "GET /healthz HTTP/1.1" 200 OK
+ui-1       | INFO:     127.0.0.1:42130 - "GET /healthz HTTP/1.1" 200 OK
+ui-1       | INFO:     127.0.0.1:39494 - "GET /healthz HTTP/1.1" 200 OK
+ui-1       | INFO:     127.0.0.1:37450 - "GET /healthz HTTP/1.1" 200 OK
+ui-1       | INFO:     127.0.0.1:42890 - "GET /healthz HTTP/1.1" 200 OK
+ui-1       | INFO:     127.0.0.1:53782 - "GET /healthz HTTP/1.1" 200 OK
+ui-1       | INFO:     127.0.0.1:60618 - "GET /healthz HTTP/1.1" 200 OK
+ui-1       | INFO:     127.0.0.1:36426 - "GET /healthz HTTP/1.1" 200 OK
+ui-1       | INFO:     127.0.0.1:37198 - "GET /healthz HTTP/1.1" 200 OK
+ui-1       | INFO:     127.0.0.1:60156 - "GET /healthz HTTP/1.1" 200 OK
+ui-1       | INFO:     127.0.0.1:52340 - "GET /healthz HTTP/1.1" 200 OK
+ui-1       | INFO:     127.0.0.1:48714 - "GET /healthz HTTP/1.1" 200 OK
+ui-1       | INFO:     127.0.0.1:51702 - "GET /healthz HTTP/1.1" 200 OK
+ui-1       | INFO:     127.0.0.1:57002 - "GET /healthz HTTP/1.1" 200 OK
+ui-1       | INFO:     127.0.0.1:35416 - "GET /healthz HTTP/1.1" 200 OK
+ui-1       | INFO:     192.168.65.1:37610 - "GET / HTTP/1.1" 200 OK
+ui-1       | INFO:     192.168.65.1:61401 - "GET /approvals HTTP/1.1" 200 OK
+ui-1       | INFO:     192.168.65.1:60129 - "GET /certifications HTTP/1.1" 200 OK
+ui-1       | INFO:     192.168.65.1:20143 - "GET /spend HTTP/1.1" 200 OK
+grafana-1  | logger=settings t=2026-09-24T02:03:50.906110011Z level=info msg="Starting Grafana" version=11.2.0 commit=2a88694fd3ced0335bf3726cc5d0adc2d1858855 branch=v11.2.x compiled=2026-09-24T02:03:50Z
+grafana-1  | logger=settings t=2026-09-24T02:03:50.906225636Z level=info msg="Config loaded from" file=/usr/share/grafana/conf/defaults.ini
+grafana-1  | logger=settings t=2026-09-24T02:03:50.906231094Z level=info msg="Config loaded from" file=/etc/grafana/grafana.ini
+grafana-1  | logger=settings t=2026-09-24T02:03:50.906232427Z level=info msg="Config overridden from command line" arg="default.paths.data=/var/lib/grafana"
+grafana-1  | logger=settings t=2026-09-24T02:03:50.906233594Z level=info msg="Config overridden from command line" arg="default.paths.logs=/var/log/grafana"
+grafana-1  | logger=settings t=2026-09-24T02:03:50.906234594Z level=info msg="Config overridden from command line" arg="default.paths.plugins=/var/lib/grafana/plugins"
+grafana-1  | logger=settings t=2026-09-24T02:03:50.906235594Z level=info msg="Config overridden from command line" arg="default.paths.provisioning=/etc/grafana/provisioning"
+grafana-1  | logger=settings t=2026-09-24T02:03:50.906236594Z level=info msg="Config overridden from command line" arg="default.log.mode=console"
+grafana-1  | logger=settings t=2026-09-24T02:03:50.906237761Z level=info msg="Config overridden from Environment variable" var="GF_PATHS_DATA=/var/lib/grafana"
+grafana-1  | logger=settings t=2026-09-24T02:03:50.906238969Z level=info msg="Config overridden from Environment variable" var="GF_PATHS_LOGS=/var/log/grafana"
+grafana-1  | logger=settings t=2026-09-24T02:03:50.906240094Z level=info msg="Config overridden from Environment variable" var="GF_PATHS_PLUGINS=/var/lib/grafana/plugins"
+grafana-1  | logger=settings t=2026-09-24T02:03:50.906241177Z level=info msg="Config overridden from Environment variable" var="GF_PATHS_PROVISIONING=/etc/grafana/provisioning"
+grafana-1  | logger=settings t=2026-09-24T02:03:50.906242177Z level=info msg="Config overridden from Environment variable" var="GF_SECURITY_ADMIN_USER=admin"
+grafana-1  | logger=settings t=2026-09-24T02:03:50.906243469Z level=info msg="Config overridden from Environment variable" var="GF_SECURITY_ADMIN_PASSWORD=*********"
+grafana-1  | logger=settings t=2026-09-24T02:03:50.906244719Z level=info msg="Config overridden from Environment variable" var="GF_AUTH_ANONYMOUS_ENABLED=true"
+grafana-1  | logger=settings t=2026-09-24T02:03:50.906245969Z level=info msg="Config overridden from Environment variable" var="GF_AUTH_ANONYMOUS_ORG_ROLE=Admin"
+grafana-1  | logger=settings t=2026-09-24T02:03:50.906247386Z level=info msg=Target target=[all]
+grafana-1  | logger=settings t=2026-09-24T02:03:50.906253177Z level=info msg="Path Home" path=/usr/share/grafana
+grafana-1  | logger=settings t=2026-09-24T02:03:50.906254261Z level=info msg="Path Data" path=/var/lib/grafana
+grafana-1  | logger=settings t=2026-09-24T02:03:50.906255427Z level=info msg="Path Logs" path=/var/log/grafana
+grafana-1  | logger=settings t=2026-09-24T02:03:50.906256302Z level=info msg="Path Plugins" path=/var/lib/grafana/plugins
+grafana-1  | logger=settings t=2026-09-24T02:03:50.906257219Z level=info msg="Path Provisioning" path=/etc/grafana/provisioning
+grafana-1  | logger=settings t=2026-09-24T02:03:50.906258136Z level=info msg="App mode production"
+grafana-1  | logger=featuremgmt t=2026-09-24T02:03:50.906370761Z level=info msg=FeatureToggles alertingNoDataErrorExecution=true autoMigrateXYChartPanel=true dataplaneFrontendFallback=true logsContextDatasourceUi=true panelMonitoring=true cloudWatchNewLabelParsing=true lokiStructuredMetadata=true kubernetesPlaylists=true logsInfiniteScrolling=true influxdbBackendMigration=true angularDeprecationUI=true lokiQueryHints=true cloudWatchRoundUpEndTime=true dashgpt=true prometheusDataplane=true ssoSettingsApi=true recoveryThreshold=true prometheusAzureOverrideAudience=true alertingSimplifiedRouting=true publicDashboards=true lokiMetricDataplane=true prometheusConfigOverhaulAuth=true transformationsVariableSupport=true managedPluginsInstall=true recordedQueriesMulti=true cloudWatchCrossAccountQuerying=true nestedFolders=true transformationsRedesign=true logRowsPopoverMenu=true tlsMemcached=true annotationPermissionUpdate=true logsExploreTableVisualisation=true exploreMetrics=true topnav=true alertingInsights=true lokiQuerySplitting=true awsAsyncQueryCaching=true formatString=true addFieldFromCalculationStatFunctions=true correlations=true prometheusMetricEncyclopedia=true groupToNestedTableTransformation=true
+grafana-1  | logger=sqlstore t=2026-09-24T02:03:50.906389594Z level=info msg="Connecting to DB" dbtype=sqlite3
+grafana-1  | logger=migrator t=2026-09-24T02:03:50.909247511Z level=info msg="Locking database"
+grafana-1  | logger=migrator t=2026-09-24T02:03:50.909253636Z level=info msg="Starting DB migrations"
+grafana-1  | logger=migrator t=2026-09-24T02:03:50.914626427Z level=info msg="migrations completed" performed=0 skipped=594 duration=215.042µs
+grafana-1  | logger=migrator t=2026-09-24T02:03:50.914791261Z level=info msg="Unlocking database"
+grafana-1  | logger=secrets t=2026-09-24T02:03:50.914931886Z level=info msg="Envelope encryption state" enabled=true currentprovider=secretKey.v1
+grafana-1  | logger=plugin.angulardetectorsprovider.dynamic t=2026-09-24T02:03:50.927266802Z level=info msg="Restored cache from database" duration=285.834µs
+grafana-1  | logger=plugin.store t=2026-09-24T02:03:50.927834386Z level=info msg="Loading plugins..."
+grafana-1  | logger=plugins.registration t=2026-09-24T02:03:50.937862177Z level=error msg="Could not register plugin" pluginId=xychart error="plugin xychart is already registered"
+grafana-1  | logger=plugins.initialization t=2026-09-24T02:03:50.937887552Z level=error msg="Could not initialize plugin" pluginId=xychart error="plugin xychart is already registered"
+grafana-1  | logger=local.finder t=2026-09-24T02:03:50.937917886Z level=warn msg="Skipping finding plugins as directory does not exist" path=/usr/share/grafana/plugins-bundled
+grafana-1  | logger=plugin.store t=2026-09-24T02:03:50.937921094Z level=info msg="Plugins loaded" count=54 duration=10.087041ms
+grafana-1  | logger=query_data t=2026-09-24T02:03:50.939958219Z level=info msg="Query Service initialization"
+grafana-1  | logger=live.push_http t=2026-09-24T02:03:50.940919552Z level=info msg="Live Push Gateway initialization"
+grafana-1  | logger=ngalert.notifier.alertmanager org=1 t=2026-09-24T02:03:50.941942427Z level=info msg="Applying new configuration to Alertmanager" configHash=d2c56faca6af2a5772ff4253222f7386
+grafana-1  | logger=ngalert.state.manager t=2026-09-24T02:03:50.948619719Z level=info msg="Running in alternative execution of Error/NoData mode"
+grafana-1  | logger=infra.usagestats.collector t=2026-09-24T02:03:50.950867927Z level=info msg="registering usage stat providers" usageStatsProvidersLen=2
+grafana-1  | logger=provisioning.plugins t=2026-09-24T02:03:50.967084427Z level=error msg="Failed to read plugin provisioning files from directory" path=/etc/grafana/provisioning/plugins error="open /etc/grafana/provisioning/plugins: no such file or directory"
+grafana-1  | logger=provisioning.alerting t=2026-09-24T02:03:50.967136219Z level=error msg="can't read alerting provisioning files from directory" path=/etc/grafana/provisioning/alerting error="open /etc/grafana/provisioning/alerting: no such file or directory"
+grafana-1  | logger=provisioning.alerting t=2026-09-24T02:03:50.967144177Z level=info msg="starting to provision alerting"
+grafana-1  | logger=provisioning.alerting t=2026-09-24T02:03:50.967147761Z level=info msg="finished to provision alerting"
+grafana-1  | logger=grafanaStorageLogger t=2026-09-24T02:03:50.967278594Z level=info msg="Storage starting"
+grafana-1  | logger=ngalert.state.manager t=2026-09-24T02:03:50.967312386Z level=info msg="Warming state cache for startup"
+grafana-1  | logger=provisioning.dashboard t=2026-09-24T02:03:50.967747219Z level=info msg="starting to provision dashboards"
+grafana-1  | logger=http.server t=2026-09-24T02:03:50.967911136Z level=info msg="HTTP Server Listen" address=[::]:3000 protocol=http subUrl= socket=
+grafana-1  | logger=ngalert.multiorg.alertmanager t=2026-09-24T02:03:50.967955094Z level=info msg="Starting MultiOrg Alertmanager"
+grafana-1  | logger=provisioning.dashboard t=2026-09-24T02:03:50.968874927Z level=info msg="finished to provision dashboards"
+grafana-1  | logger=ngalert.state.manager t=2026-09-24T02:03:50.992905177Z level=info msg="State cache has been initialized" states=0 duration=25.592458ms
+grafana-1  | logger=ngalert.scheduler t=2026-09-24T02:03:50.992921177Z level=info msg="Starting scheduler" tickInterval=10s maxAttempts=1
+grafana-1  | logger=ticker t=2026-09-24T02:03:50.992940511Z level=info msg=starting first_tick=2026-09-24T02:04:00Z
+tempo-1    | level=warn ts=2026-09-24T02:04:45.813384091Z caller=server.go:2171 trace_id_unsampled=283bfcb434938562 msg="GET /metrics 794.75µs, error: write tcp [::1]:3200->[::1]:55346: write: connection reset by peer ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+tempo-1    | level=warn ts=2026-09-24T02:04:55.835436721Z caller=server.go:2171 trace_id_unsampled=2dd05ccee3bafc5d msg="GET /metrics 980.166µs, error: write tcp [::1]:3200->[::1]:59670: write: connection reset by peer ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+tempo-1    | level=warn ts=2026-09-24T02:05:05.859735545Z caller=server.go:2171 trace_id_unsampled=4e9e856d15f2aa7b msg="GET /metrics 653.084µs, error: write tcp [::1]:3200->[::1]:52186: write: broken pipe ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+tempo-1    | level=warn ts=2026-09-24T02:05:15.8828058Z caller=server.go:2171 trace_id_unsampled=2fe56a5a60a739b7 msg="GET /metrics 592.875µs, error: write tcp [::1]:3200->[::1]:35014: write: broken pipe ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+tempo-1    | level=warn ts=2026-09-24T02:05:25.897772971Z caller=server.go:2171 trace_id_unsampled=33a41057bc6111a1 msg="GET /metrics 859.291µs, error: write tcp [::1]:3200->[::1]:48556: write: connection reset by peer ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+tempo-1    | level=warn ts=2026-09-24T02:05:35.922827295Z caller=server.go:2171 trace_id_unsampled=687b17bcef619269 msg="GET /metrics 634.667µs, error: write tcp [::1]:3200->[::1]:42802: write: connection reset by peer ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+tempo-1    | level=warn ts=2026-09-24T02:05:45.945718092Z caller=server.go:2171 trace_id_unsampled=09142815365a8ad9 msg="GET /metrics 619.875µs, error: write tcp [::1]:3200->[::1]:39532: write: broken pipe ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+tempo-1    | level=warn ts=2026-09-24T02:05:55.971982096Z caller=server.go:2171 trace_id_unsampled=622f290e287c282b msg="GET /metrics 637.25µs, error: write tcp [::1]:3200->[::1]:48356: write: connection reset by peer ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+tempo-1    | level=warn ts=2026-09-24T02:06:05.997065378Z caller=server.go:2171 trace_id_unsampled=68e169773efc91f3 msg="GET /metrics 719.958µs, error: write tcp [::1]:3200->[::1]:57760: write: connection reset by peer ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+tempo-1    | level=warn ts=2026-09-24T02:06:16.018781467Z caller=server.go:2171 trace_id_unsampled=6cbd18074645dbb3 msg="GET /metrics 634.833µs, error: write tcp [::1]:3200->[::1]:47152: write: connection reset by peer ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+tempo-1    | level=warn ts=2026-09-24T02:06:26.041144055Z caller=server.go:2171 trace_id_unsampled=042346f401a81f55 msg="GET /metrics 844.125µs, error: write tcp [::1]:3200->[::1]:46252: write: connection reset by peer ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+tempo-1    | level=warn ts=2026-09-24T02:06:36.067875087Z caller=server.go:2171 trace_id_unsampled=3cada624502461e9 msg="GET /metrics 614.041µs, error: write tcp [::1]:3200->[::1]:53526: write: connection reset by peer ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+tempo-1    | level=warn ts=2026-09-24T02:06:46.090693925Z caller=server.go:2171 trace_id_unsampled=2edaaae404160a89 msg="GET /metrics 575.25µs, error: write tcp [::1]:3200->[::1]:49184: write: connection reset by peer ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+tempo-1    | level=warn ts=2026-09-24T02:06:56.117964138Z caller=server.go:2171 trace_id_unsampled=6726c9e68d32bc77 msg="GET /metrics 1.0035ms, error: write tcp [::1]:3200->[::1]:57912: write: connection reset by peer ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+tempo-1    | level=warn ts=2026-09-24T02:07:06.14311842Z caller=server.go:2171 trace_id_unsampled=254119b3376744c8 msg="GET /metrics 822.125µs, error: write tcp [::1]:3200->[::1]:40336: write: connection reset by peer ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+tempo-1    | level=warn ts=2026-09-24T02:07:16.166436675Z caller=server.go:2171 trace_id_unsampled=5d9141dd318c7654 msg="GET /metrics 655.666µs, error: write tcp [::1]:3200->[::1]:36298: write: connection reset by peer ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+tempo-1    | level=warn ts=2026-09-24T02:07:26.191292596Z caller=server.go:2171 trace_id_unsampled=24389541f0b7a2fd msg="GET /metrics 893.333µs, error: write tcp [::1]:3200->[::1]:56762: write: connection reset by peer ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+tempo-1       | level=warn ts=2026-09-24T02:07:36.215609837Z caller=server.go:2171 trace_id_unsampled=6b493aa6444ecf9a msg="GET /metrics 887.291µs, error: write tcp [::1]:3200->[::1]:41358: write: connection reset by peer ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+tempo-1       | level=warn ts=2026-09-24T02:07:46.23992505Z caller=server.go:2171 trace_id_unsampled=25d78ba09f2d6148 msg="GET /metrics 799.458µs, error: write tcp [::1]:3200->[::1]:33242: write: broken pipe ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+tempo-1           | level=warn ts=2026-09-24T02:07:56.265337138Z caller=server.go:2171 trace_id_unsampled=330ab5db64e49f94 msg="GET /metrics 603.125µs, error: write tcp [::1]:3200->[::1]:42446: write: connection reset by peer ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+tempo-1           | level=warn ts=2026-09-24T02:08:06.291042254Z caller=server.go:2171 trace_id_unsampled=3321069e54268e5b msg="GET /metrics 636.417µs, error: write tcp [::1]:3200->[::1]:41378: write: connection reset by peer ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+tempo-1           | level=warn ts=2026-09-24T02:08:16.317389633Z caller=server.go:2171 trace_id_unsampled=3c0408d5852f8325 msg="GET /metrics 656.083µs, error: write tcp [::1]:3200->[::1]:38092: write: connection reset by peer ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+tempo-1           | level=warn ts=2026-09-24T02:08:26.341036346Z caller=server.go:2171 trace_id_unsampled=47407889825f08a2 msg="GET /metrics 1.053125ms, error: write tcp [::1]:3200->[::1]:36612: write: broken pipe ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+tempo-1           | level=warn ts=2026-09-24T02:08:36.36641617Z caller=server.go:2171 trace_id_unsampled=7d5fdb88377acd96 msg="GET /metrics 1.120208ms, error: write tcp [::1]:3200->[::1]:49234: write: broken pipe ws: false; Accept: */*; Connection: close; User-Agent: Wget; "
+webhook-sink-1    | webhook-sink listening on :8081
+webhook-sink-1    | {"path": "/slack", "body": "{\"text\": \"{\\\"run_id\\\": \\\"run-4fe075aa1980\\\", \\\"workload\\\": \\\"repo-agent\\\", \\\"state\\\": \\\"completed\\\", \\\"failure_reason\\\": null, \\\"cost_usd\\\": 0.0, \\\"attestation_id\\\": null}\"}"}
+webhook-sink-1    | {"path": "/slack", "body": "{\"text\": \"{\\\"run_id\\\": \\\"run-534d4aa659b9\\\", \\\"workload\\\": \\\"repo-agent\\\", \\\"state\\\": \\\"completed\\\", \\\"failure_reason\\\": null, \\\"cost_usd\\\": 0.0, \\\"attestation_id\\\": null}\"}"}
+webhook-sink-1    | {"path": "/slack", "body": "{\"text\": \"{\\\"run_id\\\": \\\"run-8bb02ff8b187\\\", \\\"workload\\\": \\\"repo-agent\\\", \\\"state\\\": \\\"completed\\\", \\\"failure_reason\\\": null, \\\"cost_usd\\\": 0.0, \\\"attestation_id\\\": null}\"}"}
+postgres-1        | The files belonging to this database system will be owned by user "postgres".
+postgres-1        | This user must also own the server process.
+postgres-1        | 
+postgres-1        | The database cluster will be initialized with locale "en_US.utf8".
+postgres-1        | The default database encoding has accordingly been set to "UTF8".
+postgres-1        | The default text search configuration will be set to "english".
+api-1      | INFO:     Started server process [1]
+api-1             | INFO:     Waiting for application startup.
+api-1             | ERROR:    Traceback (most recent call last):
+api-1             |   File "/usr/local/lib/python3.12/site-packages/starlette/routing.py", line 654, in lifespan
+api-1             |     async with self.lifespan_context(app) as maybe_state:
+api-1             |                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+api-1             |   File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+api-1             |     return await anext(self.gen)
+api-1             |            ^^^^^^^^^^^^^^^^^^^^^
+api-1             |   File "/usr/local/lib/python3.12/site-packages/fastapi/routing.py", line 240, in merged_lifespan
+api-1             |     async with original_context(app) as maybe_original_state:
+prometheus-1  | ts=2026-09-24T02:03:50.826Z caller=main.go:601 level=info msg="No time or size retention was set so using the default time retention" duration=15d
+prometheus-1      | ts=2026-09-24T02:03:50.826Z caller=main.go:645 level=info msg="Starting Prometheus Server" mode=server version="(version=2.54.1, branch=HEAD, revision=e6cfa720fbe6280153fab13090a483dbd40bece3)"
+prometheus-1      | ts=2026-09-24T02:03:50.826Z caller=main.go:650 level=info build_context="(go=go1.22.6, platform=linux/arm64, user=root@812ffd741951, date=20240827-10:59:03, tags=netgo,builtinassets,stringlabels)"
+prometheus-1      | ts=2026-09-24T02:03:50.826Z caller=main.go:651 level=info host_details="(Linux 7.0.12-linuxkit #1 SMP PREEMPT Thu Aug 27 14:02:21 UTC 2026 aarch64 ddb4f7185cf5 (none))"
+webhook-sink-1    | {"path": "/slack", "body": "{\"text\": \"{\\\"run_id\\\": \\\"run-118ff15aa239\\\", \\\"workload\\\": \\\"repo-agent\\\", \\\"state\\\": \\\"completed\\\", \\\"failure_reason\\\": null, \\\"cost_usd\\\": 0.0, \\\"attestation_id\\\": null}\"}"}
+webhook-sink-1    | {"path": "/slack", "body": "{\"text\": \"{\\\"run_id\\\": \\\"run-a8bebf63127a\\\", \\\"workload\\\": \\\"repo-agent\\\", \\\"state\\\": \\\"completed\\\", \\\"failure_reason\\\": null, \\\"cost_usd\\\": 0.0, \\\"attestation_id\\\": null}\"}"}
+webhook-sink-1    | {"path": "/slack", "body": "{\"text\": \"{\\\"run_id\\\": \\\"run-8ff872e4d133\\\", \\\"workload\\\": \\\"repo-agent\\\", \\\"state\\\": \\\"completed\\\", \\\"failure_reason\\\": null, \\\"cost_usd\\\": 0.0, \\\"attestation_id\\\": null}\"}"}
+webhook-sink-1    | {"path": "/slack", "body": "{\"text\": \"{\\\"run_id\\\": \\\"run-bccbc312e46c\\\", \\\"workload\\\": \\\"repo-agent\\\", \\\"state\\\": \\\"completed\\\", \\\"failure_reason\\\": null, \\\"cost_usd\\\": 0.0, \\\"attestation_id\\\": null}\"}"}
+api-1             |                ^^^^^^^^^^^^^^^^^^^^^
+api-1             |   File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+api-1             |     return await anext(self.gen)
+grafana-1  | logger=plugins.update.checker t=2026-09-24T02:03:51.112494261Z level=info msg="Update check succeeded" duration=145.184083ms
+grafana-1         | logger=grafana-apiserver t=2026-09-24T02:03:51.162000052Z level=info msg="Adding GroupVersion playlist.grafana.app v0alpha1 to ResourceManager"
+grafana-1         | logger=grafana-apiserver t=2026-09-24T02:03:51.162184511Z level=info msg="Adding GroupVersion featuretoggle.grafana.app v0alpha1 to ResourceManager"
+grafana-1         | logger=grafana.update.checker t=2026-09-24T02:03:51.221810636Z level=info msg="Update check succeeded" duration=254.074541ms
+postgres-1        | 
+postgres-1        | Data page checksums are disabled.
+postgres-1        | 
+postgres-1        | fixing permissions on existing directory /var/lib/postgresql/data ... ok
+postgres-1        | creating subdirectories ... ok
+postgres-1        | selecting dynamic shared memory implementation ... posix
+postgres-1        | selecting default max_connections ... 100
+postgres-1        | selecting default shared_buffers ... 128MB
+postgres-1        | selecting default time zone ... UTC
+grafana-1         | logger=infra.usagestats t=2026-09-24T02:05:46.975318259Z level=info msg="Usage stats are ready to report"
+postgres-1        | creating configuration files ... ok
+postgres-1        | running bootstrap script ... ok
+postgres-1        | sh: locale: not found
+postgres-1        | 2026-09-24 01:53:30.792 UTC [35] WARNING:  no usable system locales were found
+postgres-1        | performing post-bootstrap initialization ... ok
+postgres-1        | syncing data to disk ... ok
+postgres-1        | 
+postgres-1        | 
+postgres-1        | Success. You can now start the database server using:
+postgres-1        | 
+postgres-1        |     pg_ctl -D /var/lib/postgresql/data -l logfile start
+otel-collector-1  | 2026-09-24T02:03:50.783Z	warn	internal@v0.110.0/warning.go:40	Using the 0.0.0.0 address exposes this server to every network interface, which may facilitate Denial of Service attacks.	{"kind": "extension", "name": "health_check", "documentation": "https://github.com/open-telemetry/opentelemetry-collector/blob/main/docs/security-best-practices.md#safeguards-against-denial-of-service-attacks"}
+otel-collector-1  | 2026-09-24T02:03:50.783Z	warn	internal@v0.110.0/warning.go:40	Using the 0.0.0.0 address exposes this server to every network interface, which may facilitate Denial of Service attacks.	{"kind": "exporter", "data_type": "metrics", "name": "prometheus", "documentation": "https://github.com/open-telemetry/opentelemetry-collector/blob/main/docs/security-best-practices.md#safeguards-against-denial-of-service-attacks"}
+otel-collector-1  | 2026-09-24T02:03:50.783Z	warn	internal@v0.110.0/warning.go:40	Using the 0.0.0.0 address exposes this server to every network interface, which may facilitate Denial of Service attacks.	{"kind": "receiver", "name": "otlp", "data_type": "logs", "documentation": "https://github.com/open-telemetry/opentelemetry-collector/blob/main/docs/security-best-practices.md#safeguards-against-denial-of-service-attacks"}
+otel-collector-1  | 2026-09-24T02:03:50.783Z	warn	internal@v0.110.0/warning.go:40	Using the 0.0.0.0 address exposes this server to every network interface, which may facilitate Denial of Service attacks.	{"kind": "receiver", "name": "otlp", "data_type": "logs", "documentation": "https://github.com/open-telemetry/opentelemetry-collector/blob/main/docs/security-best-practices.md#safeguards-against-denial-of-service-attacks"}
+prometheus-1      | ts=2026-09-24T02:03:50.826Z caller=main.go:652 level=info fd_limits="(soft=1048576, hard=1048576)"
+prometheus-1      | ts=2026-09-24T02:03:50.826Z caller=main.go:653 level=info vm_limits="(soft=unlimited, hard=unlimited)"
+prometheus-1      | ts=2026-09-24T02:03:50.828Z caller=web.go:571 level=info component=web msg="Start listening for connections" address=0.0.0.0:9090
+prometheus-1      | ts=2026-09-24T02:03:50.828Z caller=main.go:1160 level=info msg="Starting TSDB ..."
+prometheus-1      | ts=2026-09-24T02:03:50.829Z caller=tls_config.go:313 level=info component=web msg="Listening on" address=[::]:9090
+prometheus-1      | ts=2026-09-24T02:03:50.829Z caller=tls_config.go:316 level=info component=web msg="TLS is disabled." http2=false address=[::]:9090
+prometheus-1      | ts=2026-09-24T02:03:50.829Z caller=head.go:626 level=info component=tsdb msg="Replaying on-disk memory mappable chunks if any"
+api-1             |            ^^^^^^^^^^^^^^^^^^^^^
+api-1             |   File "/usr/local/lib/python3.12/site-packages/fastapi/routing.py", line 240, in merged_lifespan
+api-1             |     async with original_context(app) as maybe_original_state:
+api-1             |                ^^^^^^^^^^^^^^^^^^^^^
+api-1             |   File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+api-1             |     return await anext(self.gen)
+api-1             |            ^^^^^^^^^^^^^^^^^^^^^
+api-1             |   File "/usr/local/lib/python3.12/site-packages/fastapi/routing.py", line 240, in merged_lifespan
+api-1             |     async with original_context(app) as maybe_original_state:
+api-1             |                ^^^^^^^^^^^^^^^^^^^^^
+api-1             |   File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+postgres-1        | 
+postgres-1        | initdb: warning: enabling "trust" authentication for local connections
+postgres-1        | initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+postgres-1        | waiting for server to start....2026-09-24 01:53:31.065 UTC [41] LOG:  starting PostgreSQL 16.15 on aarch64-unknown-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+postgres-1        | 2026-09-24 01:53:31.065 UTC [41] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+postgres-1        | 2026-09-24 01:53:31.069 UTC [44] LOG:  database system was shut down at 2026-09-24 01:53:30 UTC
+postgres-1        | 2026-09-24 01:53:31.071 UTC [41] LOG:  database system is ready to accept connections
+api-1             |     return await anext(self.gen)
+api-1             |            ^^^^^^^^^^^^^^^^^^^^^
+postgres-1        |  done
+postgres-1        | server started
+postgres-1        | CREATE DATABASE
+postgres-1        | 
+postgres-1        | 
+api-1             |   File "/usr/local/lib/python3.12/site-packages/fastapi/routing.py", line 240, in merged_lifespan
+api-1             |     async with original_context(app) as maybe_original_state:
+api-1             |                ^^^^^^^^^^^^^^^^^^^^^
+api-1             |   File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+api-1             |     return await anext(self.gen)
+api-1             |            ^^^^^^^^^^^^^^^^^^^^^
+postgres-1        | /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+postgres-1        | 
+postgres-1        | waiting for server to shut down....2026-09-24 01:53:31.185 UTC [41] LOG:  received fast shutdown request
+postgres-1        | 2026-09-24 01:53:31.188 UTC [41] LOG:  aborting any active transactions
+postgres-1        | 2026-09-24 01:53:31.189 UTC [41] LOG:  background worker "logical replication launcher" (PID 47) exited with exit code 1
+postgres-1        | 2026-09-24 01:53:31.189 UTC [42] LOG:  shutting down
+postgres-1        | 2026-09-24 01:53:31.190 UTC [42] LOG:  checkpoint starting: shutdown immediate
+postgres-1        | 2026-09-24 01:53:31.250 UTC [42] LOG:  checkpoint complete: wrote 926 buffers (5.7%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.012 s, sync=0.039 s, total=0.062 s; sync files=301, longest=0.003 s, average=0.001 s; distance=4283 kB, estimate=4283 kB; lsn=0/1925D20, redo lsn=0/1925D20
+postgres-1        | 2026-09-24 01:53:31.255 UTC [41] LOG:  database system is shut down
+postgres-1        |  done
+postgres-1        | server stopped
+postgres-1        | 
+postgres-1        | PostgreSQL init process complete; ready for start up.
+api-1             |   File "/usr/local/lib/python3.12/site-packages/fastapi/routing.py", line 240, in merged_lifespan
+api-1             |     async with original_context(app) as maybe_original_state:
+api-1             |                ^^^^^^^^^^^^^^^^^^^^^
+api-1             |   File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+postgres-1        | 
+postgres-1        | 2026-09-24 01:53:31.296 UTC [1] LOG:  starting PostgreSQL 16.15 on aarch64-unknown-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+postgres-1        | 2026-09-24 01:53:31.296 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+postgres-1        | 2026-09-24 01:53:31.296 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+postgres-1        | 2026-09-24 01:53:31.300 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+postgres-1        | 2026-09-24 01:53:31.306 UTC [57] LOG:  database system was shut down at 2026-09-24 01:53:31 UTC
+postgres-1        | 2026-09-24 01:53:31.310 UTC [1] LOG:  database system is ready to accept connections
+postgres-1        | 2026-09-24 01:54:07.792 UTC [129] ERROR:  column "failure_reason" does not exist at character 15
+postgres-1        | 2026-09-24 01:54:07.792 UTC [129] STATEMENT:  select state, failure_reason from runs where id='';
+prometheus-1      | ts=2026-09-24T02:03:50.829Z caller=head.go:713 level=info component=tsdb msg="On-disk memory mappable chunks replay completed" duration=103.917µs
+prometheus-1      | ts=2026-09-24T02:03:50.829Z caller=head.go:721 level=info component=tsdb msg="Replaying WAL, this may take a while"
+prometheus-1      | ts=2026-09-24T02:03:50.833Z caller=head.go:793 level=info component=tsdb msg="WAL segment loaded" segment=0 maxSegment=1
+prometheus-1      | ts=2026-09-24T02:03:50.833Z caller=head.go:793 level=info component=tsdb msg="WAL segment loaded" segment=1 maxSegment=1
+prometheus-1      | ts=2026-09-24T02:03:50.833Z caller=head.go:830 level=info component=tsdb msg="WAL replay completed" checkpoint_replay_duration=8.041µs wal_replay_duration=3.997833ms wbl_replay_duration=83ns chunk_snapshot_load_duration=0s mmap_chunk_replay_duration=103.917µs total_replay_duration=4.1205ms
+postgres-1        | 2026-09-24 01:54:36.984 UTC [69] ERROR:  duplicate key value violates unique constraint "run_events_pkey"
+postgres-1        | 2026-09-24 01:54:36.984 UTC [69] DETAIL:  Key (run_id, sequence)=(run-922fad79d01a, 0) already exists.
+postgres-1        | 2026-09-24 01:54:36.984 UTC [69] STATEMENT:  INSERT INTO run_events (run_id, sequence, type, actor, timestamp, payload) VALUES ($1::VARCHAR, $2::INTEGER, $3::VARCHAR, $4::VARCHAR, $5::TIMESTAMP WITH TIME ZONE, $6::JSONB)
+postgres-1        | 2026-09-24 01:57:38.869 UTC [69] ERROR:  duplicate key value violates unique constraint "run_events_pkey"
+postgres-1        | 2026-09-24 01:57:38.869 UTC [69] DETAIL:  Key (run_id, sequence)=(run-e7d5a5c7ee63, 0) already exists.
+postgres-1        | 2026-09-24 01:57:38.869 UTC [69] STATEMENT:  INSERT INTO run_events (run_id, sequence, type, actor, timestamp, payload) VALUES ($1::VARCHAR, $2::INTEGER, $3::VARCHAR, $4::VARCHAR, $5::TIMESTAMP WITH TIME ZONE, $6::JSONB)
+api-1             |     return await anext(self.gen)
+api-1             |            ^^^^^^^^^^^^^^^^^^^^^
+api-1             |   File "/usr/local/lib/python3.12/site-packages/fastapi/routing.py", line 240, in merged_lifespan
+api-1             |     async with original_context(app) as maybe_original_state:
+api-1             |                ^^^^^^^^^^^^^^^^^^^^^
+api-1             |   File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+api-1             |     return await anext(self.gen)
+api-1             |            ^^^^^^^^^^^^^^^^^^^^^
+api-1             |   File "/usr/local/lib/python3.12/site-packages/fastapi/routing.py", line 240, in merged_lifespan
+api-1             |     async with original_context(app) as maybe_original_state:
+api-1             |                ^^^^^^^^^^^^^^^^^^^^^
+api-1             |   File "/usr/local/lib/python3.12/contextlib.py", line 210, in __aenter__
+api-1             |     return await anext(self.gen)
+api-1             |            ^^^^^^^^^^^^^^^^^^^^^
+api-1             |   File "/usr/local/lib/python3.12/site-packages/hiveplane/api/app.py", line 129, in _lifespan
+api-1             |     report = recovery.run()
+api-1             |              ^^^^^^^^^^^^^^
+postgres-1        | 2026-09-24 01:58:31.404 UTC [55] LOG:  checkpoint starting: time
+postgres-1        | 2026-09-24 01:58:54.228 UTC [55] LOG:  checkpoint complete: wrote 225 buffers (1.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=22.803 s, sync=0.014 s, total=22.825 s; sync files=163, longest=0.002 s, average=0.001 s; distance=1010 kB, estimate=1010 kB; lsn=0/1A226D0, redo lsn=0/1A22698
+postgres-1        | 2026-09-24 01:58:56.488 UTC [567] ERROR:  duplicate key value violates unique constraint "run_events_pkey"
+postgres-1        | 2026-09-24 01:58:56.488 UTC [567] DETAIL:  Key (run_id, sequence)=(run-922fad79d01a, 0) already exists.
+postgres-1        | 2026-09-24 01:58:56.488 UTC [567] STATEMENT:  INSERT INTO run_events (run_id, sequence, type, actor, timestamp, payload) VALUES ($1::VARCHAR, $2::INTEGER, $3::VARCHAR, $4::VARCHAR, $5::TIMESTAMP WITH TIME ZONE, $6::JSONB)
+postgres-1        | 2026-09-24 01:58:57.306 UTC [577] ERROR:  duplicate key value violates unique constraint "run_events_pkey"
+postgres-1        | 2026-09-24 01:58:57.306 UTC [577] DETAIL:  Key (run_id, sequence)=(run-e7d5a5c7ee63, 0) already exists.
+postgres-1        | 2026-09-24 01:58:57.306 UTC [577] STATEMENT:  INSERT INTO run_events (run_id, sequence, type, actor, timestamp, payload) VALUES ($1::VARCHAR, $2::INTEGER, $3::VARCHAR, $4::VARCHAR, $5::TIMESTAMP WITH TIME ZONE, $6::JSONB)
+postgres-1        | 2026-09-24 01:59:01.137 UTC [580] ERROR:  duplicate key value violates unique constraint "run_events_pkey"
+postgres-1        | 2026-09-24 01:59:01.137 UTC [580] DETAIL:  Key (run_id, sequence)=(run-f7560cca4cb9, 0) already exists.
+postgres-1        | 2026-09-24 01:59:01.137 UTC [580] STATEMENT:  INSERT INTO run_events (run_id, sequence, type, actor, timestamp, payload) VALUES ($1::VARCHAR, $2::INTEGER, $3::VARCHAR, $4::VARCHAR, $5::TIMESTAMP WITH TIME ZONE, $6::JSONB)
+postgres-1        | 2026-09-24 02:03:31.321 UTC [55] LOG:  checkpoint starting: time
+postgres-1        | 2026-09-24 02:03:32.863 UTC [55] LOG:  checkpoint complete: wrote 16 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.535 s, sync=0.001 s, total=1.542 s; sync files=14, longest=0.001 s, average=0.001 s; distance=21 kB, estimate=911 kB; lsn=0/1A27D58, redo lsn=0/1A27D20
+api-1             |   File "/usr/local/lib/python3.12/site-packages/hiveplane/execution/recovery.py", line 50, in run
+api-1             |     self._fail(run.id, report)
+postgres-1        | 2026-09-24 02:08:31.932 UTC [55] LOG:  checkpoint starting: time
+postgres-1        | 2026-09-24 02:08:43.248 UTC [55] LOG:  checkpoint complete: wrote 111 buffers (0.7%); 0 WAL file(s) added, 0 removed, 0 recycled; write=11.302 s, sync=0.010 s, total=11.316 s; sync files=76, longest=0.002 s, average=0.001 s; distance=268 kB, estimate=847 kB; lsn=0/1A6B0C0, redo lsn=0/1A6B050
+api-1             |   File "/usr/local/lib/python3.12/site-packages/hiveplane/execution/recovery.py", line 65, in _fail
+api-1             |     self._run_service.fail(run_id, actor="recovery", reason=_INTERRUPTED_REASON)
+api-1             |   File "/usr/local/lib/python3.12/site-packages/hiveplane/execution/service.py", line 417, in fail
+api-1             |     return self.transition(
+api-1             |            ^^^^^^^^^^^^^^^^
+api-1             |   File "/usr/local/lib/python3.12/site-packages/hiveplane/execution/service.py", line 341, in transition
+api-1             |     self._sandbox_runtime.destroy(updated.sandbox_id)
+api-1             |   File "/usr/local/lib/python3.12/site-packages/hiveplane/sandbox/manager.py", line 91, in destroy
+api-1             |     instance = self._get(sandbox_id)
+api-1             |                ^^^^^^^^^^^^^^^^^^^^^
+api-1             |   File "/usr/local/lib/python3.12/site-packages/hiveplane/sandbox/manager.py", line 66, in _get
+api-1             |     raise SandboxNotFoundError(sandbox_id)
+api-1             | hiveplane.sandbox.errors.SandboxNotFoundError: sandbox 'sb-d81fbeaedb5f' not found
+api-1             | 
+api-1             | ERROR:    Application startup failed. Exiting.
+api-1             | INFO:     Started server process [1]
+api-1             | INFO:     Waiting for application startup.
+api-1             | INFO:     Application startup complete.
+api-1             | INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+api-1             | INFO:     127.0.0.1:47652 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:20905 - "GET /readyz HTTP/1.1" 200 OK
+prometheus-1      | ts=2026-09-24T02:03:50.834Z caller=main.go:1181 level=info fs_type=EXT4_SUPER_MAGIC
+prometheus-1      | ts=2026-09-24T02:03:50.834Z caller=main.go:1184 level=info msg="TSDB started"
+prometheus-1      | ts=2026-09-24T02:03:50.834Z caller=main.go:1367 level=info msg="Loading configuration file" filename=/etc/prometheus/prometheus.yml
+api-1             | INFO:     192.168.65.1:32321 - "POST /tools HTTP/1.1" 409 Conflict
+api-1             | INFO:     192.168.65.1:47378 - "POST /tools HTTP/1.1" 409 Conflict
+api-1             | INFO:     192.168.65.1:57086 - "POST /tools HTTP/1.1" 409 Conflict
+api-1             | INFO:     192.168.65.1:59054 - "POST /tools HTTP/1.1" 409 Conflict
+api-1             | INFO:     192.168.65.1:22706 - "POST /tools HTTP/1.1" 409 Conflict
+api-1             | INFO:     192.168.65.1:23160 - "POST /tools HTTP/1.1" 409 Conflict
+api-1             | INFO:     192.168.65.1:44459 - "POST /tools HTTP/1.1" 409 Conflict
+api-1             | INFO:     192.168.65.1:18441 - "POST /tools HTTP/1.1" 409 Conflict
+api-1             | INFO:     192.168.65.1:61647 - "POST /tools HTTP/1.1" 409 Conflict
+api-1             | INFO:     192.168.65.1:59029 - "POST /tools HTTP/1.1" 409 Conflict
+api-1             | INFO:     192.168.65.1:29535 - "POST /tools HTTP/1.1" 409 Conflict
+api-1             | INFO:     192.168.65.1:47828 - "POST /tools HTTP/1.1" 409 Conflict
+api-1             | INFO:     192.168.65.1:24559 - "POST /tools HTTP/1.1" 409 Conflict
+prometheus-1      | ts=2026-09-24T02:03:50.835Z caller=main.go:1404 level=info msg="updated GOGC" old=100 new=75
+prometheus-1      | ts=2026-09-24T02:03:50.835Z caller=main.go:1415 level=info msg="Completed loading of configuration file" filename=/etc/prometheus/prometheus.yml totalDuration=468.75µs db_storage=833ns remote_storage=667ns web_handler=167ns query_engine=459ns scrape=89µs scrape_sd=19.958µs notify=291ns notify_sd=333ns rules=625ns tracing=1.792µs
+prometheus-1      | ts=2026-09-24T02:03:50.835Z caller=main.go:1145 level=info msg="Server is ready to receive web requests."
+prometheus-1      | ts=2026-09-24T02:03:50.835Z caller=manager.go:164 level=info component="rule manager" msg="Starting rule manager..."
+redis-1           | 1:C 24 Sep 2026 01:53:30.559 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+api-1             | INFO:     192.168.65.1:63971 - "GET /manifest/schema HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:28102 - "GET /healthz HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:43829 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:30769 - "POST /workloads HTTP/1.1" 201 Created
+redis-1           | 1:C 24 Sep 2026 01:53:30.559 * Redis version=7.4.11, bits=64, commit=00000000, modified=0, pid=1, just started
+redis-1           | 1:C 24 Sep 2026 01:53:30.559 * Configuration loaded
+redis-1           | 1:M 24 Sep 2026 01:53:30.559 * monotonic clock: POSIX clock_gettime
+redis-1           | 1:M 24 Sep 2026 01:53:30.560 * Running mode=standalone, port=6379.
+redis-1           | 1:M 24 Sep 2026 01:53:30.560 * Server initialized
+redis-1           | 1:M 24 Sep 2026 01:53:30.561 * Creating AOF base file appendonly.aof.1.base.rdb on server start
+redis-1           | 1:M 24 Sep 2026 01:53:30.563 * Creating AOF incr file appendonly.aof.1.incr.aof on server start
+redis-1           | 1:M 24 Sep 2026 01:53:30.563 * Ready to accept connections tcp
+api-1             | INFO:     192.168.65.1:37684 - "GET /workloads HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:43443 - "GET /workloads/repo-agent HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:26312 - "GET /workloads/repo-agent/versions HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:42665 - "GET /workloads/repo-agent/admission HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:26154 - "GET /workloads/repo-agent/attestations HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:25725 - "GET /workloads/repo-agent/triggers HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:24151 - "GET /workloads/ghost HTTP/1.1" 404 Not Found
+api-1             | INFO:     192.168.65.1:51160 - "POST /tools HTTP/1.1" 422 Unprocessable Entity
+api-1             | INFO:     192.168.65.1:65129 - "POST /runs HTTP/1.1" 201 Created
+api-1             | INFO:     192.168.65.1:52559 - "GET /runs/run-cb9e0d1bb41c HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:28484 - "GET /runs/run-cb9e0d1bb41c/events HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:64758 - "GET /runs/run-cb9e0d1bb41c/usage HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:23580 - "GET /runs/run-cb9e0d1bb41c/story HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:17946 - "GET /runs/ghost HTTP/1.1" 404 Not Found
+api-1             | INFO:     192.168.65.1:44069 - "POST /runs HTTP/1.1" 403 Forbidden
+api-1             | INFO:     192.168.65.1:27502 - "GET /policy-packs HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:23278 - "GET /approvals HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:45640 - "GET /certifications HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:25309 - "GET /spend HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:45546 - "GET /tools HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:54707 - "POST /workloads HTTP/1.1" 409 Conflict
+api-1             | INFO:     127.0.0.1:45898 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     127.0.0.1:45584 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     127.0.0.1:47606 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     127.0.0.1:54758 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     127.0.0.1:37984 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     127.0.0.1:44436 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     127.0.0.1:38354 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     127.0.0.1:50662 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     172.18.0.10:35670 - "GET /runs HTTP/1.1" 200 OK
+api-1             | INFO:     172.18.0.10:35670 - "GET /workloads HTTP/1.1" 200 OK
+api-1             | INFO:     172.18.0.10:35670 - "GET /spend HTTP/1.1" 200 OK
+api-1             | INFO:     127.0.0.1:37300 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     127.0.0.1:48874 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     127.0.0.1:53676 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     127.0.0.1:60406 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     127.0.0.1:37518 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     127.0.0.1:35722 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     127.0.0.1:50842 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     127.0.0.1:53152 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     127.0.0.1:56668 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     127.0.0.1:52304 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     127.0.0.1:47450 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     127.0.0.1:52258 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     127.0.0.1:46092 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     127.0.0.1:50572 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     127.0.0.1:57902 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:21353 - "POST /certifications HTTP/1.1" 201 Created
+api-1             | INFO:     192.168.65.1:22513 - "POST /workloads HTTP/1.1" 409 Conflict
+api-1             | INFO:     192.168.65.1:27109 - "POST /runs HTTP/1.1" 201 Created
+api-1             | INFO:     192.168.65.1:22965 - "POST /runs/run-c7e034225410/start HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:19722 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:18085 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:43610 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:62790 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:45044 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:62214 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:17198 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:21354 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     127.0.0.1:51480 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:18065 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:21527 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:18114 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:59312 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:18660 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:46553 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:22497 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:49036 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:42662 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:37795 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     127.0.0.1:57176 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:37181 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:39240 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:54948 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:16867 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:48515 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:62799 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:61946 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:17088 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:28028 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     Shutting down
+api-1             | INFO:     Waiting for application shutdown.
+api-1             | INFO:     Application shutdown complete.
+api-1             | INFO:     Finished server process [1]
+api-1             | INFO:     Started server process [1]
+api-1             | INFO:     Waiting for application startup.
+api-1             | INFO:     Application startup complete.
+api-1             | INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+api-1             | INFO:     192.168.65.1:45068 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:29297 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:29508 - "GET /runs/run-c7e034225410/events HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:18415 - "POST /runs/run-c7e034225410/resume HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:28063 - "GET /runs/run-c7e034225410 HTTP/1.1" 200 OK
+api-1             | Exception in thread Thread-1 (_run):
+api-1             | Traceback (most recent call last):
+api-1             |   File "/usr/local/lib/python3.12/threading.py", line 1075, in _bootstrap_inner
+api-1             |     self.run()
+api-1             |   File "/usr/local/lib/python3.12/threading.py", line 1012, in run
+api-1             |     self._target(*self._args, **self._kwargs)
+api-1             |   File "/usr/local/lib/python3.12/site-packages/hiveplane/telemetry.py", line 148, in _run
+api-1             |     context.run(work)
+api-1             |   File "/usr/local/lib/python3.12/site-packages/hiveplane/adapters/langgraph.py", line 207, in <lambda>
+api-1             |     telemetry.propagate_context(lambda: self._drive(graph, context, ctx, command))
+api-1             |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+api-1             |   File "/usr/local/lib/python3.12/site-packages/hiveplane/adapters/langgraph.py", line 286, in _drive
+api-1             |     self._reporter.transition(
+api-1             |   File "/usr/local/lib/python3.12/site-packages/hiveplane/execution/service.py", line 341, in transition
+api-1             |     self._sandbox_runtime.destroy(updated.sandbox_id)
+api-1             |   File "/usr/local/lib/python3.12/site-packages/hiveplane/sandbox/manager.py", line 91, in destroy
+api-1             |     instance = self._get(sandbox_id)
+api-1             |                ^^^^^^^^^^^^^^^^^^^^^
+api-1             |   File "/usr/local/lib/python3.12/site-packages/hiveplane/sandbox/manager.py", line 66, in _get
+api-1             |     raise SandboxNotFoundError(sandbox_id)
+api-1             | hiveplane.sandbox.errors.SandboxNotFoundError: sandbox 'sb-2d0c1809bce3' not found
+api-1             | INFO:     192.168.65.1:42679 - "POST /workloads HTTP/1.1" 201 Created
+api-1             | INFO:     192.168.65.1:47766 - "POST /runs HTTP/1.1" 403 Forbidden
+api-1             | INFO:     192.168.65.1:24108 - "POST /runs HTTP/1.1" 201 Created
+api-1             | INFO:     192.168.65.1:51677 - "GET /spend HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:34889 - "GET /healthz HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:23309 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     127.0.0.1:35540 - "GET /readyz HTTP/1.1" 200 OK
+api-1             | INFO:     172.18.0.10:51434 - "GET /runs HTTP/1.1" 200 OK
+api-1             | INFO:     172.18.0.10:51434 - "GET /workloads HTTP/1.1" 200 OK
+api-1             | INFO:     172.18.0.10:51434 - "GET /spend HTTP/1.1" 200 OK
+api-1             | INFO:     192.168.65.1:32429 - "POST /workloads HTTP/1.1" 409 Conflict
+api-1             | INFO:     192.168.65.1:54574 - "POST /runs HTTP/1.1" 422 Unprocessable Entity
+api-1             | INFO:     172.18.0.10:51434 - "GET /approvals HTTP/1.1" 200 OK
+api-1             | INFO:     172.18.0.10:51434 - "GET /certifications HTTP/1.1" 200 OK
+api-1             | INFO:     172.18.0.10:51434 - "GET /spend HTTP/1.1" 200 OK

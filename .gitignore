@@ -76,6 +76,9 @@ local_settings.py
 db.sqlite3
 db.sqlite3-journal
 
+# Docker run evidence is committed (M23, #93/#96): keep the runner logs.
+!field_test/v0.1.0/docker/*.log
+
 # Flask
 instance/
 .webassets-cache

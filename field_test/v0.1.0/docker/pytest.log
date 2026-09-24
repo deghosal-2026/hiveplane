@@ -1,0 +1,78 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.13, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/deghosal/Desktop/code/github/hiveplane
+configfile: pyproject.toml
+plugins: cov-7.1.0, playwright-0.9.0, langsmith-0.12.6, base-url-2.1.0, anyio-4.15.1
+collected 25 items
+
+tests/docker/test_api_contract.py ........                               [ 32%]
+tests/docker/test_container_fixtures.py ..                               [ 40%]
+tests/docker/test_control_loop.py F                                      [ 44%]
+tests/docker/test_durability.py .                                        [ 48%]
+tests/docker/test_governance.py ...                                      [ 60%]
+tests/docker/test_llm_matrix.py ..                                       [ 68%]
+tests/docker/test_stack_health.py ...                                    [ 80%]
+tests/docker/test_ui.py .E...                                            [100%]
+
+==================================== ERRORS ====================================
+______________ ERROR at setup of test_run_detail_screen[chromium] ______________
+
+    @pytest.fixture(scope="module")
+    def seeded_run() -> str:
+        """Register repo-agent and create a started run for the detail screen."""
+        payload = load_manifest(_ROOT / "examples" / "workloads" / "repo-agent.yaml").model_dump(
+            by_alias=True, mode="json"
+        )
+        _request("POST", "/workloads", payload)
+        status, run = _request(
+            "POST",
+            "/runs",
+            {
+                "workload": "repo-agent",
+                "caller": "field-test",
+                "context": "sandbox",
+                "model_identity": "openai/gpt-4o/2024-08-06",
+            },
+        )
+>       assert status == 201, run
+E       AssertionError: {'detail': "attestation 'att-b7d392e5cb9d' failed signature verification"}
+E       assert 422 == 201
+
+tests/docker/test_ui.py:71: AssertionError
+=================================== FAILURES ===================================
+____________________ test_register_certify_run_and_deliver _____________________
+
+local_llm = <docker.conftest.LocalLLM object at 0x109868c50>
+
+    @pytest.mark.docker
+    def test_register_certify_run_and_deliver(local_llm: Any) -> None:
+        identity = _canonical_identity()
+        payload = load_manifest(_WORKLOADS_DIR / "repo-agent.yaml").model_dump(
+            by_alias=True, mode="json"
+        )
+        assert _request("POST", "/workloads", payload)[0] in (200, 201, 409)
+    
+        status, record = _request(
+            "POST",
+            "/certifications",
+            {
+                "workload": "repo-agent",
+                "target_context": "production",
+                "model_identity": identity,
+            },
+        )
+        assert status == 201, record
+>       assert record["certification"]["status"] == "certified", record
+E       AssertionError: {'record_id': 'att-b7d392e5cb9d', 'certification': {'certification_id': 'cert-d269c655c2d1', 'workload_id': 'repo-agen...run_id': 'br-fc1c031ba0da', 'workload_id': 'repo-agent', 'manifest_version': 1, 'corpus_id': 'repo-agent-corpus', ...}}
+E       assert 'uncertified' == 'certified'
+E         
+E         - certified
+E         + uncertified
+E         ? ++
+
+/Users/deghosal/Desktop/code/github/hiveplane/tests/docker/test_control_loop.py:87: AssertionError
+- generated xml file: /Users/deghosal/desktop/code/github/hiveplane/field_test/v0.1.0/docker/junit.xml -
+=========================== short test summary info ============================
+ERROR tests/docker/test_ui.py::test_run_detail_screen[chromium] - AssertionEr...
+FAILED tests/docker/test_control_loop.py::test_register_certify_run_and_deliver
+============== 1 failed, 23 passed, 1 error in 280.25s (0:04:40) ===============
