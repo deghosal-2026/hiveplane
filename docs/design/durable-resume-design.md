@@ -1,7 +1,8 @@
 # D18: Durable Resume Design
 
-> Status: proposed (M23, #106). Defines startup recovery and restart-resume. Prerequisite for
-> scenario S8 and the "durable state" promise (run-lifecycle-design.md).
+> Status: implemented (M23, #106; #111 startup recovery, #122 durable LangGraph checkpoint). Defines startup
+> recovery and restart-resume. Prerequisite for scenario S8 and the "durable state" promise
+> (run-lifecycle-design.md).
 
 ## Problem
 

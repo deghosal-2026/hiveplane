@@ -1,6 +1,6 @@
 # WBS v0.1.0 — Part 12: Field Test
 
-**Milestone:** M23 · **Issues:** #56-#59, #92-#144 (38 closed; 15 open) · **Phases:** P0-P7
+**Milestone:** M23 · **Issues:** #56-#59, #92-#144 (40 closed; 13 open) · **Phases:** P0-P7
 
 ## Goal
 
@@ -105,8 +105,8 @@ Run three real, LLM-backed agents through the certified control loop and produce
 **Issues:** [#110](https://github.com/deghosal-2026/hiveplane/issues/110) · [#111](https://github.com/deghosal-2026/hiveplane/issues/111) · [#122](https://github.com/deghosal-2026/hiveplane/issues/122) · [#124](https://github.com/deghosal-2026/hiveplane/issues/124) · [#130](https://github.com/deghosal-2026/hiveplane/issues/130)
 
 - [x] #110 — Wire sandbox resource caps into the adapter execution path (RLIMIT_AS/CPU + wall-clock watchdog) — `sandbox_mode=subprocess` runs the agent in a capped child (`subprocess_worker`) that reaches the boundary over the token-guarded `SandboxChannel`; `SubprocessSpawner` applies the wall-clock watchdog + ephemeral workdir; the child self-applies RLIMIT_AS/CPU (Linux-enforced; macOS best-effort no-op). In-process thread spawner retained as the test escape hatch. Verified by `test_sandbox_subprocess_e2e.py` (clean run completes over the channel) and `test_subprocess_spawner.py`.
-- [ ] #111 — Implement startup recovery & durable resume (S8 unblocked; depends on closed design #106)
-- [ ] #122 — Durable LangGraph checkpoint (replace InMemorySaver) — **after #111**; S8 for docs-agent specifically
+- [x] #111 — Implement startup recovery & durable resume (S8 unblocked; depends on closed design #106) — `execution/recovery.py` scans non-terminal runs on boot: paused runs are re-attached (`RunService.reattach` → adapter `reattach`) so an operator can resume them, running runs are reconciled to `failed` with reason `interrupted`, and a `recovery` event is recorded. Wired into the app lifespan.
+- [x] #122 — Durable LangGraph checkpoint (replace InMemorySaver) — **after #111**; S8 for docs-agent specifically — `hiveplane/checkpointing.py` adds `JsonFileCheckpointSaver` (extends LangGraph's `InMemorySaver`, flushes every write to JSON) and `default_checkpointer()`; docs-agent compiles against it, and compose mounts `checkpoint-data` at `HIVEPLANE_EXECUTION__CHECKPOINT_PATH` so state survives container recreate. Verified by `test_checkpointing.py` and an adapter restart-resume test in `test_adapter_langgraph.py`.
 - [x] #124 — Trace story renders model-call spans (observability; independent) — `UsageReport` now carries truncated `prompt`/`response` + `latency_ms`, recorded by `WorkerContext.complete()` and rendered in the run story and UI timeline; verified by `test_adapter_llm_seam.py`, `test_run_story.py`, `test_ui_app.py`
 - [x] #130 — Real readiness probe (`/readyz` checks stores, migrations, adapter, signing key; independent; #144 surfaced it as the disabled-adapter surface) — `api/readiness.py` checks database, migrations, adapter, certification store, and signing key, returning 503 with named reasons; compose API healthcheck now uses `/readyz`; verified by `test_readiness.py`
 
