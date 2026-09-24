@@ -9,6 +9,7 @@ the live-server integration is covered in the caps/wiring slices.
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -19,14 +20,14 @@ from hiveplane.execution.subprocess_worker import (
     run_worker,
 )
 from hiveplane.execution.tools import ToolCallOutcome, ToolCallResult
-from hiveplane.llm.models import CompletionResult
+from hiveplane.llm.models import CompletionResult, TokenUsage
 from hiveplane.shaping.pipeline import ShapedOutput
 
 _RUN = "run-1"
 _BASE = "http://127.0.0.1:9/"
 
 
-def _tool_result(outcome: ToolCallOutcome) -> dict:
+def _tool_result(outcome: ToolCallOutcome) -> dict[str, Any]:
     return ToolCallResult(
         run_id=_RUN,
         tool_id="mcp.t.read",
@@ -41,28 +42,30 @@ def _tool_result(outcome: ToolCallOutcome) -> dict:
     ).model_dump()
 
 
-def _model_result() -> dict:
+def _model_result() -> dict[str, Any]:
     return CompletionResult(
         content="hi",
         model_identity="openai/gpt-4o/2024-08-06",
-        usage={"input_tokens": 3, "output_tokens": 2},
+        usage=TokenUsage(input_tokens=3, output_tokens=2),
         finish_reason="stop",
     ).model_dump()
 
 
 class _FakeTransport:
     def __init__(self) -> None:
-        self.calls: list[tuple[str, str, dict | None, dict | None]] = []
-        self.tool_result: dict = _tool_result(ToolCallOutcome.ALLOWED)
-        self.model_result: dict = _model_result()
+        self.calls: list[
+            tuple[str, str, dict[str, Any] | None, dict[str, Any] | None]
+        ] = []
+        self.tool_result: dict[str, Any] = _tool_result(ToolCallOutcome.ALLOWED)
+        self.model_result: dict[str, Any] = _model_result()
 
     def __call__(
         self,
         method: str,
         url: str,
-        payload: dict | None,
-        headers: dict | None = None,
-    ) -> tuple[int, dict]:
+        payload: dict[str, Any] | None,
+        headers: dict[str, Any] | None = None,
+    ) -> tuple[int, dict[str, Any]]:
         self.calls.append((method, url, payload, headers))
         if url.endswith("/tool-call"):
             return 200, self.tool_result
@@ -170,8 +173,11 @@ def test_checkpoint_stops_when_cancelled(tmp_path: Path) -> None:
     transport = _FakeTransport()
 
     def cancelled_control(
-        method: str, url: str, payload: dict | None, headers: dict | None = None
-    ) -> tuple[int, dict]:
+        method: str,
+        url: str,
+        payload: dict[str, Any] | None,
+        headers: dict[str, Any] | None = None,
+    ) -> tuple[int, dict[str, Any]]:
         if url.endswith("/control"):
             return 200, {"state": "cancelled", "paused": False, "cancelled": True}
         return transport(method, url, payload, headers)

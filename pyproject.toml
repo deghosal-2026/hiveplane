@@ -94,6 +94,7 @@ skip_covered = true
 src = ["src", "tests"]
 target-version = "py312"
 line-length = 100
+extend-exclude = ["field_test"]
 
 [tool.ruff.lint]
 select = [

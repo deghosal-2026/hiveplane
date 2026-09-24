@@ -14,7 +14,6 @@ from hiveplane.budget.pricing import CostTable
 from hiveplane.config import get_settings
 from hiveplane.core.fanout import FanOutType
 from hiveplane.core.spec import RuntimeAdapter
-from hiveplane.execution.subprocess_spawner import SubprocessSpawner
 from hiveplane.execution.admission import AdmissionPipeline
 from hiveplane.execution.fanout import FanOutService, SlackTransport, WebhookTransport
 from hiveplane.execution.gates import (
@@ -28,6 +27,7 @@ from hiveplane.execution.gates import (
 )
 from hiveplane.execution.service import RunService
 from hiveplane.execution.store import InMemoryRunStore, JsonFileRunStore, RunStore
+from hiveplane.execution.subprocess_spawner import SubprocessSpawner
 from hiveplane.execution.tool_executor import FixtureToolExecutor
 from hiveplane.execution.tools import ToolGateway
 from hiveplane.llm.provider import LLMProvider

@@ -14,6 +14,7 @@ import time
 import urllib.request
 from collections.abc import Iterator
 from pathlib import Path
+from typing import Any, cast
 
 import pytest
 import uvicorn
@@ -58,7 +59,7 @@ def _wait_ready(url: str, timeout: float = 15.0) -> None:
 
 
 class _LiveServer:
-    def __init__(self, app: object, port: int) -> None:
+    def __init__(self, app: Any, port: int) -> None:
         self._server = uvicorn.Server(
             uvicorn.Config(app, host="127.0.0.1", port=port, log_level="error")
         )
@@ -120,7 +121,7 @@ def live(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Iterator[tuple[obje
 def _wait_terminal(service: object, run_id: str, timeout: float = 30.0) -> Run:
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
-        run = service.get(run_id)  # type: ignore[attr-defined]
+        run = cast("Run", service.get(run_id))  # type: ignore[attr-defined]
         if run.state in (RunState.COMPLETED, RunState.FAILED, RunState.CANCELLED):
             return run
         time.sleep(0.1)
