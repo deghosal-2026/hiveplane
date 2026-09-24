@@ -51,9 +51,9 @@ The field test covers six phases:
 ### Prerequisites
 
 ```bash
-# CI (deterministic, no secrets) or local (OMLX on the host, port 8000):
-docker compose --profile ci up -d        # fake provider
-# or: docker compose --env-file .env.local up -d   # OMLX via host.docker.internal
+# The container suite uses REAL local inference (OMLX on the host, port 8000).
+# It fails — never skips — if the local LLM is unavailable.
+scripts/docker-test.sh            # or: make docker-test
 pip install -e ".[dev]"
 ```
 
