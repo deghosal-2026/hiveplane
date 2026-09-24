@@ -147,6 +147,7 @@ services:
       HIVEPLANE_OTEL__ENDPOINT: http://otel-collector:4318
       HIVEPLANE_EXECUTION__ADAPTER: ${HIVEPLANE_EXECUTION__ADAPTER:-auto}
       HIVEPLANE_EXECUTION__STORE: postgres
+      HIVEPLANE_EXECUTION__CHECKPOINT_PATH: ${HIVEPLANE_EXECUTION__CHECKPOINT_PATH:-/app/.hiveplane/checkpoints/graph.json}
       HIVEPLANE_CERTIFICATION__EXECUTOR: ${HIVEPLANE_CERTIFICATION__EXECUTOR:-adapter}
       HIVEPLANE_MODEL__PROVIDER: ${HIVEPLANE_MODEL__PROVIDER:-fake}
       HIVEPLANE_MODEL__BASE_URL: ${HIVEPLANE_MODEL__BASE_URL:-}
@@ -156,6 +157,8 @@ services:
       HIVEPLANE_FANOUT__GENERIC_WEBHOOK_URL: ${HIVEPLANE_FANOUT__GENERIC_WEBHOOK_URL:-}
     ports:
       - "${API_PORT:-8100}:8000"
+    volumes:
+      - checkpoint-data:/app/.hiveplane/checkpoints
     depends_on:
       postgres:
         condition: service_healthy
@@ -239,3 +242,4 @@ volumes:
   prometheus-data:
   grafana-data:
   webhook-sink-data:
+  checkpoint-data:

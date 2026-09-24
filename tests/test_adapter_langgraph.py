@@ -4,18 +4,21 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterator
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any
 
 import pytest
 
 from hiveplane.adapters.errors import UnsupportedAdapterError
 from hiveplane.adapters.langgraph import LangGraphAdapter
+from hiveplane.checkpointing import JsonFileCheckpointSaver
 from hiveplane.core.event import EventType
 from hiveplane.core.run import AdmissionContext, Run, RunState
 from hiveplane.core.usage import UsageReport
 from hiveplane.core.workload import AgentWorkload
 from hiveplane.execution.models import RunContext
 from hiveplane.execution.tools import ToolCallOutcome, ToolCallResult
+from test_checkpointing import _build
 
 _NOW = datetime(2026, 1, 1, tzinfo=UTC)
 
@@ -175,6 +178,64 @@ class _CapturingGraph(_Graph):
     ) -> Iterator[dict[str, Any]]:
         self.payload = payload
         yield from ()
+
+
+def test_reattach_then_resume_sends_resume_command(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    graph = _CapturingGraph(_Snapshot((), {"result": {"ok": True}}))
+    reporter = _Reporter()
+    adapter = LangGraphAdapter(
+        reporter,
+        _Tools(),  # type: ignore[arg-type]
+        _Loader(graph),  # type: ignore[arg-type]
+        clock=lambda: _NOW,
+        spawner=lambda work: work(),
+        command_factory=lambda **kwargs: ("command", kwargs),
+    )
+    workload = make_manifest(adapter="langgraph")
+
+    assert adapter.reattach(RunContext(run=_run(), workload=workload, sandbox=True)) is True
+    assert adapter.status("run-1") is RunState.PAUSED
+
+    assert adapter.resume("run-1") is True
+
+    assert graph.payload == ("command", {"resume": True})
+    assert reporter.transitions == [(RunState.COMPLETED, None)]
+
+
+def test_langgraph_run_resumes_from_a_durable_checkpoint_after_restart(
+    make_manifest: Callable[..., AgentWorkload], tmp_path: Path
+) -> None:
+    path = tmp_path / "graph.json"
+    workload = make_manifest(adapter="langgraph")
+    context = RunContext(run=_run(), workload=workload, sandbox=True)
+
+    reporter = _Reporter()
+    first = LangGraphAdapter(
+        reporter,
+        _Tools(),  # type: ignore[arg-type]
+        _Loader(_build(JsonFileCheckpointSaver(path))),  # type: ignore[arg-type]
+        clock=lambda: _NOW,
+        spawner=lambda work: work(),
+    )
+    first.submit(context)
+    assert reporter.transitions == [(RunState.PAUSED, None)]
+
+    # A new adapter and graph over the same checkpoint file = a restarted control plane.
+    resumed_reporter = _Reporter()
+    second = LangGraphAdapter(
+        resumed_reporter,
+        _Tools(),  # type: ignore[arg-type]
+        _Loader(_build(JsonFileCheckpointSaver(path))),  # type: ignore[arg-type]
+        clock=lambda: _NOW,
+        spawner=lambda work: work(),
+    )
+
+    assert second.reattach(context) is True
+    assert second.resume("run-1") is True
+
+    assert resumed_reporter.transitions[-1] == (RunState.COMPLETED, None)
 
 
 def test_submit_passes_the_run_task_wrapped_under_task(

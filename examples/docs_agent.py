@@ -16,10 +16,10 @@ import json
 from typing import Any, TypedDict
 
 from langchain_core.runnables import RunnableConfig
-from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import interrupt
 
+from hiveplane.checkpointing import default_checkpointer
 from hiveplane.llm.models import Message
 
 #: Stable user instruction; the fake/replay provider keys on this exact prompt.
@@ -116,4 +116,4 @@ _builder.add_edge("plan", "review_gate")
 _builder.add_edge("review_gate", "finalize")
 _builder.add_edge("finalize", END)
 
-graph = _builder.compile(checkpointer=InMemorySaver())
+graph = _builder.compile(checkpointer=default_checkpointer())
