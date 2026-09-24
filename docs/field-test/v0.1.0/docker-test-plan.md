@@ -231,8 +231,12 @@ docs/field-test/v0.1.0/screenshots/<scenario-id>/<step>-<name>.png
 
 ## 9. Results
 
-`docs/field-test/v0.1.0/DOCKER_TEST_REPORT.md` (#96) records per-layer results, observations,
-fixes, and takeaways, plus which LLM providers were exercised. (Not created yet.)
+Every run writes its evidence to `field_test/v0.1.0/docker/<run-id>/` (build,
+compose, `/readyz`, service, and pytest logs; `junit.xml`; `environment.json`)
+and **commits it**. `scripts/docker_report.py` renders the detailed
+`docs/field-test/v0.1.0/DOCKER_TEST_REPORT.md` from that JUnit run — per-layer
+and per-test results, failures, environment, and a log index — and exits
+non-zero on any failure/error or **any skip** (zero-skip policy, #96).
 
 ## 10. Out of Scope
 
