@@ -36,6 +36,22 @@ _JUNIT_SKIP = """<?xml version="1.0" encoding="utf-8"?>
 """
 
 
+_JUNIT_FAIL = """<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+  <testsuite name="pytest" tests="2" failures="1" errors="0" skipped="0">
+    <testcase classname="tests.docker.test_control_loop"
+      name="test_register_certify_run_and_deliver"
+      file="tests/docker/test_control_loop.py" time="3.40"/>
+    <testcase classname="tests.docker.test_stack_health"
+      name="test_observability_services_are_healthy"
+      file="tests/docker/test_stack_health.py" time="2.10">
+      <failure message="tempo not healthy">503</failure>
+    </testcase>
+  </testsuite>
+</testsuites>
+"""
+
+
 def _run(tmp_path: Path, junit: str) -> tuple[subprocess.CompletedProcess[str], Path]:
     junit_path = tmp_path / "junit.xml"
     junit_path.write_text(junit, encoding="utf-8")
@@ -85,3 +101,12 @@ def test_report_fails_when_a_test_is_skipped(tmp_path: Path) -> None:
     text = output.read_text(encoding="utf-8")
     assert "**Overall: FAIL**" in text
     assert "Zero-skip policy violated" in text
+
+
+def test_report_fails_when_a_test_fails(tmp_path: Path) -> None:
+    result, output = _run(tmp_path, _JUNIT_FAIL)
+
+    assert result.returncode != 0
+    text = output.read_text(encoding="utf-8")
+    assert "**Overall: FAIL**" in text
+    assert "L1" in text and "failed" in text.lower()

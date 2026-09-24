@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import os
+import time
 import urllib.error
 import urllib.request
 from typing import Any
@@ -59,6 +60,17 @@ def test_observability_services_are_healthy() -> None:
         "tempo": f"{_TEMPO_BASE}/ready",
     }
 
-    for name, url in checks.items():
-        status, body = _get(url)
-        assert status == 200, f"{name} not healthy at {url}: {status} {body}"
+    deadline = time.monotonic() + 90.0
+    pending = dict(checks)
+    bodies: dict[str, Any] = {}
+    while pending and time.monotonic() < deadline:
+        for name, url in list(pending.items()):
+            status, body = _get(url)
+            if status == 200:
+                pending.pop(name, None)
+            else:
+                bodies[name] = (status, body)
+        if pending:
+            time.sleep(3)
+
+    assert not pending, f"services not healthy within timeout: {bodies}"

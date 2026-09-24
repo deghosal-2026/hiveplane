@@ -115,13 +115,22 @@ def parse_junit(path: Path) -> list[TestResult]:
 
 def summarize(results: list[TestResult]) -> dict[str, LayerSummary]:
     """Group results by layer."""
+    field_by_status = {
+        "passed": "passed",
+        "failure": "failed",
+        "error": "errored",
+        "skipped": "skipped",
+    }
     summaries = {layer: LayerSummary() for layer, _ in LAYERS}
     for result in results:
         summary = summaries.setdefault(result.layer, LayerSummary())
         summary.total += 1
         summary.duration_s += result.duration_s
         summary.results.append(result)
-        setattr(summary, result.status, getattr(summary, result.status) + 1)
+        count_field = field_by_status.get(result.status)
+        if count_field is None:
+            continue
+        setattr(summary, count_field, getattr(summary, count_field) + 1)
     return summaries
 
 

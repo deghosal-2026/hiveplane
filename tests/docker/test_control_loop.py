@@ -72,7 +72,7 @@ def test_register_certify_run_and_deliver(local_llm: Any) -> None:
     payload = load_manifest(_WORKLOADS_DIR / "repo-agent.yaml").model_dump(
         by_alias=True, mode="json"
     )
-    assert _request("POST", "/workloads", payload)[0] in (200, 201)
+    assert _request("POST", "/workloads", payload)[0] in (200, 201, 409)
 
     status, record = _request(
         "POST",

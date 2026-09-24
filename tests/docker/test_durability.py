@@ -23,6 +23,15 @@ from hiveplane.core.manifest import load_manifest
 _API_BASE = os.environ.get("HIVEPLANE_API_URL", "http://localhost:8100").rstrip("/")
 _ROOT = Path(__file__).resolve().parents[2]
 _WORKLOADS_DIR = _ROOT / "examples" / "workloads"
+_ENV_FILE = _ROOT / ".env.local"
+
+
+def _canonical_identity() -> str:
+    if _ENV_FILE.is_file():
+        for line in _ENV_FILE.read_text(encoding="utf-8").splitlines():
+            if line.startswith("HIVEPLANE_MODEL__DEFAULT_MODEL="):
+                return line.partition("=")[2].strip()
+    return "openai/gpt-4o/2024-08-06"
 
 
 def _request(method: str, path: str, payload: dict[str, Any] | None = None) -> tuple[int, Any]:
@@ -94,12 +103,17 @@ def test_paused_run_survives_restart_and_resumes() -> None:
     payload = load_manifest(_WORKLOADS_DIR / "docs-agent.yaml").model_dump(
         by_alias=True, mode="json"
     )
-    assert _request("POST", "/workloads", payload)[0] in (200, 201)
+    assert _request("POST", "/workloads", payload)[0] in (200, 201, 409)
 
     status, run = _request(
         "POST",
         "/runs",
-        {"workload": "docs-agent", "caller": "field-test", "context": "sandbox"},
+        {
+            "workload": "docs-agent",
+            "caller": "field-test",
+            "context": "sandbox",
+            "model_identity": _canonical_identity(),
+        },
     )
     assert status == 201, run
     run_id = run["id"]

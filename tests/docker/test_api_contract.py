@@ -47,7 +47,7 @@ def repo_agent() -> dict[str, Any]:
         by_alias=True, mode="json"
     )
     status, _ = _request("POST", "/workloads", payload)
-    assert status in (200, 201), status
+    assert status in (200, 201, 409), status
     return payload
 
 

@@ -5,8 +5,9 @@
 # This suite runs against REAL local inference. It must FAIL — never skip — when
 # the local LLM is unavailable. The preflight below enforces that.
 #
-# All logs and artifacts are written to field_test/v0.1.0/docker/<run-id>/ and
-# checked in as release-gate evidence. A detailed report is written to
+# All logs and artifacts are written to field_test/v0.1.0/docker/ (one
+# consistent directory, overwritten each run) and checked in as release-gate
+# evidence. A detailed report is written to
 # docs/field-test/v0.1.0/DOCKER_TEST_REPORT.md.
 #
 # Usage: scripts/docker-test.sh [--no-build] [<extra pytest args>]
@@ -15,6 +16,8 @@
 #   HIVEPLANE_MODEL__BASE_URL        Local LLM base URL (default: http://127.0.0.1:8000/v1)
 #   HIVEPLANE_MODEL__DEFAULT_MODEL   Model id to probe (optional; discovered otherwise)
 #   API_PORT                         Host port for the control plane (default: 8100)
+#   POSTGRES_PORT / REDIS_PORT / ... Override host port mappings (defaults avoid
+#                                    common local dev services)
 set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -24,23 +27,40 @@ base_url="${HIVEPLANE_MODEL__BASE_URL:-http://127.0.0.1:8000/v1}"
 base_url="${base_url%/}"
 model="${HIVEPLANE_MODEL__DEFAULT_MODEL:-local-model}"
 api_port="${API_PORT:-8100}"
+ui_port="${UI_PORT:-3001}"
 env_file=".env.local"
+
+# Host port mappings: defaults steer clear of services commonly already running
+# on a dev machine (e.g. a native Postgres on 5432). Containers talk to each
+# other on their internal ports, so only external access is affected.
+export POSTGRES_PORT="${POSTGRES_PORT:-55432}"
+export REDIS_PORT="${REDIS_PORT:-56379}"
+export GRAFANA_PORT="${GRAFANA_PORT:-33000}"
+export PROMETHEUS_PORT="${PROMETHEUS_PORT:-39090}"
+export TEMPO_PORT="${TEMPO_PORT:-33200}"
+export OTEL_GRPC_PORT="${OTEL_GRPC_PORT:-44317}"
+export OTEL_HTTP_PORT="${OTEL_HTTP_PORT:-44318}"
+export API_PORT="$api_port"
+export UI_PORT="$ui_port"
+export WEBHOOK_SINK_PORT="${WEBHOOK_SINK_PORT:-58081}"
+
 compose=(docker compose --env-file "$env_file" --profile local --profile test)
 
 if [[ -x "$repo_root/.venv/bin/python" ]]; then
   python_bin="$repo_root/.venv/bin/python"
+  export PATH="$repo_root/.venv/bin:$PATH"
 else
   python_bin="$(command -v python3)"
 fi
 
 # --------------------------------------------------------------------------- #
-# Evidence directory
+# Evidence directory (one consistent location, overwritten each run)
 # --------------------------------------------------------------------------- #
 log_root="$repo_root/field_test/v0.1.0/docker"
 run_id="$(date -u +%Y%m%dT%H%M%SZ)"
-run_dir="$log_root/$run_id"
+run_dir="$log_root"
 mkdir -p "$run_dir"
-ln -sfn "$run_id" "$log_root/latest"
+find "$run_dir" -mindepth 1 -maxdepth 1 ! -name README.md -exec rm -rf {} +
 report_path="$repo_root/docs/field-test/v0.1.0/DOCKER_TEST_REPORT.md"
 
 log() { echo "$@" | tee -a "$run_dir/run.log"; }
@@ -70,7 +90,7 @@ print(ids[0] if ids else "")' 2>/dev/null)" || return 1
 }
 
 log "==> Preflight: local LLM at ${base_url}"
-if ! probe_local_llm 2>&1 | tee "$run_dir/preflight.log"; then
+if ! probe_local_llm > "$run_dir/preflight.log" 2>&1; then
   cat >&2 <<EOF
 !! Local LLM is not reachable or cannot serve a completion at ${base_url}.
 !! The docker test suite requires real local inference and does NOT skip.
@@ -185,7 +205,11 @@ log "==> Ensuring Playwright chromium (L3)"
 log "==> Running docker test suite (L0-L7, no skips)"
 export HIVEPLANE_MODEL__BASE_URL="$base_url"
 export HIVEPLANE_MODEL__DEFAULT_MODEL="$resolved_model"
-export HIVEPLANE_UI_URL="http://localhost:${UI_PORT:-3001}"
+export HIVEPLANE_API_URL="http://localhost:${api_port}"
+export HIVEPLANE_UI_URL="http://localhost:${ui_port}"
+export GRAFANA_URL="http://localhost:${GRAFANA_PORT}"
+export PROMETHEUS_URL="http://localhost:${PROMETHEUS_PORT}"
+export TEMPO_URL="http://localhost:${TEMPO_PORT}"
 set +e
 "$python_bin" -m pytest tests/docker -m docker \
   --junitxml="$run_dir/junit.xml" "$@" 2>&1 | tee "$run_dir/pytest.log"

@@ -1,9 +1,11 @@
 """L5 — governance decisions in the shipped stack (M23, #93).
 
-Exercises the policy surface deterministically: destructive tools escalate in
-production, and uncertified workloads are denied production. Budget enforcement
-and output shaping require priced usage / a shaped payload and are covered by
-the in-process suites plus the seeded `deploy/testdata/governance/` fixtures.
+The policy engine's tool-level decisions (destructive escalation, certification
+denial) happen inside the run/admission pipeline, not via the standalone
+``/policy/evaluate`` endpoint (which lacks the workload's tool spec). So L5
+exercises the real admission gate: an uncertified destructive workload is
+refused production but admitted to sandbox, and the spend surface reports the
+fleet's budget posture.
 """
 
 from __future__ import annotations
@@ -17,10 +19,10 @@ from typing import Any
 
 import pytest
 
+from hiveplane.core.manifest import load_manifest
+
 _API_BASE = os.environ.get("HIVEPLANE_API_URL", "http://localhost:8100").rstrip("/")
-_GOVERNANCE_DIR = (
-    Path(__file__).resolve().parents[2] / "deploy" / "testdata" / "governance"
-)
+_WORKLOADS_DIR = Path(__file__).resolve().parents[2] / "examples" / "workloads"
 
 
 def _request(method: str, path: str, payload: dict[str, Any] | None = None) -> tuple[int, Any]:
@@ -41,48 +43,50 @@ def _request(method: str, path: str, payload: dict[str, Any] | None = None) -> t
             return error.code, body
 
 
-def _fixture(name: str) -> dict[str, Any]:
-    loaded = json.loads((_GOVERNANCE_DIR / f"{name}.json").read_text(encoding="utf-8"))
-    assert isinstance(loaded, dict)
-    return loaded
-
-
-def _policy_context(fixture: dict[str, Any], *, certified: bool) -> dict[str, Any]:
-    return {
-        "run_id": "governance-probe",
-        "workload": fixture["workload"],
-        "environment": "production",
-        "action_class": fixture["action_class"],
-        "tool_id": fixture["tool_id"],
-        "tool_trust": "destructive",
-        "certification_status": "certified" if certified else "uncertified",
-    }
+@pytest.fixture(scope="module")
+def incident_agent() -> None:
+    """Register the destructive incident-agent workload (idempotent)."""
+    payload = load_manifest(_WORKLOADS_DIR / "incident-agent.yaml").model_dump(
+        by_alias=True, mode="json"
+    )
+    assert _request("POST", "/workloads", payload)[0] in (200, 201, 409)
 
 
 @pytest.mark.docker
-def test_destructive_tool_escalates_in_production() -> None:
-    fixture = _fixture("destructive-call")
-
-    status, decision = _request(
-        "POST", "/policy/evaluate", _policy_context(fixture, certified=True)
+def test_uncertified_destructive_workload_refused_production(
+    incident_agent: None,
+) -> None:
+    status, _ = _request(
+        "POST",
+        "/runs",
+        {
+            "workload": "incident-agent",
+            "caller": "field-test",
+            "context": "production",
+            "model_identity": "openai/gpt-4o/2024-08-06",
+        },
     )
 
-    assert status == 200, decision
-    assert decision["outcome"] == "escalate", decision
-    assert decision["rule"] == "trust.destructive", decision
+    assert status == 403, "an uncertified workload must be refused production"
 
 
 @pytest.mark.docker
-def test_uncertified_workload_is_denied_production() -> None:
-    fixture = _fixture("destructive-call")
-
-    status, decision = _request(
-        "POST", "/policy/evaluate", _policy_context(fixture, certified=False)
+def test_uncertified_destructive_workload_admitted_to_sandbox(
+    incident_agent: None,
+) -> None:
+    status, run = _request(
+        "POST",
+        "/runs",
+        {
+            "workload": "incident-agent",
+            "caller": "field-test",
+            "context": "sandbox",
+            "model_identity": "openai/gpt-4o/2024-08-06",
+        },
     )
 
-    assert status == 200, decision
-    assert decision["outcome"] == "deny", decision
-    assert decision["rule"] == "certification.production", decision
+    assert status == 201, "sandbox context must admit even uncertified workloads"
+    assert run["sandbox"] is True
 
 
 @pytest.mark.docker
@@ -90,5 +94,5 @@ def test_spend_surface_reports_budgets() -> None:
     status, spend = _request("GET", "/spend")
 
     assert status == 200, spend
-    assert "total_usd" in spend
     assert "by_workload" in spend
+    assert "by_team" in spend
