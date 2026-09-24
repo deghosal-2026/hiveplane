@@ -133,6 +133,29 @@ def test_run_detail_renders_story() -> None:
     assert "trace-1" in response.text
 
 
+def test_run_detail_renders_model_call_content() -> None:
+    fake = _story_fake()
+    fake.story["entries"] = [
+        {
+            "timestamp": "2026-09-19T11:00:01Z",
+            "kind": "model_call",
+            "summary": "15 tokens, $0.0100",
+            "detail": {
+                "model_identity": "openai:gpt-4o",
+                "prompt": "classify this PR",
+                "response": "risky",
+                "latency_ms": 42,
+            },
+        }
+    ]
+
+    response = _app(fake).get("/runs/r1")
+
+    assert response.status_code == 200
+    assert "classify this PR" in response.text
+    assert "risky" in response.text
+
+
 def test_run_detail_unknown_run_renders_404() -> None:
     fake = _story_fake()
     fake.errors["get_story"] = ControlPlaneError(404, "run 'ghost' not found")

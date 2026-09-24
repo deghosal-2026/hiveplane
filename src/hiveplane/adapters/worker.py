@@ -8,6 +8,7 @@ checkpoints. Workers report; the control plane decides.
 from __future__ import annotations
 
 import threading
+import time
 from collections.abc import Callable
 from datetime import datetime
 
@@ -45,6 +46,17 @@ from hiveplane.llm.models import (
 from hiveplane.llm.provider import LLMProvider
 
 _TERMINAL = (RunState.COMPLETED, RunState.FAILED, RunState.CANCELLED)
+
+#: Longest prompt/response excerpt recorded on a usage report for the run story
+#: (M23, #124). Longer text is truncated so the story stays reviewable.
+MAX_RECORDED_TEXT = 500
+
+
+def _truncate(text: str) -> str:
+    """Cap recorded model text, marking where it was cut."""
+    if len(text) <= MAX_RECORDED_TEXT:
+        return text
+    return text[:MAX_RECORDED_TEXT] + "..."
 
 
 def _default_provider() -> LLMProvider:
@@ -215,7 +227,9 @@ class WorkerContext:
             workload=self._workload,
             attributes={"model_identity": bound},
         ) as active:
+            started = time.monotonic()
             response = provider.complete(request)
+            latency_ms = int((time.monotonic() - started) * 1000)
             self.checkpoint()
             try:
                 canonical = validate_model_identity(response.model_identity)
@@ -241,6 +255,9 @@ class WorkerContext:
             cost_usd=cost,
             timestamp=self._clock(),
             model_identity=canonical,
+            prompt=_truncate("\n".join(message.content for message in messages)),
+            response=_truncate(response.content),
+            latency_ms=latency_ms,
         )
         updated = self._reporter.record_usage(self._run.id, report)
         if updated.state in _TERMINAL:

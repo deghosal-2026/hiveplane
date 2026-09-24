@@ -40,6 +40,9 @@ class UsageReport(BaseModel):
     cost_usd: float = Field(ge=0.0)
     timestamp: AwareDatetime
     model_identity: str | None = None
+    prompt: str | None = None
+    response: str | None = None
+    latency_ms: int | None = Field(default=None, ge=0)
 
     @property
     def total_tokens(self) -> int:

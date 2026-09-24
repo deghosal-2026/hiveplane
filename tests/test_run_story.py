@@ -61,6 +61,34 @@ def test_story_orders_admission_state_and_usage(
     assert "model_call" in kinds
 
 
+def test_story_includes_model_call_detail(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    service, run_id, run = _submit(make_manifest)
+    service.record_usage(
+        run_id,
+        UsageReport(
+            run_id=run_id,
+            input_tokens=10,
+            output_tokens=5,
+            tool_calls=0,
+            cost_usd=0.02,
+            timestamp=run.created_at,
+            model_identity="m1",
+            prompt="classify this PR",
+            response="risky",
+            latency_ms=42,
+        ),
+    )
+
+    story = service.story(run_id)
+
+    entry = next(entry for entry in story.entries if entry.kind == "model_call")
+    assert entry.detail["prompt"] == "classify this PR"
+    assert entry.detail["response"] == "risky"
+    assert entry.detail["latency_ms"] == 42
+
+
 def test_story_links_the_active_trace(
     telemetry_spans: SpanRecorder, make_manifest: Callable[..., AgentWorkload]
 ) -> None:

@@ -151,6 +151,9 @@ def _usage_entry(report: UsageReport) -> StoryEntry:
             "output_tokens": report.output_tokens,
             "tool_calls": report.tool_calls,
             "cost_usd": report.cost_usd,
+            "prompt": report.prompt,
+            "response": report.response,
+            "latency_ms": report.latency_ms,
         },
     )
 

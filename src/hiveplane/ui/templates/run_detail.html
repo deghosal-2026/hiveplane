@@ -65,6 +65,12 @@
     <strong>{{ entry.kind }}</strong>
     — {{ entry.summary }}
     <span class="muted">{{ entry.timestamp }}</span>
+    {% if entry.kind == "model_call" and entry.detail.get("prompt") %}
+    <div class="muted">prompt: {{ entry.detail["prompt"] }}</div>
+    {% endif %}
+    {% if entry.kind == "model_call" and entry.detail.get("response") %}
+    <div class="muted">response: {{ entry.detail["response"] }}</div>
+    {% endif %}
   </li>
   {% endfor %}
 </ul>

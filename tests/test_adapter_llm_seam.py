@@ -106,6 +106,35 @@ def test_complete_returns_content_and_reports_usage(
     assert reporter.usage[0].model_identity == "openai/gpt-4o/2024-08-06"
 
 
+def test_complete_records_prompt_response_and_latency(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    reporter = _Reporter()
+    ctx = _context(make_manifest, provider=FakeProvider(), reporter=reporter)
+
+    result = ctx.complete("summarize this")
+
+    report = reporter.usage[0]
+    assert report.prompt == "summarize this"
+    assert report.response == result.content
+    assert report.latency_ms is not None
+    assert report.latency_ms >= 0
+
+
+def test_complete_truncates_an_oversized_prompt(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    reporter = _Reporter()
+    ctx = _context(make_manifest, provider=FakeProvider(), reporter=reporter)
+
+    ctx.complete("x" * 5000)
+
+    report = reporter.usage[0]
+    assert report.prompt is not None
+    assert len(report.prompt) <= 512
+    assert report.prompt.endswith("...")
+
+
 def test_complete_emits_model_call_span(
     make_manifest: Callable[..., AgentWorkload], telemetry_spans: object
 ) -> None:
