@@ -98,6 +98,9 @@ def test_register_certify_run_and_deliver(local_llm: Any) -> None:
     )
     assert status == 201, run
 
+    started = _request("POST", f"/runs/{run['id']}/start")
+    assert started[0] == 200, started
+
     finished = _poll_run(run["id"])
     assert finished["state"] == "completed", finished
 

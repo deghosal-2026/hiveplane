@@ -24,6 +24,9 @@ _REQUIRED_FIXTURES = (
     "deploy/testdata/tools/prometheus.query.json",
     "deploy/testdata/tools/pagerduty.acknowledge.json",
     "deploy/testdata/llm/replay.json",
+    "deploy/testdata/governance/over-budget.json",
+    "deploy/testdata/governance/destructive-call.json",
+    "deploy/testdata/governance/large-output.json",
 )
 
 _REQUIRED_IMPORTS = (
