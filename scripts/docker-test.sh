@@ -179,9 +179,13 @@ done >> "$run_dir/wait-ready.log" 2>&1
 log "==> Seeding tool registry"
 scripts/seed-tools.sh > "$run_dir/seed-tools.log" 2>&1
 
+log "==> Ensuring Playwright chromium (L3)"
+"$python_bin" -m playwright install chromium > "$run_dir/playwright-install.log" 2>&1
+
 log "==> Running docker test suite (L0-L7, no skips)"
 export HIVEPLANE_MODEL__BASE_URL="$base_url"
 export HIVEPLANE_MODEL__DEFAULT_MODEL="$resolved_model"
+export HIVEPLANE_UI_URL="http://localhost:${UI_PORT:-3001}"
 set +e
 "$python_bin" -m pytest tests/docker -m docker \
   --junitxml="$run_dir/junit.xml" "$@" 2>&1 | tee "$run_dir/pytest.log"
