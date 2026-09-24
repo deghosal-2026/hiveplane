@@ -1,6 +1,6 @@
 # WBS v0.1.0 — Part 12: Field Test
 
-**Milestone:** M23 · **Issues:** #56-#59, #92-#144 (35 closed; 18 open) · **Phases:** P0-P7
+**Milestone:** M23 · **Issues:** #56-#59, #92-#144 (38 closed; 15 open) · **Phases:** P0-P7
 
 ## Goal
 
@@ -107,8 +107,8 @@ Run three real, LLM-backed agents through the certified control loop and produce
 - [x] #110 — Wire sandbox resource caps into the adapter execution path (RLIMIT_AS/CPU + wall-clock watchdog) — `sandbox_mode=subprocess` runs the agent in a capped child (`subprocess_worker`) that reaches the boundary over the token-guarded `SandboxChannel`; `SubprocessSpawner` applies the wall-clock watchdog + ephemeral workdir; the child self-applies RLIMIT_AS/CPU (Linux-enforced; macOS best-effort no-op). In-process thread spawner retained as the test escape hatch. Verified by `test_sandbox_subprocess_e2e.py` (clean run completes over the channel) and `test_subprocess_spawner.py`.
 - [ ] #111 — Implement startup recovery & durable resume (S8 unblocked; depends on closed design #106)
 - [ ] #122 — Durable LangGraph checkpoint (replace InMemorySaver) — **after #111**; S8 for docs-agent specifically
-- [ ] #124 — Trace story renders model-call spans (observability; independent)
-- [ ] #130 — Real readiness probe (`/readyz` checks stores, migrations, adapter; independent; #144 surfaced it as the disabled-adapter surface)
+- [x] #124 — Trace story renders model-call spans (observability; independent) — `UsageReport` now carries truncated `prompt`/`response` + `latency_ms`, recorded by `WorkerContext.complete()` and rendered in the run story and UI timeline; verified by `test_adapter_llm_seam.py`, `test_run_story.py`, `test_ui_app.py`
+- [x] #130 — Real readiness probe (`/readyz` checks stores, migrations, adapter, signing key; independent; #144 surfaced it as the disabled-adapter surface) — `api/readiness.py` checks database, migrations, adapter, certification store, and signing key, returning 503 with named reasons; compose API healthcheck now uses `/readyz`; verified by `test_readiness.py`
 
 **Exit:** caps demonstrably kill seeded hogs; a paused run resumes after control-plane restart; the trace story shows model calls; `/readyz` is honest.
 
@@ -116,7 +116,7 @@ Run three real, LLM-backed agents through the certified control loop and produce
 
 **Issues:** [#143](https://github.com/deghosal-2026/hiveplane/issues/143) · [#93](https://github.com/deghosal-2026/hiveplane/issues/93) · [#94](https://github.com/deghosal-2026/hiveplane/issues/94) · [#95](https://github.com/deghosal-2026/hiveplane/issues/95) · [#96](https://github.com/deghosal-2026/hiveplane/issues/96) · [#59](https://github.com/deghosal-2026/hiveplane/issues/59)
 
-- [ ] #143 — Copy `deploy/testdata` into the Docker image (fixtures + replay files missing in container) — **first:** nothing below works without fixtures in-container
+- [x] #143 — Copy `deploy/testdata` into the Docker image (fixtures + replay files missing in container) — **first:** the `Dockerfile` now copies `deploy/testdata`, and `tests/docker/test_container_fixtures.py` (marker: `docker`) asserts the built image ships the tool and replay fixtures
 - [ ] #93 — Docker test cases, dummy data, and setup (layered `tests/docker/`, `deploy/testdata/`, Ollama + fake-webhook compose profile) — needs #143
 - [ ] #94 — Docker test execution (one-command runner, structured results, CI exit codes) — needs #93 + #143
 - [ ] #95 — Scenario screenshots for user guide (`docs/field-test/v0.1.0/screenshots/<scenario-id>/<step>-<name>.png`, regenerable) — needs #94
