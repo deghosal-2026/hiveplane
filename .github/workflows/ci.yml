@@ -98,3 +98,24 @@ jobs:
 
       - name: Run operator UI browser tests
         run: pytest tests/e2e -m e2e
+
+  docker-image:
+    name: docker · L0 image build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      # L0 needs only Docker (no stack, no LLM): it builds the image and checks
+      # the entrypoints import and the runtime fixtures are present.
+      - name: Run L0 image tests
+        run: python -m pytest tests/docker/test_container_fixtures.py -m docker -v

@@ -212,10 +212,19 @@ Steps:
 7. Capture screenshots; write `DOCKER_TEST_REPORT.md`.
 8. `docker compose down -v`.
 
-CI: a nightly job runs the full `local`-profile docker suite; a PR job runs L0–L2 only (fast).
-Exit codes are CI-friendly; any layer failure — including an unreachable local LLM — fails the job
-(#59). Neither job is wired yet; the only workflow currently is `.github/workflows/ci.yml`
-(lint/type/test + operator UI e2e).
+CI wiring (`.github/workflows/`):
+
+- **PR/push** (`ci.yml` → `docker-image`): runs **L0 only** on `ubuntu-latest` —
+  builds the image and checks entrypoints + fixtures. No stack and no LLM, so it
+  is fast and hermetic.
+- **Nightly** (`docker-nightly.yml` → `docker-full`): runs the **full L0–L7**
+  suite on a self-hosted macOS runner (`self-hosted`, `macos`, `hiveplane-omlx`)
+  with OMLX serving `127.0.0.1:8000`. The runner's preflight makes a missing
+  local LLM a **red job**, never a skip.
+
+Exit codes are CI-friendly; any layer failure — including an unreachable local
+LLM — fails the job (#59). Evidence is uploaded as the `docker-run-evidence`
+artifact.
 
 ## 8. Screenshots
 
