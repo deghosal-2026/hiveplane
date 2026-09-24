@@ -71,7 +71,8 @@ def test_compose_defines_healthchecked_operator_ui() -> None:
     ui = services["ui"]
 
     assert ui["environment"]["HIVEPLANE_UI__API_URL"] == "http://api:8000"
-    assert any(str(port).endswith(":8000") for port in ui["ports"])
+    assert ui["environment"]["HIVEPLANE_UI__PORT"] == "3001"
+    assert any(str(port).endswith(":3001") for port in ui["ports"])
     assert ui.get("healthcheck") is not None
     assert "api" in ui["depends_on"]
 

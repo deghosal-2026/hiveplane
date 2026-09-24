@@ -150,6 +150,9 @@ services:
       HIVEPLANE_EXECUTION__STORE: postgres
       HIVEPLANE_EXECUTION__CHECKPOINT_PATH: ${HIVEPLANE_EXECUTION__CHECKPOINT_PATH:-/app/.hiveplane/checkpoints/graph.json}
       HIVEPLANE_CERTIFICATION__EXECUTOR: ${HIVEPLANE_CERTIFICATION__EXECUTOR:-adapter}
+      # Persistent Ed25519 attestation key: attestations must verify across
+      # container restarts/recreates (M23, #125).
+      HIVEPLANE_CERTIFICATION__SIGNING_KEY_FILE: /app/.hiveplane/checkpoints/attestation.pem
       HIVEPLANE_MODEL__PROVIDER: ${HIVEPLANE_MODEL__PROVIDER:-fake}
       HIVEPLANE_MODEL__BASE_URL: ${HIVEPLANE_MODEL__BASE_URL:-}
       HIVEPLANE_MODEL__API_KEY: ${HIVEPLANE_MODEL__API_KEY:-}
@@ -185,8 +188,9 @@ services:
     command: ["hiveplane-ui"]
     environment:
       HIVEPLANE_UI__API_URL: http://api:8000
+      HIVEPLANE_UI__PORT: "3001"
     ports:
-      - "${UI_PORT:-3001}:8000"
+      - "${UI_PORT:-3001}:3001"
     depends_on:
       api:
         condition: service_healthy
@@ -196,7 +200,7 @@ services:
           "CMD",
           "python",
           "-c",
-          "import urllib.request; urllib.request.urlopen('http://localhost:8000/healthz')",
+          "import urllib.request; urllib.request.urlopen('http://localhost:3001/healthz')",
         ]
       interval: 10s
       timeout: 5s
