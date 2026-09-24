@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from sqlalchemy import Engine, delete, select
+from sqlalchemy import Engine, delete, func, select
 from sqlalchemy.orm import Session
 
 from hiveplane.core.event import RunEvent
@@ -80,13 +80,24 @@ class PostgresRunStore:
             return [Run.model_validate(row.payload) for row in session.scalars(statement)]
 
     def add_event(self, event: RunEvent) -> None:
-        """Append one run event."""
+        """Append one run event with an atomically-assigned sequence.
+
+        The sequence is computed inside the write transaction (not from a
+        separate read) so concurrent appends for the same run cannot collide on
+        the composite primary key.
+        """
         with self._session.begin() as session:
             self._require(session, event.run_id)
+            max_seq = session.scalar(
+                select(func.max(RunEventRow.sequence)).where(
+                    RunEventRow.run_id == event.run_id
+                )
+            )
+            sequence = 0 if max_seq is None else max_seq + 1
             session.add(
                 RunEventRow(
                     run_id=event.run_id,
-                    sequence=event.sequence,
+                    sequence=sequence,
                     type=event.type.value,
                     actor=event.actor,
                     timestamp=event.timestamp,
