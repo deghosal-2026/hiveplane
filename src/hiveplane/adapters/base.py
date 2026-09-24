@@ -68,6 +68,13 @@ class AdapterRunExecutor:
         """Delegate run start to the adapter's ``submit``."""
         self._adapter.submit(context)
 
+    def reattach(self, context: RunContext) -> bool:
+        """Delegate a post-restart re-attach to the adapter, if it supports one."""
+        reattach = getattr(self._adapter, "reattach", None)
+        if reattach is None:
+            return False
+        return bool(reattach(context))
+
     def pause(self, run_id: str) -> bool:
         """Delegate a pause request to the adapter."""
         return self._adapter.pause(run_id)

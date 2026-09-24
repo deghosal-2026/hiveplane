@@ -78,6 +78,22 @@ class RunService:
         """Bind the runtime adapter that executes runs after service construction."""
         self._executor = executor
 
+    def reattach(self, run_id: str) -> bool:
+        """Re-attach a recovered run to its executor after a control-plane restart.
+
+        Returns whether the executor rebuilt the bookkeeping needed to resume the
+        run. Executors that cannot re-attach report ``False`` and the run is left
+        untouched for an operator to reconcile.
+        """
+        run = self._require(run_id)
+        manifest = self._registry.get(run.workload_id).manifest
+        reattach = getattr(self._executor, "reattach", None)
+        if reattach is None:
+            return False
+        return bool(
+            reattach(RunContext(run=run, workload=manifest, sandbox=run.sandbox))
+        )
+
     def _require(self, run_id: str) -> Run:
         run = self._store.get_run(run_id)
         if run is None:

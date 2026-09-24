@@ -85,6 +85,7 @@ class RawWorkerAdapter:
         self._escalated: dict[str, bool] = {}
         self._tool_calls: dict[str, list[ToolCallResult]] = {}
         self._usage: dict[str, UsageReport | None] = {}
+        self._recovered: set[str] = set()
 
     def _subprocess_enabled(self, context: RunContext) -> bool:
         """Whether this run executes in the capped subprocess (#110)."""
@@ -173,23 +174,45 @@ class RawWorkerAdapter:
         control.pause()
         return True
 
+    def reattach(self, context: RunContext) -> bool:
+        """Rebuild bookkeeping for a paused run recovered after a restart (#111).
+
+        A raw worker cannot continue mid-flight, so a recovered run is marked to
+        be re-driven from the start on resume (at-least-once, matching the
+        escalation re-dispatch path).
+        """
+        run = context.run
+        self._entry(context.workload)
+        control = RunControl()
+        with self._lock:
+            self._states[run.id] = RunState.PAUSED
+            self._controls[run.id] = control
+            self._contexts[run.id] = context
+            self._escalated[run.id] = False
+            self._tool_calls.setdefault(run.id, [])
+            self._usage.setdefault(run.id, None)
+            self._recovered.add(run.id)
+        return True
+
     def resume(self, run_id: str) -> bool:
-        """Clear a pause request, or re-drive a run that escalated (#129).
+        """Clear a pause request, or re-drive a run that escalated or was recovered.
 
         A raw worker cannot resume mid-flight, so a run that died on a tool
-        escalation is executed again; the escalated call now carries an
-        approved approval record and executes against the configured executor.
+        escalation or a control-plane restart is executed again; the escalated
+        call now carries an approved approval record and executes against the
+        configured executor.
         """
-        if self._escalated.get(run_id):
+        if self._escalated.get(run_id) or run_id in self._recovered:
             context = self._contexts.get(run_id)
             if context is None:
                 return False
             with self._lock:
                 self._escalated[run_id] = False
+                self._recovered.discard(run_id)
                 self._states[run_id] = RunState.RUNNING
             entry = self._entry(context.workload)
             run_control = self._controls[run_id]
-            run_control.resume()  # clear the pause the escalation set
+            run_control.resume()  # clear the pause the escalation/recovery set
             self._spawner(
                 telemetry.propagate_context(
                     lambda: self._execute(entry, context, run_control)

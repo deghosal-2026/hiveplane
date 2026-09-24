@@ -55,6 +55,7 @@ from hiveplane.execution.errors import (
     RunNotFoundError,
     RunNotIntervenableError,
 )
+from hiveplane.execution.recovery import RunRecovery
 from hiveplane.execution.service import RunService
 from hiveplane.execution.subprocess_spawner import SubprocessSpawner
 from hiveplane.execution.wiring import (
@@ -123,6 +124,15 @@ async def _lifespan(app: FastAPI) -> AsyncIterator[None]:
         run_migrations(settings)
     provider = telemetry.configure_telemetry(settings.otel)
     meter_provider = telemetry.configure_metrics(settings.otel)
+    recovery = getattr(app.state, "run_recovery", None)
+    if recovery is not None:
+        report = recovery.run()
+        if report.reattached or report.failed:
+            _LOGGER.info(
+                "startup recovery: reattached=%s failed=%s",
+                report.reattached,
+                report.failed,
+            )
     yield
     provider.force_flush()
     meter_provider.force_flush()
@@ -237,6 +247,7 @@ def create_app(
         )
     app.state.certification_coordinator = certification_coordinator
     app.state.certification_store = getattr(certification_coordinator, "store", None)
+    app.state.run_recovery = RunRecovery(app.state.run_service)
     readiness_engine = (
         create_engine_from_settings(settings)
         if settings.execution.store == "postgres"

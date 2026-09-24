@@ -145,6 +145,36 @@ class LangGraphAdapter:
         session[2].pause()
         return True
 
+    def reattach(self, context: RunContext) -> bool:
+        """Rebuild a recovered paused graph run from its durable checkpoint (#111).
+
+        The graph state lives in the checkpointer (durable as of #122), so only
+        the in-process session needs rebuilding; resume drives the graph again
+        with ``Command(resume=True)`` to continue from its last checkpoint.
+        """
+        run = context.run
+        self._graph(context.workload)
+        control = RunControl()
+        ctx = WorkerContext(
+            run=run,
+            workload=context.workload,
+            sandbox=context.sandbox,
+            tools=self._tools,
+            reporter=self._reporter,
+            control=control,
+            tool_calls=[],
+            clock=self._clock,
+            provider=self._provider,
+            cost_table=self._cost_table,
+        )
+        with self._lock:
+            self._states[run.id] = RunState.PAUSED
+            self._sessions[run.id] = (context, ctx, control)
+            self._usage[run.id] = None
+            self._interrupted[run.id] = True
+            self._escalated[run.id] = False
+        return True
+
     def resume(self, run_id: str) -> bool:
         """Resume a paused run: review interrupt, cooperative pause, or escalation."""
         session = self._sessions.get(run_id)

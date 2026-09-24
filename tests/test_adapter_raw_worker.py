@@ -152,6 +152,33 @@ def test_tool_call_escalation_stops_without_completing(
     assert EventType.OPERATOR_ACTION in reporter.events
 
 
+def test_reattach_then_resume_redrives_a_recovered_run(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    calls = {"n": 0}
+
+    def entry(task: dict[str, JsonValue], ctx: WorkerContext) -> dict[str, JsonValue]:
+        calls["n"] += 1
+        return {"ok": True}
+
+    reporter = _Reporter()
+    adapter = RawWorkerAdapter(
+        reporter,
+        _Tools(),  # type: ignore[arg-type]
+        _Loader(entry),  # type: ignore[arg-type]
+        clock=lambda: _NOW,
+        spawner=lambda work: work(),
+    )
+
+    assert adapter.reattach(_context(make_manifest())) is True
+    assert adapter.status("run-1") is RunState.PAUSED
+
+    assert adapter.resume("run-1") is True
+
+    assert calls["n"] == 1
+    assert reporter.transitions == [(RunState.COMPLETED, None)]
+
+
 def test_pause_resume_and_cancel_delegate(make_manifest: Callable[..., AgentWorkload]) -> None:
     started = threading.Event()
     release = threading.Event()

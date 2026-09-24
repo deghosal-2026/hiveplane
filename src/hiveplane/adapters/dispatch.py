@@ -46,6 +46,16 @@ class DispatchingAdapter:
             self._selected[context.run.id] = adapter
         adapter.submit(context)
 
+    def reattach(self, context: RunContext) -> bool:
+        """Route a recovered run to its workload's adapter and remember the owner."""
+        adapter = self._adapter_for(context.workload)
+        with self._lock:
+            self._selected[context.run.id] = adapter
+        reattach = getattr(adapter, "reattach", None)
+        if reattach is None:
+            return False
+        return bool(reattach(context))
+
     def pause(self, run_id: str) -> bool:
         """Pause the run on the adapter that owns it."""
         return self._owner(run_id).pause(run_id)

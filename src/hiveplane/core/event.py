@@ -19,6 +19,7 @@ class EventType(StrEnum):
     USAGE = "usage"
     OPERATOR_ACTION = "operator_action"
     SANDBOX = "sandbox"
+    RECOVERY = "recovery"
 
 
 class RunEvent(BaseModel):
