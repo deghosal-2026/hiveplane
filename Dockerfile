@@ -11,6 +11,7 @@ WORKDIR /app
 COPY pyproject.toml README.md ./
 COPY src ./src
 COPY examples ./examples
+COPY deploy/testdata ./deploy/testdata
 
 RUN python -m pip install --upgrade pip && python -m pip install ".[langgraph]"
 

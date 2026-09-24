@@ -66,9 +66,10 @@ packages = ["src/hiveplane"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-ra --strict-markers --strict-config -m 'not e2e'"
+addopts = "-ra --strict-markers --strict-config -m 'not e2e and not docker'"
 markers = [
   "e2e: browser end-to-end tests (run with `make test-e2e`)",
+  "docker: container tests that require a running Docker daemon (run with `pytest tests/docker -m docker`)",
 ]
 filterwarnings = [
   "error",
