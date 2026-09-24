@@ -16,8 +16,10 @@ def test_healthz_reports_ok() -> None:
     assert response.json() == {"status": "ok"}
 
 
-def test_readyz_reports_ready() -> None:
-    client = TestClient(create_app())
+def test_readyz_reports_ready_when_adapter_attached() -> None:
+    app = create_app()
+    app.state.adapter = object()
+    client = TestClient(app)
 
     response = client.get("/readyz")
 

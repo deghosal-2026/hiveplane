@@ -14,13 +14,14 @@ from importlib import import_module
 from typing import Any, cast
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 
 from hiveplane import __version__, telemetry
 from hiveplane.api.approvals import router as approvals_router
 from hiveplane.api.certifications import router as certifications_router
 from hiveplane.api.policy import router as policy_router
+from hiveplane.api.readiness import build_readiness_probe
 from hiveplane.api.registry import router as registry_router
 from hiveplane.api.runs import router as runs_router
 from hiveplane.api.sandbox_channel import SandboxChannel
@@ -64,6 +65,7 @@ from hiveplane.execution.wiring import (
     build_tool_gateway,
 )
 from hiveplane.llm.factory import build_provider
+from hiveplane.persistence.base import create_engine_from_settings
 from hiveplane.persistence.migrate import run_migrations
 from hiveplane.policy.approvals import ApprovalService
 from hiveplane.policy.engine import PolicyEngine
@@ -146,6 +148,7 @@ def create_app(
         )
     else:
         private_key, public_key = generate_keypair()
+    app.state.attestation_public_key = public_key
     registry = registry_service or RegistryService(
         build_registry_store(settings), attestation_public_key=public_key
     )
@@ -233,6 +236,18 @@ def create_app(
             registry, private_key, app.state.run_service, settings, approval_service
         )
     app.state.certification_coordinator = certification_coordinator
+    app.state.certification_store = getattr(certification_coordinator, "store", None)
+    readiness_engine = (
+        create_engine_from_settings(settings)
+        if settings.execution.store == "postgres"
+        else None
+    )
+    app.state.readiness = build_readiness_probe(
+        engine=readiness_engine,
+        get_adapter=lambda: app.state.adapter,
+        get_certification_store=lambda: app.state.certification_store,
+        get_public_key=lambda: app.state.attestation_public_key,
+    )
 
     @app.get("/healthz", tags=["health"])
     def healthz() -> dict[str, str]:
@@ -240,8 +255,15 @@ def create_app(
         return {"status": "ok"}
 
     @app.get("/readyz", tags=["health"])
-    def readyz() -> dict[str, str]:
-        """Readiness probe: the control plane can accept traffic."""
+    def readyz(response: Response) -> dict[str, Any]:
+        """Readiness probe: every control-plane dependency is live."""
+        report = app.state.readiness.check()
+        if not report.ready:
+            response.status_code = 503
+            return {
+                "status": "not_ready",
+                "reasons": [check.reason for check in report.checks if not check.ok],
+            }
         return {"status": "ready"}
 
     @app.get("/manifest/schema", tags=["manifest"])

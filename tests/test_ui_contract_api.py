@@ -54,7 +54,9 @@ def _registered_client(make_manifest: Callable[..., AgentWorkload]) -> tuple[Tes
 
 
 def test_health_endpoints() -> None:
-    client = TestClient(create_app())
+    app = create_app()
+    app.state.adapter = object()
+    client = TestClient(app)
 
     assert client.get("/healthz").status_code == 200
     assert client.get("/readyz").status_code == 200
