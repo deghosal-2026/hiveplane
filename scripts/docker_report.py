@@ -45,6 +45,50 @@ _MODULE_LAYER: dict[str, str] = {
     "test_llm_matrix": "L7",
 }
 
+ISSUES_AND_LEARNINGS: tuple[str, ...] = (
+    (
+        "LLM selection matters: the docker stack now uses "
+        "`Qwen3-4B-Instruct-2507-4bit` via canonical identity "
+        "`omlx/qwen3-4b-instruct-2507/4bit` because the non-Instruct Qwen3.5/8B "
+        "models emitted reasoning prose instead of the strict JSON contract and "
+        "were materially slower."
+    ),
+    (
+        "Small local models need an explicit rubric: the repo-agent prompt was "
+        "hardened so tests-only changes stay low risk, auth/token changes stay "
+        "high risk, destructive migrations stay high risk, and prompt-injection "
+        "text in a PR body is classified as high risk."
+    ),
+    (
+        "Concurrent `run_events` appends were not race-safe under Postgres READ "
+        "COMMITTED. The store now locks the parent run row (`FOR UPDATE`) before "
+        "assigning the next sequence and persists the assigned sequence in the "
+        "event payload."
+    ),
+    (
+        "Startup recovery must tolerate orphaned runs. Recovery now skips "
+        "non-terminal runs whose workload has been deleted instead of crashing "
+        "the API during lifespan startup."
+    ),
+    (
+        "The docker runner now resets volumes at start, records a PID, "
+        "heartbeat, current phase, and abort marker so interrupted runs are "
+        "diagnosable instead of silently leaving partial evidence."
+    ),
+    (
+        "The control-loop docker test depends on certification lifecycle "
+        "semantics: staging must produce `provisional` before production can "
+        "produce `certified`, and the field-test profile lowers "
+        "`min_production_runs_survived` to `0` so the loop can be demonstrated "
+        "in one stack run without weakening the benchmark thresholds themselves."
+    ),
+    (
+        "The UI seeded run must use the same canonical model identity as the "
+        "certification path; hardcoding `gpt-4o` correctly triggered the "
+        "model-swap gate once repo-agent was certified against the local model."
+    ),
+)
+
 
 @dataclass
 class TestResult:
@@ -164,6 +208,9 @@ def render(
             "> **Zero-skip policy violated:** the docker suite must not skip; "
             "every layer is required."
         )
+    lines += ["", "## Issues / Learnings", ""]
+    for item in ISSUES_AND_LEARNINGS:
+        lines.append(f"- {item}")
     lines += ["", "## Environment", "", "| Key | Value |", "|-----|-------|"]
     for key in sorted(environment):
         lines.append(f"| `{key}` | `{environment[key]}` |")

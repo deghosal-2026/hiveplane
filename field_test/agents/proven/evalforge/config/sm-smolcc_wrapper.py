@@ -19,7 +19,7 @@ os.environ.setdefault(
 
 
 def build_agent(payload=None):
-    model_name = os.environ.get("EVALFORGE_FIELD_MODEL", "Qwen3.5-4B-4bit")
+    model_name = os.environ.get("EVALFORGE_FIELD_MODEL", "Qwen3-4B-Instruct-2507-4bit")
 
     from smolagents import ToolCallingAgent, tool
     from smolagents import LiteLLMModel

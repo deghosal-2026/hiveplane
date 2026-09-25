@@ -11,7 +11,7 @@ os.environ.setdefault(
     os.environ.get("EVALFORGE_FIELD_ENDPOINT", "http://127.0.0.1:8000/v1"),
 )
 
-MODEL = os.environ.get("EVALFORGE_FIELD_MODEL", "Qwen3.5-4B-4bit")
+MODEL = os.environ.get("EVALFORGE_FIELD_MODEL", "Qwen3-4B-Instruct-2507-4bit")
 if MODEL.startswith("openai/"):
     MODEL = MODEL[len("openai/"):]
 

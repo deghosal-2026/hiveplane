@@ -1,8 +1,8 @@
 {
-  "run_id": "20260924T020320Z",
-  "timestamp_utc": "2026-09-24T02:03:23.058536+00:00",
-  "log_dir": "/Users/deghosal/desktop/code/github/hiveplane/field_test/v0.1.0/docker",
-  "git_sha": "c6629a7b4bba5e5f8498bad94cbcd6087e082134",
+  "run_id": "20260924T235452Z",
+  "timestamp_utc": "2026-09-24T23:54:53.131884+00:00",
+  "log_dir": "/Users/deghosal/Desktop/code/github/hiveplane/field_test/v0.1.0/docker",
+  "git_sha": "fdb0d46dab906636087b345579a0925ee8426931",
   "git_branch": "main",
   "git_dirty": true,
   "platform": "macOS-26.6.2-arm64-arm-64bit",
@@ -12,6 +12,7 @@
   "profile": "local+test",
   "provider": "local",
   "llm_base_url": "http://127.0.0.1:8000/v1",
-  "llm_model": "Llama-3.2-3B-Instruct-4bit",
+  "llm_model": "omlx/qwen3-4b-instruct-2507/4bit",
+  "llm_served_model": "Qwen3-4B-Instruct-2507-4bit",
   "api_url": "http://localhost:8100"
 }

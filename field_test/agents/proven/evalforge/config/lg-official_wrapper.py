@@ -72,7 +72,7 @@ _DEFAULT_TOOLS = [calculator, get_weather, web_search]
 
 def build_agent(payload: dict[str, Any] | None = None) -> Any:
     payload = payload or {}
-    model_name = os.environ.get("EVALFORGE_FIELD_MODEL", "Qwen3.5-4B-4bit")
+    model_name = os.environ.get("EVALFORGE_FIELD_MODEL", "Qwen3-4B-Instruct-2507-4bit")
 
     tools_raw = payload.get("allowed_tools")
     if tools_raw:

@@ -30,7 +30,7 @@ ENDPOINT = (
 MODEL = (
     os.environ.get("TOOLTRUST_FIELD_MODEL")
     or os.environ.get("EVALFORGE_FIELD_MODEL")
-    or "Qwen3.5-4B-4bit"
+    or "Qwen3-4B-Instruct-2507-4bit"
 )
 #: API key for the local endpoint.
 API_KEY = (

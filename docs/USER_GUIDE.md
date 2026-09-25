@@ -84,6 +84,33 @@ is unreachable it renders a controlled "control plane unavailable" page.
 | **Certification** (`/certifications`) | Status counts, pass-rate trend, last certified, quarantine history, attestation links | — |
 | **Spend** (`/spend`) | Attributed spend by workload and by team | — |
 
+### Screens
+
+The screenshots below are captured deterministically by the Docker test suite's
+Playwright layer (L3) and regenerated on every `make docker-test` run into
+`docs/field-test/v0.1.0/screenshots/` (see the
+[Docker test report](field-test/v0.1.0/DOCKER_TEST_REPORT.md), #95).
+
+**Fleet** — certification status, run-state counts, and budget burn per workload:
+
+![Operator UI: fleet overview](field-test/v0.1.0/screenshots/ui-fleet/01-fleet.png)
+
+**Run detail** — state timeline with tool calls, model calls, usage, and approvals:
+
+![Operator UI: run detail](field-test/v0.1.0/screenshots/ui-run-detail/01-run-detail.png)
+
+**Approvals** — pending escalations with approve/deny:
+
+![Operator UI: approval queue](field-test/v0.1.0/screenshots/ui-approvals/01-approvals.png)
+
+**Certification dashboard** — status counts, pass-rate trend, and quarantine history:
+
+![Operator UI: certification dashboard](field-test/v0.1.0/screenshots/ui-certifications/01-certifications.png)
+
+**Spend** — attributed spend by workload and team:
+
+![Operator UI: spend](field-test/v0.1.0/screenshots/ui-spend/01-spend.png)
+
 ### Running the UI browser tests
 
 ```bash

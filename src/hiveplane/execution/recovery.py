@@ -21,6 +21,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from hiveplane.core.event import EventType
 from hiveplane.core.run import RunState
 from hiveplane.execution.service import RunService
+from hiveplane.registry.errors import WorkloadNotFoundError
 
 _INTERRUPTED_REASON = "interrupted by control-plane restart"
 
@@ -32,6 +33,7 @@ class RecoveryReport(BaseModel):
 
     reattached: list[str] = Field(default_factory=list)
     failed: list[str] = Field(default_factory=list)
+    skipped: list[str] = Field(default_factory=list)
 
 
 class RunRecovery:
@@ -44,10 +46,13 @@ class RunRecovery:
         """Scan the run store and reconcile paused and running runs."""
         report = RecoveryReport()
         for run in self._run_service.list_runs():
-            if run.state is RunState.PAUSED:
-                self._reattach(run.id, report)
-            elif run.state is RunState.RUNNING:
-                self._fail(run.id, report)
+            try:
+                if run.state is RunState.PAUSED:
+                    self._reattach(run.id, report)
+                elif run.state is RunState.RUNNING:
+                    self._fail(run.id, report)
+            except WorkloadNotFoundError:
+                report.skipped.append(run.id)
         return report
 
     def _reattach(self, run_id: str, report: RecoveryReport) -> None:

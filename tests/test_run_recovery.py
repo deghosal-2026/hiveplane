@@ -206,6 +206,33 @@ def test_startup_recovery_runs_during_the_app_lifespan(
     assert service.get("run-running").state is RunState.FAILED
 
 
+def test_recovery_skips_runs_whose_workload_is_gone(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    """An orphaned pause must not abort startup recovery (regression: a paused
+    run referencing a deleted workload raised WorkloadNotFoundError and killed
+    the app lifespan)."""
+    store = InMemoryRunStore()
+    service = _service(make_manifest, store, _Executor())
+    store.save_run(
+        Run(
+            id="run-ghost",
+            workload_id="ghost",
+            caller="cli",
+            state=RunState.PAUSED,
+            context=AdmissionContext.SANDBOX,
+            created_at=_NOW,
+            updated_at=_NOW,
+        )
+    )
+
+    report = RunRecovery(service).run()
+
+    assert report.skipped == ["run-ghost"]
+    assert report.reattached == []
+    assert service.get("run-ghost").state is RunState.PAUSED
+
+
 def test_paused_run_survives_a_restart_and_resumes(
     make_manifest: Callable[..., AgentWorkload], tmp_path: Path
 ) -> None:

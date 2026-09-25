@@ -26,27 +26,27 @@
  Container hiveplane-api-1 Stopped 
  Container hiveplane-api-1 Removing 
  Container hiveplane-api-1 Removed 
- Container hiveplane-redis-1 Stopping 
  Container hiveplane-postgres-1 Stopping 
+ Container hiveplane-redis-1 Stopping 
  Container hiveplane-postgres-1 Stopped 
  Container hiveplane-postgres-1 Removing 
  Container hiveplane-postgres-1 Removed 
  Container hiveplane-redis-1 Stopped 
  Container hiveplane-redis-1 Removing 
  Container hiveplane-redis-1 Removed 
- Volume hiveplane_grafana-data Removing 
+ Volume hiveplane_tempo-data Removing 
  Volume hiveplane_checkpoint-data Removing 
+ Network hiveplane_default Removing 
  Volume hiveplane_webhook-sink-data Removing 
  Volume hiveplane_redis-data Removing 
- Network hiveplane_default Removing 
- Volume hiveplane_tempo-data Removing 
- Volume hiveplane_postgres-data Removing 
  Volume hiveplane_prometheus-data Removing 
- Volume hiveplane_grafana-data Removed 
- Volume hiveplane_webhook-sink-data Removed 
- Volume hiveplane_redis-data Removed 
- Volume hiveplane_checkpoint-data Removed 
+ Volume hiveplane_postgres-data Removing 
+ Volume hiveplane_grafana-data Removing 
  Volume hiveplane_tempo-data Removed 
+ Volume hiveplane_redis-data Resource is still in use 
+ Volume hiveplane_checkpoint-data Removed 
+ Volume hiveplane_webhook-sink-data Removed 
+ Volume hiveplane_grafana-data Removed 
  Volume hiveplane_postgres-data Removed 
  Volume hiveplane_prometheus-data Removed 
  Network hiveplane_default Removed 

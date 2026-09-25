@@ -1,6 +1,6 @@
 # WBS v0.1.0 — Part 12: Field Test
 
-**Milestone:** M23 · **Issues:** #56-#59, #92-#144 (40 closed; 13 open) · **Phases:** P0-P7
+**Milestone:** M23 · **Issues:** #56-#59, #92-#144 (45 closed; 8 open) · **Phases:** P0-P7
 
 ## Goal
 
@@ -114,16 +114,16 @@ Run three real, LLM-backed agents through the certified control loop and produce
 
 ### P3 — Docker Test Track
 
-**Issues:** [#143](https://github.com/deghosal-2026/hiveplane/issues/143) · [#93](https://github.com/deghosal-2026/hiveplane/issues/93) · [#94](https://github.com/deghosal-2026/hiveplane/issues/94) · [#95](https://github.com/deghosal-2026/hiveplane/issues/95) · [#96](https://github.com/deghosal-2026/hiveplane/issues/96) · [#59](https://github.com/deghosal-2026/hiveplane/issues/59)
+**Issues:** [#143](https://github.com/deghosal-2026/hiveplane/issues/143) · [#93](https://github.com/deghosal-2026/hiveplane/issues/93) · [#94](https://github.com/deghosal-2026/hiveplane/issues/94) · [#95](https://github.com/deghosal-2026/hiveplane/issues/95) · [#96](https://github.com/deghosal-2026/hiveplane/issues/96)
 
 - [x] #143 — Copy `deploy/testdata` into the Docker image (fixtures + replay files missing in container) — **first:** the `Dockerfile` now copies `deploy/testdata`, and `tests/docker/test_container_fixtures.py` (marker: `docker`) asserts the built image ships the tool and replay fixtures
-- [ ] #93 — Docker test cases, dummy data, and setup (layered `tests/docker/`, `deploy/testdata/`, OMLX-on-host local profile + fake-webhook compose profile) — needs #143. **Zero skips:** the suite requires a reachable local LLM and must fail without it; `scripts/docker-test.sh` preflights the endpoint. **All layers implemented:** L0 `test_container_fixtures.py`, L1 `test_stack_health.py`, L2 `test_api_contract.py`, L3 `test_ui.py` (Playwright screenshots), L4 `test_control_loop.py`, L5 `test_governance.py`, L6 `test_durability.py`, L7 `test_llm_matrix.py` + `conftest.py`. Fixtures: negative workloads (`uncertified-agent`, `model-swap-agent`, `regressed-agent` + `examples/regressed_agent.py`) and governance data (`deploy/testdata/governance/`). Run evidence under `field_test/v0.1.0/docker/` (committed) with `scripts/docker_report.py` rendering `docs/field-test/v0.1.0/DOCKER_TEST_REPORT.md`. **Pending:** a Docker-enabled run to execute L0-L6 and produce real evidence (L5 covers the policy/approval surface; end-to-end budget/shaping enforcement needs priced usage or the fake profile).
-- [ ] #94 — Docker test execution (one-command runner, structured results, CI exit codes) — needs #93 + #143. `make docker-test` / `scripts/docker-test.sh` bring the stack up, wait for `/readyz`, seed tools, install chromium, run `pytest tests/docker -m docker`, capture logs/junit, and tear down; local-LLM preflight is fail-fast. CI: `ci.yml` runs L0 on PRs; `docker-nightly.yml` runs the full local-LLM suite nightly on a self-hosted OMLX macOS runner and uploads evidence.
-- [ ] #95 — Scenario screenshots for user guide (`docs/field-test/v0.1.0/screenshots/<scenario-id>/<step>-<name>.png`, regenerable) — needs #94
-- [ ] #96 — Docker test results summary (`DOCKER_TEST_REPORT.md`) — needs #94
-- [ ] #59 — Nightly simulator + CI regression harness (keeps evidence fresh; needs #94) — #103 closed as a duplicate of this; the container-suite part is wired in `.github/workflows/docker-nightly.yml`
+- [x] #93 — Docker test cases, dummy data, and setup (layered `tests/docker/`, `deploy/testdata/`, OMLX-on-host local profile + fake-webhook compose profile) — needs #143. **Zero skips:** the suite requires a reachable local LLM and fails without it; `scripts/docker-test.sh` preflights the endpoint. **All layers implemented and green:** L0 `test_container_fixtures.py`, L1 `test_stack_health.py`, L2 `test_api_contract.py`, L3 `test_ui.py` (Playwright screenshots), L4 `test_control_loop.py`, L5 `test_governance.py`, L6 `test_durability.py`, L7 `test_llm_matrix.py` + `conftest.py`. Fixtures: negative workloads (`uncertified-agent`, `model-swap-agent`, `regressed-agent` + `examples/regressed_agent.py`) and governance data (`deploy/testdata/governance/`). Run evidence under `field_test/v0.1.0/docker/` (committed) with `scripts/docker_report.py` rendering `docs/field-test/v0.1.0/DOCKER_TEST_REPORT.md`. **Verified:** `make docker-test` run `20260924T235452Z` — **25/25 passed, 0 failed, 0 skipped** against the real local model (`Qwen3-4B-Instruct-2507-4bit`).
+- [x] #94 — Docker test execution (one-command runner, structured results, CI exit codes) — needs #93 + #143. `make docker-test` / `scripts/docker-test.sh` reset volumes, bring the stack up, wait for `/readyz`, seed tools, install chromium, run `pytest tests/docker -m docker`, capture logs/junit, and tear down; local-LLM preflight is fail-fast and resolves the app model via its `.env.local` alias. The runner writes a PID, heartbeat, current phase, and abort marker for interruption diagnostics. CI: `ci.yml` runs L0 on PRs; `docker-nightly.yml` runs the full local-LLM suite nightly on a self-hosted OMLX macOS runner and uploads evidence.
+- [x] #95 — Scenario screenshots for user guide (`docs/field-test/v0.1.0/screenshots/<scenario-id>/<step>-<name>.png`, regenerable) — L3 captures five UI screens deterministically (reruns overwrite identical paths) and they are embedded in [USER_GUIDE.md](../../USER_GUIDE.md#screens).
+- [x] #96 — Docker test results summary (`DOCKER_TEST_REPORT.md`) — needs #94. Regenerated each run by `scripts/docker_report.py` with per-layer results, environment (app + served model), a persistent **Issues / Learnings** section, failure details, and a log index; exits non-zero on any failure/error or skip.
+- [x] #59 — Nightly simulator + CI regression harness — **closed as not planned** (not pursued for v0.1.0); #103 closed as a duplicate of this. The container-suite part remains wired in `.github/workflows/docker-nightly.yml` (owned by #94).
 
-**Exit:** one command runs the full Docker test pass; screenshots regenerate deterministically; nightly CI green.
+**Exit:** one command runs the full Docker test pass (25/25 green); screenshots regenerate deterministically and are embedded in the guide; the nightly CI job is wired (its container-suite part is owned by #94 — #59's simulator/regression-alert scope is not pursued).
 
 ### P4 — Field Test & Release Evidence
 
@@ -178,7 +178,7 @@ P0 (Design & Planning)
                       #124 (trace story)    ─ independent
                       #130 (/readyz)        ─ independent
                     └─> P3 (Docker Test Track)
-                            #143 ─> #93 ─> #94 ─> {#95, #96, #59}
+                            #143 ─> #93 ─> #94 ─> {#95, #96}
                               └─> P4 (Field Test & Release Evidence)
                                     #99 ─> #121 ─> #56 ─> #57 ─> #58
                                           └─> #100 ─> {#101, #102}

@@ -127,11 +127,12 @@ async def _lifespan(app: FastAPI) -> AsyncIterator[None]:
     recovery = getattr(app.state, "run_recovery", None)
     if recovery is not None:
         report = recovery.run()
-        if report.reattached or report.failed:
+        if report.reattached or report.failed or report.skipped:
             _LOGGER.info(
-                "startup recovery: reattached=%s failed=%s",
+                "startup recovery: reattached=%s failed=%s skipped=%s",
                 report.reattached,
                 report.failed,
+                report.skipped,
             )
     yield
     provider.force_flush()

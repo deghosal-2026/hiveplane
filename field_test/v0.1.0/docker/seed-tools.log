@@ -1,15 +1,15 @@
-==> Seeding tools from /Users/deghosal/desktop/code/github/hiveplane/examples/workloads
-present    mcp.github.read_issue
-present    mcp.github.create_pr
-present    prometheus.query
-present    github.create_pr_comment
-present    pagerduty.acknowledge
-present    mcp.github.list_pull_requests
-present    mcp.github.read_issue
-present    mcp.github.list_pull_requests
+==> Seeding tools from /Users/deghosal/Desktop/code/github/hiveplane/examples/workloads
+registered mcp.github.read_issue
+registered mcp.github.create_pr
+registered prometheus.query
+registered github.create_pr_comment
+registered pagerduty.acknowledge
+registered mcp.github.list_pull_requests
 present    mcp.github.read_issue
 present    mcp.github.list_pull_requests
 present    mcp.github.read_issue
-present    mcp.github.create_pr_comment
 present    mcp.github.list_pull_requests
-OK: 0 registered, 13 already present
+present    mcp.github.read_issue
+registered mcp.github.create_pr_comment
+present    mcp.github.list_pull_requests
+OK: 7 registered, 6 already present

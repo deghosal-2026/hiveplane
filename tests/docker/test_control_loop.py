@@ -57,13 +57,37 @@ def _request(
 def _poll_run(run_id: str, timeout: float = 300.0) -> dict[str, Any]:
     deadline = time.monotonic() + timeout
     run: dict[str, Any] = {}
+    handled_pause = False
     while time.monotonic() < deadline:
         status, run = _request("GET", f"/runs/{run_id}")
         assert status == 200, run
         if run.get("state") in _TERMINAL:
             return run
+        if run.get("state") == "paused" and not handled_pause:
+            _approve_and_resume(run_id)
+            handled_pause = True
         time.sleep(1)
     raise AssertionError(f"run {run_id} never reached a terminal state: {run}")
+
+
+def _approve_and_resume(run_id: str) -> None:
+    status, approvals = _request("GET", "/approvals")
+    assert status == 200, approvals
+    pending = [
+        approval
+        for approval in approvals
+        if approval.get("run_id") == run_id and approval.get("status") == "pending"
+    ]
+    assert pending, f"paused run {run_id} has no pending approval: {approvals}"
+    approval_id = pending[0]["approval_id"]
+    approved = _request(
+        "POST",
+        f"/approvals/{approval_id}/approve",
+        {"operator": "field-test", "reason": "docker control-loop auto-approval"},
+    )
+    assert approved[0] == 200, approved
+    resumed = _request("POST", f"/runs/{run_id}/resume")
+    assert resumed[0] in (200, 409), resumed
 
 
 @pytest.mark.docker
@@ -73,6 +97,18 @@ def test_register_certify_run_and_deliver(local_llm: Any) -> None:
         by_alias=True, mode="json"
     )
     assert _request("POST", "/workloads", payload)[0] in (200, 201, 409)
+
+    status, staging = _request(
+        "POST",
+        "/certifications",
+        {
+            "workload": "repo-agent",
+            "target_context": "staging",
+            "model_identity": identity,
+        },
+    )
+    assert status == 201, staging
+    assert staging["certification"]["status"] == "provisional", staging
 
     status, record = _request(
         "POST",

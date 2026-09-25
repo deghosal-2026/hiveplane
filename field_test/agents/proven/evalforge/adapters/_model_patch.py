@@ -13,7 +13,7 @@ from __future__ import annotations
 import os
 from typing import Any
 
-_MODEL = os.environ.get("EVALFORGE_FIELD_MODEL", "Qwen3.5-4B-4bit")
+_MODEL = os.environ.get("EVALFORGE_FIELD_MODEL", "Qwen3-4B-Instruct-2507-4bit")
 _ENDPOINT = os.environ.get("EVALFORGE_FIELD_ENDPOINT", "http://127.0.0.1:8000/v1")
 _FORCE = os.environ.get("EVALFORCE_FORCE_MODEL", "0") in {"1", "true", "yes"}
 

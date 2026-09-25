@@ -82,18 +82,22 @@ class PostgresRunStore:
     def add_event(self, event: RunEvent) -> None:
         """Append one run event with an atomically-assigned sequence.
 
-        The sequence is computed inside the write transaction (not from a
-        separate read) so concurrent appends for the same run cannot collide on
-        the composite primary key.
+        The parent run row is locked for update before reading the current max
+        sequence, so concurrent appends for the same run serialize and cannot
+        compute the same next sequence. Without the lock, READ COMMITTED lets two
+        transactions both read the same max and collide on the composite primary
+        key ``(run_id, sequence)``.
         """
         with self._session.begin() as session:
-            self._require(session, event.run_id)
+            if session.get(RunRow, event.run_id, with_for_update=True) is None:
+                raise RunNotFoundError(event.run_id)
             max_seq = session.scalar(
                 select(func.max(RunEventRow.sequence)).where(
                     RunEventRow.run_id == event.run_id
                 )
             )
             sequence = 0 if max_seq is None else max_seq + 1
+            stored = event.model_copy(update={"sequence": sequence})
             session.add(
                 RunEventRow(
                     run_id=event.run_id,
@@ -101,7 +105,7 @@ class PostgresRunStore:
                     type=event.type.value,
                     actor=event.actor,
                     timestamp=event.timestamp,
-                    payload=event.model_dump(mode="json"),
+                    payload=stored.model_dump(mode="json"),
                 )
             )
 

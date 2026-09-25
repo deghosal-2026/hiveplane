@@ -66,7 +66,7 @@ class LangGraphAdapter(Adapter):
         os.environ.setdefault("OPENAI_API_KEY", "omlx-test")
         endpoint = os.environ.get("EVALFORGE_FIELD_ENDPOINT", "http://127.0.0.1:8000/v1")
         os.environ.setdefault("OPENAI_BASE_URL", endpoint)
-        model = os.environ.get("EVALFORGE_FIELD_MODEL", "Qwen3.5-4B-4bit")
+        model = os.environ.get("EVALFORGE_FIELD_MODEL", "Qwen3-4B-Instruct-2507-4bit")
         try:
             from langchain_openai import ChatOpenAI as _CO
             if not getattr(_CO, "_evalforge_patched", False):

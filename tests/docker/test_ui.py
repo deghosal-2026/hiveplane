@@ -23,6 +23,16 @@ _API_BASE = os.environ.get("HIVEPLANE_API_URL", "http://localhost:8100").rstrip(
 _UI_BASE = os.environ.get("HIVEPLANE_UI_URL", "http://localhost:3001").rstrip("/")
 _ROOT = Path(__file__).resolve().parents[2]
 _SCREENSHOTS = _ROOT / "docs" / "field-test" / "v0.1.0" / "screenshots"
+_ENV_FILE = _ROOT / ".env.local"
+
+
+def _canonical_identity() -> str:
+    """The local model identity the stack certifies and binds runs to."""
+    if _ENV_FILE.is_file():
+        for line in _ENV_FILE.read_text(encoding="utf-8").splitlines():
+            if line.startswith("HIVEPLANE_MODEL__DEFAULT_MODEL="):
+                return line.partition("=")[2].strip()
+    return "openai/gpt-4o/2024-08-06"
 
 
 def _request(method: str, path: str, payload: dict[str, Any] | None = None) -> tuple[int, Any]:
@@ -65,7 +75,7 @@ def seeded_run() -> str:
             "workload": "repo-agent",
             "caller": "field-test",
             "context": "sandbox",
-            "model_identity": "openai/gpt-4o/2024-08-06",
+            "model_identity": _canonical_identity(),
         },
     )
     assert status == 201, run

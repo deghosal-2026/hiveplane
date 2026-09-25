@@ -58,14 +58,14 @@ Source: `field_test/agents/proven/tooltrust/` — 12 framework shims (`*.py`), `
 
 | Framework | Agents | Source repo (vendored) | Models validated |
 |-----------|--------|------------------------|------------------|
-| LangGraph | 6 | `langchain-ai/langgraph` | Qwen3.5-4B, gpt-oss-20b |
-| PydanticAI | 10 | `pydantic/pydantic-ai` | Qwen3.5-4B, gpt-oss-20b |
-| CrewAI | 10 | `crewAIInc/crewAI-examples` | Qwen3.5-4B, gpt-oss-20b, glm-5 |
-| OpenAI Agents SDK | 8 | `openai/openai-agents-python` | Qwen3.5-4B, gpt-oss-20b |
-| AutoGen | 8 | `ag2ai/ag2` | Qwen3.5-4B, gpt-oss-20b, glm-5 |
-| smolagents | 10 | `_awesome-quickstart` + `DeepSearchAgents` + `smolcc` | Qwen3.5-4B |
-| LlamaIndex | 8 | `run-llama/llama_index` (sparse checkout) | Qwen3.5-4B, gpt-oss-20b, glm-5 |
-| Google ADK | 8 | `google/adk-python` + `sokart/adk-walkthrough` | Qwen3.5-4B, gpt-oss-20b, glm-5 |
+| LangGraph | 6 | `langchain-ai/langgraph` | Qwen3-4B-Instruct-2507, gpt-oss-20b |
+| PydanticAI | 10 | `pydantic/pydantic-ai` | Qwen3-4B-Instruct-2507, gpt-oss-20b |
+| CrewAI | 10 | `crewAIInc/crewAI-examples` | Qwen3-4B-Instruct-2507, gpt-oss-20b, glm-5 |
+| OpenAI Agents SDK | 8 | `openai/openai-agents-python` | Qwen3-4B-Instruct-2507, gpt-oss-20b |
+| AutoGen | 8 | `ag2ai/ag2` | Qwen3-4B-Instruct-2507, gpt-oss-20b, glm-5 |
+| smolagents | 10 | `_awesome-quickstart` + `DeepSearchAgents` + `smolcc` | Qwen3-4B-Instruct-2507 |
+| LlamaIndex | 8 | `run-llama/llama_index` (sparse checkout) | Qwen3-4B-Instruct-2507, gpt-oss-20b, glm-5 |
+| Google ADK | 8 | `google/adk-python` + `sokart/adk-walkthrough` | Qwen3-4B-Instruct-2507, gpt-oss-20b, glm-5 |
 | SWE-bench | 5 | in-repo fixture (`swe_bench_tasks.yaml`) | deterministic (no LLM) |
 | ToolTrust MCP | 10 | in-repo (`agent_tooltrust` package) | deterministic (no LLM) |
 
@@ -364,7 +364,7 @@ Models validated by the proven agents (for reference when configuring LLM profil
 
 | Model | Used by | Tier |
 |-------|---------|------|
-| `Qwen3.5-4B-4bit` (local MLX) | tooltrust (all), exectrace | Tier 2 |
+| `Qwen3-4B-Instruct-2507-4bit` (local MLX) | tooltrust (all), exectrace | Tier 2 |
 | `gpt-oss-20b` (OpenRouter) | tooltrust (v0.2.0) | Tier 2 |
 | `glm-5` (z-ai) | tooltrust (retries, best tier-1) | Tier 2 |
 | `deepseek-v4-flash` (deepseek) | tooltrust (v0.2.0 comparison) | Tier 2 |

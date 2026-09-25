@@ -8,326 +8,59 @@
 #2 transferring dockerfile: 531B done
 #2 DONE 0.0s
 
-#3 [api internal] load metadata for docker.io/library/python:3.12-slim
+#3 [ui internal] load metadata for docker.io/library/python:3.12-slim
 #3 DONE 0.0s
 
 #4 [api internal] load .dockerignore
 #4 transferring context: 2B done
 #4 DONE 0.0s
 
-#5 [ui 1/7] FROM docker.io/library/python:3.12-slim@sha256:2f17fc044b579bab302c2e8054d3a686e2cb9a83de48e70534b94cd8ebbe06a9
+#5 [api 1/7] FROM docker.io/library/python:3.12-slim@sha256:2f17fc044b579bab302c2e8054d3a686e2cb9a83de48e70534b94cd8ebbe06a9
 #5 resolve docker.io/library/python:3.12-slim@sha256:2f17fc044b579bab302c2e8054d3a686e2cb9a83de48e70534b94cd8ebbe06a9 done
 #5 DONE 0.0s
 
 #6 [ui internal] load build context
-#6 transferring context: 41.88kB done
+#6 transferring context: 20.45kB done
 #6 DONE 0.0s
 
-#7 [ui 2/7] WORKDIR /app
+#7 [ui 3/7] COPY pyproject.toml README.md ./
 #7 CACHED
 
-#8 [ui 3/7] COPY pyproject.toml README.md ./
+#8 [ui 2/7] WORKDIR /app
 #8 CACHED
 
-#9 [api 4/7] COPY src ./src
-#9 DONE 0.0s
+#9 [ui 4/7] COPY src ./src
+#9 CACHED
 
-#10 [api 5/7] COPY examples ./examples
-#10 DONE 0.0s
+#10 [ui 5/7] COPY examples ./examples
+#10 CACHED
 
 #11 [ui 6/7] COPY deploy/testdata ./deploy/testdata
-#11 DONE 0.0s
+#11 CACHED
 
 #12 [ui 7/7] RUN python -m pip install --upgrade pip && python -m pip install ".[langgraph]"
-#12 0.517 Requirement already satisfied: pip in /usr/local/lib/python3.12/site-packages (25.0.1)
-#12 0.634 Collecting pip
-#12 0.728   Downloading pip-26.2.1-py3-none-any.whl.metadata (4.6 kB)
-#12 0.750 Downloading pip-26.2.1-py3-none-any.whl (1.8 MB)
-#12 1.421    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 3.0 MB/s eta 0:00:00
-#12 1.436 Installing collected packages: pip
-#12 1.436   Attempting uninstall: pip
-#12 1.438     Found existing installation: pip 25.0.1
-#12 1.456     Uninstalling pip-25.0.1:
-#12 1.522       Successfully uninstalled pip-25.0.1
-#12 1.828 Successfully installed pip-26.2.1
-#12 1.828 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
-#12 2.116 Processing ./.
-#12 2.117   Installing build dependencies: started
-#12 3.154   Installing build dependencies: finished with status 'done'
-#12 3.155   Getting requirements to build wheel: started
-#12 3.288   Getting requirements to build wheel: finished with status 'done'
-#12 3.289   Preparing metadata (pyproject.toml): started
-#12 3.487   Preparing metadata (pyproject.toml): finished with status 'done'
-#12 3.627 Collecting alembic>=1.13 (from hiveplane==0.1.0)
-#12 3.706   Downloading alembic-1.20.0-py3-none-any.whl.metadata (7.3 kB)
-#12 3.945 Collecting cryptography>=43 (from hiveplane==0.1.0)
-#12 3.980   Downloading cryptography-50.0.1-cp311-abi3-manylinux_2_34_aarch64.whl.metadata (4.3 kB)
-#12 4.047 Collecting fastapi>=0.115 (from hiveplane==0.1.0)
-#12 4.066   Downloading fastapi-0.141.1-py3-none-any.whl.metadata (27 kB)
-#12 4.110 Collecting httpx>=0.27 (from hiveplane==0.1.0)
-#12 4.126   Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
-#12 4.155 Collecting jinja2>=3.1 (from hiveplane==0.1.0)
-#12 4.172   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
-#12 4.204 Collecting opentelemetry-api>=1.25 (from hiveplane==0.1.0)
-#12 4.219   Downloading opentelemetry_api-1.44.0-py3-none-any.whl.metadata (1.4 kB)
-#12 4.251 Collecting opentelemetry-exporter-otlp-proto-http>=1.25 (from hiveplane==0.1.0)
-#12 4.270   Downloading opentelemetry_exporter_otlp_proto_http-1.44.0-py3-none-any.whl.metadata (2.4 kB)
-#12 4.301 Collecting opentelemetry-sdk>=1.25 (from hiveplane==0.1.0)
-#12 4.317   Downloading opentelemetry_sdk-1.44.0-py3-none-any.whl.metadata (1.6 kB)
-#12 4.348 Collecting psycopg>=3.2 (from psycopg[binary]>=3.2->hiveplane==0.1.0)
-#12 4.367   Downloading psycopg-3.3.6-py3-none-any.whl.metadata (4.4 kB)
-#12 4.400 Collecting pydantic-settings>=2.4 (from hiveplane==0.1.0)
-#12 4.415   Downloading pydantic_settings-2.15.0-py3-none-any.whl.metadata (3.9 kB)
-#12 4.566 Collecting pydantic>=2.8 (from hiveplane==0.1.0)
-#12 4.583   Downloading pydantic-2.13.5-py3-none-any.whl.metadata (110 kB)
-#12 4.692 Collecting python-multipart>=0.0.9 (from hiveplane==0.1.0)
-#12 4.708   Downloading python_multipart-0.0.32-py3-none-any.whl.metadata (2.1 kB)
-#12 4.758 Collecting pyyaml>=6.0 (from hiveplane==0.1.0)
-#12 4.774   Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl.metadata (2.4 kB)
-#12 4.814 Collecting redis>=5.0 (from hiveplane==0.1.0)
-#12 4.829   Downloading redis-8.1.0-py3-none-any.whl.metadata (16 kB)
-#12 5.131 Collecting sqlalchemy>=2.0 (from hiveplane==0.1.0)
-#12 5.149   Downloading sqlalchemy-2.0.54-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl.metadata (9.7 kB)
-#12 5.184 Collecting typer>=0.12 (from hiveplane==0.1.0)
-#12 5.197   Downloading typer-0.27.2-py3-none-any.whl.metadata (16 kB)
-#12 5.240 Collecting uvicorn>=0.30 (from uvicorn[standard]>=0.30->hiveplane==0.1.0)
-#12 5.255   Downloading uvicorn-0.53.0-py3-none-any.whl.metadata (6.6 kB)
-#12 5.311 Collecting langgraph>=0.2 (from hiveplane==0.1.0)
-#12 5.326   Downloading langgraph-1.2.12-py3-none-any.whl.metadata (4.9 kB)
-#12 5.353 Collecting Mako (from alembic>=1.13->hiveplane==0.1.0)
-#12 5.373   Downloading mako-1.4.3-py3-none-any.whl.metadata (2.9 kB)
-#12 5.403 Collecting typing-extensions>=4.12 (from alembic>=1.13->hiveplane==0.1.0)
-#12 5.421   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
-#12 5.552 Collecting cffi>=2.0.0 (from cryptography>=43->hiveplane==0.1.0)
-#12 5.568   Downloading cffi-2.1.1-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.whl.metadata (2.5 kB)
-#12 5.594 Collecting pycparser (from cffi>=2.0.0->cryptography>=43->hiveplane==0.1.0)
-#12 5.618   Downloading pycparser-3.0-py3-none-any.whl.metadata (8.2 kB)
-#12 5.661 Collecting starlette>=0.46.0 (from fastapi>=0.115->hiveplane==0.1.0)
-#12 5.680   Downloading starlette-1.7.0-py3-none-any.whl.metadata (6.6 kB)
-#12 5.706 Collecting typing-inspection>=0.4.2 (from fastapi>=0.115->hiveplane==0.1.0)
-#12 5.724   Downloading typing_inspection-0.4.4-py3-none-any.whl.metadata (2.6 kB)
-#12 5.747 Collecting annotated-doc>=0.0.2 (from fastapi>=0.115->hiveplane==0.1.0)
-#12 5.764   Downloading annotated_doc-0.0.5-py3-none-any.whl.metadata (6.5 kB)
-#12 5.808 Collecting anyio (from httpx>=0.27->hiveplane==0.1.0)
-#12 5.823   Downloading anyio-4.15.1-py3-none-any.whl.metadata (4.7 kB)
-#12 5.857 Collecting certifi (from httpx>=0.27->hiveplane==0.1.0)
-#12 5.874   Downloading certifi-2026.7.22-py3-none-any.whl.metadata (2.5 kB)
-#12 5.906 Collecting httpcore==1.* (from httpx>=0.27->hiveplane==0.1.0)
-#12 5.927   Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
-#12 5.966 Collecting idna (from httpx>=0.27->hiveplane==0.1.0)
-#12 5.986   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
-#12 6.015 Collecting h11>=0.16 (from httpcore==1.*->httpx>=0.27->hiveplane==0.1.0)
-#12 6.032   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
-#12 6.110 Collecting MarkupSafe>=2.0 (from jinja2>=3.1->hiveplane==0.1.0)
-#12 6.129   Downloading markupsafe-3.0.3-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl.metadata (2.7 kB)
-#12 6.184 Collecting langchain-core<2,>=1.4.7 (from langgraph>=0.2->hiveplane==0.1.0)
-#12 6.202   Downloading langchain_core-1.6.4-py3-none-any.whl.metadata (4.8 kB)
-#12 6.237 Collecting langgraph-checkpoint<5.0.0,>=4.1.0 (from langgraph>=0.2->hiveplane==0.1.0)
-#12 6.253   Downloading langgraph_checkpoint-4.2.0-py3-none-any.whl.metadata (6.7 kB)
-#12 6.279 Collecting langgraph-prebuilt<1.2.0,>=1.1.0 (from langgraph>=0.2->hiveplane==0.1.0)
-#12 6.296   Downloading langgraph_prebuilt-1.1.0-py3-none-any.whl.metadata (5.2 kB)
-#12 6.335 Collecting langgraph-sdk<0.5.0,>=0.4.2 (from langgraph>=0.2->hiveplane==0.1.0)
-#12 6.351   Downloading langgraph_sdk-0.4.5-py3-none-any.whl.metadata (5.1 kB)
-#12 6.505 Collecting xxhash>=3.5.0 (from langgraph>=0.2->hiveplane==0.1.0)
-#12 6.525   Downloading xxhash-4.0.1-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl.metadata (17 kB)
-#12 6.564 Collecting jsonpatch<2.0.0,>=1.33.0 (from langchain-core<2,>=1.4.7->langgraph>=0.2->hiveplane==0.1.0)
-#12 6.577   Downloading jsonpatch-1.33-py2.py3-none-any.whl.metadata (3.0 kB)
-#12 6.601 Collecting langchain-protocol>=0.0.17 (from langchain-core<2,>=1.4.7->langgraph>=0.2->hiveplane==0.1.0)
-#12 6.616   Downloading langchain_protocol-0.0.19-py3-none-any.whl.metadata (2.4 kB)
-#12 6.702 Collecting langsmith<1.0.0,>=0.3.45 (from langchain-core<2,>=1.4.7->langgraph>=0.2->hiveplane==0.1.0)
-#12 6.718   Downloading langsmith-0.14.0-py3-none-any.whl.metadata (22 kB)
-#12 6.759 Collecting packaging>=23.2.0 (from langchain-core<2,>=1.4.7->langgraph>=0.2->hiveplane==0.1.0)
-#12 6.773   Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
-#12 6.809 Collecting tenacity!=8.4.0,<10.0.0,>=8.1.0 (from langchain-core<2,>=1.4.7->langgraph>=0.2->hiveplane==0.1.0)
-#12 6.828   Downloading tenacity-9.1.4-py3-none-any.whl.metadata (1.2 kB)
-#12 6.956 Collecting uuid-utils<1.0,>=0.12.0 (from langchain-core<2,>=1.4.7->langgraph>=0.2->hiveplane==0.1.0)
-#12 6.971   Downloading uuid_utils-0.17.1-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl.metadata (6.4 kB)
-#12 6.996 Collecting jsonpointer>=1.9 (from jsonpatch<2.0.0,>=1.33.0->langchain-core<2,>=1.4.7->langgraph>=0.2->hiveplane==0.1.0)
-#12 7.015   Downloading jsonpointer-3.1.1-py3-none-any.whl.metadata (2.4 kB)
-#12 7.077 Collecting ormsgpack>=1.12.0 (from langgraph-checkpoint<5.0.0,>=4.1.0->langgraph>=0.2->hiveplane==0.1.0)
-#12 7.093   Downloading ormsgpack-1.12.2-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl.metadata (3.2 kB)
-#12 7.341 Collecting orjson>=3.11.5 (from langgraph-sdk<0.5.0,>=0.4.2->langgraph>=0.2->hiveplane==0.1.0)
-#12 7.358   Downloading orjson-3.12.0-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl.metadata (41 kB)
-#12 7.495 Collecting websockets<17,>=14 (from langgraph-sdk<0.5.0,>=0.4.2->langgraph>=0.2->hiveplane==0.1.0)
-#12 7.510   Downloading websockets-16.1.1-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl.metadata (6.8 kB)
-#12 7.562 Collecting distro>=1.7.0 (from langsmith<1.0.0,>=0.3.45->langchain-core<2,>=1.4.7->langgraph>=0.2->hiveplane==0.1.0)
-#12 7.579   Downloading distro-1.9.0-py3-none-any.whl.metadata (6.8 kB)
-#12 7.602 Collecting httpx2<3,>=2 (from langsmith<1.0.0,>=0.3.45->langchain-core<2,>=1.4.7->langgraph>=0.2->hiveplane==0.1.0)
-#12 7.620   Downloading httpx2-2.13.1-py3-none-any.whl.metadata (9.8 kB)
-#12 7.652 Collecting requests-toolbelt>=1.0.0 (from langsmith<1.0.0,>=0.3.45->langchain-core<2,>=1.4.7->langgraph>=0.2->hiveplane==0.1.0)
-#12 7.668   Downloading requests_toolbelt-1.0.0-py2.py3-none-any.whl.metadata (14 kB)
-#12 7.710 Collecting requests>=2.0.0 (from langsmith<1.0.0,>=0.3.45->langchain-core<2,>=1.4.7->langgraph>=0.2->hiveplane==0.1.0)
-#12 7.728   Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
-#12 7.758 Collecting sniffio>=1.1 (from langsmith<1.0.0,>=0.3.45->langchain-core<2,>=1.4.7->langgraph>=0.2->hiveplane==0.1.0)
-#12 7.781   Downloading sniffio-1.3.1-py3-none-any.whl.metadata (3.9 kB)
-#12 7.859 Collecting zstandard>=0.23.0 (from langsmith<1.0.0,>=0.3.45->langchain-core<2,>=1.4.7->langgraph>=0.2->hiveplane==0.1.0)
-#12 7.876   Downloading zstandard-0.25.0-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.whl.metadata (3.3 kB)
-#12 7.900 Collecting httpcore2==2.13.1 (from httpx2<3,>=2->langsmith<1.0.0,>=0.3.45->langchain-core<2,>=1.4.7->langgraph>=0.2->hiveplane==0.1.0)
-#12 7.918   Downloading httpcore2-2.13.1-py3-none-any.whl.metadata (26 kB)
-#12 7.955 Collecting truststore>=0.10 (from httpx2<3,>=2->langsmith<1.0.0,>=0.3.45->langchain-core<2,>=1.4.7->langgraph>=0.2->hiveplane==0.1.0)
-#12 7.973   Downloading truststore-0.10.4-py3-none-any.whl.metadata (4.4 kB)
-#12 7.995 Collecting annotated-types>=0.6.0 (from pydantic>=2.8->hiveplane==0.1.0)
-#12 8.011   Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
-#12 8.540 Collecting pydantic-core==2.46.5 (from pydantic>=2.8->hiveplane==0.1.0)
-#12 8.557   Downloading pydantic_core-2.46.5-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl.metadata (6.6 kB)
-#12 8.592 Collecting googleapis-common-protos~=1.52 (from opentelemetry-exporter-otlp-proto-http>=1.25->hiveplane==0.1.0)
-#12 8.607   Downloading googleapis_common_protos-1.75.3-py3-none-any.whl.metadata (8.5 kB)
-#12 8.631 Collecting opentelemetry-exporter-otlp-proto-common==1.44.0 (from opentelemetry-exporter-otlp-proto-http>=1.25->hiveplane==0.1.0)
-#12 8.647   Downloading opentelemetry_exporter_otlp_proto_common-1.44.0-py3-none-any.whl.metadata (1.8 kB)
-#12 8.672 Collecting opentelemetry-proto==1.44.0 (from opentelemetry-exporter-otlp-proto-http>=1.25->hiveplane==0.1.0)
-#12 8.691   Downloading opentelemetry_proto-1.44.0-py3-none-any.whl.metadata (2.3 kB)
-#12 8.824 Collecting protobuf<8.0,>=5.0 (from opentelemetry-proto==1.44.0->opentelemetry-exporter-otlp-proto-http>=1.25->hiveplane==0.1.0)
-#12 8.838   Downloading protobuf-7.36.2-cp310-abi3-manylinux2014_aarch64.whl.metadata (595 bytes)
-#12 8.864 Collecting opentelemetry-semantic-conventions==0.65b0 (from opentelemetry-sdk>=1.25->hiveplane==0.1.0)
-#12 8.886   Downloading opentelemetry_semantic_conventions-0.65b0-py3-none-any.whl.metadata (2.4 kB)
-#12 9.006 Collecting charset_normalizer<4,>=2 (from requests>=2.0.0->langsmith<1.0.0,>=0.3.45->langchain-core<2,>=1.4.7->langgraph>=0.2->hiveplane==0.1.0)
-#12 9.026   Downloading charset_normalizer-3.5.1-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl.metadata (45 kB)
-#12 9.080 Collecting urllib3<3,>=1.26 (from requests>=2.0.0->langsmith<1.0.0,>=0.3.45->langchain-core<2,>=1.4.7->langgraph>=0.2->hiveplane==0.1.0)
-#12 9.102   Downloading urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
-#12 9.235 Collecting psycopg-binary==3.3.6 (from psycopg[binary]>=3.2->hiveplane==0.1.0)
-#12 9.251   Downloading psycopg_binary-3.3.6-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl.metadata (2.7 kB)
-#12 9.277 Collecting python-dotenv>=0.21.0 (from pydantic-settings>=2.4->hiveplane==0.1.0)
-#12 9.294   Downloading python_dotenv-1.2.3-py3-none-any.whl.metadata (29 kB)
-#12 9.422 Collecting greenlet>=1 (from sqlalchemy>=2.0->hiveplane==0.1.0)
-#12 9.439   Downloading greenlet-3.5.6-cp312-cp312-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl.metadata (3.8 kB)
-#12 9.462 Collecting shellingham>=1.3.0 (from typer>=0.12->hiveplane==0.1.0)
-#12 9.482   Downloading shellingham-1.5.4-py2.py3-none-any.whl.metadata (3.5 kB)
-#12 9.517 Collecting rich>=13.8.0 (from typer>=0.12->hiveplane==0.1.0)
-#12 9.534   Downloading rich-15.0.0-py3-none-any.whl.metadata (18 kB)
-#12 9.570 Collecting markdown-it-py>=2.2.0 (from rich>=13.8.0->typer>=0.12->hiveplane==0.1.0)
-#12 9.589   Downloading markdown_it_py-4.2.0-py3-none-any.whl.metadata (7.4 kB)
-#12 9.617 Collecting pygments<3.0.0,>=2.13.0 (from rich>=13.8.0->typer>=0.12->hiveplane==0.1.0)
-#12 9.633   Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
-#12 9.655 Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich>=13.8.0->typer>=0.12->hiveplane==0.1.0)
-#12 9.672   Downloading mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
-#12 9.698 Collecting click>=7.0 (from uvicorn>=0.30->uvicorn[standard]>=0.30->hiveplane==0.1.0)
-#12 9.716   Downloading click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
-#12 9.749 Collecting httptools>=0.8.0 (from uvicorn[standard]>=0.30->hiveplane==0.1.0)
-#12 9.767   Downloading httptools-0.8.0-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl.metadata (3.5 kB)
-#12 9.807 Collecting uvloop>=0.15.1 (from uvicorn[standard]>=0.30->hiveplane==0.1.0)
-#12 9.829   Downloading uvloop-0.22.1-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl.metadata (4.9 kB)
-#12 9.904 Collecting watchfiles>=0.20 (from uvicorn[standard]>=0.30->hiveplane==0.1.0)
-#12 9.920   Downloading watchfiles-1.3.0-cp310-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl.metadata (4.9 kB)
-#12 9.943 Downloading alembic-1.20.0-py3-none-any.whl (268 kB)
-#12 10.08 Downloading cryptography-50.0.1-cp311-abi3-manylinux_2_34_aarch64.whl (4.7 MB)
-#12 11.21    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.7/4.7 MB 4.3 MB/s  0:00:01
-#12 11.23 Downloading cffi-2.1.1-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.whl (222 kB)
-#12 11.29 Downloading fastapi-0.141.1-py3-none-any.whl (131 kB)
-#12 11.33 Downloading annotated_doc-0.0.5-py3-none-any.whl (5.3 kB)
-#12 11.34 Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
-#12 11.37 Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
-#12 11.40 Downloading h11-0.16.0-py3-none-any.whl (37 kB)
-#12 11.43 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
-#12 11.47 Downloading langgraph-1.2.12-py3-none-any.whl (250 kB)
-#12 11.54 Downloading langchain_core-1.6.4-py3-none-any.whl (571 kB)
-#12 11.63    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 572.0/572.0 kB 6.9 MB/s  0:00:00
-#12 11.65 Downloading jsonpatch-1.33-py2.py3-none-any.whl (12 kB)
-#12 11.68 Downloading langgraph_checkpoint-4.2.0-py3-none-any.whl (56 kB)
-#12 11.70 Downloading langgraph_prebuilt-1.1.0-py3-none-any.whl (41 kB)
-#12 11.73 Downloading langgraph_sdk-0.4.5-py3-none-any.whl (162 kB)
-#12 11.77 Downloading langsmith-0.14.0-py3-none-any.whl (805 kB)
-#12 11.90    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 805.0/805.0 kB 6.3 MB/s  0:00:00
-#12 11.92 Downloading httpx2-2.13.1-py3-none-any.whl (95 kB)
-#12 11.95 Downloading httpcore2-2.13.1-py3-none-any.whl (83 kB)
-#12 11.98 Downloading pydantic-2.13.5-py3-none-any.whl (472 kB)
-#12 12.08 Downloading pydantic_core-2.46.5-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl (2.0 MB)
-#12 12.34    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 7.5 MB/s  0:00:00
-#12 12.36 Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (775 kB)
-#12 12.46    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 775.1/775.1 kB 8.0 MB/s  0:00:00
-#12 12.47 Downloading tenacity-9.1.4-py3-none-any.whl (28 kB)
-#12 12.50 Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
-#12 12.52 Downloading uuid_utils-0.17.1-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl (320 kB)
-#12 12.65 Downloading websockets-16.1.1-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (188 kB)
-#12 12.71 Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
-#12 12.73 Downloading anyio-4.15.1-py3-none-any.whl (132 kB)
-#12 12.77 Downloading distro-1.9.0-py3-none-any.whl (20 kB)
-#12 12.79 Downloading idna-3.20-py3-none-any.whl (69 kB)
-#12 12.82 Downloading jsonpointer-3.1.1-py3-none-any.whl (7.7 kB)
-#12 12.84 Downloading langchain_protocol-0.0.19-py3-none-any.whl (7.3 kB)
-#12 12.86 Downloading markupsafe-3.0.3-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (24 kB)
-#12 12.89 Downloading opentelemetry_api-1.44.0-py3-none-any.whl (60 kB)
-#12 12.91 Downloading opentelemetry_exporter_otlp_proto_http-1.44.0-py3-none-any.whl (21 kB)
-#12 12.93 Downloading opentelemetry_exporter_otlp_proto_common-1.44.0-py3-none-any.whl (17 kB)
-#12 12.95 Downloading opentelemetry_proto-1.44.0-py3-none-any.whl (72 kB)
-#12 12.98 Downloading googleapis_common_protos-1.75.3-py3-none-any.whl (306 kB)
-#12 13.04 Downloading opentelemetry_sdk-1.44.0-py3-none-any.whl (137 kB)
-#12 13.07 Downloading opentelemetry_semantic_conventions-0.65b0-py3-none-any.whl (204 kB)
-#12 13.11 Downloading protobuf-7.36.2-cp310-abi3-manylinux2014_aarch64.whl (344 kB)
-#12 13.17 Downloading requests-2.34.2-py3-none-any.whl (73 kB)
-#12 13.19 Downloading charset_normalizer-3.5.1-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (238 kB)
-#12 13.24 Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
-#12 13.27 Downloading certifi-2026.7.22-py3-none-any.whl (136 kB)
-#12 13.30 Downloading orjson-3.12.0-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl (130 kB)
-#12 13.33 Downloading ormsgpack-1.12.2-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl (203 kB)
-#12 13.38 Downloading packaging-26.3-py3-none-any.whl (129 kB)
-#12 13.41 Downloading psycopg-3.3.6-py3-none-any.whl (215 kB)
-#12 13.46 Downloading psycopg_binary-3.3.6-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl (6.8 MB)
-#12 14.19    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.8/6.8 MB 9.3 MB/s  0:00:00
-#12 14.21 Downloading pydantic_settings-2.15.0-py3-none-any.whl (69 kB)
-#12 14.24 Downloading python_dotenv-1.2.3-py3-none-any.whl (22 kB)
-#12 14.26 Downloading python_multipart-0.0.32-py3-none-any.whl (30 kB)
-#12 14.28 Downloading redis-8.1.0-py3-none-any.whl (560 kB)
-#12 14.33    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 560.6/560.6 kB 11.4 MB/s  0:00:00
-#12 14.35 Downloading requests_toolbelt-1.0.0-py2.py3-none-any.whl (54 kB)
-#12 14.37 Downloading sniffio-1.3.1-py3-none-any.whl (10 kB)
-#12 14.39 Downloading sqlalchemy-2.0.54-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (3.4 MB)
-#12 14.70    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.4/3.4 MB 11.2 MB/s  0:00:00
-#12 14.72 Downloading greenlet-3.5.6-cp312-cp312-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl (611 kB)
-#12 14.78    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 611.7/611.7 kB 9.8 MB/s  0:00:00
-#12 14.80 Downloading starlette-1.7.0-py3-none-any.whl (78 kB)
-#12 14.82 Downloading truststore-0.10.4-py3-none-any.whl (18 kB)
-#12 14.84 Downloading typer-0.27.2-py3-none-any.whl (123 kB)
-#12 14.87 Downloading rich-15.0.0-py3-none-any.whl (310 kB)
-#12 14.91 Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
-#12 15.02    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 12.4 MB/s  0:00:00
-#12 15.04 Downloading markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
-#12 15.07 Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
-#12 15.09 Downloading shellingham-1.5.4-py2.py3-none-any.whl (9.8 kB)
-#12 15.11 Downloading typing_inspection-0.4.4-py3-none-any.whl (14 kB)
-#12 15.13 Downloading uvicorn-0.53.0-py3-none-any.whl (87 kB)
-#12 15.16 Downloading click-8.5.0-py3-none-any.whl (125 kB)
-#12 15.18 Downloading httptools-0.8.0-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (518 kB)
-#12 15.24 Downloading uvloop-0.22.1-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (4.3 MB)
-#12 15.57    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.3/4.3 MB 13.3 MB/s  0:00:00
-#12 15.59 Downloading watchfiles-1.3.0-cp310-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl (454 kB)
-#12 15.65 Downloading xxhash-4.0.1-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (276 kB)
-#12 15.69 Downloading zstandard-0.25.0-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.whl (5.1 MB)
-#12 16.09    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.1/5.1 MB 12.8 MB/s  0:00:00
-#12 16.11 Downloading mako-1.4.3-py3-none-any.whl (80 kB)
-#12 16.13 Downloading pycparser-3.0-py3-none-any.whl (48 kB)
-#12 16.23 Building wheels for collected packages: hiveplane
-#12 16.23   Building wheel for hiveplane (pyproject.toml): started
-#12 16.28   Building wheel for hiveplane (pyproject.toml): finished with status 'done'
-#12 16.28   Created wheel for hiveplane: filename=hiveplane-0.1.0-py3-none-any.whl size=185636 sha256=952d72bcf4f7dc1978e3fd2539990223c09980a5464b21ade82c6921ceeb6489
-#12 16.28   Stored in directory: /tmp/pip-ephem-wheel-cache-j9xsz2py/wheels/54/1b/b7/aa63e25c8f14f4f2ae7b04e6097bdecb770e455c5c1ee0a600
-#12 16.28 Successfully built hiveplane
-#12 16.33 Installing collected packages: zstandard, xxhash, websockets, uvloop, uuid-utils, urllib3, typing-extensions, truststore, tenacity, sniffio, shellingham, redis, pyyaml, python-multipart, python-dotenv, pygments, pycparser, psycopg-binary, protobuf, packaging, ormsgpack, orjson, mdurl, MarkupSafe, jsonpointer, idna, httptools, h11, greenlet, distro, click, charset_normalizer, certifi, annotated-types, annotated-doc, uvicorn, typing-inspection, sqlalchemy, requests, pydantic-core, psycopg, opentelemetry-proto, opentelemetry-api, markdown-it-py, Mako, langchain-protocol, jsonpatch, jinja2, httpcore2, httpcore, googleapis-common-protos, cffi, anyio, watchfiles, starlette, rich, requests-toolbelt, pydantic, opentelemetry-semantic-conventions, opentelemetry-exporter-otlp-proto-common, httpx2, httpx, cryptography, alembic, typer, pydantic-settings, opentelemetry-sdk, langsmith, fastapi, opentelemetry-exporter-otlp-proto-http, langchain-core, langgraph-sdk, langgraph-checkpoint, hiveplane, langgraph-prebuilt, langgraph
-#12 19.23 
-#12 19.23 Successfully installed Mako-1.4.3 MarkupSafe-3.0.3 alembic-1.20.0 annotated-doc-0.0.5 annotated-types-0.8.0 anyio-4.15.1 certifi-2026.7.22 cffi-2.1.1 charset_normalizer-3.5.1 click-8.5.0 cryptography-50.0.1 distro-1.9.0 fastapi-0.141.1 googleapis-common-protos-1.75.3 greenlet-3.5.6 h11-0.16.0 hiveplane-0.1.0 httpcore-1.0.9 httpcore2-2.13.1 httptools-0.8.0 httpx-0.28.1 httpx2-2.13.1 idna-3.20 jinja2-3.1.6 jsonpatch-1.33 jsonpointer-3.1.1 langchain-core-1.6.4 langchain-protocol-0.0.19 langgraph-1.2.12 langgraph-checkpoint-4.2.0 langgraph-prebuilt-1.1.0 langgraph-sdk-0.4.5 langsmith-0.14.0 markdown-it-py-4.2.0 mdurl-0.1.2 opentelemetry-api-1.44.0 opentelemetry-exporter-otlp-proto-common-1.44.0 opentelemetry-exporter-otlp-proto-http-1.44.0 opentelemetry-proto-1.44.0 opentelemetry-sdk-1.44.0 opentelemetry-semantic-conventions-0.65b0 orjson-3.12.0 ormsgpack-1.12.2 packaging-26.3 protobuf-7.36.2 psycopg-3.3.6 psycopg-binary-3.3.6 pycparser-3.0 pydantic-2.13.5 pydantic-core-2.46.5 pydantic-settings-2.15.0 pygments-2.21.0 python-dotenv-1.2.3 python-multipart-0.0.32 pyyaml-6.0.3 redis-8.1.0 requests-2.34.2 requests-toolbelt-1.0.0 rich-15.0.0 shellingham-1.5.4 sniffio-1.3.1 sqlalchemy-2.0.54 starlette-1.7.0 tenacity-9.1.4 truststore-0.10.4 typer-0.27.2 typing-extensions-4.16.0 typing-inspection-0.4.4 urllib3-2.8.0 uuid-utils-0.17.1 uvicorn-0.53.0 uvloop-0.22.1 watchfiles-1.3.0 websockets-16.1.1 xxhash-4.0.1 zstandard-0.25.0
-#12 19.23 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
-#12 DONE 19.5s
+#12 CACHED
 
 #13 [api] exporting to image
-#13 exporting layers
-#13 exporting layers 2.9s done
-#13 exporting manifest sha256:c4f3fa6b79bae5cec7d01d8c6aee13897def9ec760c6e21094ba15b50ff65e67 0.0s done
-#13 exporting config sha256:37d40e0211752eefcd26207763f1ccca9f1035916f6bb8ba61a702a2c05f3576 0.0s done
-#13 exporting attestation manifest sha256:8de65382036b0428408281b303ef361b8ab16c9694b67b8d2ff82ea6d20701df 0.0s done
-#13 exporting manifest list sha256:40aaa760241315f2fb870871707a3434f687d22471efee5fef1f16cb75f21d8e done
+#13 exporting layers done
+#13 exporting manifest sha256:843387b51c80380c77433bc4e3b72ce7a38251b0682ec42ab9e8f6aeb44123bb done
+#13 exporting config sha256:ffb35beba14899fc544169c7e31c96d7ffa6b4e43189cbfcd0126e01e65d292b done
+#13 exporting attestation manifest sha256:e43c265d453e807f2e5dfc5771364853dbd7a54ed2129fb1083858ea9a4f3445 0.0s done
+#13 exporting manifest list sha256:6e6c6d5a6a85373734e3602fa91f316c21e5ad5cab7025dc451ca87ad2846a7c
+#13 exporting manifest list sha256:6e6c6d5a6a85373734e3602fa91f316c21e5ad5cab7025dc451ca87ad2846a7c done
 #13 naming to docker.io/library/hiveplane-api:latest done
-#13 unpacking to docker.io/library/hiveplane-api:latest
-#13 unpacking to docker.io/library/hiveplane-api:latest 0.9s done
-#13 DONE 3.9s
+#13 unpacking to docker.io/library/hiveplane-api:latest done
+#13 DONE 0.1s
 
 #14 [ui] exporting to image
-#14 exporting layers 2.9s done
-#14 exporting manifest sha256:fca72dec0f4395304a853597677eeb6dea0ce11978d5f1176b501c712fa3dbee 0.0s done
-#14 exporting config sha256:63a2a1bb12daf912bbbf8f0173d9ed4408f2d3becbf2d9e7d2b0c99ed2e3a0b6 0.0s done
-#14 exporting attestation manifest sha256:5cf6fad37d30a8397f84168b18defe1e14ce5c65ac39003a566d0e97ce7afccc 0.0s done
-#14 exporting manifest list sha256:0bf22088a044161ebf66bbf776a3f92a2bcdc0026a9ee4d4d914deacc7dbbd1c done
+#14 exporting layers done
+#14 exporting manifest sha256:7d43a3950872fbe8eba64ec5de47e88920aef6dac87dcdf93353ee3df754d255 done
+#14 exporting config sha256:a7d8ee0817f37381aed57377f4a4b181fdaf9d97e498933f850f6fc629446c88 done
+#14 exporting attestation manifest sha256:b50ec567680aa6518fefbbc316ceae8aa3b3fcf5eec5c2bd385a1fe845f2e3fb done
+#14 exporting manifest list sha256:91664a8d2da13d88c95a904c8cf340f9ad81dfac3eb07d8f0af54cd4c3632dc6 0.0s done
 #14 naming to docker.io/library/hiveplane-ui:latest done
-#14 unpacking to docker.io/library/hiveplane-ui:latest 0.9s done
-#14 DONE 3.9s
+#14 unpacking to docker.io/library/hiveplane-ui:latest done
+#14 DONE 0.1s
 
 #15 [api] resolving provenance for metadata file
 #15 DONE 0.0s
@@ -336,27 +69,65 @@
 #16 DONE 0.0s
  Image hiveplane-api Built 
  Image hiveplane-ui Built 
- Container hiveplane-postgres-1 Running 
- Container hiveplane-redis-1 Running 
- Container hiveplane-api-1 Recreate 
- Container hiveplane-webhook-sink-1 Recreate 
- Container hiveplane-tempo-1 Recreate 
- Container hiveplane-api-1 Recreated 
- Container hiveplane-ui-1 Recreate 
- Container hiveplane-ui-1 Recreated 
- Container hiveplane-tempo-1 Recreated 
- Container hiveplane-otel-collector-1 Recreate 
- Container hiveplane-otel-collector-1 Recreated 
- Container hiveplane-prometheus-1 Recreate 
- Container hiveplane-prometheus-1 Recreated 
- Container hiveplane-grafana-1 Recreate 
- Container hiveplane-grafana-1 Recreated 
- Container hiveplane-webhook-sink-1 Recreated 
+ Volume hiveplane_grafana-data Creating 
+ Network hiveplane_default Creating 
+ Volume hiveplane_grafana-data Creating 
+ Network hiveplane_default Creating 
+ Volume hiveplane_postgres-data Creating 
+ Volume hiveplane_redis-data Creating 
+ Volume hiveplane_redis-data Creating 
+ Volume hiveplane_prometheus-data Creating 
+ Volume hiveplane_prometheus-data Creating 
+ Volume hiveplane_tempo-data Creating 
+ Volume hiveplane_tempo-data Creating 
+ Volume hiveplane_checkpoint-data Creating 
+ Volume hiveplane_webhook-sink-data Creating 
+ Volume hiveplane_postgres-data Creating 
+ Volume hiveplane_checkpoint-data Creating 
+ Volume hiveplane_webhook-sink-data Creating 
+ Volume hiveplane_grafana-data Created 
+ Volume hiveplane_grafana-data Created 
+ Volume hiveplane_tempo-data Created 
+ Volume hiveplane_tempo-data Created 
+ Volume hiveplane_redis-data Created 
+ Volume hiveplane_redis-data Created 
+ Volume hiveplane_prometheus-data Created 
+ Volume hiveplane_prometheus-data Created 
+ Volume hiveplane_postgres-data Created 
+ Volume hiveplane_postgres-data Created 
+ Volume hiveplane_checkpoint-data Created 
+ Volume hiveplane_checkpoint-data Created 
+ Volume hiveplane_webhook-sink-data Created 
+ Volume hiveplane_webhook-sink-data Created 
+ Network hiveplane_default Created 
+ Network hiveplane_default Created 
+ Container hiveplane-tempo-1 Creating 
+ Container hiveplane-postgres-1 Creating 
+ Container hiveplane-redis-1 Creating 
+ Container hiveplane-webhook-sink-1 Creating 
+ Container hiveplane-tempo-1 Created 
+ Container hiveplane-otel-collector-1 Creating 
+ Container hiveplane-redis-1 Created 
+ Container hiveplane-webhook-sink-1 Created 
+ Container hiveplane-postgres-1 Created 
+ Container hiveplane-api-1 Creating 
+ Container hiveplane-otel-collector-1 Created 
+ Container hiveplane-prometheus-1 Creating 
+ Container hiveplane-api-1 Created 
+ Container hiveplane-ui-1 Creating 
+ Container hiveplane-prometheus-1 Created 
+ Container hiveplane-grafana-1 Creating 
+ Container hiveplane-ui-1 Created 
+ Container hiveplane-grafana-1 Created 
+ Container hiveplane-redis-1 Starting 
  Container hiveplane-webhook-sink-1 Starting 
+ Container hiveplane-postgres-1 Starting 
  Container hiveplane-tempo-1 Starting 
+ Container hiveplane-redis-1 Started 
+ Container hiveplane-webhook-sink-1 Started 
+ Container hiveplane-postgres-1 Started 
  Container hiveplane-postgres-1 Waiting 
  Container hiveplane-redis-1 Waiting 
- Container hiveplane-webhook-sink-1 Started 
  Container hiveplane-tempo-1 Started 
  Container hiveplane-otel-collector-1 Starting 
  Container hiveplane-otel-collector-1 Started 

@@ -1,14 +1,30 @@
-==> HivePlane docker test run 20260924T020320Z
-==> Logs: /Users/deghosal/desktop/code/github/hiveplane/field_test/v0.1.0/docker
+==> HivePlane docker test run 20260924T235452Z
+==> Logs: /Users/deghosal/Desktop/code/github/hiveplane/field_test/v0.1.0/docker
+==> Status: starting
 ==> Preflight: local LLM at http://127.0.0.1:8000/v1
-    local LLM OK (probe model: Llama-3.2-3B-Instruct-4bit)
+==> Status: preflight
+    local LLM OK (app model: omlx/qwen3-4b-instruct-2507/4bit; served: Qwen3-4B-Instruct-2507-4bit)
+==> Status: resetting stack
+==> Resetting stack volumes (fresh database)
+==> Capturing service logs and tearing down
+==> Rendering report
+wrote /Users/deghosal/desktop/code/github/hiveplane/docs/field-test/v0.1.0/DOCKER_TEST_REPORT.md (25 tests, 13 failed, 0 skipped)
+==> Status: failed
+==> Artifacts: /Users/deghosal/desktop/code/github/hiveplane/field_test/v0.1.0/docker
+==> Report:    /Users/deghosal/desktop/code/github/hiveplane/docs/field-test/v0.1.0/DOCKER_TEST_REPORT.md
+==> Status: bringing up stack
 ==> Bringing up stack (.env.local, profiles: local test)
+==> Status: waiting for readyz
 ==> Waiting for /readyz
+==> Status: seeding tools
 ==> Seeding tool registry
+==> Status: installing playwright
 ==> Ensuring Playwright chromium (L3)
+==> Status: running pytest (L0-L7)
 ==> Running docker test suite (L0-L7, no skips)
 ==> Capturing service logs and tearing down
 ==> Rendering report
-wrote /Users/deghosal/desktop/code/github/hiveplane/docs/field-test/v0.1.0/DOCKER_TEST_REPORT.md (25 tests, 2 failed, 0 skipped)
-==> Artifacts: /Users/deghosal/desktop/code/github/hiveplane/field_test/v0.1.0/docker
-==> Report:    /Users/deghosal/desktop/code/github/hiveplane/docs/field-test/v0.1.0/DOCKER_TEST_REPORT.md
+wrote /Users/deghosal/Desktop/code/github/hiveplane/docs/field-test/v0.1.0/DOCKER_TEST_REPORT.md (25 tests, 0 failed, 0 skipped)
+==> Status: completed
+==> Artifacts: /Users/deghosal/Desktop/code/github/hiveplane/field_test/v0.1.0/docker
+==> Report:    /Users/deghosal/Desktop/code/github/hiveplane/docs/field-test/v0.1.0/DOCKER_TEST_REPORT.md

@@ -17,7 +17,7 @@ def build_agent(payload=None):
         "OPENAI_BASE_URL",
         os.environ.get("EVALFORGE_FIELD_ENDPOINT", "http://127.0.0.1:8000/v1"),
     )
-    model_name = os.environ.get("EVALFORGE_FIELD_MODEL", "Qwen3.5-4B-4bit")
+    model_name = os.environ.get("EVALFORGE_FIELD_MODEL", "Qwen3-4B-Instruct-2507-4bit")
 
     from smolagents import ToolCallingAgent, VisitWebpageTool, tool
     from smolagents import LiteLLMModel

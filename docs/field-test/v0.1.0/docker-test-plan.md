@@ -1,9 +1,10 @@
 # HivePlane v0.1.0 — Docker Test Plan
 
-> Status: plan (M23, #92); updated 2026-09-23 to match the implemented stack (readiness
-> #130, recovery #111, durable checkpoint #122, fixtures in-image #143). Defines image
+> Status: executed (M23, #92/#93/#94/#95/#96); updated 2026-09-24. Defines image
 > build, the layered test matrix, dummy data, the LLM strategy, and how results and
-> screenshots are produced. Companion to the [field test plan](field-test-plan.md).
+> screenshots are produced. Last run `20260924T235452Z`: **25/25 passed, 0 skipped**
+> against the local model `Qwen3-4B-Instruct-2507-4bit`. Companion to the
+> [field test plan](field-test-plan.md).
 
 ## Objective
 
@@ -236,7 +237,7 @@ docs/field-test/v0.1.0/screenshots/<scenario-id>/<step>-<name>.png
 
 - `<scenario-id>` matches S1–S9 and UI view names.
 - Reruns overwrite the same paths (repeatable).
-- Embedded in the user guide. See #95. (Directory not created yet.)
+- Embedded in the user guide. See #95. (Directory is created by the L3 run.)
 
 ## 9. Results
 

@@ -8,7 +8,7 @@ from pydantic import BaseModel
 
 # ── Agent definition ────────────────────────────────────────────────────
 weather_agent = Agent(
-    'openai:Qwen3.5-4B-4bit',
+    'openai:Qwen3-4B-Instruct-2507-4bit',
     system_prompt='You are a weather assistant. Use tools to look up weather. Be concise.',
     deps_type=str,
 )

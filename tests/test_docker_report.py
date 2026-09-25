@@ -57,7 +57,9 @@ def _run(tmp_path: Path, junit: str) -> tuple[subprocess.CompletedProcess[str], 
     junit_path.write_text(junit, encoding="utf-8")
     environment = tmp_path / "environment.json"
     environment.write_text(
-        json.dumps({"git_sha": "abc123", "llm_model": "Qwen3.5-4B-4bit"}),
+        json.dumps(
+            {"git_sha": "abc123", "llm_model": "Qwen3-4B-Instruct-2507-4bit"}
+        ),
         encoding="utf-8",
     )
     output = tmp_path / "report.md"
@@ -88,9 +90,10 @@ def test_report_renders_layers_and_overall_pass(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     text = output.read_text(encoding="utf-8")
     assert "**Overall: PASS**" in text
+    assert "## Issues / Learnings" in text
     assert "L2" in text and "API contract" in text
     assert "L7" in text and "LLM matrix" in text
-    assert "Qwen3.5-4B-4bit" in text
+    assert "Qwen3-4B-Instruct-2507-4bit" in text
     assert "`pytest.log`" in text
 
 

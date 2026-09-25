@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import threading
 from datetime import UTC, datetime
 
 import pytest
@@ -102,6 +103,48 @@ def test_event_sequences_are_assigned_atomically(pg_engine: Engine) -> None:
 
     sequences = [event.sequence for event in store.list_events("run-1")]
     assert sequences == [0, 1, 2]
+
+
+def test_concurrent_event_appends_do_not_collide(pg_engine: Engine) -> None:
+    """Concurrent appends for one run must serialize on distinct sequences.
+
+    Regression: under READ COMMITTED a bare ``SELECT max(sequence)`` takes no
+    lock, so two concurrent appends read the same max and collide on the
+    ``(run_id, sequence)`` primary key.
+    """
+    store = PostgresRunStore(pg_engine)
+    store.clear()
+    store.save_run(_run())
+
+    threads_count = 8
+    barrier = threading.Barrier(threads_count)
+    errors: list[BaseException] = []
+
+    def append() -> None:
+        barrier.wait()
+        try:
+            store.add_event(
+                RunEvent(
+                    run_id="run-1",
+                    sequence=0,
+                    type=EventType.STATE_CHANGE,
+                    actor="operator",
+                    timestamp=_NOW,
+                    to_state=RunState.PAUSED,
+                )
+            )
+        except BaseException as exc:
+            errors.append(exc)
+
+    threads = [threading.Thread(target=append) for _ in range(threads_count)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+
+    assert not errors, f"concurrent appends raised: {errors!r}"
+    sequences = [event.sequence for event in store.list_events("run-1")]
+    assert sequences == list(range(threads_count))
 
 
 def test_paused_run_survives_restart(pg_engine: Engine) -> None:

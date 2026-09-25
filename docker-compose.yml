@@ -150,6 +150,7 @@ services:
       HIVEPLANE_EXECUTION__STORE: postgres
       HIVEPLANE_EXECUTION__CHECKPOINT_PATH: ${HIVEPLANE_EXECUTION__CHECKPOINT_PATH:-/app/.hiveplane/checkpoints/graph.json}
       HIVEPLANE_CERTIFICATION__EXECUTOR: ${HIVEPLANE_CERTIFICATION__EXECUTOR:-adapter}
+      HIVEPLANE_CERTIFICATION__PRODUCTION__MIN_PRODUCTION_RUNS_SURVIVED: ${HIVEPLANE_CERTIFICATION__PRODUCTION__MIN_PRODUCTION_RUNS_SURVIVED:-50}
       # Persistent Ed25519 attestation key: attestations must verify across
       # container restarts/recreates (M23, #125).
       HIVEPLANE_CERTIFICATION__SIGNING_KEY_FILE: /app/.hiveplane/checkpoints/attestation.pem

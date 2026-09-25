@@ -180,9 +180,9 @@ def test_env_profiles_set_llm_provider_defaults() -> None:
     assert "HIVEPLANE_MODEL__PROVIDER=local" in local
     assert "HIVEPLANE_MODEL__BASE_URL=http://host.docker.internal:8000/v1" in local
     assert (
-        '{"Qwen3.5-4B-4bit": "omlx/qwen3.5-4b/4bit"}' in local
+        '{"Qwen3-4B-Instruct-2507-4bit": "omlx/qwen3-4b-instruct-2507/4bit"}' in local
     ), "local profile must alias the OMLX-served model to the canonical identity"
-    assert "HIVEPLANE_MODEL__DEFAULT_MODEL=omlx/qwen3.5-4b/4bit" in local
+    assert "HIVEPLANE_MODEL__DEFAULT_MODEL=omlx/qwen3-4b-instruct-2507/4bit" in local
 
     assert "HIVEPLANE_MODEL__PROVIDER=cloud" in cloud
     assert "HIVEPLANE_MODEL__BASE_URL=https://api.openai.com/v1" in cloud
