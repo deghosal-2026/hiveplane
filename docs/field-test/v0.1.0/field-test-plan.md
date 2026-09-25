@@ -265,7 +265,7 @@ field_test/
 |--------|-----------|------|------------------|
 | tooltrust (12 upstream repos) | `proven/tooltrust/vendor/` | 463 MB | `cd proven/tooltrust && bash download_field_agents.sh` |
 | evalforge (13 upstream repos) | `proven/evalforge/agents/` | 1.2 GB | `cd proven/evalforge && bash setup.sh` (or clone from `list.txt`) |
-| exectrace (4 reference agents) | `proven/exectrace/{agent-crew,agent-chatbot,agent-react,agent-mcp}/` | 36 MB | copy from agent-exec-trace repo |
+| exectrace (6 vendored agents) | `proven/exectrace/{agent-crew,agent-chatbot,agent-react,agent-mcp,agent-github,agent-weather}/` | 36 MB | copy from agent-exec-trace repo; `agent-github` is a copy of `coleam00/ottomator-agents` and `agent-weather` is a public PydanticAI weather-agent example — both are third-party and must never be committed |
 
 ## Phases
 

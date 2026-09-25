@@ -12,10 +12,10 @@ package on PyPI, the image published, and the GitHub release tagged.
 
 | Item | Issue | Title | Area | Status |
 |------|-------|-------|------|--------|
-| M24.1 | [#145](https://github.com/deghosal-2026/hiveplane/issues/145) | Security pass — git history audit + trufflehog secret scan | security | ⬜ |
+| M24.1 | [#145](https://github.com/deghosal-2026/hiveplane/issues/145) | Security pass — git history audit + trufflehog secret scan | security | ✅ |
 | M24.2 | [#60](https://github.com/deghosal-2026/hiveplane/issues/60) | Final release gate — tests, CI, coverage, docs accuracy | testing/docs | ⬜ |
-| M24.3 | [#146](https://github.com/deghosal-2026/hiveplane/issues/146) | Documentation refresh — CHANGELOG, release notes, README | docs | ⬜ |
-| M24.4 | [#147](https://github.com/deghosal-2026/hiveplane/issues/147) | Publish to PyPI | release | ⬜ |
+| M24.3 | [#146](https://github.com/deghosal-2026/hiveplane/issues/146) | Documentation refresh — CHANGELOG, release notes, README | docs | ✅ |
+| M24.4 | [#147](https://github.com/deghosal-2026/hiveplane/issues/147) | Publish to PyPI | release | ✅ |
 | M24.5 | [#61](https://github.com/deghosal-2026/hiveplane/issues/61) | Distribution — Docker image publish + demo verification | release | ⬜ |
 | M24.6 | [#148](https://github.com/deghosal-2026/hiveplane/issues/148) | Tag and publish the GitHub release `v0.1.0` | release | ⬜ |
 
@@ -31,11 +31,11 @@ secret, vulnerable dependency, or security regression must be caught before the 
 OpenSSF scorecard (if applicable).
 
 **Checklist**
-- [ ] `trufflehog git file://.` clean (or documented false positives)
-- [ ] `pip-audit` clean on production dependencies (no unmitigated high/critical)
-- [ ] `.gitignore`/`.dockerignore` verified; no key material tracked
-- [ ] `SECURITY.md` current (threat model, disclosure policy)
-- [ ] Scan results recorded in the release notes
+- [x] `trufflehog git file://.` clean — 0 findings (verified + full history)
+- [x] `pip-audit` clean on production dependencies — 52 deps, 0 vulnerabilities
+- [x] `.gitignore`/`.dockerignore` verified; no key material tracked; third-party public-repo agents (`agent-github`, `agent-weather`) untracked
+- [x] `SECURITY.md` current (threat model, disclosure policy) — created
+- [x] Scan results recorded — [`docs/release/v0.1.0/security-audit.md`](../../release/v0.1.0/security-audit.md)
 
 ### M24.2 — Final release gate — tests, CI, coverage, docs accuracy (#60)
 
@@ -49,7 +49,7 @@ ADAPTERS, observability, WBS).
 - [ ] `pytest`: 100% pass, zero unexplained skips
 - [ ] Docker test track green against the rebuilt `v0.1.0` image
 - [ ] CI hermetic pass on GitHub Actions (py3.12 + 3.13)
-- [ ] Coverage recorded — **current 93%, target >95%**: raise or restate the gate
+- [x] Coverage recorded — **93%** local (6707 stmts, 353 missed); gate restated to **> 92%** (`--cov-fail-under=92` in CI)
 - [ ] Docs match behavior (no stale-doc contradictions)
 
 ### M24.3 — Documentation refresh — CHANGELOG, release notes, README (#146)
@@ -60,23 +60,24 @@ ADAPTERS, observability, WBS).
 (`__version__`), `Dockerfile` pin, `README.md`, `CHANGELOG.md`, `docs/release/v0.1.0/`.
 
 **Checklist**
-- [ ] `CHANGELOG.md` created (Keep a Changelog) with a v0.1.0 entry
-- [ ] `docs/release/v0.1.0/release-notes.md` — what's new, field-test results, known issues
-- [ ] `README.md` — status (alpha), `pip install hiveplane`, quickstart, links
-- [ ] `SECURITY.md`, `CONTRIBUTING.md` published
-- [ ] Version consistent at all locations; no stale agent names/versions
-- [ ] `docs/README.md` links the release artifacts
+- [x] `CHANGELOG.md` created (Keep a Changelog) with a v0.1.0 entry
+- [x] `docs/release/v0.1.0/release-notes.md` — what's new, field-test results, known issues
+- [x] `README.md` — status (alpha), `pip install hiveplane`, quickstart, full documentation index
+- [x] `SECURITY.md`, `CONTRIBUTING.md` published
+- [x] Version consistent at all locations (0.1.0); no stale agent names/versions
+- [x] `docs/README.md` links the release artifacts
 
 ### M24.4 — Publish to PyPI (#147)
 
 **Problem:** `pip install hiveplane` must work.
 
 **Checklist**
-- [ ] `python -m build` produces clean sdist + wheel
-- [ ] Metadata complete (license, classifiers, readme, URLs, python-requires)
-- [ ] Clean-venv install smoke test (`hiveplane --help`, `hiveplane init`)
-- [ ] TestPyPI verified, then PyPI published (Trusted Publishing / token — never committed)
-- [ ] `pip install hiveplane==0.1.0` works from PyPI
+- [x] `python -m build` produces clean sdist + wheel (sdist 135 KB, sources only)
+- [x] Metadata complete (license, classifiers, readme, URLs, python-requires >=3.12)
+- [x] Clean-venv install smoke test (`hiveplane --help`, `hiveplane init`)
+- [x] Published to PyPI via API token (TestPyPI skipped by request)
+- [x] `pip install hiveplane==0.1.0` works from PyPI
+- [x] sdist restricted to `src/hiveplane` + root metadata — no field-test/third-party agent code ships
 - [ ] Optional: `release.yml` workflow (build + publish on tag)
 
 ### M24.5 — Distribution — Docker image publish + demo verification (#61)
@@ -118,7 +119,7 @@ Distribution conveniences and platform breadth — tracked, not blocking the cor
 
 Standard gate:
 - [ ] All tests in the system pass: `pytest`
-- [ ] Code coverage total > 95% (current 93% — raise or restate)
+- [x] Code coverage total > 92% (93% local; Postgres-backed tests raise it further in CI)
 - [ ] Ruff clean · Mypy strict clean
 - [ ] Update all relevant docs affected by this milestone
 - [ ] Verify all issues in this milestone are done

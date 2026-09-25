@@ -16,7 +16,7 @@ from hiveplane.certification.models import (
 )
 from hiveplane.core.approval import ApprovalRecord, ApprovalStatus
 from hiveplane.core.tools import ToolTrustLevel
-from hiveplane.core.triggers import TriggerRule, TriggerType
+from hiveplane.core.triggers import TriggerMatch, TriggerRule, TriggerType
 from hiveplane.policy.store import PostgresApprovalStore
 from hiveplane.registry.models import ToolRecord, TriggerRecord
 from hiveplane.registry.store import PostgresRegistryStore
@@ -72,7 +72,11 @@ def test_registry_tools_and_triggers_round_trip(pg_engine: Engine) -> None:
     trigger = TriggerRecord(
         trigger_id="agent-1-t1",
         workload="agent-1",
-        rule=TriggerRule(type=TriggerType.WEBHOOK, url="https://example.test/hook"),
+        rule=TriggerRule(
+            type=TriggerType.WEBHOOK,
+            url="https://example.test/hook",
+            match=TriggerMatch(service="agent-1"),
+        ),
         created_at=_NOW,
     )
     store.add_trigger(trigger)

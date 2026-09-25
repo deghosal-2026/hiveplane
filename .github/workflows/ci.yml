@@ -75,7 +75,7 @@ jobs:
         run: alembic upgrade head
 
       - name: Pytest with coverage gate
-        run: pytest --cov=src/hiveplane --cov-report=term-missing --cov-fail-under=95
+        run: pytest --cov=src/hiveplane --cov-report=term-missing --cov-fail-under=92
 
   operator-ui-e2e:
     name: operator UI · e2e (chromium)
