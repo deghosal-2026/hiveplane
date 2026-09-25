@@ -1,8 +1,15 @@
 # HivePlane — Control Plane for Production Agent Fleets
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Status: alpha](https://img.shields.io/badge/status-alpha-orange.svg)](#mvp-010)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue.svg)](https://www.python.org/)
 [![PyPI](https://img.shields.io/badge/pypi-hiveplane-blue.svg)](https://pypi.org/project/hiveplane/)
+[![Status: alpha](https://img.shields.io/badge/status-alpha-orange.svg)](#mvp-010)
+[![Ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
+[![Type checked](https://img.shields.io/badge/mypy-strict-blue.svg)](https://github.com/python/mypy)
+[![Coverage](https://img.shields.io/badge/coverage-92%25%20gate-yellow.svg)](https://github.com/deghosal-2026/hiveplane/actions)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/14940/badge)](https://www.bestpractices.dev/projects/14940/passing)
+[![Field Test](https://img.shields.io/badge/field%20test-v0.1.0%20%7C%2010%2F10%20scenarios-brightgreen.svg)](docs/field-test/v0.1.0/FIELD_TEST_REPORT.md)
+[![Changelog](https://img.shields.io/badge/changelog-Keep%20a%20Changelog-%23E05735.svg)](CHANGELOG.md)
 
 > A Kubernetes-like control plane for AI agents: register agents, define budgets and permissions, route tasks, inspect workflow state, and intervene when a run becomes unsafe or uneconomical.
 
