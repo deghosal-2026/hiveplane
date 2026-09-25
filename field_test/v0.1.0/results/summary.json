@@ -1,0 +1,16 @@
+{
+  "generated_at": "2026-09-25T01:02:47.617039+00:00",
+  "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+  "passed": 1,
+  "failed": 0,
+  "blocked": 0,
+  "scenarios": [
+    {
+      "scenario": "S9",
+      "name": "fan-out",
+      "status": "pass",
+      "detail": "delivery recorded in run story",
+      "evidence": "field_test/v0.1.0/results/S9-fan-out"
+    }
+  ]
+}

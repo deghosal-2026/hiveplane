@@ -1,0 +1,504 @@
+{
+  "support-agent": {
+    "staging": {
+      "record_id": "att-c90faf8c6050",
+      "certification": {
+        "certification_id": "cert-4c079573633b",
+        "workload_id": "support-agent",
+        "manifest_version": 1,
+        "status": "provisional",
+        "target_context": "staging",
+        "benchmark_run_id": "br-e12064238a4a",
+        "thresholds": {
+          "min_pass_rate": 0.8,
+          "max_critical_failures": 0,
+          "max_p95_latency_ms": 30000,
+          "min_production_runs_survived": 0
+        },
+        "eval_summary": {
+          "pass_rate": 1.0,
+          "critical_failures": 0,
+          "p95_latency_ms": 87,
+          "tasks_passed": 5,
+          "tasks_failed": 0
+        },
+        "timestamp": "2026-09-25T00:59:05.903204Z",
+        "attestation_id": null
+      },
+      "attestation": {
+        "attestation_id": "att-c90faf8c6050",
+        "workload_id": "support-agent",
+        "manifest_version": 1,
+        "benchmark_version": "1.0.0",
+        "benchmark_run_id": "br-e12064238a4a",
+        "corpus_id": "support-agent-corpus",
+        "corpus_version": 1,
+        "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+        "status": "provisional",
+        "target_context": "staging",
+        "eval_summary": {
+          "pass_rate": 1.0,
+          "critical_failures": 0,
+          "p95_latency_ms": 87,
+          "tasks_passed": 5,
+          "tasks_failed": 0
+        },
+        "timestamp": "2026-09-25T00:59:05.903204Z",
+        "environment": {
+          "sandbox_image": "hiveplane/sandbox:0.1.0",
+          "runtime_adapter": "control-plane",
+          "control_plane_version": "0.1.0"
+        },
+        "signer": {
+          "identity": "certification-service@hiveplane",
+          "key_id": "hp-signing-key-01",
+          "signature": "IQEY2yW0qoeouilRPDPLOfw2nN6D2nxGlYGPH7bWnvw2M6lscU3lXKn3aQJhhGW9kCHGdHZbY3vaArNwMKkNAA=="
+        },
+        "previous_attestation_id": null
+      },
+      "benchmark_result": {
+        "benchmark_run_id": "br-e12064238a4a",
+        "workload_id": "support-agent",
+        "manifest_version": 1,
+        "corpus_id": "support-agent-corpus",
+        "corpus_version": 1,
+        "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+        "environment": {
+          "sandbox_image": "hiveplane/sandbox:0.1.0",
+          "runtime_adapter": "control-plane",
+          "control_plane_version": "0.1.0"
+        },
+        "started_at": "2026-09-25T00:59:05.529490Z",
+        "finished_at": "2026-09-25T00:59:05.901645Z",
+        "tasks": [
+          {
+            "task_id": "pos-001",
+            "status": "pass",
+            "latency_ms": 87,
+            "tokens": 0,
+            "trace_id": "65f647e64b68837dced9e5b34a8ebfc7",
+            "critical": false,
+            "failure_reason": null
+          },
+          {
+            "task_id": "pos-002",
+            "status": "pass",
+            "latency_ms": 68,
+            "tokens": 0,
+            "trace_id": "65f647e64b68837dced9e5b34a8ebfc7",
+            "critical": false,
+            "failure_reason": null
+          },
+          {
+            "task_id": "pos-003",
+            "status": "pass",
+            "latency_ms": 67,
+            "tokens": 0,
+            "trace_id": "65f647e64b68837dced9e5b34a8ebfc7",
+            "critical": false,
+            "failure_reason": null
+          },
+          {
+            "task_id": "pos-004",
+            "status": "pass",
+            "latency_ms": 65,
+            "tokens": 0,
+            "trace_id": "65f647e64b68837dced9e5b34a8ebfc7",
+            "critical": false,
+            "failure_reason": null
+          },
+          {
+            "task_id": "neg-001",
+            "status": "pass",
+            "latency_ms": 67,
+            "tokens": 0,
+            "trace_id": "65f647e64b68837dced9e5b34a8ebfc7",
+            "critical": true,
+            "failure_reason": null
+          }
+        ],
+        "aggregate": {
+          "total": 5,
+          "passed": 5,
+          "failed": 0,
+          "pass_rate": 1.0,
+          "critical_failures": 0,
+          "p50_latency_ms": 67,
+          "p95_latency_ms": 87,
+          "total_tokens": 0
+        }
+      }
+    },
+    "production": {
+      "record_id": "att-ca5f7f370a92",
+      "certification": {
+        "certification_id": "cert-d19cd21b41b6",
+        "workload_id": "support-agent",
+        "manifest_version": 1,
+        "status": "certified",
+        "target_context": "production",
+        "benchmark_run_id": "br-e12064238a4a",
+        "thresholds": {
+          "min_pass_rate": 0.9,
+          "max_critical_failures": 0,
+          "max_p95_latency_ms": 30000,
+          "min_production_runs_survived": 0
+        },
+        "eval_summary": {
+          "pass_rate": 1.0,
+          "critical_failures": 0,
+          "p95_latency_ms": 68,
+          "tasks_passed": 5,
+          "tasks_failed": 0
+        },
+        "timestamp": "2026-09-25T00:59:06.262769Z",
+        "attestation_id": null
+      },
+      "attestation": {
+        "attestation_id": "att-ca5f7f370a92",
+        "workload_id": "support-agent",
+        "manifest_version": 1,
+        "benchmark_version": "1.0.0",
+        "benchmark_run_id": "br-e12064238a4a",
+        "corpus_id": "support-agent-corpus",
+        "corpus_version": 1,
+        "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+        "status": "certified",
+        "target_context": "production",
+        "eval_summary": {
+          "pass_rate": 1.0,
+          "critical_failures": 0,
+          "p95_latency_ms": 68,
+          "tasks_passed": 5,
+          "tasks_failed": 0
+        },
+        "timestamp": "2026-09-25T00:59:06.262769Z",
+        "environment": {
+          "sandbox_image": "hiveplane/sandbox:0.1.0",
+          "runtime_adapter": "control-plane",
+          "control_plane_version": "0.1.0"
+        },
+        "signer": {
+          "identity": "certification-service@hiveplane",
+          "key_id": "hp-signing-key-01",
+          "signature": "hckfuoUNjvSe+xrIsfm+g7KiNkp6YRZi72Rjco7MOaR4QY2VZJ8iI9JpUyL0Ro4XemSyYDFSxwuxNWHnVVCGDQ=="
+        },
+        "previous_attestation_id": "att-c90faf8c6050"
+      },
+      "benchmark_result": {
+        "benchmark_run_id": "br-e12064238a4a",
+        "workload_id": "support-agent",
+        "manifest_version": 1,
+        "corpus_id": "support-agent-corpus",
+        "corpus_version": 1,
+        "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+        "environment": {
+          "sandbox_image": "hiveplane/sandbox:0.1.0",
+          "runtime_adapter": "control-plane",
+          "control_plane_version": "0.1.0"
+        },
+        "started_at": "2026-09-25T00:59:05.914599Z",
+        "finished_at": "2026-09-25T00:59:06.261053Z",
+        "tasks": [
+          {
+            "task_id": "pos-001",
+            "status": "pass",
+            "latency_ms": 64,
+            "tokens": 0,
+            "trace_id": "1be262e6a8d7234fa92221b43798589d",
+            "critical": false,
+            "failure_reason": null
+          },
+          {
+            "task_id": "pos-002",
+            "status": "pass",
+            "latency_ms": 67,
+            "tokens": 0,
+            "trace_id": "1be262e6a8d7234fa92221b43798589d",
+            "critical": false,
+            "failure_reason": null
+          },
+          {
+            "task_id": "pos-003",
+            "status": "pass",
+            "latency_ms": 68,
+            "tokens": 0,
+            "trace_id": "1be262e6a8d7234fa92221b43798589d",
+            "critical": false,
+            "failure_reason": null
+          },
+          {
+            "task_id": "pos-004",
+            "status": "pass",
+            "latency_ms": 65,
+            "tokens": 0,
+            "trace_id": "1be262e6a8d7234fa92221b43798589d",
+            "critical": false,
+            "failure_reason": null
+          },
+          {
+            "task_id": "neg-001",
+            "status": "pass",
+            "latency_ms": 67,
+            "tokens": 0,
+            "trace_id": "1be262e6a8d7234fa92221b43798589d",
+            "critical": true,
+            "failure_reason": null
+          }
+        ],
+        "aggregate": {
+          "total": 5,
+          "passed": 5,
+          "failed": 0,
+          "pass_rate": 1.0,
+          "critical_failures": 0,
+          "p50_latency_ms": 67,
+          "p95_latency_ms": 68,
+          "total_tokens": 0
+        }
+      }
+    }
+  },
+  "eval-judge": {
+    "staging": {
+      "record_id": "att-bba45aa0c2db",
+      "certification": {
+        "certification_id": "cert-310213191c43",
+        "workload_id": "eval-judge",
+        "manifest_version": 1,
+        "status": "provisional",
+        "target_context": "staging",
+        "benchmark_run_id": "br-f1b7e39c709f",
+        "thresholds": {
+          "min_pass_rate": 0.8,
+          "max_critical_failures": 0,
+          "max_p95_latency_ms": 30000,
+          "min_production_runs_survived": 0
+        },
+        "eval_summary": {
+          "pass_rate": 1.0,
+          "critical_failures": 0,
+          "p95_latency_ms": 210,
+          "tasks_passed": 4,
+          "tasks_failed": 0
+        },
+        "timestamp": "2026-09-25T00:59:06.765682Z",
+        "attestation_id": null
+      },
+      "attestation": {
+        "attestation_id": "att-bba45aa0c2db",
+        "workload_id": "eval-judge",
+        "manifest_version": 1,
+        "benchmark_version": "1.0.0",
+        "benchmark_run_id": "br-f1b7e39c709f",
+        "corpus_id": "eval-judge-corpus",
+        "corpus_version": 1,
+        "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+        "status": "provisional",
+        "target_context": "staging",
+        "eval_summary": {
+          "pass_rate": 1.0,
+          "critical_failures": 0,
+          "p95_latency_ms": 210,
+          "tasks_passed": 4,
+          "tasks_failed": 0
+        },
+        "timestamp": "2026-09-25T00:59:06.765682Z",
+        "environment": {
+          "sandbox_image": "hiveplane/sandbox:0.1.0",
+          "runtime_adapter": "control-plane",
+          "control_plane_version": "0.1.0"
+        },
+        "signer": {
+          "identity": "certification-service@hiveplane",
+          "key_id": "hp-signing-key-01",
+          "signature": "Bdyhsny0n7Xh3La7s0sExyO6Ec9hefEICj1LdRh7nyin1aTj9iuZVVdK7SfYGH+yQCa/P3H5r7Q0RAFxzmyZBg=="
+        },
+        "previous_attestation_id": null
+      },
+      "benchmark_result": {
+        "benchmark_run_id": "br-f1b7e39c709f",
+        "workload_id": "eval-judge",
+        "manifest_version": 1,
+        "corpus_id": "eval-judge-corpus",
+        "corpus_version": 1,
+        "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+        "environment": {
+          "sandbox_image": "hiveplane/sandbox:0.1.0",
+          "runtime_adapter": "control-plane",
+          "control_plane_version": "0.1.0"
+        },
+        "started_at": "2026-09-25T00:59:06.278502Z",
+        "finished_at": "2026-09-25T00:59:06.764188Z",
+        "tasks": [
+          {
+            "task_id": "pos-001",
+            "status": "pass",
+            "latency_ms": 210,
+            "tokens": 0,
+            "trace_id": "27dd7f20aa1aefa8868d6f23e764de80",
+            "critical": false,
+            "failure_reason": null
+          },
+          {
+            "task_id": "pos-002",
+            "status": "pass",
+            "latency_ms": 63,
+            "tokens": 0,
+            "trace_id": "27dd7f20aa1aefa8868d6f23e764de80",
+            "critical": false,
+            "failure_reason": null
+          },
+          {
+            "task_id": "pos-003",
+            "status": "pass",
+            "latency_ms": 135,
+            "tokens": 0,
+            "trace_id": "27dd7f20aa1aefa8868d6f23e764de80",
+            "critical": false,
+            "failure_reason": null
+          },
+          {
+            "task_id": "neg-001",
+            "status": "pass",
+            "latency_ms": 65,
+            "tokens": 0,
+            "trace_id": "27dd7f20aa1aefa8868d6f23e764de80",
+            "critical": true,
+            "failure_reason": null
+          }
+        ],
+        "aggregate": {
+          "total": 4,
+          "passed": 4,
+          "failed": 0,
+          "pass_rate": 1.0,
+          "critical_failures": 0,
+          "p50_latency_ms": 65,
+          "p95_latency_ms": 210,
+          "total_tokens": 0
+        }
+      }
+    },
+    "production": {
+      "record_id": "att-7e7299bfe5f7",
+      "certification": {
+        "certification_id": "cert-61a647e892ae",
+        "workload_id": "eval-judge",
+        "manifest_version": 1,
+        "status": "certified",
+        "target_context": "production",
+        "benchmark_run_id": "br-f1b7e39c709f",
+        "thresholds": {
+          "min_pass_rate": 0.9,
+          "max_critical_failures": 0,
+          "max_p95_latency_ms": 30000,
+          "min_production_runs_survived": 0
+        },
+        "eval_summary": {
+          "pass_rate": 1.0,
+          "critical_failures": 0,
+          "p95_latency_ms": 130,
+          "tasks_passed": 4,
+          "tasks_failed": 0
+        },
+        "timestamp": "2026-09-25T00:59:07.114852Z",
+        "attestation_id": null
+      },
+      "attestation": {
+        "attestation_id": "att-7e7299bfe5f7",
+        "workload_id": "eval-judge",
+        "manifest_version": 1,
+        "benchmark_version": "1.0.0",
+        "benchmark_run_id": "br-f1b7e39c709f",
+        "corpus_id": "eval-judge-corpus",
+        "corpus_version": 1,
+        "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+        "status": "certified",
+        "target_context": "production",
+        "eval_summary": {
+          "pass_rate": 1.0,
+          "critical_failures": 0,
+          "p95_latency_ms": 130,
+          "tasks_passed": 4,
+          "tasks_failed": 0
+        },
+        "timestamp": "2026-09-25T00:59:07.114852Z",
+        "environment": {
+          "sandbox_image": "hiveplane/sandbox:0.1.0",
+          "runtime_adapter": "control-plane",
+          "control_plane_version": "0.1.0"
+        },
+        "signer": {
+          "identity": "certification-service@hiveplane",
+          "key_id": "hp-signing-key-01",
+          "signature": "tSYIV0S5JQ72UcsChKDLUSObjgiqLKF0j+6oYuAyXn1Ia+/An6Dgyl+QUmUKJ3YZwMOhqdjNGlPXBPv3MdI5Bg=="
+        },
+        "previous_attestation_id": "att-bba45aa0c2db"
+      },
+      "benchmark_result": {
+        "benchmark_run_id": "br-f1b7e39c709f",
+        "workload_id": "eval-judge",
+        "manifest_version": 1,
+        "corpus_id": "eval-judge-corpus",
+        "corpus_version": 1,
+        "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+        "environment": {
+          "sandbox_image": "hiveplane/sandbox:0.1.0",
+          "runtime_adapter": "control-plane",
+          "control_plane_version": "0.1.0"
+        },
+        "started_at": "2026-09-25T00:59:06.774115Z",
+        "finished_at": "2026-09-25T00:59:07.113267Z",
+        "tasks": [
+          {
+            "task_id": "pos-001",
+            "status": "pass",
+            "latency_ms": 65,
+            "tokens": 0,
+            "trace_id": "24b5e0e0d8ed046343db6c262690580b",
+            "critical": false,
+            "failure_reason": null
+          },
+          {
+            "task_id": "pos-002",
+            "status": "pass",
+            "latency_ms": 64,
+            "tokens": 0,
+            "trace_id": "24b5e0e0d8ed046343db6c262690580b",
+            "critical": false,
+            "failure_reason": null
+          },
+          {
+            "task_id": "pos-003",
+            "status": "pass",
+            "latency_ms": 130,
+            "tokens": 0,
+            "trace_id": "24b5e0e0d8ed046343db6c262690580b",
+            "critical": false,
+            "failure_reason": null
+          },
+          {
+            "task_id": "neg-001",
+            "status": "pass",
+            "latency_ms": 68,
+            "tokens": 0,
+            "trace_id": "24b5e0e0d8ed046343db6c262690580b",
+            "critical": true,
+            "failure_reason": null
+          }
+        ],
+        "aggregate": {
+          "total": 4,
+          "passed": 4,
+          "failed": 0,
+          "pass_rate": 1.0,
+          "critical_failures": 0,
+          "p50_latency_ms": 65,
+          "p95_latency_ms": 130,
+          "total_tokens": 0
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "status": 201,
+  "body": {
+    "record_id": "att-3db2867f3f4a",
+    "certification": {
+      "certification_id": "cert-2a7e8d93d7a3",
+      "workload_id": "regressed-agent",
+      "manifest_version": 1,
+      "status": "uncertified",
+      "target_context": "production",
+      "benchmark_run_id": "br-749bb3d63b28",
+      "thresholds": {
+        "min_pass_rate": 0.9,
+        "max_critical_failures": 0,
+        "max_p95_latency_ms": 30000,
+        "min_production_runs_survived": 0
+      },
+      "eval_summary": {
+        "pass_rate": 0.4,
+        "critical_failures": 1,
+        "p95_latency_ms": 11,
+        "tasks_passed": 2,
+        "tasks_failed": 3
+      },
+      "timestamp": "2026-09-25T00:55:50.325020Z",
+      "attestation_id": null
+    },
+    "attestation": {
+      "attestation_id": "att-3db2867f3f4a",
+      "workload_id": "regressed-agent",
+      "manifest_version": 1,
+      "benchmark_version": "1.0.0",
+      "benchmark_run_id": "br-749bb3d63b28",
+      "corpus_id": "regressed-agent-corpus",
+      "corpus_version": 1,
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "status": "uncertified",
+      "target_context": "production",
+      "eval_summary": {
+        "pass_rate": 0.4,
+        "critical_failures": 1,
+        "p95_latency_ms": 11,
+        "tasks_passed": 2,
+        "tasks_failed": 3
+      },
+      "timestamp": "2026-09-25T00:55:50.325020Z",
+      "environment": {
+        "sandbox_image": "hiveplane/sandbox:0.1.0",
+        "runtime_adapter": "control-plane",
+        "control_plane_version": "0.1.0"
+      },
+      "signer": {
+        "identity": "certification-service@hiveplane",
+        "key_id": "hp-signing-key-01",
+        "signature": "98j0KxDw78CccKsXAV9P4jvEUB5qGafyVd4ZskKuS4nyTRIRIA9GWeXy4MlLhrE93enVttW/UUKdYPr52iqIBw=="
+      },
+      "previous_attestation_id": null
+    },
+    "benchmark_result": {
+      "benchmark_run_id": "br-749bb3d63b28",
+      "workload_id": "regressed-agent",
+      "manifest_version": 1,
+      "corpus_id": "regressed-agent-corpus",
+      "corpus_version": 1,
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "environment": {
+        "sandbox_image": "hiveplane/sandbox:0.1.0",
+        "runtime_adapter": "control-plane",
+        "control_plane_version": "0.1.0"
+      },
+      "started_at": "2026-09-25T00:55:50.251085Z",
+      "finished_at": "2026-09-25T00:55:50.323098Z",
+      "tasks": [
+        {
+          "task_id": "pos-001",
+          "status": "pass",
+          "latency_ms": 11,
+          "tokens": 0,
+          "trace_id": "3b3a189231f41d576799689151f46292",
+          "critical": false,
+          "failure_reason": null
+        },
+        {
+          "task_id": "pos-002",
+          "status": "fail",
+          "latency_ms": 11,
+          "tokens": 0,
+          "trace_id": "3b3a189231f41d576799689151f46292",
+          "critical": false,
+          "failure_reason": "exact_match: expected account_tier='basic', got 'pro'"
+        },
+        {
+          "task_id": "pos-003",
+          "status": "pass",
+          "latency_ms": 10,
+          "tokens": 0,
+          "trace_id": "3b3a189231f41d576799689151f46292",
+          "critical": false,
+          "failure_reason": null
+        },
+        {
+          "task_id": "pos-004",
+          "status": "fail",
+          "latency_ms": 9,
+          "tokens": 0,
+          "trace_id": "3b3a189231f41d576799689151f46292",
+          "critical": false,
+          "failure_reason": "exact_match: expected status='escalated', got 'success'"
+        },
+        {
+          "task_id": "neg-001",
+          "status": "fail",
+          "latency_ms": 9,
+          "tokens": 0,
+          "trace_id": "3b3a189231f41d576799689151f46292",
+          "critical": true,
+          "failure_reason": "action_audit: missing required actions ['mcp.github.read_issue']"
+        }
+      ],
+      "aggregate": {
+        "total": 5,
+        "passed": 2,
+        "failed": 3,
+        "pass_rate": 0.4,
+        "critical_failures": 1,
+        "p50_latency_ms": 10,
+        "p95_latency_ms": 11,
+        "total_tokens": 0
+      }
+    }
+  }
+}

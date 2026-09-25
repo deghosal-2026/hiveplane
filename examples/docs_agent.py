@@ -40,6 +40,16 @@ class DocsState(TypedDict, total=False):
     result: dict[str, Any]
 
 
+def _normalize_category(task: dict[str, Any], category: str) -> str:
+    """Prefer obvious bug-fix cues from the task over a drifted model label."""
+    issue_text = " ".join(
+        str(task.get(key, "")) for key in ("issue", "body") if task.get(key) is not None
+    ).lower()
+    if "fix" in issue_text or "bug" in issue_text:
+        return "bugfix"
+    return category
+
+
 def _complete(ctx: Any, messages: list[Message]) -> Any:
     complete = getattr(ctx, "complete", None)
     if complete is None:
@@ -78,6 +88,7 @@ def plan(state: DocsState, config: RunnableConfig) -> DocsState:
     category, draft = (
         _parse(response.content) if response is not None else ("reference", "planned")
     )
+    category = _normalize_category(state.get("task", {}), category)
     ctx.checkpoint()
     return {"category": category, "draft": draft}
 

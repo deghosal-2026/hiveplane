@@ -12,6 +12,14 @@ COPY pyproject.toml README.md ./
 COPY src ./src
 COPY examples ./examples
 COPY deploy/testdata ./deploy/testdata
+COPY field_test/__init__.py ./field_test/__init__.py
+COPY field_test/workloads ./field_test/workloads
+COPY field_test/shims ./field_test/shims
+COPY field_test/corpora/support-agent ./field_test/corpora/support-agent
+COPY field_test/corpora/eval-judge ./field_test/corpora/eval-judge
+COPY field_test/corpora/regressed-agent ./field_test/corpora/regressed-agent
+COPY field_test/agents/proven/exectrace/agent-raw ./field_test/agents/proven/exectrace/agent-raw
+COPY field_test/agents/proven/exectrace/agent-eval-graph ./field_test/agents/proven/exectrace/agent-eval-graph
 
 RUN python -m pip install --upgrade pip && python -m pip install ".[langgraph]"
 

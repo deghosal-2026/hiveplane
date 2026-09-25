@@ -1,0 +1,136 @@
+{
+  "run_id": "run-69ed32b11265",
+  "workload": "support-agent",
+  "team": "support",
+  "state": "completed",
+  "context": "sandbox",
+  "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+  "cost_usd": 0.0,
+  "sandbox": true,
+  "sandbox_id": "sb-e08b2282a2a5",
+  "certification_status": "certified",
+  "attestation_id": "att-ca5f7f370a92",
+  "trace_id": "1be262e6a8d7234fa92221b43798589d",
+  "entries": [
+    {
+      "timestamp": "2026-09-25T00:59:06.191782Z",
+      "kind": "admission",
+      "summary": "sandbox_only",
+      "detail": {
+        "outcome": "sandbox_only",
+        "refused_reason": null,
+        "escalation_required": false,
+        "sandbox": true,
+        "checks": [
+          {
+            "step": "certification",
+            "passed": true,
+            "reason": null,
+            "rule": "certification"
+          },
+          {
+            "step": "model_identity",
+            "passed": true,
+            "reason": null,
+            "rule": "model_binding"
+          },
+          {
+            "step": "budget",
+            "passed": true,
+            "reason": null,
+            "rule": "run"
+          },
+          {
+            "step": "policy",
+            "passed": true,
+            "reason": "no tool policy applies",
+            "rule": "run.allow"
+          },
+          {
+            "step": "sandbox",
+            "passed": true,
+            "reason": null,
+            "rule": "sandbox"
+          }
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-09-25T00:59:06.199289Z",
+      "kind": "state",
+      "summary": "queued -> running",
+      "detail": {
+        "actor": "benchmark",
+        "detail": null,
+        "from_state": "queued",
+        "to_state": "running"
+      }
+    },
+    {
+      "timestamp": "2026-09-25T00:59:06.201331Z",
+      "kind": "sandbox",
+      "summary": "provisioned sb-e08b2282a2a5",
+      "detail": {
+        "actor": "benchmark",
+        "detail": "provisioned sb-e08b2282a2a5",
+        "from_state": null,
+        "to_state": null
+      }
+    },
+    {
+      "timestamp": "2026-09-25T00:59:06.203328Z",
+      "kind": "policy_decision",
+      "summary": "sandbox.allow: sandbox context allows the tool",
+      "detail": {
+        "actor": "policy",
+        "detail": "sandbox.allow: sandbox context allows the tool",
+        "from_state": null,
+        "to_state": null
+      }
+    },
+    {
+      "timestamp": "2026-09-25T00:59:06.205246Z",
+      "kind": "tool_call",
+      "summary": "mcp.github.read_issue",
+      "detail": {
+        "actor": "adapter",
+        "detail": "mcp.github.read_issue",
+        "from_state": null,
+        "to_state": null
+      }
+    },
+    {
+      "timestamp": "2026-09-25T00:59:06.208098Z",
+      "kind": "state",
+      "summary": "running -> completed",
+      "detail": {
+        "actor": "adapter",
+        "detail": null,
+        "from_state": "running",
+        "to_state": "completed"
+      }
+    },
+    {
+      "timestamp": "2026-09-25T00:59:06.209734Z",
+      "kind": "sandbox",
+      "summary": "destroyed sb-e08b2282a2a5",
+      "detail": {
+        "actor": "adapter",
+        "detail": "destroyed sb-e08b2282a2a5",
+        "from_state": null,
+        "to_state": null
+      }
+    },
+    {
+      "timestamp": "2026-09-25T00:59:06.210583Z",
+      "kind": "delivery",
+      "summary": "slack delivered",
+      "detail": {
+        "target": "#support-agent-results",
+        "status": "delivered",
+        "attempts": 1,
+        "error": null
+      }
+    }
+  ]
+}

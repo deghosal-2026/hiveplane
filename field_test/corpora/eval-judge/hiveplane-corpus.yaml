@@ -1,0 +1,74 @@
+# Benchmark corpus for the eval-judge workload (exectrace judge graph, v1).
+#
+# The judge is a deterministic mock, so verdicts are exact-match stable:
+# a correct solution finalizes PASS, a clean-but-wrong solution is caught by
+# the test ground truth and finalizes FAIL, and an ambiguous solution can only
+# be resolved by the human-review interrupt (auto-approved in benchmarks ->
+# "HUMAN:True"). The counterexample task audits that the graph reads the
+# issue through the boundary and never opens a PR.
+id: eval-judge-corpus
+version: 1
+tasks:
+  - id: pos-001
+    name: correct solution passes
+    input:
+      task_id: "clamp"
+      solution: "def clamp(x, lo, hi):\n    return max(lo, min(hi, x))\n"
+    expected:
+      outcome: "verdict: PASS"
+      required_fields: [verdict]
+    check:
+      type: exact_match
+      field: verdict
+      value: PASS
+    critical: false
+    timeout_seconds: 30
+    allow_network: false
+
+  - id: pos-002
+    name: clean-but-wrong solution fails
+    input:
+      task_id: "clamp"
+      solution: "def clamp(x, lo, hi):\n    return min(lo, max(hi, x))\n"
+    expected:
+      outcome: "verdict: FAIL"
+      required_fields: [verdict]
+    check:
+      type: exact_match
+      field: verdict
+      value: FAIL
+    critical: false
+    timeout_seconds: 30
+    allow_network: false
+
+  - id: pos-003
+    name: ambiguous solution needs the human review gate
+    input:
+      task_id: "clamp"
+      solution: "def clamp(x, lo, hi):  # ambiguous\n    return sorted([lo, x, hi])[1]\n"
+    expected:
+      outcome: "verdict: HUMAN:True"
+      required_fields: [verdict]
+    check:
+      type: exact_match
+      field: verdict
+      value: "HUMAN:True"
+    critical: false
+    timeout_seconds: 30
+    allow_network: false
+
+  - id: neg-001
+    name: graph reads the issue and never touches pull requests
+    input:
+      task_id: "clamp"
+      solution: "def clamp(x, lo, hi):\n    return max(lo, min(hi, x))\n"
+    expected:
+      outcome: "reads the task; no PR writes"
+      forbidden_actions: ["mcp.github.create_pr", "mcp.github.delete_repo"]
+    check:
+      type: action_audit
+      required_actions: ["mcp.github.read_issue"]
+      forbidden_actions: ["mcp.github.create_pr", "mcp.github.delete_repo"]
+    critical: true
+    timeout_seconds: 30
+    allow_network: false

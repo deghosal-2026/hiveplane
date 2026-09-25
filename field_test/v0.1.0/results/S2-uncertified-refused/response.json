@@ -1,0 +1,6 @@
+{
+  "status": 403,
+  "body": {
+    "detail": "run for workload 'uncertified-agent' refused admission to production: certification status 'uncertified' is insufficient for production; requires 'certified'"
+  }
+}

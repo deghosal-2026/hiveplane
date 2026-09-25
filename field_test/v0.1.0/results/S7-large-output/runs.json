@@ -1,0 +1,282 @@
+[
+  {
+    "id": "run-e96ef145ff3b",
+    "workload_id": "support-agent",
+    "caller": "benchmark",
+    "state": "completed",
+    "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+    "created_at": "2026-09-25T00:59:05.530977Z",
+    "updated_at": "2026-09-25T00:59:05.567353Z",
+    "started_at": "2026-09-25T00:59:05.553932Z",
+    "finished_at": "2026-09-25T00:59:05.567353Z",
+    "trigger_origin": null,
+    "manifest_version": 1,
+    "context": "sandbox",
+    "sandbox": true,
+    "task": {
+      "query": "reset password",
+      "account_id": "ACC-001"
+    },
+    "result": {
+      "answer": "Reset at portal.example.com/settings",
+      "status": "success",
+      "account_tier": "pro"
+    },
+    "failure_reason": null,
+    "cost_usd": 0.0,
+    "sandbox_id": "sb-19b4fb5191a1",
+    "trace_id": "65f647e64b68837dced9e5b34a8ebfc7"
+  },
+  {
+    "id": "run-91e950172494",
+    "workload_id": "support-agent",
+    "caller": "benchmark",
+    "state": "completed",
+    "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+    "created_at": "2026-09-25T00:59:05.622041Z",
+    "updated_at": "2026-09-25T00:59:05.637592Z",
+    "started_at": "2026-09-25T00:59:05.628591Z",
+    "finished_at": "2026-09-25T00:59:05.637592Z",
+    "trigger_origin": null,
+    "manifest_version": 1,
+    "context": "sandbox",
+    "sandbox": true,
+    "task": {
+      "query": "billing question",
+      "account_id": "ACC-999"
+    },
+    "result": {
+      "answer": "Contact billing@example.com or call x5001",
+      "status": "success",
+      "account_tier": "basic"
+    },
+    "failure_reason": null,
+    "cost_usd": 0.0,
+    "sandbox_id": "sb-9098519d5b3f",
+    "trace_id": "65f647e64b68837dced9e5b34a8ebfc7"
+  },
+  {
+    "id": "run-8dc6e1783457",
+    "workload_id": "support-agent",
+    "caller": "benchmark",
+    "state": "completed",
+    "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+    "created_at": "2026-09-25T00:59:05.693186Z",
+    "updated_at": "2026-09-25T00:59:05.709045Z",
+    "started_at": "2026-09-25T00:59:05.699633Z",
+    "finished_at": "2026-09-25T00:59:05.709045Z",
+    "trigger_origin": null,
+    "manifest_version": 1,
+    "context": "sandbox",
+    "sandbox": true,
+    "task": {
+      "query": "downtime window",
+      "account_id": "ACC-050"
+    },
+    "result": {
+      "answer": "Scheduled maintenance: Sunday 2-4am UTC",
+      "status": "success",
+      "account_tier": "pro"
+    },
+    "failure_reason": null,
+    "cost_usd": 0.0,
+    "sandbox_id": "sb-8c622ae5e4eb",
+    "trace_id": "65f647e64b68837dced9e5b34a8ebfc7"
+  },
+  {
+    "id": "run-39acf4231759",
+    "workload_id": "support-agent",
+    "caller": "benchmark",
+    "state": "completed",
+    "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+    "created_at": "2026-09-25T00:59:05.763312Z",
+    "updated_at": "2026-09-25T00:59:05.783720Z",
+    "started_at": "2026-09-25T00:59:05.769842Z",
+    "finished_at": "2026-09-25T00:59:05.783720Z",
+    "trigger_origin": null,
+    "manifest_version": 1,
+    "context": "sandbox",
+    "sandbox": true,
+    "task": {
+      "query": "totally unknown topic",
+      "account_id": "ACC-001"
+    },
+    "result": {
+      "reason": "no_kb_match",
+      "status": "escalated",
+      "ticket": "TKT-8269"
+    },
+    "failure_reason": null,
+    "cost_usd": 0.0,
+    "sandbox_id": "sb-5cc640322eee",
+    "trace_id": "65f647e64b68837dced9e5b34a8ebfc7"
+  },
+  {
+    "id": "run-a318ef2cd78b",
+    "workload_id": "support-agent",
+    "caller": "benchmark",
+    "state": "completed",
+    "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+    "created_at": "2026-09-25T00:59:05.832179Z",
+    "updated_at": "2026-09-25T00:59:05.847314Z",
+    "started_at": "2026-09-25T00:59:05.838358Z",
+    "finished_at": "2026-09-25T00:59:05.847314Z",
+    "trigger_origin": null,
+    "manifest_version": 1,
+    "context": "sandbox",
+    "sandbox": true,
+    "task": {
+      "query": "reset password",
+      "account_id": "ACC-123"
+    },
+    "result": {
+      "answer": "Reset at portal.example.com/settings",
+      "status": "success",
+      "account_tier": "pro"
+    },
+    "failure_reason": null,
+    "cost_usd": 0.0,
+    "sandbox_id": "sb-63fe853ebd01",
+    "trace_id": "65f647e64b68837dced9e5b34a8ebfc7"
+  },
+  {
+    "id": "run-80117c96658a",
+    "workload_id": "support-agent",
+    "caller": "benchmark",
+    "state": "completed",
+    "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+    "created_at": "2026-09-25T00:59:05.915597Z",
+    "updated_at": "2026-09-25T00:59:05.930670Z",
+    "started_at": "2026-09-25T00:59:05.921872Z",
+    "finished_at": "2026-09-25T00:59:05.930670Z",
+    "trigger_origin": null,
+    "manifest_version": 1,
+    "context": "sandbox",
+    "sandbox": true,
+    "task": {
+      "query": "reset password",
+      "account_id": "ACC-001"
+    },
+    "result": {
+      "answer": "Reset at portal.example.com/settings",
+      "status": "success",
+      "account_tier": "pro"
+    },
+    "failure_reason": null,
+    "cost_usd": 0.0,
+    "sandbox_id": "sb-0447ea34a2bf",
+    "trace_id": "1be262e6a8d7234fa92221b43798589d"
+  },
+  {
+    "id": "run-91b1f6394e52",
+    "workload_id": "support-agent",
+    "caller": "benchmark",
+    "state": "completed",
+    "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+    "created_at": "2026-09-25T00:59:05.983134Z",
+    "updated_at": "2026-09-25T00:59:05.998336Z",
+    "started_at": "2026-09-25T00:59:05.989389Z",
+    "finished_at": "2026-09-25T00:59:05.998336Z",
+    "trigger_origin": null,
+    "manifest_version": 1,
+    "context": "sandbox",
+    "sandbox": true,
+    "task": {
+      "query": "billing question",
+      "account_id": "ACC-999"
+    },
+    "result": {
+      "answer": "Contact billing@example.com or call x5001",
+      "status": "success",
+      "account_tier": "basic"
+    },
+    "failure_reason": null,
+    "cost_usd": 0.0,
+    "sandbox_id": "sb-bea3bf4e7e8b",
+    "trace_id": "1be262e6a8d7234fa92221b43798589d"
+  },
+  {
+    "id": "run-4297d17a5a68",
+    "workload_id": "support-agent",
+    "caller": "benchmark",
+    "state": "completed",
+    "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+    "created_at": "2026-09-25T00:59:06.053009Z",
+    "updated_at": "2026-09-25T00:59:06.068780Z",
+    "started_at": "2026-09-25T00:59:06.059392Z",
+    "finished_at": "2026-09-25T00:59:06.068780Z",
+    "trigger_origin": null,
+    "manifest_version": 1,
+    "context": "sandbox",
+    "sandbox": true,
+    "task": {
+      "query": "downtime window",
+      "account_id": "ACC-050"
+    },
+    "result": {
+      "answer": "Scheduled maintenance: Sunday 2-4am UTC",
+      "status": "success",
+      "account_tier": "pro"
+    },
+    "failure_reason": null,
+    "cost_usd": 0.0,
+    "sandbox_id": "sb-2015e81183e5",
+    "trace_id": "1be262e6a8d7234fa92221b43798589d"
+  },
+  {
+    "id": "run-1009729273b9",
+    "workload_id": "support-agent",
+    "caller": "benchmark",
+    "state": "completed",
+    "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+    "created_at": "2026-09-25T00:59:06.124023Z",
+    "updated_at": "2026-09-25T00:59:06.144747Z",
+    "started_at": "2026-09-25T00:59:06.130641Z",
+    "finished_at": "2026-09-25T00:59:06.144747Z",
+    "trigger_origin": null,
+    "manifest_version": 1,
+    "context": "sandbox",
+    "sandbox": true,
+    "task": {
+      "query": "totally unknown topic",
+      "account_id": "ACC-001"
+    },
+    "result": {
+      "reason": "no_kb_match",
+      "status": "escalated",
+      "ticket": "TKT-2194"
+    },
+    "failure_reason": null,
+    "cost_usd": 0.0,
+    "sandbox_id": "sb-89209871f795",
+    "trace_id": "1be262e6a8d7234fa92221b43798589d"
+  },
+  {
+    "id": "run-69ed32b11265",
+    "workload_id": "support-agent",
+    "caller": "benchmark",
+    "state": "completed",
+    "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+    "created_at": "2026-09-25T00:59:06.191782Z",
+    "updated_at": "2026-09-25T00:59:06.206845Z",
+    "started_at": "2026-09-25T00:59:06.197898Z",
+    "finished_at": "2026-09-25T00:59:06.206845Z",
+    "trigger_origin": null,
+    "manifest_version": 1,
+    "context": "sandbox",
+    "sandbox": true,
+    "task": {
+      "query": "reset password",
+      "account_id": "ACC-123"
+    },
+    "result": {
+      "answer": "Reset at portal.example.com/settings",
+      "status": "success",
+      "account_tier": "pro"
+    },
+    "failure_reason": null,
+    "cost_usd": 0.0,
+    "sandbox_id": "sb-e08b2282a2a5",
+    "trace_id": "1be262e6a8d7234fa92221b43798589d"
+  }
+]

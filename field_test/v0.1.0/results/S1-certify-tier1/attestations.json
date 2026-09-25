@@ -1,0 +1,144 @@
+{
+  "support-agent": {
+    "staging": {
+      "attestation_id": "att-c90faf8c6050",
+      "workload_id": "support-agent",
+      "manifest_version": 1,
+      "benchmark_version": "1.0.0",
+      "benchmark_run_id": "br-e12064238a4a",
+      "corpus_id": "support-agent-corpus",
+      "corpus_version": 1,
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "status": "provisional",
+      "target_context": "staging",
+      "eval_summary": {
+        "pass_rate": 1.0,
+        "critical_failures": 0,
+        "p95_latency_ms": 87,
+        "tasks_passed": 5,
+        "tasks_failed": 0
+      },
+      "timestamp": "2026-09-25T00:59:05.903204Z",
+      "environment": {
+        "sandbox_image": "hiveplane/sandbox:0.1.0",
+        "runtime_adapter": "control-plane",
+        "control_plane_version": "0.1.0"
+      },
+      "signer": {
+        "identity": "certification-service@hiveplane",
+        "key_id": "hp-signing-key-01",
+        "signature": "IQEY2yW0qoeouilRPDPLOfw2nN6D2nxGlYGPH7bWnvw2M6lscU3lXKn3aQJhhGW9kCHGdHZbY3vaArNwMKkNAA=="
+      },
+      "previous_attestation_id": null
+    },
+    "production": {
+      "attestation_id": "att-ca5f7f370a92",
+      "workload_id": "support-agent",
+      "manifest_version": 1,
+      "benchmark_version": "1.0.0",
+      "benchmark_run_id": "br-e12064238a4a",
+      "corpus_id": "support-agent-corpus",
+      "corpus_version": 1,
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "status": "certified",
+      "target_context": "production",
+      "eval_summary": {
+        "pass_rate": 1.0,
+        "critical_failures": 0,
+        "p95_latency_ms": 68,
+        "tasks_passed": 5,
+        "tasks_failed": 0
+      },
+      "timestamp": "2026-09-25T00:59:06.262769Z",
+      "environment": {
+        "sandbox_image": "hiveplane/sandbox:0.1.0",
+        "runtime_adapter": "control-plane",
+        "control_plane_version": "0.1.0"
+      },
+      "signer": {
+        "identity": "certification-service@hiveplane",
+        "key_id": "hp-signing-key-01",
+        "signature": "hckfuoUNjvSe+xrIsfm+g7KiNkp6YRZi72Rjco7MOaR4QY2VZJ8iI9JpUyL0Ro4XemSyYDFSxwuxNWHnVVCGDQ=="
+      },
+      "previous_attestation_id": "att-c90faf8c6050"
+    },
+    "eval_summary": {
+      "pass_rate": 1.0,
+      "critical_failures": 0,
+      "p95_latency_ms": 68,
+      "tasks_passed": 5,
+      "tasks_failed": 0
+    }
+  },
+  "eval-judge": {
+    "staging": {
+      "attestation_id": "att-bba45aa0c2db",
+      "workload_id": "eval-judge",
+      "manifest_version": 1,
+      "benchmark_version": "1.0.0",
+      "benchmark_run_id": "br-f1b7e39c709f",
+      "corpus_id": "eval-judge-corpus",
+      "corpus_version": 1,
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "status": "provisional",
+      "target_context": "staging",
+      "eval_summary": {
+        "pass_rate": 1.0,
+        "critical_failures": 0,
+        "p95_latency_ms": 210,
+        "tasks_passed": 4,
+        "tasks_failed": 0
+      },
+      "timestamp": "2026-09-25T00:59:06.765682Z",
+      "environment": {
+        "sandbox_image": "hiveplane/sandbox:0.1.0",
+        "runtime_adapter": "control-plane",
+        "control_plane_version": "0.1.0"
+      },
+      "signer": {
+        "identity": "certification-service@hiveplane",
+        "key_id": "hp-signing-key-01",
+        "signature": "Bdyhsny0n7Xh3La7s0sExyO6Ec9hefEICj1LdRh7nyin1aTj9iuZVVdK7SfYGH+yQCa/P3H5r7Q0RAFxzmyZBg=="
+      },
+      "previous_attestation_id": null
+    },
+    "production": {
+      "attestation_id": "att-7e7299bfe5f7",
+      "workload_id": "eval-judge",
+      "manifest_version": 1,
+      "benchmark_version": "1.0.0",
+      "benchmark_run_id": "br-f1b7e39c709f",
+      "corpus_id": "eval-judge-corpus",
+      "corpus_version": 1,
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "status": "certified",
+      "target_context": "production",
+      "eval_summary": {
+        "pass_rate": 1.0,
+        "critical_failures": 0,
+        "p95_latency_ms": 130,
+        "tasks_passed": 4,
+        "tasks_failed": 0
+      },
+      "timestamp": "2026-09-25T00:59:07.114852Z",
+      "environment": {
+        "sandbox_image": "hiveplane/sandbox:0.1.0",
+        "runtime_adapter": "control-plane",
+        "control_plane_version": "0.1.0"
+      },
+      "signer": {
+        "identity": "certification-service@hiveplane",
+        "key_id": "hp-signing-key-01",
+        "signature": "tSYIV0S5JQ72UcsChKDLUSObjgiqLKF0j+6oYuAyXn1Ia+/An6Dgyl+QUmUKJ3YZwMOhqdjNGlPXBPv3MdI5Bg=="
+      },
+      "previous_attestation_id": "att-bba45aa0c2db"
+    },
+    "eval_summary": {
+      "pass_rate": 1.0,
+      "critical_failures": 0,
+      "p95_latency_ms": 130,
+      "tasks_passed": 4,
+      "tasks_failed": 0
+    }
+  }
+}

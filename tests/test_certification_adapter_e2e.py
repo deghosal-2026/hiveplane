@@ -12,6 +12,9 @@ from __future__ import annotations
 import json
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
+
+import pytest
 
 from hiveplane.adapters.base import Adapter, AdapterRunExecutor
 from hiveplane.adapters.dispatch import DispatchingAdapter
@@ -212,6 +215,63 @@ def test_all_three_example_workloads_certify_at_production() -> None:
         assert aggregate.pass_rate == 1.0, f"{workload}: failures={failed}"
         assert aggregate.critical_failures == 0, f"{workload}: critical failure"
         assert record.certification.status is CertificationStatus.CERTIFIED
+
+
+def test_repeated_docs_agent_certification_does_not_reuse_paused_checkpoint(
+    tmp_path: Path,
+) -> None:
+    harness = _Harness(entrypoints_root=ROOT)
+    harness.register_examples()
+
+    for _ in range(2):
+        harness.coordinator.certify("docs-agent", target_context=TargetContext.STAGING)
+        record = harness.coordinator.certify(
+            "docs-agent", target_context=TargetContext.PRODUCTION
+        )
+
+        aggregate = record.benchmark_result.aggregate
+        failed = [
+            task.task_id
+            for task in record.benchmark_result.tasks
+            if task.status.value == "fail"
+        ]
+        assert aggregate.pass_rate == 1.0, f"docs-agent: failures={failed}"
+        assert aggregate.critical_failures == 0, "docs-agent: critical failure"
+        assert record.certification.status is CertificationStatus.CERTIFIED
+
+
+def test_repeated_docs_agent_certification_stays_clean_with_durable_checkpoints(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    checkpoint_file = tmp_path / "graph.json"
+    monkeypatch.setenv("HIVEPLANE_EXECUTION__CHECKPOINT_PATH", str(checkpoint_file))
+
+    import examples.docs_agent as docs_agent
+
+    docs_agent = __import__(docs_agent.__name__, fromlist=["graph"])
+    original_graph = docs_agent.graph
+    docs_agent.graph = docs_agent._builder.compile(checkpointer=docs_agent.default_checkpointer())
+    try:
+        harness = _Harness(entrypoints_root=ROOT)
+        harness.register_examples()
+
+        for _ in range(2):
+            harness.coordinator.certify("docs-agent", target_context=TargetContext.STAGING)
+            record = harness.coordinator.certify(
+                "docs-agent", target_context=TargetContext.PRODUCTION
+            )
+
+            aggregate = record.benchmark_result.aggregate
+            failed = [
+                task.task_id
+                for task in record.benchmark_result.tasks
+                if task.status.value == "fail"
+            ]
+            assert aggregate.pass_rate == 1.0, f"docs-agent: failures={failed}"
+            assert aggregate.critical_failures == 0, "docs-agent: critical failure"
+            assert record.certification.status is CertificationStatus.CERTIFIED
+    finally:
+        docs_agent.graph = original_graph
 
 
 def test_regressed_agent_fails_certification(tmp_path: Path) -> None:

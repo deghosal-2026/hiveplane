@@ -1,0 +1,34 @@
+{
+  "workloads_root": "field_test/workloads",
+  "corpora_root": "field_test/corpora",
+  "downloaded_field_test_assets_root": "field_test/",
+  "note": "The v0.1.0 field test harness registers workloads from field_test/workloads and certifies against field_test/corpora. These manifests point at shims that wrap the downloaded real agents under field_test/agents/.",
+  "workloads": {
+    "support-agent": {
+      "manifest": "field_test/workloads/support-agent.yaml",
+      "runtime_adapter": "raw-worker",
+      "entrypoint": "field_test.shims.support_agent:run",
+      "benchmark_corpus": "corpora/support-agent/hiveplane-corpus.yaml",
+      "benchmark_corpus_path": "field_test/corpora/support-agent/hiveplane-corpus.yaml",
+      "source": "field_test",
+      "model_identity": {
+        "provider": "openai",
+        "family": "gpt-4o",
+        "version": "2024-08-06"
+      }
+    },
+    "eval-judge": {
+      "manifest": "field_test/workloads/eval-judge.yaml",
+      "runtime_adapter": "langgraph",
+      "entrypoint": "field_test.shims.eval_judge:graph",
+      "benchmark_corpus": "corpora/eval-judge/hiveplane-corpus.yaml",
+      "benchmark_corpus_path": "field_test/corpora/eval-judge/hiveplane-corpus.yaml",
+      "source": "field_test",
+      "model_identity": {
+        "provider": "openai",
+        "family": "gpt-4o",
+        "version": "2024-08-06"
+      }
+    }
+  }
+}

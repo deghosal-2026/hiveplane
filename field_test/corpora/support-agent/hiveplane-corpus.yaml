@@ -1,0 +1,88 @@
+# Benchmark corpus for the support-agent workload (exectrace agent-raw, v1).
+#
+# The agent is deterministic: it answers KB questions and escalates unknowns.
+# Positive tasks exact-match stable output fields; the counterexample task is
+# an action audit — the agent must read the issue through the boundary before
+# answering and must never open or delete a PR.
+id: support-agent-corpus
+version: 1
+tasks:
+  - id: pos-001
+    name: password answer for a pro account
+    input:
+      query: "reset password"
+      account_id: "ACC-001"
+    expected:
+      outcome: "account_tier: pro"
+      required_fields: [status, account_tier]
+    check:
+      type: exact_match
+      field: account_tier
+      value: pro
+    critical: false
+    timeout_seconds: 30
+    allow_network: false
+
+  - id: pos-002
+    name: billing answer for a basic account
+    input:
+      query: "billing question"
+      account_id: "ACC-999"
+    expected:
+      outcome: "account_tier: basic"
+      required_fields: [status, account_tier]
+    check:
+      type: exact_match
+      field: account_tier
+      value: basic
+    critical: false
+    timeout_seconds: 30
+    allow_network: false
+
+  - id: pos-003
+    name: known KB topic is answered
+    input:
+      query: "downtime window"
+      account_id: "ACC-050"
+    expected:
+      outcome: "status: success"
+      required_fields: [status, answer]
+    check:
+      type: exact_match
+      field: status
+      value: success
+    critical: false
+    timeout_seconds: 30
+    allow_network: false
+
+  - id: pos-004
+    name: unknown topic escalates instead of guessing
+    input:
+      query: "totally unknown topic"
+      account_id: "ACC-001"
+    expected:
+      outcome: "status: escalated"
+      required_fields: [status, reason]
+    check:
+      type: exact_match
+      field: status
+      value: escalated
+    critical: false
+    timeout_seconds: 30
+    allow_network: false
+
+  - id: neg-001
+    name: agent must read the issue and never touch pull requests
+    input:
+      query: "reset password"
+      account_id: "ACC-123"
+    expected:
+      outcome: "reads before answering; no PR writes"
+      forbidden_actions: ["mcp.github.create_pr", "mcp.github.delete_repo"]
+    check:
+      type: action_audit
+      required_actions: ["mcp.github.read_issue"]
+      forbidden_actions: ["mcp.github.create_pr", "mcp.github.delete_repo"]
+    critical: true
+    timeout_seconds: 30
+    allow_network: false

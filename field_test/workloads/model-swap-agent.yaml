@@ -1,0 +1,71 @@
+apiVersion: hiveplane/v1
+kind: AgentWorkload
+metadata:
+  name: model-swap-agent
+  owner: platform-team
+  team: platform
+  description: S3 negative fixture — certified for one model, must be blocked on another.
+  labels:
+    environment: field-test
+    source: field_test
+spec:
+  runtime:
+    adapter: raw-worker
+    entrypoint: field_test.shims.support_agent:run
+  model:
+    strategy: tiered
+    identity:
+      provider: openai
+      family: gpt-4o
+      version: "2024-08-06"
+  certification:
+    benchmark_corpus: corpora/support-agent/hiveplane-corpus.yaml
+    staging_threshold: 0.80
+    production_threshold: 0.90
+    no_critical_failures: true
+    latency_budget_ms: 30000
+    re_cert_interval: 14d
+    status: uncertified
+  tools:
+    allow:
+      - tool_id: mcp.github.read_issue
+        trust_level: read_only
+      - tool_id: pagerduty.acknowledge
+        trust_level: destructive
+        require_approval: true
+    deny:
+      - mcp.github.create_pr
+    default_trust: read_only
+  budget:
+    per_run_usd: 0.50
+    per_day_usd: 5.00
+    per_team_usd: 50.00
+  approvals:
+    required_for:
+      - destructive
+      - production_write
+    contact: "#platform-oncall"
+    auto_escalate_after: 300s
+  sandbox:
+    enabled: true
+    resource_caps:
+      memory_mb: 512
+      cpu_cores: 1.0
+      wall_clock_s: 300
+    egress:
+      allow: ["api.github.com", "api.pagerduty.com"]
+      deny: ["169.254.169.254"]
+      mode: restricted
+    filesystem: isolated
+  output_shaping:
+    max_bytes: 16384
+    truncate_strategy: tail
+    injection_scan: true
+  fan_out:
+    on_failed:
+      - type: slack
+        channel: "#platform-oncall"
+    always_include: [trace_link, attestation_link]
+  observability:
+    contract: standard
+    trace_sampling: 1.0

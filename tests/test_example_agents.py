@@ -138,6 +138,34 @@ def test_docs_agent_drafts_with_model() -> None:
     assert values["result"]["summary"] == "new docs section"
 
 
+def test_docs_agent_normalizes_resume_fix_as_bugfix() -> None:
+    pytest.importorskip("langgraph")
+    import examples.docs_agent as docs_agent
+    from langgraph.types import Command
+
+    task: dict[str, Any] = {"issue": "Document the paused-run resume fix"}
+    messages = [
+        Message(role="system", content=f"Task: {json.dumps(task)}"),
+        Message(role="user", content=docs_agent.DRAFT_PROMPT),
+    ]
+    provider = FakeProvider(
+        replay=_replay_entry(
+            "openai/gpt-4o/2024-08-06",
+            messages,
+            json.dumps({"category": "changelog", "draft": "resume fix notes"}),
+        )
+    )
+    ctx = _FakeCtx(provider, tool_text="{}")
+    config: Any = {"configurable": {"thread_id": "docs-run-2", "hiveplane_ctx": ctx}}
+    graph: Any = docs_agent.graph
+
+    list(graph.stream({"task": task}, config, stream_mode="values"))
+    list(graph.stream(Command(resume=True), config, stream_mode="values"))
+    values = graph.get_state(config).values
+
+    assert values["result"]["category"] == "bugfix"
+
+
 def test_incident_agent_triages_alert() -> None:
     import examples.incident_agent as incident_agent
 

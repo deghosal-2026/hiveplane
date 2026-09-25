@@ -1,0 +1,11 @@
+.git
+.venv
+__pycache__
+*.pyc
+.pytest_cache
+.ruff_cache
+.mypy_cache
+field_test/agents/proven/evalforge
+field_test/agents/proven/tooltrust
+field_test/agents/proven/exectrace/agent-github
+field_test/v0.1.0

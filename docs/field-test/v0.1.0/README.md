@@ -51,15 +51,16 @@ The field test covers six phases:
 ### Prerequisites
 
 ```bash
-# The container suite uses REAL local inference (OMLX on the host, port 8000).
-# It fails — never skips — if the local LLM is unavailable.
-scripts/docker-test.sh            # or: make docker-test
+# The field test runs the real agents on REAL local inference (OMLX on the host, port 8000).
 pip install -e ".[dev]"
+# Bring up the stack on the local model (API on :8100):
+docker compose --env-file .env.local --profile local --profile test up -d
 ```
 
-See [docker-test-plan.md](docker-test-plan.md) for the full LLM profile matrix and prerequisites
-(the M23 phases must land first — LLM seam, real agents, tool execution, adapter-backed
-certification, persistence, sandbox caps, durable resume).
+The real agents, LLM seam, tool execution, adapter-backed certification, persistence, sandbox
+caps, and durable resume are all landed (M23 P0–P3), so this plan can execute. See
+[docker-test-plan.md](docker-test-plan.md) for the container-layer matrix (already complete) and
+[field-test-plan.md](field-test-plan.md) for the LLM profile matrix.
 
 ### Procedure
 
@@ -69,10 +70,13 @@ hiveplane register examples/workloads/repo-agent.yaml
 hiveplane register examples/workloads/docs-agent.yaml
 hiveplane register examples/workloads/incident-agent.yaml
 
-# Phase 2: Certify all three
-hiveplane certify repo-agent
-hiveplane certify docs-agent
-hiveplane certify incident-agent
+# Phase 2: Certify all three (staging -> provisional, production -> certified)
+hiveplane certify repo-agent --context staging
+hiveplane certify repo-agent --context production
+hiveplane certify docs-agent --context staging
+hiveplane certify docs-agent --context production
+hiveplane certify incident-agent --context staging
+hiveplane certify incident-agent --context production
 hiveplane certs list
 hiveplane certs show <cert-id>
 
@@ -135,6 +139,8 @@ Full step-by-step instructions live in [field-test-plan.md](field-test-plan.md).
 - Docker run evidence (logs, `junit.xml`, environment, per-run report) is written under
   `field_test/v0.1.0/docker/` and committed; the consolidated report is
   `DOCKER_TEST_REPORT.md` in this directory.
+- **Field test results (real agents) are written under `field_test/v0.1.0/results/`** and committed;
+  the narrative report is `FIELD_TEST_REPORT.md` in this directory.
 - Other execution artifacts and logs are written under the repo's data directory and are not
   committed.
 - Update results in `FIELD_TEST_REPORT.md` (and `DOCKER_TEST_REPORT.md`) after each run.
