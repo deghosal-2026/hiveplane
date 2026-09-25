@@ -46,7 +46,7 @@ def test_upgrade_downgrade_upgrade(pg_engine: Engine) -> None:
 
 
 def test_run_fleet_query_uses_index(pg_engine: Engine) -> None:
-    plan = (
+    plan: list[str] = list(
         pg_engine.connect()
         .execute(
             text(

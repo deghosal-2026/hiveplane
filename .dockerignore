@@ -5,7 +5,15 @@ __pycache__
 .pytest_cache
 .ruff_cache
 .mypy_cache
+.env
+.env.*
+*.pem
+*.key
+*.sqlite3
+data/
+.hiveplane/
 field_test/agents/proven/evalforge
 field_test/agents/proven/tooltrust
 field_test/agents/proven/exectrace/agent-github
+field_test/agents/proven/exectrace/agent-weather
 field_test/v0.1.0

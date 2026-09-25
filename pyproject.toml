@@ -64,17 +64,35 @@ hiveplane-ui = "hiveplane.ui.app:main"
 [tool.hatch.build.targets.wheel]
 packages = ["src/hiveplane"]
 
+[tool.hatch.build.targets.sdist]
+# Ship sources only. An explicit allow-list (not exclude) guarantees no
+# field-test evidence or vendored third-party agent code can leak into the sdist.
+only-include = [
+  "src/hiveplane",
+  "README.md",
+  "LICENSE",
+  "CHANGELOG.md",
+  "SECURITY.md",
+  "CONTRIBUTING.md",
+  "pyproject.toml",
+]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]
 addopts = "-ra --strict-markers --strict-config -m 'not e2e and not docker'"
 markers = [
   "e2e: browser end-to-end tests (run with `make test-e2e`)",
   "docker: container tests that require a running Docker daemon (run with `pytest tests/docker -m docker`)",
 ]
 filterwarnings = [
-  "error",
-  "ignore:Using `httpx` with `starlette.testclient` is deprecated.*:DeprecationWarning",
-  "ignore:The anyio.abc.BlockingPortal alias is deprecated.*:DeprecationWarning",
+    "error",
+    "ignore:Using `httpx` with `starlette.testclient` is deprecated.*:DeprecationWarning",
+    "ignore:The anyio.abc.BlockingPortal alias is deprecated.*:DeprecationWarning",
+    # psycopg connections pooled by an engine that is garbage-collected without an
+    # explicit dispose() raise from BaseConnection.__del__; harmless cleanup noise.
+    # (Message regex cannot contain ':' — pytest's filter format splits on it.)
+    "ignore:Exception ignored in:pytest.PytestUnraisableExceptionWarning",
 ]
 
 [tool.coverage.run]

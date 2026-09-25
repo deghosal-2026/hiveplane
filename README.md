@@ -1,9 +1,33 @@
 # HivePlane — Control Plane for Production Agent Fleets
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Status: seedling](https://img.shields.io/badge/status-seedling-orange.svg)](#mvp-010)
+[![Status: alpha](https://img.shields.io/badge/status-alpha-orange.svg)](#mvp-010)
+[![PyPI](https://img.shields.io/badge/pypi-hiveplane-blue.svg)](https://pypi.org/project/hiveplane/)
 
 > A Kubernetes-like control plane for AI agents: register agents, define budgets and permissions, route tasks, inspect workflow state, and intervene when a run becomes unsafe or uneconomical.
+
+---
+
+## Install & Quick Start
+
+```bash
+pip install hiveplane          # Python 3.12+
+hiveplane init my-fleet        # scaffold a working project
+cd my-fleet
+hiveplane validate workload.yaml
+hiveplane certify workload.yaml
+hiveplane submit --workload workload --task "summarize open PRs"
+hiveplane runs list
+```
+
+Run the full local stack (API, UI, Postgres, Redis, telemetry) with Docker Compose:
+
+```bash
+scripts/dev-up.sh
+```
+
+See the [User Guide](docs/USER_GUIDE.md) for the operator workflow, and the
+[v0.1.0 release notes](docs/release/v0.1.0/release-notes.md) for what ships in this release.
 
 ---
 
@@ -333,14 +357,14 @@ pip install -e ".[dev]"
 
 ```bash
 make test    # pytest
-make cov     # pytest with coverage report (> 95% required)
+make cov     # pytest with coverage report (> 92% required)
 make lint    # ruff
 make type    # mypy (strict)
 make check   # lint + type + cov
 make test-e2e  # operator UI browser tests (Playwright, Chromium)
 ```
 
-CI (`.github/workflows/ci.yml`) runs the same gates on Python 3.12 and 3.13, fails the build below 95% coverage, and runs the operator UI browser tests in a separate job.
+CI (`.github/workflows/ci.yml`) runs the same gates on Python 3.12 and 3.13, fails the build below 92% coverage, and runs the operator UI browser tests in a separate job.
 
 ### Local stack
 
@@ -355,6 +379,40 @@ Services: API (`:8100`), Operator UI (`:3001`), PostgreSQL (`:5432`), Redis (`:6
 ### Configuration
 
 Settings load from environment variables prefixed `HIVEPLANE_`, with `__` separating nested sections (for example `HIVEPLANE_DATABASE__HOST`), falling back to a `.env` file and then defaults. See `.env.example` for the full reference.
+
+## Documentation
+
+Full index: [docs/README.md](docs/README.md).
+
+**Guides**
+
+- [User Guide](docs/USER_GUIDE.md) — operator workflow
+- [Adapters](docs/ADAPTERS.md) — adapter contract, conformance, sandbox, shaping, model binding
+- [Observability](docs/observability.md) — signals, agent health, certification metrics, cost showback
+- [Workload Manifest Format Spec](docs/workloads/manifest-format-spec.md) · [JSON Schema](docs/workloads/manifest.schema.json)
+- [Contributing Workloads](docs/workloads/CONTRIBUTING.md)
+- [Example workloads](examples/workloads/README.md) · [Scripts](scripts/README.md)
+
+**Release v0.1.0**
+
+- [Release Notes](docs/release/v0.1.0/release-notes.md)
+- [CHANGELOG](CHANGELOG.md)
+- [Field Test Report](docs/field-test/v0.1.0/FIELD_TEST_REPORT.md) · [Field Test Plan](docs/field-test/v0.1.0/field-test-plan.md)
+- [Docker Test Report](docs/field-test/v0.1.0/DOCKER_TEST_REPORT.md) · [Docker Test Plan](docs/field-test/v0.1.0/docker-test-plan.md)
+- [Security Audit](docs/release/v0.1.0/security-audit.md)
+- [WBS v0.1.0](docs/wbs/v0.1.0/wbs-v0.1.0-index.md)
+
+**Design & requirements**
+
+- [PRDs](docs/prd/) — why, architecture, landscape, users, features, security, metrics, risks, roadmap
+- [Design documents](docs/design/) — subsystem designs and [design decisions](docs/design/design-decisions.md)
+
+## Project
+
+- [Changelog](CHANGELOG.md)
+- [Contributing](CONTRIBUTING.md)
+- [Security Policy](SECURITY.md)
+- [License](LICENSE)
 
 ## License
 

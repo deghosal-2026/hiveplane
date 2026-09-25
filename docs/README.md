@@ -68,7 +68,10 @@ Documentation for the HivePlane project — the control plane for production age
 - [v0.1.0 WBS Index](wbs/v0.1.0/wbs-v0.1.0-index.md)
 - [v0.1.0 Field Test Plan](field-test/v0.1.0/field-test-plan.md)
 - [v0.1.0 Field Test Report](field-test/v0.1.0/FIELD_TEST_REPORT.md)
+- [v0.1.0 Docker Test Report](field-test/v0.1.0/DOCKER_TEST_REPORT.md)
 - [v0.1.0 Release Notes](release/v0.1.0/release-notes.md)
+- [v0.1.0 Security Audit](release/v0.1.0/security-audit.md)
+- [CHANGELOG](../CHANGELOG.md) · [SECURITY](../SECURITY.md) · [CONTRIBUTING](../CONTRIBUTING.md)
 
 ## Conventions
 

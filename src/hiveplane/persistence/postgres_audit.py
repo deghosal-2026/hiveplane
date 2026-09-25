@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from datetime import UTC, datetime
+from typing import cast
 
 from sqlalchemy import Engine, delete, select
 
@@ -57,10 +58,27 @@ class PostgresAuditLog:
             return record
 
     def records(self) -> list[AuditRecord]:
-        """Return all audit records in chain order."""
+        """Return all audit records in chain order.
+
+        The hashed fields are read from the authoritative columns (not the
+        denormalized ``payload``) so that tampering with a column is reflected
+        in the reconstructed record and breaks :meth:`verify`.
+        """
         with self._session() as session:
             rows = session.scalars(select(AuditRow).order_by(AuditRow.sequence))
-            return [AuditRecord.model_validate(row.payload) for row in rows]
+            return [
+                AuditRecord(
+                    sequence=row.sequence,
+                    actor=row.actor,
+                    action=row.action,
+                    subject=row.subject,
+                    created_at=row.created_at,
+                    detail=cast("str | None", row.payload.get("detail")),
+                    prev_hash=row.prev_hash,
+                    hash=row.hash,
+                )
+                for row in rows
+            ]
 
     def verify(self) -> bool:
         """Return True when the persisted chain is intact."""
