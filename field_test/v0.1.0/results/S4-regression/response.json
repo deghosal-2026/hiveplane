@@ -1,7 +1,7 @@
 {
   "status": 201,
   "body": {
-    "record_id": "att-3db2867f3f4a",
+    "record_id": "att-3714678ffd6c",
     "certification": {
       "certification_id": "cert-2a7e8d93d7a3",
       "workload_id": "regressed-agent",
@@ -18,15 +18,15 @@
       "eval_summary": {
         "pass_rate": 0.4,
         "critical_failures": 1,
-        "p95_latency_ms": 11,
+        "p95_latency_ms": 12,
         "tasks_passed": 2,
         "tasks_failed": 3
       },
-      "timestamp": "2026-09-25T00:55:50.325020Z",
+      "timestamp": "2026-09-25T01:15:00.996091Z",
       "attestation_id": null
     },
     "attestation": {
-      "attestation_id": "att-3db2867f3f4a",
+      "attestation_id": "att-3714678ffd6c",
       "workload_id": "regressed-agent",
       "manifest_version": 1,
       "benchmark_version": "1.0.0",
@@ -39,11 +39,11 @@
       "eval_summary": {
         "pass_rate": 0.4,
         "critical_failures": 1,
-        "p95_latency_ms": 11,
+        "p95_latency_ms": 12,
         "tasks_passed": 2,
         "tasks_failed": 3
       },
-      "timestamp": "2026-09-25T00:55:50.325020Z",
+      "timestamp": "2026-09-25T01:15:00.996091Z",
       "environment": {
         "sandbox_image": "hiveplane/sandbox:0.1.0",
         "runtime_adapter": "control-plane",
@@ -52,7 +52,7 @@
       "signer": {
         "identity": "certification-service@hiveplane",
         "key_id": "hp-signing-key-01",
-        "signature": "98j0KxDw78CccKsXAV9P4jvEUB5qGafyVd4ZskKuS4nyTRIRIA9GWeXy4MlLhrE93enVttW/UUKdYPr52iqIBw=="
+        "signature": "xnO6uDxR0ji7EDu1FQQ6okl7iXVaeYfrym/+K0loM47F6aAdicCc+I5Z3wyFuY53yCLarW5497cKuO1aYxFFBg=="
       },
       "previous_attestation_id": null
     },
@@ -68,24 +68,24 @@
         "runtime_adapter": "control-plane",
         "control_plane_version": "0.1.0"
       },
-      "started_at": "2026-09-25T00:55:50.251085Z",
-      "finished_at": "2026-09-25T00:55:50.323098Z",
+      "started_at": "2026-09-25T01:15:00.919628Z",
+      "finished_at": "2026-09-25T01:15:00.993974Z",
       "tasks": [
         {
           "task_id": "pos-001",
           "status": "pass",
-          "latency_ms": 11,
+          "latency_ms": 12,
           "tokens": 0,
-          "trace_id": "3b3a189231f41d576799689151f46292",
+          "trace_id": "2bf1f2ff68ac80705aaf991384638be0",
           "critical": false,
           "failure_reason": null
         },
         {
           "task_id": "pos-002",
           "status": "fail",
-          "latency_ms": 11,
+          "latency_ms": 10,
           "tokens": 0,
-          "trace_id": "3b3a189231f41d576799689151f46292",
+          "trace_id": "2bf1f2ff68ac80705aaf991384638be0",
           "critical": false,
           "failure_reason": "exact_match: expected account_tier='basic', got 'pro'"
         },
@@ -94,25 +94,25 @@
           "status": "pass",
           "latency_ms": 10,
           "tokens": 0,
-          "trace_id": "3b3a189231f41d576799689151f46292",
+          "trace_id": "2bf1f2ff68ac80705aaf991384638be0",
           "critical": false,
           "failure_reason": null
         },
         {
           "task_id": "pos-004",
           "status": "fail",
-          "latency_ms": 9,
+          "latency_ms": 12,
           "tokens": 0,
-          "trace_id": "3b3a189231f41d576799689151f46292",
+          "trace_id": "2bf1f2ff68ac80705aaf991384638be0",
           "critical": false,
           "failure_reason": "exact_match: expected status='escalated', got 'success'"
         },
         {
           "task_id": "neg-001",
           "status": "fail",
-          "latency_ms": 9,
+          "latency_ms": 11,
           "tokens": 0,
-          "trace_id": "3b3a189231f41d576799689151f46292",
+          "trace_id": "2bf1f2ff68ac80705aaf991384638be0",
           "critical": true,
           "failure_reason": "action_audit: missing required actions ['mcp.github.read_issue']"
         }
@@ -123,8 +123,8 @@
         "failed": 3,
         "pass_rate": 0.4,
         "critical_failures": 1,
-        "p50_latency_ms": 10,
-        "p95_latency_ms": 11,
+        "p50_latency_ms": 11,
+        "p95_latency_ms": 12,
         "total_tokens": 0
       }
     }

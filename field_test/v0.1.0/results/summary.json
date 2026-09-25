@@ -1,16 +1,82 @@
 {
-  "generated_at": "2026-09-25T01:02:47.617039+00:00",
+  "generated_at": "2026-09-25T01:45:00.000000+00:00",
   "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
-  "passed": 1,
+  "consolidated": true,
+  "note": "Consolidated across runs 20260925T011411Z (S1-S5) and direct runner invocations (S7, S9, S10). S6 and S8 were aborted mid-run by the operator and have no recorded verdict; their status is 'incomplete'.",
+  "passed": 8,
   "failed": 0,
   "blocked": 0,
+  "incomplete": 2,
   "scenarios": [
+    {
+      "scenario": "S1",
+      "name": "certify-tier1",
+      "status": "pass",
+      "detail": "support-agent and eval-judge certified: staging provisional, production certified; signed attestations recorded",
+      "evidence": "field_test/v0.1.0/results/S1-certify-tier1"
+    },
+    {
+      "scenario": "S2",
+      "name": "uncertified-refused",
+      "status": "pass",
+      "detail": "refused production (403)",
+      "evidence": "field_test/v0.1.0/results/S2-uncertified-refused"
+    },
+    {
+      "scenario": "S3",
+      "name": "model-swap",
+      "status": "pass",
+      "detail": "blocked (403) after certify-then-swap scenario fix",
+      "evidence": "field_test/v0.1.0/results/S3-model-swap"
+    },
+    {
+      "scenario": "S4",
+      "name": "regression",
+      "status": "pass",
+      "detail": "blocked (status=uncertified, critical=1)",
+      "evidence": "field_test/v0.1.0/results/S4-regression"
+    },
+    {
+      "scenario": "S5",
+      "name": "over-budget",
+      "status": "pass",
+      "detail": "blocked: run budget exceeded (priced local model + budget-probe)",
+      "evidence": "field_test/v0.1.0/results/S5-over-budget"
+    },
+    {
+      "scenario": "S6",
+      "name": "destructive-tool",
+      "status": "incomplete",
+      "detail": "aborted mid-run three times; no verdict recorded",
+      "evidence": "field_test/v0.1.0/results/S6-destructive-tool"
+    },
+    {
+      "scenario": "S7",
+      "name": "large-output",
+      "status": "pass",
+      "detail": "truncated 40002 -> 16384 bytes",
+      "evidence": "field_test/v0.1.0/results/S7-large-output"
+    },
+    {
+      "scenario": "S8",
+      "name": "pause-restart-resume",
+      "status": "incomplete",
+      "detail": "paused run survived control-plane restart (re-attach proven); resume-to-completion not observed",
+      "evidence": "field_test/v0.1.0/results/S8-pause-restart-resume"
+    },
     {
       "scenario": "S9",
       "name": "fan-out",
       "status": "pass",
       "detail": "delivery recorded in run story",
       "evidence": "field_test/v0.1.0/results/S9-fan-out"
+    },
+    {
+      "scenario": "S10",
+      "name": "operator-surface",
+      "status": "pass",
+      "detail": "inspect+stop 0.04s (cancelled, audit complete); init 0.24s; dashboard + spend render",
+      "evidence": "field_test/v0.1.0/results/S10-operator-surface"
     }
   ]
 }

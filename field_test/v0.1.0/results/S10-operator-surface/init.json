@@ -1,0 +1,6 @@
+{
+  "returncode": 0,
+  "seconds": 0.235,
+  "stdout": "created /Users/deghosal/Desktop/code/github/hiveplane/field_test/v0.1.0/results/S10-operator-surface/init-scaffold/workloads/hello-agent.yaml\ncreated /Users/deghosal/Desktop/code/github/hiveplane/field_test/v0.1.0/results/S10-operator-surface/init-scaffold/corpora/hello-agent/v1/corpus.yaml\ncreated /Users/deghosal/Desktop/code/github/hiveplane/field_test/v0.1.0/results/S10-operator-surface/init-scaffold/README.md\nNext: register /Users/deghosal/Desktop/code/github/hiveplane/field_test/v0.1.0/results/S10-operator-surface/init-scaffold/workloads/hello-agent.yaml and certify it.\n",
+  "stderr": ""
+}

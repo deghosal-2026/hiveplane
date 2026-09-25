@@ -1,0 +1,15 @@
+id: hello-agent-corpus
+version: 1
+tasks:
+  - id: task-001
+    name: greet the world
+    input:
+      name: world
+    expected:
+      outcome: "greeting: hello, world"
+      required_fields: [greeting]
+    check:
+      type: exact_match
+      field: greeting
+      value: "hello, world"
+    critical: false

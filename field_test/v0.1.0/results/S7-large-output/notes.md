@@ -1,25 +1,34 @@
-# S7 — large-output (BLOCKED — by design)
+# S7 — large-output (PASS)
 
 **Scenario:** a tool returning a payload larger than the workload's
-`output_shaping.max_bytes` must be **truncated** (and filtered) before reaching the agent.
+`output_shaping.max_bytes` (16384) must be **truncated before it reaches the agent**.
 
-**Status:** ⏸️ blocked — needs an oversized fixture.
+**Run:** direct runner invocation against the live stack (2026-09-25, run 011411Z stack).
 
-## Why blocked
+## Result
 
-Tool calls in the field-test profile are served from JSON fixtures under
-`deploy/testdata/tools/` (D20: agents never fabricate tool output). All current fixtures
-are small; none exceeds the 16384-byte `max_bytes` of the Tier 1 manifests, so truncation
-cannot be observed live. The shaping pipeline itself (truncation, redaction, injection
-scan) is verified by the unit suite and the Docker L5 layer; `runs.json` records the runs
-inspected.
+**PASS — truncated 40002 → 16384 bytes.** The run's result records
+`truncated: true`, `original_bytes: 40002`, `shaped_bytes: 16384`.
 
-## What unblocks it
+## How it works
 
-Add an oversized fixture variant (e.g. `mcp.github.read_issue.oversized.json`) and point a
-test workload (or a task in an existing corpus) at it, so a live run's tool boundary
-actually truncates and the shaped output is observable in the run story.
+- `deploy/testdata/tools/mcp.github.read_large_issue.json` is a 40 KB fixture
+  (oversized issue body + comments).
+- The support-agent shim's `large: true` branch pulls it through the tool boundary and
+  reports the shaped output's `truncated`/`original_bytes`/`shaped_bytes` in its result
+  (unit-tested in `tests/test_field_test_shims_agents.py`).
+- The corpus task `pos-005` (support-agent corpus v2) asserts `truncated: true` via
+  `exact_match`, so truncation is now also part of certification.
+- The scenario additionally asserts the run completes and the shaped payload is within
+  `max_bytes`.
+
+## Notes
+
+- Truncation happens in the **shaping pipeline at the tool boundary** — the agent's
+  context is protected regardless of what the tool returns; this is the live, end-to-end
+  demonstration the unit/Docker suites could only simulate.
 
 ## Evidence
 
-`runs.json` — the run list inspected; `notes.md` — this rationale (written by the runner).
+`run.json` — the completed run with the truncation result; `story.json` — the full run
+story including the shaped tool call.

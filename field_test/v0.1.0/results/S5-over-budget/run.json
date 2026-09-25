@@ -1,0 +1,21 @@
+{
+  "id": "run-b055d80aa529",
+  "workload_id": "budget-probe",
+  "caller": "field-test",
+  "state": "failed",
+  "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+  "created_at": "2026-09-25T01:15:01.006444Z",
+  "updated_at": "2026-09-25T01:15:01.382166Z",
+  "started_at": "2026-09-25T01:15:01.012785Z",
+  "finished_at": "2026-09-25T01:15:01.382166Z",
+  "trigger_origin": null,
+  "manifest_version": 1,
+  "context": "sandbox",
+  "sandbox": true,
+  "task": {},
+  "result": null,
+  "failure_reason": "run budget exceeded",
+  "cost_usd": 2.85,
+  "sandbox_id": "sb-1f93b8bbf5fa",
+  "trace_id": "4caa1a6c8e3c2ede0eefe1837a281bfa"
+}

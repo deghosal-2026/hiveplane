@@ -1,0 +1,25 @@
+apiVersion: hiveplane/v1
+kind: AgentWorkload
+metadata:
+  name: hello-agent
+  owner: platform-team
+  team: platform
+  description: Sample workload created by `hiveplane init`.
+spec:
+  runtime:
+    adapter: raw-worker
+    entrypoint: examples.worker:run
+  model:
+    strategy: tiered
+    identity:
+      provider: openai
+      family: gpt-4o
+      version: "2024-08-06"
+  certification:
+    benchmark_corpus: corpora/hello-agent/v1
+    staging_threshold: 0.80
+    production_threshold: 0.90
+    status: uncertified
+  budget:
+    per_run_usd: 0.50
+    per_day_usd: 5.00

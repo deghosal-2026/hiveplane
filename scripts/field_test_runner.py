@@ -18,6 +18,7 @@ Scenarios (S1-S9, see docs/field-test/v0.1.0/field-test-plan.md):
     S7  large tool output shaped before reaching the agent
     S8  pause -> control-plane restart -> resume
     S9  result fan-out recorded
+    S10 operator surface: inspect/stop a live run, audit trail, init, dashboards
 
 Usage:
     scripts/field_test_runner.py [--api-url URL] [--results-dir DIR] [--only S1,S2]
@@ -58,6 +59,18 @@ class ScenarioError(AssertionError):
 
 def _now() -> str:
     return datetime.now(UTC).isoformat()
+
+
+def _http_get(url: str) -> dict[str, Any]:
+    """Fetch a URL and report reachability + size (for UI/HTML surfaces)."""
+    try:
+        with urllib.request.urlopen(url, timeout=10) as response:
+            body = response.read()
+            return {"ok": response.status == 200, "status": response.status, "bytes": len(body)}
+    except urllib.error.HTTPError as error:
+        return {"ok": False, "status": error.code, "bytes": 0}
+    except (urllib.error.URLError, OSError) as error:
+        return {"ok": False, "status": None, "bytes": 0, "error": str(error)}
 
 
 def _canonical_identity() -> str:
@@ -153,6 +166,7 @@ class Runner:
         self.api = api
         self.results_dir = results_dir
         self.identity = _canonical_identity()
+        self.ui_url = os.environ.get("HIVEPLANE_UI_URL", "http://localhost:3001").rstrip("/")
         self.results_dir.mkdir(parents=True, exist_ok=True)
         self.summary: list[dict[str, Any]] = []
 
@@ -321,20 +335,37 @@ class Runner:
         directory = self.scenario_dir("S3", "model-swap")
         try:
             self.register("model-swap-agent")
+            # Bind an attestation to the served/certified identity first; the
+            # model-binding gate compares a run's identity against the
+            # attestation model, so a swap is only meaningful post-certification.
+            self.certify("model-swap-agent", "staging")
+            self.certify("model-swap-agent", "production")
+            swapped = "openai/gpt-4o/2024-08-06"
             status, body = self.api.request(
                 "POST",
                 "/runs",
                 {
                     "workload": "model-swap-agent",
                     "caller": "field-test",
-                    "context": "sandbox",
-                    "model_identity": self.identity,
+                    "context": "production",
+                    "model_identity": swapped,
                 },
             )
-            self.write(directory, "response.json", {"status": status, "body": body})
+            self.write(
+                directory,
+                "response.json",
+                {
+                    "status": status,
+                    "body": body,
+                    "certified_identity": self.identity,
+                    "swapped_identity": swapped,
+                },
+            )
             if status not in (403, 409, 422):
                 raise ScenarioError(f"model swap not blocked: {status} {body}")
-            self.record("S3", "model-swap", "pass", f"blocked ({status})", directory)
+            self.record(
+                "S3", "model-swap", "pass", f"blocked ({status})", directory
+            )
         except ScenarioError as exc:
             self.record("S3", "model-swap", "fail", str(exc), directory)
 
@@ -370,20 +401,34 @@ class Runner:
 
     def s5_budget(self) -> None:
         directory = self.scenario_dir("S5", "over-budget")
-        status, spend = self.api.request("GET", "/spend")
-        self.write(directory, "spend.json", {"status": status, "body": spend})
-        self.write(
-            directory,
-            "notes.md",
-            "The local model is priced at $0 in the budget table, so an over-budget run "
-            "cannot be demonstrated on the local provider. Budget blocking is covered by the "
-            "priced-provider path; this scenario captures the spend surface. Re-run on a cloud "
-            "profile to demonstrate the block.\n",
-            text=True,
-        )
-        self.record(
-            "S5", "over-budget", "blocked", "requires priced provider (local is $0)", directory
-        )
+        try:
+            self.register("budget-probe")
+            status, run = self.api.request(
+                "POST",
+                "/runs",
+                {
+                    "workload": "budget-probe",
+                    "caller": "field-test",
+                    "context": "sandbox",
+                    "model_identity": self.identity,
+                    "task": {},
+                },
+            )
+            if status != 201:
+                raise ScenarioError(f"submit budget-probe -> {status}: {run}")
+            self.api.request("POST", f"/runs/{run['id']}/start")
+            finished = self.api.poll(run["id"])
+            spend = self.api.request("GET", "/spend")[1]
+            self.write(directory, "run.json", finished)
+            self.write(directory, "spend.json", spend)
+            if finished["state"] != "failed":
+                raise ScenarioError(f"over-budget run not blocked: {finished['state']}")
+            reason = str(finished.get("failure_reason") or "")
+            if "budget" not in reason.lower():
+                raise ScenarioError(f"run failed for a non-budget reason: {reason!r}")
+            self.record("S5", "over-budget", "pass", f"blocked: {reason}", directory)
+        except ScenarioError as exc:
+            self.record("S5", "over-budget", "fail", str(exc), directory)
 
     def s6_destructive(self) -> None:
         directory = self.scenario_dir("S6", "destructive-tool")
@@ -418,18 +463,42 @@ class Runner:
 
     def s7_shaping(self) -> None:
         directory = self.scenario_dir("S7", "large-output")
-        _, story = self.api.request("GET", "/runs?workload=support-agent")
-        self.write(directory, "runs.json", story)
-        self.write(
-            directory,
-            "notes.md",
-            "Tool-output shaping (max_bytes truncation + redaction + injection scan) runs in the "
-            "shaping pipeline and is verified by the unit/e2e suite and the Docker L5 layer. "
-            "Demonstrating a >max_bytes truncation on the local fixtures needs an oversized "
-            "fixture wired to a workload; captured shaping config is recorded for evidence.\n",
-            text=True,
-        )
-        self.record("S7", "large-output", "blocked", "needs oversized fixture wiring", directory)
+        try:
+            self.register("support-agent")
+            status, run = self.api.request(
+                "POST",
+                "/runs",
+                {
+                    "workload": "support-agent",
+                    "caller": "field-test",
+                    "context": "sandbox",
+                    "model_identity": self.identity,
+                    "task": {"large": True},
+                },
+            )
+            if status != 201:
+                raise ScenarioError(f"submit support-agent -> {status}: {run}")
+            self.api.request("POST", f"/runs/{run['id']}/start")
+            finished = self.api.poll(run["id"])
+            result = finished.get("result") or {}
+            story = self.api.request("GET", f"/runs/{run['id']}/story")[1]
+            self.write(directory, "run.json", finished)
+            self.write(directory, "story.json", story)
+            if finished["state"] != "completed":
+                raise ScenarioError(f"run did not complete: {finished['state']}")
+            if not result.get("truncated"):
+                raise ScenarioError(f"tool output was not truncated: {result}")
+            if int(result.get("shaped_bytes", 0)) > 16384:
+                raise ScenarioError(f"shaped output exceeds max_bytes: {result}")
+            self.record(
+                "S7",
+                "large-output",
+                "pass",
+                f"truncated {result.get('original_bytes')} -> {result.get('shaped_bytes')} bytes",
+                directory,
+            )
+        except ScenarioError as exc:
+            self.record("S7", "large-output", "fail", str(exc), directory)
 
     def s8_durability(self) -> None:
         directory = self.scenario_dir("S8", "pause-restart-resume")
@@ -476,6 +545,113 @@ class Runner:
             self.record("S8", "pause-restart-resume", "pass", detail, directory)
         except ScenarioError as exc:
             self.record("S8", "pause-restart-resume", "fail", str(exc), directory)
+
+    def s10_operator_surface(self) -> None:
+        directory = self.scenario_dir("S10", "operator-surface")
+        try:
+            self.register("eval-judge")
+            status, run = self.api.request(
+                "POST",
+                "/runs",
+                {
+                    "workload": "eval-judge",
+                    "caller": "field-test",
+                    "context": "sandbox",
+                    "model_identity": self.identity,
+                    "task": {
+                        "task_id": "clamp",
+                        "solution": (
+                            "def clamp(x, lo, hi):  # ambiguous\n"
+                            "    return sorted([lo, x, hi])[1]\n"
+                        ),
+                    },
+                },
+            )
+            if status != 201:
+                raise ScenarioError(f"submit eval-judge -> {status}: {run}")
+            self.api.request("POST", f"/runs/{run['id']}/start")
+            self._wait_for_state(run["id"], "paused", timeout=120)
+
+            # A13/A16: inspect a live run, then stop it from one surface.
+            started = time.monotonic()
+            _, inspected = self.api.request("GET", f"/runs/{run['id']}")
+            _, events = self.api.request("GET", f"/runs/{run['id']}/events")
+            _, story = self.api.request("GET", f"/runs/{run['id']}/story")
+            stop_status, stopped = self.api.request("POST", f"/runs/{run['id']}/stop")
+            elapsed = time.monotonic() - started
+            after_events = self.api.request("GET", f"/runs/{run['id']}/events")[1]
+            self.write(
+                directory,
+                "operator_surface.json",
+                {
+                    "inspected": inspected,
+                    "stop_status": stop_status,
+                    "stopped": stopped,
+                    "events": events,
+                    "story": story,
+                    "after_stop_events": after_events,
+                    "inspect_stop_seconds": round(elapsed, 3),
+                },
+            )
+            if stopped.get("state") != "cancelled":
+                raise ScenarioError(f"stop did not cancel: {stopped.get('state')}")
+
+            # A15: the run's audit trail must be complete.
+            kinds = {event.get("type") for event in after_events}
+            missing = {"admission", "state_change", "operator_action"} - kinds
+            if missing:
+                raise ScenarioError(f"incomplete audit trail, missing {sorted(missing)}")
+
+            # A18: hiveplane init scaffolds a project quickly.
+            init_dir = directory / "init-scaffold"
+            init_started = time.monotonic()
+            init = subprocess.run(
+                [sys.executable, "-m", "hiveplane.cli", "init", str(init_dir)],
+                capture_output=True,
+                text=True,
+                timeout=300,
+            )
+            init_seconds = time.monotonic() - init_started
+            self.write(
+                directory,
+                "init.json",
+                {
+                    "returncode": init.returncode,
+                    "seconds": round(init_seconds, 3),
+                    "stdout": init.stdout,
+                    "stderr": init.stderr,
+                },
+            )
+            if init.returncode != 0:
+                raise ScenarioError(f"hiveplane init failed: {init.stderr}")
+
+            # A19/A20: dashboard + spend views render.
+            ui_cert = _http_get(f"{self.ui_url}/certifications")
+            ui_spend = _http_get(f"{self.ui_url}/spend")
+            self.write(
+                directory,
+                "views.json",
+                {
+                    "ui_certifications": ui_cert,
+                    "ui_spend": ui_spend,
+                    "api_spend": self.api.request("GET", "/spend"),
+                },
+            )
+            if not ui_cert["ok"] or not ui_spend["ok"]:
+                raise ScenarioError(
+                    "dashboard views not reachable: "
+                    f"cert={ui_cert['status']} spend={ui_spend['status']}"
+                )
+            self.record(
+                "S10",
+                "operator-surface",
+                "pass",
+                f"inspect+stop {elapsed:.2f}s (cancelled, audit complete); "
+                f"init {init_seconds:.2f}s; dashboard + spend render",
+                directory,
+            )
+        except ScenarioError as exc:
+            self.record("S10", "operator-surface", "fail", str(exc), directory)
 
     def s9_fanout(self) -> None:
         directory = self.scenario_dir("S9", "fan-out")
@@ -553,6 +729,7 @@ def main() -> int:
         ("S7", runner.s7_shaping),
         ("S8", runner.s8_durability),
         ("S9", runner.s9_fanout),
+        ("S10", runner.s10_operator_surface),
     ]
     only = {part.strip().upper() for part in args.only.split(",") if part.strip()}
     for sid, fn in scenarios:

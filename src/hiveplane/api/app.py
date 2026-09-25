@@ -168,7 +168,13 @@ def create_app(
     policy_engine = PolicyEngine(policy_pack_store)
     approval_service = ApprovalService(build_approval_store(settings))
     budget_store = build_budget_store(settings)
-    cost_table = CostTable()
+    if settings.budget.zero_cost_prefixes is None:
+        cost_table = CostTable(settings.budget.prices)
+    else:
+        cost_table = CostTable(
+            settings.budget.prices,
+            zero_cost_prefixes=tuple(settings.budget.zero_cost_prefixes),
+        )
     budget_service = BudgetService(budget_store, cost_table)
     sandbox_manager = InMemorySandboxManager()
     app.state.policy_pack_store = policy_pack_store

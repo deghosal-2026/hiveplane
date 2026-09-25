@@ -1,0 +1,320 @@
+{
+  "inspected": {
+    "id": "run-5487d420ec54",
+    "workload_id": "eval-judge",
+    "caller": "field-test",
+    "state": "paused",
+    "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+    "created_at": "2026-09-25T01:19:32.333443Z",
+    "updated_at": "2026-09-25T01:19:32.393966Z",
+    "started_at": "2026-09-25T01:19:32.353835Z",
+    "finished_at": null,
+    "trigger_origin": null,
+    "manifest_version": 1,
+    "context": "sandbox",
+    "sandbox": true,
+    "task": {
+      "task_id": "clamp",
+      "solution": "def clamp(x, lo, hi):  # ambiguous\n    return sorted([lo, x, hi])[1]\n"
+    },
+    "result": null,
+    "failure_reason": null,
+    "cost_usd": 0.0,
+    "sandbox_id": "sb-8254e3c581a0",
+    "trace_id": "c065f71038d00ec766e06730f6f30953"
+  },
+  "stop_status": 200,
+  "stopped": {
+    "id": "run-5487d420ec54",
+    "workload_id": "eval-judge",
+    "caller": "field-test",
+    "state": "cancelled",
+    "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+    "created_at": "2026-09-25T01:19:32.333443Z",
+    "updated_at": "2026-09-25T01:19:33.407632Z",
+    "started_at": "2026-09-25T01:19:32.353835Z",
+    "finished_at": "2026-09-25T01:19:33.407632Z",
+    "trigger_origin": null,
+    "manifest_version": 1,
+    "context": "sandbox",
+    "sandbox": true,
+    "task": {
+      "task_id": "clamp",
+      "solution": "def clamp(x, lo, hi):  # ambiguous\n    return sorted([lo, x, hi])[1]\n"
+    },
+    "result": null,
+    "failure_reason": null,
+    "cost_usd": 0.0,
+    "sandbox_id": "sb-8254e3c581a0",
+    "trace_id": "bb1d8ad757be965e88618daefb8161f9"
+  },
+  "events": [
+    {
+      "run_id": "run-5487d420ec54",
+      "sequence": 0,
+      "type": "admission",
+      "actor": "field-test",
+      "timestamp": "2026-09-25T01:19:32.349364Z",
+      "from_state": null,
+      "to_state": "queued",
+      "detail": "sandbox_only"
+    },
+    {
+      "run_id": "run-5487d420ec54",
+      "sequence": 1,
+      "type": "state_change",
+      "actor": "api",
+      "timestamp": "2026-09-25T01:19:32.356010Z",
+      "from_state": "queued",
+      "to_state": "running",
+      "detail": null
+    },
+    {
+      "run_id": "run-5487d420ec54",
+      "sequence": 2,
+      "type": "sandbox",
+      "actor": "api",
+      "timestamp": "2026-09-25T01:19:32.360600Z",
+      "from_state": null,
+      "to_state": null,
+      "detail": "provisioned sb-8254e3c581a0"
+    },
+    {
+      "run_id": "run-5487d420ec54",
+      "sequence": 3,
+      "type": "policy_decision",
+      "actor": "policy",
+      "timestamp": "2026-09-25T01:19:32.367058Z",
+      "from_state": null,
+      "to_state": null,
+      "detail": "sandbox.allow: sandbox context allows the tool"
+    },
+    {
+      "run_id": "run-5487d420ec54",
+      "sequence": 4,
+      "type": "tool_call",
+      "actor": "adapter",
+      "timestamp": "2026-09-25T01:19:32.370330Z",
+      "from_state": null,
+      "to_state": null,
+      "detail": "mcp.github.read_issue"
+    },
+    {
+      "run_id": "run-5487d420ec54",
+      "sequence": 5,
+      "type": "state_change",
+      "actor": "adapter",
+      "timestamp": "2026-09-25T01:19:32.398247Z",
+      "from_state": "running",
+      "to_state": "paused",
+      "detail": "interrupted"
+    }
+  ],
+  "story": {
+    "run_id": "run-5487d420ec54",
+    "workload": "eval-judge",
+    "team": "platform",
+    "state": "paused",
+    "context": "sandbox",
+    "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+    "cost_usd": 0.0,
+    "sandbox": true,
+    "sandbox_id": "sb-8254e3c581a0",
+    "certification_status": "certified",
+    "attestation_id": "att-92d19dc212ba",
+    "trace_id": "c065f71038d00ec766e06730f6f30953",
+    "entries": [
+      {
+        "timestamp": "2026-09-25T01:19:32.333443Z",
+        "kind": "admission",
+        "summary": "sandbox_only",
+        "detail": {
+          "outcome": "sandbox_only",
+          "refused_reason": null,
+          "escalation_required": false,
+          "sandbox": true,
+          "checks": [
+            {
+              "step": "certification",
+              "passed": true,
+              "reason": null,
+              "rule": "certification"
+            },
+            {
+              "step": "model_identity",
+              "passed": true,
+              "reason": null,
+              "rule": "model_binding"
+            },
+            {
+              "step": "budget",
+              "passed": true,
+              "reason": null,
+              "rule": "run"
+            },
+            {
+              "step": "policy",
+              "passed": true,
+              "reason": "no tool policy applies",
+              "rule": "run.allow"
+            },
+            {
+              "step": "sandbox",
+              "passed": true,
+              "reason": null,
+              "rule": "sandbox"
+            }
+          ]
+        }
+      },
+      {
+        "timestamp": "2026-09-25T01:19:32.356010Z",
+        "kind": "state",
+        "summary": "queued -> running",
+        "detail": {
+          "actor": "api",
+          "detail": null,
+          "from_state": "queued",
+          "to_state": "running"
+        }
+      },
+      {
+        "timestamp": "2026-09-25T01:19:32.360600Z",
+        "kind": "sandbox",
+        "summary": "provisioned sb-8254e3c581a0",
+        "detail": {
+          "actor": "api",
+          "detail": "provisioned sb-8254e3c581a0",
+          "from_state": null,
+          "to_state": null
+        }
+      },
+      {
+        "timestamp": "2026-09-25T01:19:32.367058Z",
+        "kind": "policy_decision",
+        "summary": "sandbox.allow: sandbox context allows the tool",
+        "detail": {
+          "actor": "policy",
+          "detail": "sandbox.allow: sandbox context allows the tool",
+          "from_state": null,
+          "to_state": null
+        }
+      },
+      {
+        "timestamp": "2026-09-25T01:19:32.370330Z",
+        "kind": "tool_call",
+        "summary": "mcp.github.read_issue",
+        "detail": {
+          "actor": "adapter",
+          "detail": "mcp.github.read_issue",
+          "from_state": null,
+          "to_state": null
+        }
+      },
+      {
+        "timestamp": "2026-09-25T01:19:32.398247Z",
+        "kind": "state",
+        "summary": "running -> paused",
+        "detail": {
+          "actor": "adapter",
+          "detail": "interrupted",
+          "from_state": "running",
+          "to_state": "paused"
+        }
+      }
+    ]
+  },
+  "after_stop_events": [
+    {
+      "run_id": "run-5487d420ec54",
+      "sequence": 0,
+      "type": "admission",
+      "actor": "field-test",
+      "timestamp": "2026-09-25T01:19:32.349364Z",
+      "from_state": null,
+      "to_state": "queued",
+      "detail": "sandbox_only"
+    },
+    {
+      "run_id": "run-5487d420ec54",
+      "sequence": 1,
+      "type": "state_change",
+      "actor": "api",
+      "timestamp": "2026-09-25T01:19:32.356010Z",
+      "from_state": "queued",
+      "to_state": "running",
+      "detail": null
+    },
+    {
+      "run_id": "run-5487d420ec54",
+      "sequence": 2,
+      "type": "sandbox",
+      "actor": "api",
+      "timestamp": "2026-09-25T01:19:32.360600Z",
+      "from_state": null,
+      "to_state": null,
+      "detail": "provisioned sb-8254e3c581a0"
+    },
+    {
+      "run_id": "run-5487d420ec54",
+      "sequence": 3,
+      "type": "policy_decision",
+      "actor": "policy",
+      "timestamp": "2026-09-25T01:19:32.367058Z",
+      "from_state": null,
+      "to_state": null,
+      "detail": "sandbox.allow: sandbox context allows the tool"
+    },
+    {
+      "run_id": "run-5487d420ec54",
+      "sequence": 4,
+      "type": "tool_call",
+      "actor": "adapter",
+      "timestamp": "2026-09-25T01:19:32.370330Z",
+      "from_state": null,
+      "to_state": null,
+      "detail": "mcp.github.read_issue"
+    },
+    {
+      "run_id": "run-5487d420ec54",
+      "sequence": 5,
+      "type": "state_change",
+      "actor": "adapter",
+      "timestamp": "2026-09-25T01:19:32.398247Z",
+      "from_state": "running",
+      "to_state": "paused",
+      "detail": "interrupted"
+    },
+    {
+      "run_id": "run-5487d420ec54",
+      "sequence": 6,
+      "type": "operator_action",
+      "actor": "api",
+      "timestamp": "2026-09-25T01:19:33.403441Z",
+      "from_state": null,
+      "to_state": null,
+      "detail": "stop"
+    },
+    {
+      "run_id": "run-5487d420ec54",
+      "sequence": 7,
+      "type": "state_change",
+      "actor": "api",
+      "timestamp": "2026-09-25T01:19:33.409809Z",
+      "from_state": "paused",
+      "to_state": "cancelled",
+      "detail": null
+    },
+    {
+      "run_id": "run-5487d420ec54",
+      "sequence": 8,
+      "type": "sandbox",
+      "actor": "api",
+      "timestamp": "2026-09-25T01:19:33.412743Z",
+      "from_state": null,
+      "to_state": null,
+      "detail": "destroyed sb-8254e3c581a0"
+    }
+  ],
+  "inspect_stop_seconds": 0.042
+}

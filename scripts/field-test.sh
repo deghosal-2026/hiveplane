@@ -148,6 +148,7 @@ set_status "setup (seed tools + register workloads)"
 
 set_status "running scenarios"
 export HIVEPLANE_API_URL="http://localhost:${api_port}"
+export HIVEPLANE_UI_URL="http://localhost:${ui_port}"
 export HIVEPLANE_FIELD_RESTART_CMD="${compose[*]} restart api"
 
 set +e

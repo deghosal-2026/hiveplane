@@ -14,6 +14,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, SecretStr, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from hiveplane.budget.pricing import ModelPrice
 from hiveplane.execution.tool_executor import DEFAULT_TOOL_FIXTURES
 
 ENV_PREFIX = "HIVEPLANE_"
@@ -156,6 +157,31 @@ class UiSettings(BaseModel):
     port: int = Field(default=3001, ge=1, le=65535)
 
 
+class BudgetSettings(BaseModel):
+    """Cost-table overrides for budget enforcement (DD-04).
+
+    Defaults keep local/fake providers free; a profile can add prices and
+    remove prefix exemptions to exercise budget enforcement without a cloud
+    provider (e.g. the field test's over-budget scenario).
+    """
+
+    prices: dict[str, ModelPrice] = Field(default_factory=dict)
+    #: None keeps the built-in ZERO_COST_PREFIXES; a list replaces them.
+    zero_cost_prefixes: list[str] | None = None
+
+    @field_validator("prices", mode="before")
+    @classmethod
+    def _empty_prices_become_empty_map(cls, value: object) -> object:
+        """Treat an unset env var as no price overrides."""
+        return {} if value == "" else value
+
+    @field_validator("zero_cost_prefixes", mode="before")
+    @classmethod
+    def _empty_prefixes_become_none(cls, value: object) -> object:
+        """Treat an unset env var as "use the built-in prefixes"."""
+        return None if value == "" else value
+
+
 class ModelSettings(BaseModel):
     """LLM provider selection and credentials (M23, #107)."""
 
@@ -208,6 +234,7 @@ class Settings(BaseSettings):
     fanout: FanoutSettings = Field(default_factory=FanoutSettings)
     ui: UiSettings = Field(default_factory=UiSettings)
     model: ModelSettings = Field(default_factory=ModelSettings)
+    budget: BudgetSettings = Field(default_factory=BudgetSettings)
 
 
 @lru_cache(maxsize=1)

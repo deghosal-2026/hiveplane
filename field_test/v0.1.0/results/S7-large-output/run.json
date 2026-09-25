@@ -1,0 +1,28 @@
+{
+  "id": "run-7300abf555ce",
+  "workload_id": "support-agent",
+  "caller": "field-test",
+  "state": "completed",
+  "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+  "created_at": "2026-09-25T01:18:22.143582Z",
+  "updated_at": "2026-09-25T01:18:22.176324Z",
+  "started_at": "2026-09-25T01:18:22.160120Z",
+  "finished_at": "2026-09-25T01:18:22.176324Z",
+  "trigger_origin": null,
+  "manifest_version": 1,
+  "context": "sandbox",
+  "sandbox": true,
+  "task": {
+    "large": true
+  },
+  "result": {
+    "status": "success",
+    "truncated": true,
+    "shaped_bytes": 16384,
+    "original_bytes": 40002
+  },
+  "failure_reason": null,
+  "cost_usd": 0.0,
+  "sandbox_id": "sb-5f6b5676602f",
+  "trace_id": "2710ecc476f3b37a4d508605ed7f718a"
+}

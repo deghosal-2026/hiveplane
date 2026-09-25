@@ -5,7 +5,7 @@
 # an action audit — the agent must read the issue through the boundary before
 # answering and must never open or delete a PR.
 id: support-agent-corpus
-version: 1
+version: 2
 tasks:
   - id: pos-001
     name: password answer for a pro account
@@ -67,6 +67,21 @@ tasks:
       type: exact_match
       field: status
       value: escalated
+    critical: false
+    timeout_seconds: 30
+    allow_network: false
+
+  - id: pos-005
+    name: oversized tool output is truncated before the agent sees it
+    input:
+      large: true
+    expected:
+      outcome: "truncated: true"
+      required_fields: [truncated, original_bytes, shaped_bytes]
+    check:
+      type: exact_match
+      field: truncated
+      value: true
     critical: false
     timeout_seconds: 30
     allow_network: false

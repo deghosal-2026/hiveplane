@@ -28,6 +28,18 @@ def run(task: dict[str, Any], ctx: WorkerContext) -> dict[str, Any]:
     query = str(task.get("query") or task.get("issue") or "unknown topic")
     account_id = str(task.get("account_id") or "ACC-001")
 
+    if task.get("large"):
+        # Shaping evidence path (S7): pull an oversized fixture through the
+        # boundary and report whether the pipeline truncated it.
+        pulled = ctx.tool_call("mcp.github.read_large_issue", host="api.github.com")
+        shaped = getattr(pulled, "shaped_output", None)
+        return {
+            "status": "success",
+            "truncated": bool(shaped is not None and shaped.truncated),
+            "original_bytes": int(getattr(shaped, "original_bytes", 0) or 0),
+            "shaped_bytes": int(getattr(shaped, "shaped_bytes", 0) or 0),
+        }
+
     ctx.tool_call("mcp.github.read_issue", host="api.github.com")
     result = support_agent_module.run_agent(query, account_id)
 

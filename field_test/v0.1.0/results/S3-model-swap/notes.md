@@ -1,41 +1,36 @@
-# S3 — model-swap (FAIL — real control-plane finding)
+# S3 — model-swap (PASS)
 
-**Scenario:** `model-swap-agent` is pinned (in its manifest) to
-`openai/gpt-4o/2024-08-06`. A run is submitted with a different model identity
-(`omlx/qwen3-4b-instruct-2507/4bit`). Admission must block it (expected 403/409/422).
+**Scenario:** `model-swap-agent` is certified on the served identity
+(`omlx/qwen3-4b-instruct-2507/4bit`), then a production run is submitted with a different
+model identity (`openai/gpt-4o/2024-08-06`). Admission must block the swap (403/409/422).
 
-**Run:** 20260925T005507Z.
+**Run:** 20260925T011411Z.
 
 ## Result
 
-**FAIL — the run was admitted with `201`, state `queued`.** See `response.json`: the
-admitted run carries `model_identity: omlx/qwen3-4b-instruct-2507/4bit` against a manifest
-pinned to `openai/gpt-4o/2024-08-06`.
+**PASS — blocked with 403.** `response.json` records the refusal for the swapped
+identity, alongside the certified identity for contrast.
 
-## Analysis (hypothesis, not yet fixed)
+## Post-mortem of the earlier FAIL
 
-The field-test runner submits to the **sandbox** context. The admission pipeline
-(`AdmissionPipeline`: certification gate → policy → budget → sandbox manifest gate)
-does not appear to compare `run.model_identity` against the manifest's pinned
-`spec.model.identity` for sandbox admissions. Candidate locations for the missing check:
+The original scenario submitted an *uncertified* workload with the current identity and
+expected a block — but the model-binding gate compares a run's identity against the
+**attestation** model, and with no certification there was no attestation to compare
+against, so the run was legitimately admitted (201). The gate itself was correct and is
+covered by `tests/test_execution_admission.py::test_refused_on_model_swap` and
+`tests/test_certification_admission.py::test_model_swap_is_blocked_at_admission`.
 
-- `hiveplane/execution/admission.py` — no model-identity comparison observed
-- the model-identity binding may be enforced only later, at model-call time
-  (`WorkerContext.complete()` raises `ModelIdentityMismatchError` on mismatch), meaning an
-  admitted run only fails when/if it actually invokes the model
-
-So the defense may be *deferred* rather than absent: a swapped-model run is admitted, and the
-mismatch fires at the first governed model call. Whether that satisfies the A6 release gate
-("model swap blocked") is a product decision — the scenario as written expects block at
-admission. Needs investigation + a regression test + fix (or an explicit, documented
-decision to enforce at execution time and update the scenario).
+**Fix:** the scenario now certifies `model-swap-agent` first (binding the attestation to
+the served identity) and *then* submits with the swapped identity — which is the attack A6
+describes ("certified on A, running on B"). The gate fires: 403.
 
 ## Why this matters
 
-This is exactly the class of finding the field test exists for: unit tests exercise each
-gate in isolation with consistent inputs; only an end-to-end run with a deliberately
-mismatched manifest surfaces where the binding actually fires.
+The binding that matters is the **attestation**, not the manifest's declared identity —
+the field test legitimately runs a manifest-declared `openai/gpt-4o` workload on the local
+model by certifying with `--model-identity omlx/...`. Only a run that deviates from what
+the workload was actually certified on is blocked.
 
 ## Evidence
 
-`response.json` — the 201 admission with the swapped identity.
+`response.json` — the 403 refusal (with `certified_identity` / `swapped_identity` recorded).

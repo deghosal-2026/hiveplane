@@ -1,0 +1,32 @@
+{
+  "ui_certifications": {
+    "ok": true,
+    "status": 200,
+    "bytes": 7014
+  },
+  "ui_spend": {
+    "ok": true,
+    "status": 200,
+    "bytes": 4107
+  },
+  "api_spend": [
+    200,
+    {
+      "by_workload": [
+        {
+          "workload": "budget-probe",
+          "team": "platform",
+          "total_usd": 2.85,
+          "run_count": 1
+        }
+      ],
+      "by_team": [
+        {
+          "team": "platform",
+          "total_usd": 2.85,
+          "run_count": 1
+        }
+      ]
+    }
+  ]
+}

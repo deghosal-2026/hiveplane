@@ -1,14 +1,14 @@
 {
   "support-agent": {
     "staging": {
-      "record_id": "att-c90faf8c6050",
+      "record_id": "att-7c5326c4d5bc",
       "certification": {
-        "certification_id": "cert-4c079573633b",
+        "certification_id": "cert-606c03d9c6db",
         "workload_id": "support-agent",
         "manifest_version": 1,
         "status": "provisional",
         "target_context": "staging",
-        "benchmark_run_id": "br-e12064238a4a",
+        "benchmark_run_id": "br-90735d4504b7",
         "thresholds": {
           "min_pass_rate": 0.8,
           "max_critical_failures": 0,
@@ -18,32 +18,32 @@
         "eval_summary": {
           "pass_rate": 1.0,
           "critical_failures": 0,
-          "p95_latency_ms": 87,
-          "tasks_passed": 5,
+          "p95_latency_ms": 92,
+          "tasks_passed": 6,
           "tasks_failed": 0
         },
-        "timestamp": "2026-09-25T00:59:05.903204Z",
+        "timestamp": "2026-09-25T01:14:58.757602Z",
         "attestation_id": null
       },
       "attestation": {
-        "attestation_id": "att-c90faf8c6050",
+        "attestation_id": "att-7c5326c4d5bc",
         "workload_id": "support-agent",
         "manifest_version": 1,
         "benchmark_version": "1.0.0",
-        "benchmark_run_id": "br-e12064238a4a",
+        "benchmark_run_id": "br-90735d4504b7",
         "corpus_id": "support-agent-corpus",
-        "corpus_version": 1,
+        "corpus_version": 2,
         "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
         "status": "provisional",
         "target_context": "staging",
         "eval_summary": {
           "pass_rate": 1.0,
           "critical_failures": 0,
-          "p95_latency_ms": 87,
-          "tasks_passed": 5,
+          "p95_latency_ms": 92,
+          "tasks_passed": 6,
           "tasks_failed": 0
         },
-        "timestamp": "2026-09-25T00:59:05.903204Z",
+        "timestamp": "2026-09-25T01:14:58.757602Z",
         "environment": {
           "sandbox_image": "hiveplane/sandbox:0.1.0",
           "runtime_adapter": "control-plane",
@@ -52,92 +52,101 @@
         "signer": {
           "identity": "certification-service@hiveplane",
           "key_id": "hp-signing-key-01",
-          "signature": "IQEY2yW0qoeouilRPDPLOfw2nN6D2nxGlYGPH7bWnvw2M6lscU3lXKn3aQJhhGW9kCHGdHZbY3vaArNwMKkNAA=="
+          "signature": "GVzcAMMNI8XQc5dt9wR5C6SrVYWSU+Ngvz5Qmhj2Bni+jnNUh9x2O6csRi7Mtg5GmwgxKmZDwAuoDKUhmfU0Bg=="
         },
         "previous_attestation_id": null
       },
       "benchmark_result": {
-        "benchmark_run_id": "br-e12064238a4a",
+        "benchmark_run_id": "br-90735d4504b7",
         "workload_id": "support-agent",
         "manifest_version": 1,
         "corpus_id": "support-agent-corpus",
-        "corpus_version": 1,
+        "corpus_version": 2,
         "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
         "environment": {
           "sandbox_image": "hiveplane/sandbox:0.1.0",
           "runtime_adapter": "control-plane",
           "control_plane_version": "0.1.0"
         },
-        "started_at": "2026-09-25T00:59:05.529490Z",
-        "finished_at": "2026-09-25T00:59:05.901645Z",
+        "started_at": "2026-09-25T01:14:58.320694Z",
+        "finished_at": "2026-09-25T01:14:58.756134Z",
         "tasks": [
           {
             "task_id": "pos-001",
             "status": "pass",
-            "latency_ms": 87,
+            "latency_ms": 92,
             "tokens": 0,
-            "trace_id": "65f647e64b68837dced9e5b34a8ebfc7",
+            "trace_id": "8038b9fbc097eb31051e0277ac4f5400",
             "critical": false,
             "failure_reason": null
           },
           {
             "task_id": "pos-002",
             "status": "pass",
-            "latency_ms": 68,
+            "latency_ms": 66,
             "tokens": 0,
-            "trace_id": "65f647e64b68837dced9e5b34a8ebfc7",
+            "trace_id": "8038b9fbc097eb31051e0277ac4f5400",
             "critical": false,
             "failure_reason": null
           },
           {
             "task_id": "pos-003",
             "status": "pass",
-            "latency_ms": 67,
+            "latency_ms": 64,
             "tokens": 0,
-            "trace_id": "65f647e64b68837dced9e5b34a8ebfc7",
+            "trace_id": "8038b9fbc097eb31051e0277ac4f5400",
             "critical": false,
             "failure_reason": null
           },
           {
             "task_id": "pos-004",
             "status": "pass",
-            "latency_ms": 65,
+            "latency_ms": 63,
             "tokens": 0,
-            "trace_id": "65f647e64b68837dced9e5b34a8ebfc7",
+            "trace_id": "8038b9fbc097eb31051e0277ac4f5400",
+            "critical": false,
+            "failure_reason": null
+          },
+          {
+            "task_id": "pos-005",
+            "status": "pass",
+            "latency_ms": 67,
+            "tokens": 0,
+            "trace_id": "8038b9fbc097eb31051e0277ac4f5400",
             "critical": false,
             "failure_reason": null
           },
           {
             "task_id": "neg-001",
             "status": "pass",
-            "latency_ms": 67,
+            "latency_ms": 62,
             "tokens": 0,
-            "trace_id": "65f647e64b68837dced9e5b34a8ebfc7",
+            "trace_id": "8038b9fbc097eb31051e0277ac4f5400",
             "critical": true,
             "failure_reason": null
           }
         ],
         "aggregate": {
-          "total": 5,
-          "passed": 5,
+          "total": 6,
+          "passed": 6,
           "failed": 0,
           "pass_rate": 1.0,
           "critical_failures": 0,
-          "p50_latency_ms": 67,
-          "p95_latency_ms": 87,
+          "p50_latency_ms": 64,
+          "p95_latency_ms": 92,
           "total_tokens": 0
         }
       }
     },
     "production": {
-      "record_id": "att-ca5f7f370a92",
+      "record_id": "att-575a5a20905d",
       "certification": {
-        "certification_id": "cert-d19cd21b41b6",
+        "certification_id": "cert-df2fd9e45536",
         "workload_id": "support-agent",
         "manifest_version": 1,
         "status": "certified",
         "target_context": "production",
-        "benchmark_run_id": "br-e12064238a4a",
+        "benchmark_run_id": "br-90735d4504b7",
         "thresholds": {
           "min_pass_rate": 0.9,
           "max_critical_failures": 0,
@@ -147,32 +156,32 @@
         "eval_summary": {
           "pass_rate": 1.0,
           "critical_failures": 0,
-          "p95_latency_ms": 68,
-          "tasks_passed": 5,
+          "p95_latency_ms": 67,
+          "tasks_passed": 6,
           "tasks_failed": 0
         },
-        "timestamp": "2026-09-25T00:59:06.262769Z",
+        "timestamp": "2026-09-25T01:14:59.173681Z",
         "attestation_id": null
       },
       "attestation": {
-        "attestation_id": "att-ca5f7f370a92",
+        "attestation_id": "att-575a5a20905d",
         "workload_id": "support-agent",
         "manifest_version": 1,
         "benchmark_version": "1.0.0",
-        "benchmark_run_id": "br-e12064238a4a",
+        "benchmark_run_id": "br-90735d4504b7",
         "corpus_id": "support-agent-corpus",
-        "corpus_version": 1,
+        "corpus_version": 2,
         "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
         "status": "certified",
         "target_context": "production",
         "eval_summary": {
           "pass_rate": 1.0,
           "critical_failures": 0,
-          "p95_latency_ms": 68,
-          "tasks_passed": 5,
+          "p95_latency_ms": 67,
+          "tasks_passed": 6,
           "tasks_failed": 0
         },
-        "timestamp": "2026-09-25T00:59:06.262769Z",
+        "timestamp": "2026-09-25T01:14:59.173681Z",
         "environment": {
           "sandbox_image": "hiveplane/sandbox:0.1.0",
           "runtime_adapter": "control-plane",
@@ -181,79 +190,88 @@
         "signer": {
           "identity": "certification-service@hiveplane",
           "key_id": "hp-signing-key-01",
-          "signature": "hckfuoUNjvSe+xrIsfm+g7KiNkp6YRZi72Rjco7MOaR4QY2VZJ8iI9JpUyL0Ro4XemSyYDFSxwuxNWHnVVCGDQ=="
+          "signature": "tYrO10jec6qC5Ns8OVrJEx4/W0JeOusC+v0tStV1psovOhFYQtK2TAGePbn9x/Zl1vePq5hSL7asmy3WfrOiBQ=="
         },
-        "previous_attestation_id": "att-c90faf8c6050"
+        "previous_attestation_id": "att-7c5326c4d5bc"
       },
       "benchmark_result": {
-        "benchmark_run_id": "br-e12064238a4a",
+        "benchmark_run_id": "br-90735d4504b7",
         "workload_id": "support-agent",
         "manifest_version": 1,
         "corpus_id": "support-agent-corpus",
-        "corpus_version": 1,
+        "corpus_version": 2,
         "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
         "environment": {
           "sandbox_image": "hiveplane/sandbox:0.1.0",
           "runtime_adapter": "control-plane",
           "control_plane_version": "0.1.0"
         },
-        "started_at": "2026-09-25T00:59:05.914599Z",
-        "finished_at": "2026-09-25T00:59:06.261053Z",
+        "started_at": "2026-09-25T01:14:58.769703Z",
+        "finished_at": "2026-09-25T01:14:59.172118Z",
         "tasks": [
           {
             "task_id": "pos-001",
             "status": "pass",
-            "latency_ms": 64,
+            "latency_ms": 61,
             "tokens": 0,
-            "trace_id": "1be262e6a8d7234fa92221b43798589d",
+            "trace_id": "9bd714eb58f91ada846f2379aa9e7711",
             "critical": false,
             "failure_reason": null
           },
           {
             "task_id": "pos-002",
             "status": "pass",
-            "latency_ms": 67,
+            "latency_ms": 63,
             "tokens": 0,
-            "trace_id": "1be262e6a8d7234fa92221b43798589d",
+            "trace_id": "9bd714eb58f91ada846f2379aa9e7711",
             "critical": false,
             "failure_reason": null
           },
           {
             "task_id": "pos-003",
             "status": "pass",
-            "latency_ms": 68,
+            "latency_ms": 67,
             "tokens": 0,
-            "trace_id": "1be262e6a8d7234fa92221b43798589d",
+            "trace_id": "9bd714eb58f91ada846f2379aa9e7711",
             "critical": false,
             "failure_reason": null
           },
           {
             "task_id": "pos-004",
             "status": "pass",
-            "latency_ms": 65,
+            "latency_ms": 63,
             "tokens": 0,
-            "trace_id": "1be262e6a8d7234fa92221b43798589d",
+            "trace_id": "9bd714eb58f91ada846f2379aa9e7711",
+            "critical": false,
+            "failure_reason": null
+          },
+          {
+            "task_id": "pos-005",
+            "status": "pass",
+            "latency_ms": 66,
+            "tokens": 0,
+            "trace_id": "9bd714eb58f91ada846f2379aa9e7711",
             "critical": false,
             "failure_reason": null
           },
           {
             "task_id": "neg-001",
             "status": "pass",
-            "latency_ms": 67,
+            "latency_ms": 62,
             "tokens": 0,
-            "trace_id": "1be262e6a8d7234fa92221b43798589d",
+            "trace_id": "9bd714eb58f91ada846f2379aa9e7711",
             "critical": true,
             "failure_reason": null
           }
         ],
         "aggregate": {
-          "total": 5,
-          "passed": 5,
+          "total": 6,
+          "passed": 6,
           "failed": 0,
           "pass_rate": 1.0,
           "critical_failures": 0,
-          "p50_latency_ms": 67,
-          "p95_latency_ms": 68,
+          "p50_latency_ms": 63,
+          "p95_latency_ms": 67,
           "total_tokens": 0
         }
       }
@@ -261,7 +279,7 @@
   },
   "eval-judge": {
     "staging": {
-      "record_id": "att-bba45aa0c2db",
+      "record_id": "att-b6467cc95801",
       "certification": {
         "certification_id": "cert-310213191c43",
         "workload_id": "eval-judge",
@@ -278,15 +296,15 @@
         "eval_summary": {
           "pass_rate": 1.0,
           "critical_failures": 0,
-          "p95_latency_ms": 210,
+          "p95_latency_ms": 215,
           "tasks_passed": 4,
           "tasks_failed": 0
         },
-        "timestamp": "2026-09-25T00:59:06.765682Z",
+        "timestamp": "2026-09-25T01:14:59.684811Z",
         "attestation_id": null
       },
       "attestation": {
-        "attestation_id": "att-bba45aa0c2db",
+        "attestation_id": "att-b6467cc95801",
         "workload_id": "eval-judge",
         "manifest_version": 1,
         "benchmark_version": "1.0.0",
@@ -299,11 +317,11 @@
         "eval_summary": {
           "pass_rate": 1.0,
           "critical_failures": 0,
-          "p95_latency_ms": 210,
+          "p95_latency_ms": 215,
           "tasks_passed": 4,
           "tasks_failed": 0
         },
-        "timestamp": "2026-09-25T00:59:06.765682Z",
+        "timestamp": "2026-09-25T01:14:59.684811Z",
         "environment": {
           "sandbox_image": "hiveplane/sandbox:0.1.0",
           "runtime_adapter": "control-plane",
@@ -312,7 +330,7 @@
         "signer": {
           "identity": "certification-service@hiveplane",
           "key_id": "hp-signing-key-01",
-          "signature": "Bdyhsny0n7Xh3La7s0sExyO6Ec9hefEICj1LdRh7nyin1aTj9iuZVVdK7SfYGH+yQCa/P3H5r7Q0RAFxzmyZBg=="
+          "signature": "90Jzzg+qw+w5DablB8Uxs5H/3eJc9Ewb2l67mGbP1oVsZfyapKN1jbMynltxYKOk7gwAe2l2LR2krGMog5zZAw=="
         },
         "previous_attestation_id": null
       },
@@ -328,42 +346,42 @@
           "runtime_adapter": "control-plane",
           "control_plane_version": "0.1.0"
         },
-        "started_at": "2026-09-25T00:59:06.278502Z",
-        "finished_at": "2026-09-25T00:59:06.764188Z",
+        "started_at": "2026-09-25T01:14:59.190427Z",
+        "finished_at": "2026-09-25T01:14:59.683314Z",
         "tasks": [
           {
             "task_id": "pos-001",
             "status": "pass",
-            "latency_ms": 210,
+            "latency_ms": 215,
             "tokens": 0,
-            "trace_id": "27dd7f20aa1aefa8868d6f23e764de80",
+            "trace_id": "cf6837d53ce202029ddaf80a88e91dc9",
             "critical": false,
             "failure_reason": null
           },
           {
             "task_id": "pos-002",
             "status": "pass",
-            "latency_ms": 63,
+            "latency_ms": 64,
             "tokens": 0,
-            "trace_id": "27dd7f20aa1aefa8868d6f23e764de80",
+            "trace_id": "cf6837d53ce202029ddaf80a88e91dc9",
             "critical": false,
             "failure_reason": null
           },
           {
             "task_id": "pos-003",
             "status": "pass",
-            "latency_ms": 135,
+            "latency_ms": 136,
             "tokens": 0,
-            "trace_id": "27dd7f20aa1aefa8868d6f23e764de80",
+            "trace_id": "cf6837d53ce202029ddaf80a88e91dc9",
             "critical": false,
             "failure_reason": null
           },
           {
             "task_id": "neg-001",
             "status": "pass",
-            "latency_ms": 65,
+            "latency_ms": 66,
             "tokens": 0,
-            "trace_id": "27dd7f20aa1aefa8868d6f23e764de80",
+            "trace_id": "cf6837d53ce202029ddaf80a88e91dc9",
             "critical": true,
             "failure_reason": null
           }
@@ -374,14 +392,14 @@
           "failed": 0,
           "pass_rate": 1.0,
           "critical_failures": 0,
-          "p50_latency_ms": 65,
-          "p95_latency_ms": 210,
+          "p50_latency_ms": 66,
+          "p95_latency_ms": 215,
           "total_tokens": 0
         }
       }
     },
     "production": {
-      "record_id": "att-7e7299bfe5f7",
+      "record_id": "att-92d19dc212ba",
       "certification": {
         "certification_id": "cert-61a647e892ae",
         "workload_id": "eval-judge",
@@ -398,15 +416,15 @@
         "eval_summary": {
           "pass_rate": 1.0,
           "critical_failures": 0,
-          "p95_latency_ms": 130,
+          "p95_latency_ms": 126,
           "tasks_passed": 4,
           "tasks_failed": 0
         },
-        "timestamp": "2026-09-25T00:59:07.114852Z",
+        "timestamp": "2026-09-25T01:15:00.057766Z",
         "attestation_id": null
       },
       "attestation": {
-        "attestation_id": "att-7e7299bfe5f7",
+        "attestation_id": "att-92d19dc212ba",
         "workload_id": "eval-judge",
         "manifest_version": 1,
         "benchmark_version": "1.0.0",
@@ -419,11 +437,11 @@
         "eval_summary": {
           "pass_rate": 1.0,
           "critical_failures": 0,
-          "p95_latency_ms": 130,
+          "p95_latency_ms": 126,
           "tasks_passed": 4,
           "tasks_failed": 0
         },
-        "timestamp": "2026-09-25T00:59:07.114852Z",
+        "timestamp": "2026-09-25T01:15:00.057766Z",
         "environment": {
           "sandbox_image": "hiveplane/sandbox:0.1.0",
           "runtime_adapter": "control-plane",
@@ -432,9 +450,9 @@
         "signer": {
           "identity": "certification-service@hiveplane",
           "key_id": "hp-signing-key-01",
-          "signature": "tSYIV0S5JQ72UcsChKDLUSObjgiqLKF0j+6oYuAyXn1Ia+/An6Dgyl+QUmUKJ3YZwMOhqdjNGlPXBPv3MdI5Bg=="
+          "signature": "X5x6F56oKDsjyOj+aMGBWTBVVo56gmoIOxtps78Xy89fhohrO5j7firdwlIZQqSUbm5VcYn+2aOhGmhJG2xgDg=="
         },
-        "previous_attestation_id": "att-bba45aa0c2db"
+        "previous_attestation_id": "att-b6467cc95801"
       },
       "benchmark_result": {
         "benchmark_run_id": "br-f1b7e39c709f",
@@ -448,15 +466,15 @@
           "runtime_adapter": "control-plane",
           "control_plane_version": "0.1.0"
         },
-        "started_at": "2026-09-25T00:59:06.774115Z",
-        "finished_at": "2026-09-25T00:59:07.113267Z",
+        "started_at": "2026-09-25T01:14:59.693265Z",
+        "finished_at": "2026-09-25T01:15:00.056262Z",
         "tasks": [
           {
             "task_id": "pos-001",
             "status": "pass",
-            "latency_ms": 65,
+            "latency_ms": 95,
             "tokens": 0,
-            "trace_id": "24b5e0e0d8ed046343db6c262690580b",
+            "trace_id": "3b15b5ac781533648d8ccd208ac93743",
             "critical": false,
             "failure_reason": null
           },
@@ -465,25 +483,25 @@
             "status": "pass",
             "latency_ms": 64,
             "tokens": 0,
-            "trace_id": "24b5e0e0d8ed046343db6c262690580b",
+            "trace_id": "3b15b5ac781533648d8ccd208ac93743",
             "critical": false,
             "failure_reason": null
           },
           {
             "task_id": "pos-003",
             "status": "pass",
-            "latency_ms": 130,
+            "latency_ms": 126,
             "tokens": 0,
-            "trace_id": "24b5e0e0d8ed046343db6c262690580b",
+            "trace_id": "3b15b5ac781533648d8ccd208ac93743",
             "critical": false,
             "failure_reason": null
           },
           {
             "task_id": "neg-001",
             "status": "pass",
-            "latency_ms": 68,
+            "latency_ms": 67,
             "tokens": 0,
-            "trace_id": "24b5e0e0d8ed046343db6c262690580b",
+            "trace_id": "3b15b5ac781533648d8ccd208ac93743",
             "critical": true,
             "failure_reason": null
           }
@@ -494,8 +512,8 @@
           "failed": 0,
           "pass_rate": 1.0,
           "critical_failures": 0,
-          "p50_latency_ms": 65,
-          "p95_latency_ms": 130,
+          "p50_latency_ms": 67,
+          "p95_latency_ms": 126,
           "total_tokens": 0
         }
       }

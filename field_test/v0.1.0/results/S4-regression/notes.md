@@ -4,7 +4,7 @@
 issue, never escalates, guesses the account tier) — is submitted for production
 certification. The benchmark must catch it instead of waving it through.
 
-**Run:** 20260925T005507Z.
+**Run:** 20260925T011411Z.
 
 ## Result
 
@@ -26,9 +26,9 @@ Failing tasks, by design of the fixture:
 ## Why this is the thesis scenario
 
 The benchmark is not theater (D19/D20): a plausible-looking agent that "works" (returns
-200-shaped JSON) is still blocked because its *behavior* — read-before-write, escalate
-rather than guess — fails deterministic checks. The negative proof and the critical-failure
-count both fire in one run.
+well-formed JSON) is still blocked because its *behavior* — read-before-write, escalate
+rather than guess — fails deterministic checks. The negative proof and the
+critical-failure count both fire in one run.
 
 ## Evidence
 

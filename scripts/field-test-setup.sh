@@ -38,7 +38,7 @@ log() { echo "$@" ; }
 log "==> Seeding MCP tool registry"
 "$repo_root/scripts/seed-tools.sh" "$workloads_dir"
 
-workloads=(support-agent eval-judge uncertified-agent model-swap-agent regressed-agent)
+workloads=(support-agent eval-judge uncertified-agent model-swap-agent regressed-agent budget-probe)
 log "==> Registering workloads (api: ${api_url})"
 failed=0
 for name in "${workloads[@]}"; do

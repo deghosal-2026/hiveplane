@@ -1,27 +1,38 @@
-# S5 — over-budget (BLOCKED — by design)
+# S5 — over-budget (PASS)
 
-**Scenario:** an over-budget run must be blocked **before** expensive work executes.
+**Scenario:** a run that accumulates priced usage beyond its per-run budget must be
+**failed by the control plane before expensive work continues**.
 
-**Status:** ⏸️ blocked — not demonstrable on the current profile.
+**Run:** 20260925T011411Z.
 
-## Why blocked
+## Result
 
-The local model (`omlx/qwen3-4b-instruct-2507/4bit`) is priced at **$0** in the budget cost
-table (by design — local inference is free). Both Tier 1 agents are deterministic and do
-not invoke the model seam, so no run can accumulate non-zero spend, and no budget ceiling
-can be breached. `spend.json` in this directory records the (all-zero) spend surface.
+**PASS — the `budget-probe` run failed with `run budget exceeded`.** The probe makes
+exactly one governed model call; its manifest sets `per_run_usd: 0.000001`, so the priced
+usage exceeds the run ceiling and the budget service fails the run at the usage report.
 
-## What unblocks it
+## How the local $0 model got priced
 
-Either:
-- run the sweep on a **priced-provider profile** (cloud; `HIVEPLANE_MODEL__PROVIDER=cloud`
-  with real prices), where an agent that calls `ctx.complete()` accumulates per-run cost, or
-- seed the cost table with a non-zero price for the local model identity in a test-only
-  profile.
+Budget enforcement needs non-zero cost, and the built-in cost table prices `omlx/*` at
+zero. Two additions made the local model priceable without a cloud provider:
 
-The budget service itself is exercised by the unit suite (budget gate, run/day/team
-ceilings) and the Docker layer; what S5 adds is the *live, end-to-end* demonstration.
+- **Config**: new `HIVEPLANE_BUDGET__PRICES` /
+  `HIVEPLANE_BUDGET__ZERO_COST_PREFIXES` settings (with empty-string fallbacks to the
+  defaults); the field-test profile prices
+  `omlx/qwen3-4b-instruct-2507/4bit` at 150/600 USD per 1M tokens and drops the prefix
+  exemption. Unit-tested in `tests/test_config_budget.py`.
+- **Fixture**: the `budget-probe` workload (`field_test/shims/budget_agent.py`) — one
+  `ctx.complete()` call so real token usage flows through the budget service.
+
+## Notes
+
+- The block fires at the **usage report**, not at admission: admission checks day/team
+  headroom only, and a per-run ceiling can only be judged once cost accrues. This is the
+  correct seam — it stops the run the moment the ceiling is crossed.
+- Admission-level day/team blocking is covered by the budget unit suite and remains the
+  path for repeated over-spend.
 
 ## Evidence
 
-`spend.json` — the spend snapshot; `notes.md` — this rationale (written by the runner).
+`run.json` — the failed run with `failure_reason` containing "budget exceeded";
+`spend.json` — the spend snapshot showing the priced attribution.

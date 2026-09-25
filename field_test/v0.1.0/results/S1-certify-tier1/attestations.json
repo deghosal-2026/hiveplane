@@ -1,24 +1,24 @@
 {
   "support-agent": {
     "staging": {
-      "attestation_id": "att-c90faf8c6050",
+      "attestation_id": "att-7c5326c4d5bc",
       "workload_id": "support-agent",
       "manifest_version": 1,
       "benchmark_version": "1.0.0",
-      "benchmark_run_id": "br-e12064238a4a",
+      "benchmark_run_id": "br-90735d4504b7",
       "corpus_id": "support-agent-corpus",
-      "corpus_version": 1,
+      "corpus_version": 2,
       "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
       "status": "provisional",
       "target_context": "staging",
       "eval_summary": {
         "pass_rate": 1.0,
         "critical_failures": 0,
-        "p95_latency_ms": 87,
-        "tasks_passed": 5,
+        "p95_latency_ms": 92,
+        "tasks_passed": 6,
         "tasks_failed": 0
       },
-      "timestamp": "2026-09-25T00:59:05.903204Z",
+      "timestamp": "2026-09-25T01:14:58.757602Z",
       "environment": {
         "sandbox_image": "hiveplane/sandbox:0.1.0",
         "runtime_adapter": "control-plane",
@@ -27,29 +27,29 @@
       "signer": {
         "identity": "certification-service@hiveplane",
         "key_id": "hp-signing-key-01",
-        "signature": "IQEY2yW0qoeouilRPDPLOfw2nN6D2nxGlYGPH7bWnvw2M6lscU3lXKn3aQJhhGW9kCHGdHZbY3vaArNwMKkNAA=="
+        "signature": "GVzcAMMNI8XQc5dt9wR5C6SrVYWSU+Ngvz5Qmhj2Bni+jnNUh9x2O6csRi7Mtg5GmwgxKmZDwAuoDKUhmfU0Bg=="
       },
       "previous_attestation_id": null
     },
     "production": {
-      "attestation_id": "att-ca5f7f370a92",
+      "attestation_id": "att-575a5a20905d",
       "workload_id": "support-agent",
       "manifest_version": 1,
       "benchmark_version": "1.0.0",
-      "benchmark_run_id": "br-e12064238a4a",
+      "benchmark_run_id": "br-90735d4504b7",
       "corpus_id": "support-agent-corpus",
-      "corpus_version": 1,
+      "corpus_version": 2,
       "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
       "status": "certified",
       "target_context": "production",
       "eval_summary": {
         "pass_rate": 1.0,
         "critical_failures": 0,
-        "p95_latency_ms": 68,
-        "tasks_passed": 5,
+        "p95_latency_ms": 67,
+        "tasks_passed": 6,
         "tasks_failed": 0
       },
-      "timestamp": "2026-09-25T00:59:06.262769Z",
+      "timestamp": "2026-09-25T01:14:59.173681Z",
       "environment": {
         "sandbox_image": "hiveplane/sandbox:0.1.0",
         "runtime_adapter": "control-plane",
@@ -58,21 +58,21 @@
       "signer": {
         "identity": "certification-service@hiveplane",
         "key_id": "hp-signing-key-01",
-        "signature": "hckfuoUNjvSe+xrIsfm+g7KiNkp6YRZi72Rjco7MOaR4QY2VZJ8iI9JpUyL0Ro4XemSyYDFSxwuxNWHnVVCGDQ=="
+        "signature": "tYrO10jec6qC5Ns8OVrJEx4/W0JeOusC+v0tStV1psovOhFYQtK2TAGePbn9x/Zl1vePq5hSL7asmy3WfrOiBQ=="
       },
-      "previous_attestation_id": "att-c90faf8c6050"
+      "previous_attestation_id": "att-7c5326c4d5bc"
     },
     "eval_summary": {
       "pass_rate": 1.0,
       "critical_failures": 0,
-      "p95_latency_ms": 68,
-      "tasks_passed": 5,
+      "p95_latency_ms": 67,
+      "tasks_passed": 6,
       "tasks_failed": 0
     }
   },
   "eval-judge": {
     "staging": {
-      "attestation_id": "att-bba45aa0c2db",
+      "attestation_id": "att-b6467cc95801",
       "workload_id": "eval-judge",
       "manifest_version": 1,
       "benchmark_version": "1.0.0",
@@ -85,11 +85,11 @@
       "eval_summary": {
         "pass_rate": 1.0,
         "critical_failures": 0,
-        "p95_latency_ms": 210,
+        "p95_latency_ms": 215,
         "tasks_passed": 4,
         "tasks_failed": 0
       },
-      "timestamp": "2026-09-25T00:59:06.765682Z",
+      "timestamp": "2026-09-25T01:14:59.684811Z",
       "environment": {
         "sandbox_image": "hiveplane/sandbox:0.1.0",
         "runtime_adapter": "control-plane",
@@ -98,12 +98,12 @@
       "signer": {
         "identity": "certification-service@hiveplane",
         "key_id": "hp-signing-key-01",
-        "signature": "Bdyhsny0n7Xh3La7s0sExyO6Ec9hefEICj1LdRh7nyin1aTj9iuZVVdK7SfYGH+yQCa/P3H5r7Q0RAFxzmyZBg=="
+        "signature": "90Jzzg+qw+w5DablB8Uxs5H/3eJc9Ewb2l67mGbP1oVsZfyapKN1jbMynltxYKOk7gwAe2l2LR2krGMog5zZAw=="
       },
       "previous_attestation_id": null
     },
     "production": {
-      "attestation_id": "att-7e7299bfe5f7",
+      "attestation_id": "att-92d19dc212ba",
       "workload_id": "eval-judge",
       "manifest_version": 1,
       "benchmark_version": "1.0.0",
@@ -116,11 +116,11 @@
       "eval_summary": {
         "pass_rate": 1.0,
         "critical_failures": 0,
-        "p95_latency_ms": 130,
+        "p95_latency_ms": 126,
         "tasks_passed": 4,
         "tasks_failed": 0
       },
-      "timestamp": "2026-09-25T00:59:07.114852Z",
+      "timestamp": "2026-09-25T01:15:00.057766Z",
       "environment": {
         "sandbox_image": "hiveplane/sandbox:0.1.0",
         "runtime_adapter": "control-plane",
@@ -129,14 +129,14 @@
       "signer": {
         "identity": "certification-service@hiveplane",
         "key_id": "hp-signing-key-01",
-        "signature": "tSYIV0S5JQ72UcsChKDLUSObjgiqLKF0j+6oYuAyXn1Ia+/An6Dgyl+QUmUKJ3YZwMOhqdjNGlPXBPv3MdI5Bg=="
+        "signature": "X5x6F56oKDsjyOj+aMGBWTBVVo56gmoIOxtps78Xy89fhohrO5j7firdwlIZQqSUbm5VcYn+2aOhGmhJG2xgDg=="
       },
-      "previous_attestation_id": "att-bba45aa0c2db"
+      "previous_attestation_id": "att-b6467cc95801"
     },
     "eval_summary": {
       "pass_rate": 1.0,
       "critical_failures": 0,
-      "p95_latency_ms": 130,
+      "p95_latency_ms": 126,
       "tasks_passed": 4,
       "tasks_failed": 0
     }

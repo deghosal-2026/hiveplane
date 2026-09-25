@@ -30,6 +30,8 @@ spec:
     allow:
       - tool_id: mcp.github.read_issue
         trust_level: read_only
+      - tool_id: mcp.github.read_large_issue
+        trust_level: read_only
       - tool_id: pagerduty.acknowledge
         trust_level: destructive
         require_approval: true

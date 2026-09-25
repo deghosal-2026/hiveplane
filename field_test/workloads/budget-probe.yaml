@@ -1,0 +1,53 @@
+apiVersion: hiveplane/v1
+kind: AgentWorkload
+metadata:
+  name: budget-probe
+  owner: platform-team
+  team: platform
+  description: S5 fixture — one governed model call against a tiny per-run budget.
+  labels:
+    environment: field-test
+    source: field_test
+spec:
+  runtime:
+    adapter: raw-worker
+    entrypoint: field_test.shims.budget_agent:run
+  model:
+    strategy: tiered
+    identity:
+      provider: openai
+      family: gpt-4o
+      version: "2024-08-06"
+  tools:
+    allow: []
+    deny:
+      - mcp.github.delete_repo
+    default_trust: read_only
+  budget:
+    per_run_usd: 0.000001
+    per_day_usd: 1.00
+    per_team_usd: 10.00
+  approvals:
+    required_for:
+      - production_write
+    contact: "#platform-oncall"
+    auto_escalate_after: 300s
+  sandbox:
+    enabled: true
+    resource_caps:
+      memory_mb: 512
+      cpu_cores: 1.0
+      wall_clock_s: 300
+    egress:
+      allow: ["api.github.com"]
+      deny: ["169.254.169.254"]
+      mode: restricted
+    filesystem: isolated
+  fan_out:
+    on_failed:
+      - type: slack
+        channel: "#platform-oncall"
+    always_include: [trace_link]
+  observability:
+    contract: standard
+    trace_sampling: 1.0
