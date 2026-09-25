@@ -3,7 +3,6 @@ from __future__ import annotations
 from pathlib import Path
 
 from hiveplane.adapters.loader import EntrypointLoader
-from hiveplane.certification.corpus import load_corpus
 from hiveplane.core.manifest import load_manifest
 
 _ROOT = Path(__file__).resolve().parents[1]
@@ -32,7 +31,10 @@ def test_real_field_test_workloads_reference_shims_and_corpora() -> None:
     assert judge.spec.runtime.entrypoint == "field_test.shims.eval_judge:graph"
     assert support.spec.certification is not None
     assert judge.spec.certification is not None
-    assert support.spec.certification.benchmark_corpus == "corpora/support-agent/hiveplane-corpus.yaml"
+    assert (
+        support.spec.certification.benchmark_corpus
+        == "corpora/support-agent/hiveplane-corpus.yaml"
+    )
     assert judge.spec.certification.benchmark_corpus == "corpora/eval-judge/hiveplane-corpus.yaml"
     assert (_CORPORA_DIR / "support-agent" / "hiveplane-corpus.yaml").is_file()
     assert (_CORPORA_DIR / "eval-judge" / "hiveplane-corpus.yaml").is_file()

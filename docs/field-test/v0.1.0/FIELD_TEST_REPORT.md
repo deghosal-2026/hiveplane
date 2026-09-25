@@ -1,6 +1,6 @@
 # HivePlane v0.1.0 — Field Test Report
 
-> Generated 2026-09-25T01:39:10.451751+00:00 from `results/summary.json`.
+> Generated 2026-09-25T01:49:14.716431+00:00 from `results/summary.json`.
 > **Overall: PASS** — 10 passed, 0 failed, 0 blocked, 0 incomplete.
 
 ## BLUF + Release Gate Verdict
@@ -43,6 +43,14 @@ the operator approval path, S8 through the post-restart resume.
 This is the **real-agent** field test (Tier 1 exectrace agents). Container/API/UI layers are
 covered by [DOCKER_TEST_REPORT.md](DOCKER_TEST_REPORT.md).
 
+> **Run provenance & data verification.** Verdicts are consolidated across the full
+> sweep `20260925T011411Z` (S1–S5) and direct runner invocations against the live stack
+> (S6–S10); every number below is read from the committed artifacts under
+> `field_test/v0.1.0/results/` at report-render time — nothing is transcribed by hand.
+> The run-by-run history (including the aborted attempts) is in
+> [`results/NOTES.md`](../../field_test/v0.1.0/results/NOTES.md). One uninterrupted
+> `scripts/field-test.sh` sweep regenerates all of this from a single run.
+
 ## Scenario Results
 
 | Scenario | Name | Status | Detail | Evidence |
@@ -82,6 +90,101 @@ covered by [DOCKER_TEST_REPORT.md](DOCKER_TEST_REPORT.md).
 | A18 | hiveplane init scaffolds a working project in < 5 minutes | ✅ pass |
 | A19 | Certification dashboard renders fleet cert status | ✅ pass |
 | A20 | Spend view shows cost showback by team and agent | ✅ pass |
+
+## Scenario → Acceptance-Criteria Traceability
+
+| Criterion | Evidenced by | Scenario status |
+|---|---|---|
+| A1 | S1 | S1 pass |
+| A2 | S1 | S1 pass |
+| A3 | S2 | S2 pass |
+| A4 | S4 | S4 pass |
+| A5 | S1 | S1 pass |
+| A6 | S3 | S3 pass |
+| A7 | S6 | S6 pass |
+| A8 | S5 | S5 pass |
+| A9 | S6 | S6 pass |
+| A10 | S7 | S7 pass |
+| A11 | S6 | S6 pass |
+| A12 | S8 | S8 pass |
+| A13 | S10 | S10 pass |
+| A14 | S9 | S9 pass |
+| A15 | S10 | S10 pass |
+| A16 | S10 | S10 pass |
+| A17 | S1 | S1 pass |
+| A18 | S10 | S10 pass |
+| A19 | S10 | S10 pass |
+| A20 | S10 | S10 pass |
+
+## Unit-Test Cross-Reference
+
+Every scenario's control-plane behavior is also locked by a hermetic unit test — the
+field test exercises the seams end to end; the unit suite pins them:
+
+| Scenario | Behavior under test | Backing unit tests |
+|---|---|---|
+| S1 | adapter-backed certification, benchmark auto-approval | `test_certification_adapter_e2e.py`, `test_benchmark_auto_approval.py` |
+| S2 | uncertified refused at admission | `test_execution_admission.py`, `test_certification_admission.py` |
+| S3 | model-swap blocked against the attestation | `test_certification_admission.py::test_model_swap_is_blocked_at_admission`, `test_execution_admission.py::test_refused_on_model_swap` |
+| S4 | regression caught by the benchmark | `test_certification_adapter_e2e.py::test_regressed_agent_fails_certification` |
+| S5 | budget pricing + enforcement | `test_config_budget.py`, `test_budget_service.py`, `test_execution_budget.py` |
+| S6 | escalation → approval → re-dispatch | `test_approval_redispatch.py` |
+| S7 | tool-output truncation | `test_shaping_pipeline.py`, `test_field_test_shims_agents.py` |
+| S8 | durable checkpoint + resume | `test_checkpointing.py`; container: `tests/docker/test_durability.py` |
+| S9 | fan-out delivery in the run story | `test_execution_fanout.py`, `test_run_story.py` |
+| S10 | operator surface, run story, CLI init, UI | `test_run_story.py`, `test_cli.py`, `test_ui_app.py` |
+
+The scenario-level behavior of the agents themselves (escalation path, truncation flag,
+verdicts) is locked by `test_field_test_shims.py` / `test_field_test_shims_agents.py`,
+and the runner's evidence discipline by `test_field_test_runner.py`.
+
+## Certification Detail
+
+| Workload | Context | Status | Pass rate | Tasks | Threshold | p95 (ms) | Benchmark run | Attestation | Corpus |
+|---|---|---|---:|---:|---:|---:|---|---|---|
+| eval-judge | staging | provisional | 1.00 | 4/4 | 0.8 | 215 | `br-f1b7e39c709f` | `att-b6467cc95801` | eval-judge-corpus v1 |
+| eval-judge | production | certified | 1.00 | 4/4 | 0.9 | 126 | `br-f1b7e39c709f` | `att-92d19dc212ba` | eval-judge-corpus v1 |
+| support-agent | staging | provisional | 1.00 | 6/6 | 0.8 | 92 | `br-90735d4504b7` | `att-7c5326c4d5bc` | support-agent-corpus v2 |
+| support-agent | production | certified | 1.00 | 6/6 | 0.9 | 67 | `br-90735d4504b7` | `att-575a5a20905d` | support-agent-corpus v2 |
+
+## Spend & Cost
+
+| Workload | Team | Total USD | Runs |
+|---|---|---:|---:|
+| budget-probe | platform | $2.85 | 1 |
+
+- Tier 1 agents (`support-agent`, `eval-judge`) make no model calls, so their runs
+  price at **$0**; the only priced usage is `budget-probe`'s single governed model
+  call, which exceeded its `0.000001` per-run ceiling and was failed by budget
+  (run cost recorded: $2.85).
+- Local-model pricing is a **field-test profile override** (`HIVEPLANE_BUDGET__PRICES`); production profiles keep local models free.
+
+## Performance & Timings
+
+| Measurement | Value |
+|---|---|
+| Certification task p95 (all contexts) | 67–215 ms |
+| Operator inspect + stop a paused run | 0.042 s |
+| `hiveplane init` scaffold | 0.235 s |
+| S8 control-plane restart (container + readiness) | ~1–3 min (dominates the scenario) |
+
+- All certification tasks complete in well under the 30 s/45 s corpus `timeout_seconds`.
+- The operator path (inspect → stop) is far inside the 2-minute A16 target.
+
+## Reproducibility
+
+- **S1 passed identically in three consecutive stack runs** (20260925T005507Z,
+  20260925T005843Z, 20260925T011411Z) — same tasks, same verdicts, same pass rates. The
+  deterministic agents (mock KB, mock judge) plus deterministic checks
+  (`exact_match`/`action_audit`) make certification repeatable: the signal measures the
+  control plane, not model drift.
+- The earlier model-backed trio demonstrated the failure mode this replaces: the real
+  local model misclassified a bug-fix task as `changelog` and failed certification
+  nondeterministically across runs.
+- The full sweep is one command (`scripts/field-test.sh`) against a fresh volume set;
+  scenario subsets can be run directly against a live stack
+  (`scripts/field_test_runner.py --only S6`), which is how S6–S10 verdicts were
+  recorded.
 
 ## Scenario Detail
 
@@ -300,6 +403,15 @@ the operator approves → the run resumes and completes.
 The approval was made through the operator surface (the UI/`/approvals`), proving the
 operator-facing approval path, not just the benchmark's internal auto-approval.
 
+### Operator in the loop — by design
+
+S6 deliberately exercises the **full E2E path**: the escalation pause is a manual-approval
+gate, and resolving it through the operator UI is the behavior under test, not an
+inconvenience. The field-test runner drives the same approval through the API for
+unattended sweeps; the UI approval and the API approval are two entry points into the
+same `ApprovalService.decide` path. No automated-approval shortcut is wanted here —
+replacing the human would change what the scenario proves.
+
 ### Learning
 
 - **The scenario was not hung — it was under-instrumented.** It wrote no evidence until
@@ -371,6 +483,14 @@ run completes.
 
 This is the full A12 proof: a paused langgraph run survived process death with its audit
 trail and resumed to completion.
+
+### Operator in the loop — by design
+
+S8 deliberately exercises the **full E2E path**: the human-review `interrupt()` is a
+manual gate, and the operator resume (UI or API) is the behavior under test. The
+runner's `POST /runs/{id}/resume` and a click at the UI are the same seam; keeping the
+human (or the runner standing in for the human) in the loop is what makes the durability
+proof meaningful.
 
 ### Learning
 
@@ -478,6 +598,24 @@ API spend snapshot.
 - **Report:** regenerated from `results/summary.json` + the embedded notes + these
   narrative sections by `scripts/field_test_report.py` — one self-contained document per
   run. Run history and per-run outcomes live in `results/NOTES.md`.
+## Field-Test Profile Settings
+
+The non-default knobs that make this run possible (all documented in `.env.local` /
+`docker-compose.yml`):
+
+| Setting | Field-test value | Default | Why |
+|---|---|---|---|
+| `HIVEPLANE_CERTIFICATION__CORPORA_DIR` | `field_test` | `examples` | resolve the real corpora in-container |
+| `HIVEPLANE_CERTIFICATION__EXECUTOR` | `adapter` | `none` | execute the real agents in certification |
+| `HIVEPLANE_EXECUTION__ADAPTER` | `auto` | `none` | dispatch raw-worker + langgraph by manifest |
+| `HIVEPLANE_EXECUTION__CHECKPOINT_PATH` | `/app/.hiveplane/checkpoints/graph.json` (volume) | none | durable S8 resume across restarts |
+| `HIVEPLANE_CERTIFICATION__PRODUCTION__MIN_PRODUCTION_RUNS_SURVIVED` | `0` | `50` | single-run loop; thresholds are NOT relaxed |
+| `HIVEPLANE_BUDGET__PRICES` | `omlx/qwen3-4b-instruct-2507/4bit` @ 150/600 per 1M | none | price the local model for S5 |
+| `HIVEPLANE_BUDGET__ZERO_COST_PREFIXES` | `[]` | `["local/", "fake/", "omlx/"]` | charge the priced identity |
+| `HIVEPLANE_MODEL__MODEL_ALIASES` | `Qwen3-4B-Instruct-2507-4bit` → `omlx/qwen3-4b-instruct-2507/4bit` | none | T11 identity binding |
+
+Production and CI profiles are unaffected: the budget overrides live only in the
+field-test `.env.local`, and CI keeps the zero-cost prefixes + replay provider.
 ## What Worked / What Didn't Work
 
 ### What worked ✅
@@ -654,6 +792,14 @@ recommended final step for a one-run evidence base.
 | 12 | Conclusions + release verdict | ✅ above |
 | 13 | Observations | ✅ folded into What Worked / Fixes |
 | 14 | Cross-model comparison | N/A — single local model this cycle (cloud is a later profile) |
+| 15 | Run provenance & data verification | ✅ above |
+| 16 | Traceability matrix (scenario → criterion) | ✅ above |
+| 17 | Unit-test cross-reference | ✅ above |
+| 18 | Certification detail (attestations, corpora, thresholds) | ✅ above |
+| 19 | Spend & cost measurement | ✅ above |
+| 20 | Performance & timings | ✅ above |
+| 21 | Reproducibility | ✅ above |
+| 22 | Field-test profile settings | ✅ above |
 ## Source Documents
 
 - [`field-test-plan.md`](field-test-plan.md) — the v0.1.0 plan (scope, agents, corpora, phases, criteria)

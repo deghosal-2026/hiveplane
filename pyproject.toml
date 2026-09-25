@@ -106,6 +106,8 @@ ignore = ["ANN401"]
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["ANN", "S101"]
 "scripts/**" = ["T201"]
+# The report generator's literals are markdown documents, not code.
+"scripts/field_test_report.py" = ["E501", "RUF001", "RUF005"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["hiveplane"]
@@ -119,4 +121,11 @@ show_error_codes = true
 
 [[tool.mypy.overrides]]
 module = ["tests.*"]
+disallow_untyped_defs = false
+
+# This test imports the field-test harness from scripts/ (not a package on the
+# mypy path); the harness is exercised end-to-end, not type-checked here.
+[[tool.mypy.overrides]]
+module = ["test_field_test_runner", "tests.test_field_test_runner"]
+ignore_missing_imports = true
 disallow_untyped_defs = false

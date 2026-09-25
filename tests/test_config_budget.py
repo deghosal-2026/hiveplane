@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pytest
 
+from hiveplane.budget.errors import UnknownModelPriceError
 from hiveplane.budget.pricing import DEFAULT_PRICES, CostTable, ModelPrice
 from hiveplane.config import Settings
 
@@ -51,7 +52,7 @@ def test_cost_table_prices_an_override_and_drops_prefix_exemption() -> None:
 
     assert table.price("omlx/x/1", 1000, 1000) == pytest.approx(750.0)
     # Without the prefix exemption, an unpriced local identity is an error.
-    with pytest.raises(Exception):
+    with pytest.raises(UnknownModelPriceError):
         table.price("omlx/unknown/1", 1, 1)
 
 

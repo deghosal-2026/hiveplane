@@ -158,7 +158,9 @@ class Api:
             )
             if status != 200:
                 raise ScenarioError(f"approve -> {status}: {body}")
-            approved.append({"approval_id": approval["approval_id"], "status": status, "body": body})
+            approved.append(
+                {"approval_id": approval["approval_id"], "status": status, "body": body}
+            )
         resume_status, resume_body = self.request("POST", f"/runs/{run_id}/resume")
         if resume_status not in (200, 409):
             raise ScenarioError(f"resume -> {resume_status}: {resume_body}")
@@ -199,14 +201,17 @@ class Runner:
         evidence: dict[str, Any] = {}
         for name in names:
             manifest = load_manifest(WORKLOADS_DIR / f"{name}.yaml")
-            corpus_ref = manifest.spec.certification.benchmark_corpus if manifest.spec.certification else None
+            certification = manifest.spec.certification
+            corpus_ref = certification.benchmark_corpus if certification else None
             corpus_path = CORPORA_DIR / name / "hiveplane-corpus.yaml" if corpus_ref else None
             evidence[name] = {
                 "manifest": str((WORKLOADS_DIR / f"{name}.yaml").relative_to(ROOT)),
                 "runtime_adapter": manifest.spec.runtime.adapter.value,
                 "entrypoint": manifest.spec.runtime.entrypoint,
                 "benchmark_corpus": corpus_ref,
-                "benchmark_corpus_path": str(corpus_path.relative_to(ROOT)) if corpus_path else None,
+                "benchmark_corpus_path": (
+                    str(corpus_path.relative_to(ROOT)) if corpus_path else None
+                ),
                 "source": "field_test",
                 "model_identity": (
                     manifest.spec.model.identity.model_dump(mode="json")
@@ -462,7 +467,12 @@ class Runner:
             self.write(
                 directory,
                 "submitted.json",
-                {"submit_status": status, "run": run, "start_status": start_status, "start_body": start_body},
+                {
+                    "submit_status": status,
+                    "run": run,
+                    "start_status": start_status,
+                    "start_body": start_body,
+                },
             )
             paused = self._wait_for_state(run["id"], "paused", timeout=120)
             self.write(directory, "paused.json", paused)
@@ -770,7 +780,9 @@ def main() -> int:
                 "unexpected_error.json",
                 {"type": type(exc).__name__, "message": str(exc)},
             )
-            runner.record(sid, "unexpected-error", "fail", f"{type(exc).__name__}: {exc}", directory)
+            runner.record(
+                sid, "unexpected-error", "fail", f"{type(exc).__name__}: {exc}", directory
+            )
     return runner.finish()
 
 

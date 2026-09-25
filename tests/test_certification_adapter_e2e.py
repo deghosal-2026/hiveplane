@@ -12,7 +12,6 @@ from __future__ import annotations
 import json
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
 
 import pytest
 
@@ -35,6 +34,7 @@ from hiveplane.certification.service import CertificationService
 from hiveplane.certification.signing import generate_keypair
 from hiveplane.certification.store import InMemoryCertificationStore
 from hiveplane.certification.workflow import CertificationCoordinator
+from hiveplane.checkpointing import default_checkpointer
 from hiveplane.core.manifest import load_manifest
 from hiveplane.core.run import Run
 from hiveplane.core.spec import RuntimeAdapter
@@ -250,7 +250,7 @@ def test_repeated_docs_agent_certification_stays_clean_with_durable_checkpoints(
 
     docs_agent = __import__(docs_agent.__name__, fromlist=["graph"])
     original_graph = docs_agent.graph
-    docs_agent.graph = docs_agent._builder.compile(checkpointer=docs_agent.default_checkpointer())
+    docs_agent.graph = docs_agent._builder.compile(checkpointer=default_checkpointer())
     try:
         harness = _Harness(entrypoints_root=ROOT)
         harness.register_examples()
