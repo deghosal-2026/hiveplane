@@ -8,7 +8,7 @@
 
 > **Milestone exit gate:** Every milestone must pass the [exit gate](#milestone-exit-gate) before the next begins.
 > **Issue tracking:** All work is tracked on GitHub. Milestones M1-M24 mirror the parts below; issues carry the `[0.1.0]` prefix and are grouped by milestone.
-> **Progress:** Parts 1-11 complete and M22 complete (M1-M22, #2-#55, #82-#91). **M23 is complete** — P0-P4 all done; the **field test passes 10/10 scenarios and all acceptance criteria A1-A20** (`FIELD_TEST_REPORT.md`). Tier 1 subjects are the deterministic exectrace agents (`support-agent` raw-worker, `eval-judge` langgraph) plus negative fixtures; the original heavyweight trio is demoted to Tier 3 (import incompatibilities + nondeterminism — see the report). P3 Docker Test Track passed 25/25 (`20260924T235452Z`). **#59 closed as not planned** (nightly-simulator/regression-alert scope not pursued for v0.1.0). Remaining: **M24** (release readiness). Exit gate: `pytest` 925 passed, ruff clean, mypy clean, coverage 93% (noted), all M23 issues closed.
+> **Progress:** Parts 1-11 complete and M22 complete (M1-M22, #2-#55, #82-#91). **M23 is complete** — P0-P4 all done; the **field test passes 10/10 scenarios and all acceptance criteria A1-A20** (`FIELD_TEST_REPORT.md`). Tier 1 subjects are the deterministic exectrace agents (`support-agent` raw-worker, `eval-judge` langgraph) plus negative fixtures; the original heavyweight trio is demoted to Tier 3 (import incompatibilities + nondeterminism — see the report). P3 Docker Test Track passed 25/25 (`20260924T235452Z`). **#59 closed as not planned** (nightly-simulator/regression-alert scope not pursued for v0.1.0). Remaining: **M24** (release readiness, target tag `v0.1.0`). M24 items: #60 final release gate + docs accuracy, #61 distribution/demo, #145 security pass (trufflehog + audit), #146 docs refresh (CHANGELOG/release notes/README), #147 publish to PyPI, #148 tag + GitHub release. Exit gate: `pytest` 925 passed, ruff clean, mypy clean, coverage 93% (noted), all M23 issues closed.
 
 ---
 
@@ -28,7 +28,7 @@
 | [10](wbs-v0.1.0-part10-telemetry.md) | Telemetry & Observability | M19-M20 | [#48-#51](https://github.com/deghosal-2026/hiveplane/issues) |
 | [11](wbs-v0.1.0-part11-cli-operator-ui.md) | CLI & Operator UI | M21-M22 | [#52-#55](https://github.com/deghosal-2026/hiveplane/issues), [#82-#91](https://github.com/deghosal-2026/hiveplane/issues) |
 | [12](wbs-v0.1.0-part12-field-test.md) | Field Test | M23 | [#56-#59, #92-#133](https://github.com/deghosal-2026/hiveplane/issues) |
-| [13](wbs-v0.1.0-part13-release-readiness.md) | Release Readiness | M24 | [#60-#61](https://github.com/deghosal-2026/hiveplane/issues) |
+| [13](wbs-v0.1.0-part13-release-readiness.md) | Release Readiness | M24 | [#60-#61, #145-#148](https://github.com/deghosal-2026/hiveplane/issues) |
 | **Total** | | **M1-M24** | **112 issues** |
 
 ---
