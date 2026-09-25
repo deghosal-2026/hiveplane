@@ -1,0 +1,42 @@
+{
+  "pending": [
+    {
+      "approval_id": "ap-efd913c91765",
+      "run_id": "run-d81c6ae5535c",
+      "workload": "support-agent",
+      "rule": "blast_radius.medium",
+      "reason": "blast radius is medium",
+      "action_class": null,
+      "requested_at": "2026-09-25T01:34:46.061992Z",
+      "status": "pending",
+      "decided_at": null,
+      "decided_by": null,
+      "decision_reason": null
+    }
+  ],
+  "approved": [
+    {
+      "approval_id": "ap-efd913c91765",
+      "status": 200,
+      "body": {
+        "approval_id": "ap-efd913c91765",
+        "run_id": "run-d81c6ae5535c",
+        "workload": "support-agent",
+        "rule": "blast_radius.medium",
+        "reason": "blast radius is medium",
+        "action_class": null,
+        "requested_at": "2026-09-25T01:34:46.061992Z",
+        "status": "approved",
+        "decided_at": "2026-09-25T01:34:47.077465Z",
+        "decided_by": "field-test",
+        "decision_reason": "field-test approval"
+      }
+    }
+  ],
+  "resume": {
+    "status": 409,
+    "body": {
+      "detail": "run 'run-d81c6ae5535c' cannot be resume in its current state"
+    }
+  }
+}

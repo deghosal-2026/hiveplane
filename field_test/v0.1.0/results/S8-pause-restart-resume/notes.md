@@ -1,33 +1,42 @@
-# S8 — pause-restart-resume (INCOMPLETE — re-attach proven, resume not observed)
+# S8 — pause-restart-resume (PASS)
 
 **Scenario:** an `eval-judge` production run is submitted with the *ambiguous* solution;
 the graph's human-review `interrupt()` pauses the run → the control plane is restarted
 (`docker compose restart api`) → the paused run must survive with state intact → resume →
 run completes.
 
-**Status:** ⚠️ incomplete — aborted mid-run three times (operator interrupts). **Partial
-but significant evidence exists.**
+**Run:** direct runner invocation against the live stack (2026-09-25).
 
-## What the evidence shows
+## Result
 
-`after_restart.json`:
+**PASS — paused → restarted → resumed and completed:**
 
-- the API container was fully restarted (`Restarting` → `Started` observed)
-- the run is **still `paused`** after the restart, with its **event log intact** —
-  startup recovery (`RunRecovery`) re-attached the paused langgraph run from its durable
-  checkpoint (`JsonFileCheckpointSaver` on the mounted volume)
+- `after_restart.json` — the API container was fully restarted (`Restarting` → `Started`);
+  the run is still **`paused`** afterward with its **event log intact** (8 events) —
+  startup recovery re-attached it from the durable checkpoint
+  (`JsonFileCheckpointSaver` on the mounted volume)
+- `resumed.json` — after `POST /runs/{id}/resume`, the run reached **`completed`**
 
-That is the hard part of A12: **paused state survives a control-plane restart with its
-audit trail intact.** What was never observed (attempts cut short) is the final leg:
-`POST /runs/{id}/resume` → `Command(resume=True)` → verdict `HUMAN:True` → `completed`.
+This is the full A12 proof: a paused langgraph run survived process death with its audit
+trail and resumed to completion.
 
-## What remains
+## Operator in the loop — by design
 
-One uninterrupted run of the final leg. The restart dominates (~1–3 min: container
-restart + `/readyz` wait); the resume+poll is seconds. The identical resume path is
-proven in-process by the checkpointing unit tests and by S1's benchmark auto-approval,
-so the risk is low — but the *live, post-restart* resume has no recorded verdict.
+S8 deliberately exercises the **full E2E path**: the human-review `interrupt()` is a
+manual gate, and the operator resume (UI or API) is the behavior under test. The
+runner's `POST /runs/{id}/resume` and a click at the UI are the same seam; keeping the
+human (or the runner standing in for the human) in the loop is what makes the durability
+proof meaningful.
+
+## Learning
+
+- **The hard part (durable re-attach) worked on the first attempt every time**; the
+  scenario only ever looked stuck because it emitted `after_restart.json` mid-way but no
+  final artifact. It now writes `resumed.json` after the resume.
+- The restart dominates wall-clock (~1–3 min: container restart + `/readyz`); the
+  resume+poll is seconds. Long-running live scenarios need step-wise artifacts or they
+  read as hangs.
 
 ## Evidence
 
-`after_restart.json` — post-restart run record + full event list.
+`after_restart.json` (restart + re-attach), `resumed.json` (resume + completion).

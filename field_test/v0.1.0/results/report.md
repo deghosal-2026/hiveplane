@@ -1,21 +1,20 @@
 # HivePlane v0.1.0 — Field Test Report
 
-> Generated 2026-09-25T01:25:24.306509+00:00 from `results/summary.json`.
-> **Overall: INCOMPLETE** — 8 passed, 0 failed, 0 blocked, 2 incomplete.
+> Generated 2026-09-25T01:39:10.451751+00:00 from `results/summary.json`.
+> **Overall: PASS** — 10 passed, 0 failed, 0 blocked, 0 incomplete.
 
 ## BLUF + Release Gate Verdict
 
 The v0.1.0 field test exercises the **certified control loop with real downloaded agents**:
 two deterministic exectrace agents (`support-agent` via raw-worker, `eval-judge` via
-langgraph) plus four negative fixtures, against the live stack on local inference. **8 of
-10 scenarios pass, zero fail, two are incomplete** (S6/S8 — operator-aborted mid-run, no
-verdict). Every control-plane behavior under test held: certification with signed
-attestations, every admission gate (uncertified refused, model swap blocked), regression
-blocking, budget enforcement, shaping truncation, durable re-attach across a restart,
-fan-out, and the operator surface. The only open items are **execution coverage**, not
-missing behavior: S6's operator approval path and S8's post-restart resume were cut short
-by operator aborts — the equivalent paths are proven inside S1's benchmark auto-approval
-and S8's restart evidence.
+langgraph) plus four negative fixtures, against the live stack on local inference. **All
+10 of 10 scenarios pass, zero fail.** Every control-plane behavior under test held:
+certification with signed attestations, every admission gate (uncertified refused, model
+swap blocked), regression blocking, budget enforcement, shaping truncation, the destructive
+approval path, durable re-attach and resume across a control-plane restart, fan-out, and
+the operator surface. The two scenarios that were repeatedly cut short by operator aborts
+(S6, S8) were completed to a verdict in standalone runs against the live stack: S6 through
+the operator approval path, S8 through the post-restart resume.
 
 ### Release gate verdict
 
@@ -27,8 +26,8 @@ and S8's restart evidence.
 | Regression caught by re-certification | ✅ MET | S4: blocked, `uncertified`, critical=1 (naive agent fails read-first audit) |
 | Budget enforcement | ✅ MET | S5: run failed `run budget exceeded` the moment priced usage crossed the ceiling |
 | Output shaping | ✅ MET | S7: 40002-byte fixture truncated to 16384 before the agent saw it |
-| Destructive approval (operator path) | ⚠️ INCOMPLETE | S6 aborted mid-run ×3; the identical chain passes inside S1's benchmark auto-approval |
-| Durability (restart → re-attach → resume) | ⚠️ PARTIAL | S8: run stayed `paused` across a full restart with events intact; resume leg not observed |
+| Destructive approval (operator path) | ✅ MET | S6: escalated → paused → approved → resumed → completed (production context) |
+| Durability (restart → re-attach → resume) | ✅ MET | S8: run stayed `paused` across a full restart with events intact, then resumed to `completed` |
 | Fan-out | ✅ MET | S9: delivery recorded in the run story to the webhook sink |
 | Operator surface + dashboards | ✅ MET | S10: inspect+stop 0.04 s, audit trail complete, init 0.24 s, dashboards render |
 
@@ -53,9 +52,9 @@ covered by [DOCKER_TEST_REPORT.md](DOCKER_TEST_REPORT.md).
 | S3 | model-swap | ✅ pass | blocked (403) after certify-then-swap scenario fix | `field_test/v0.1.0/results/S3-model-swap` |
 | S4 | regression | ✅ pass | blocked (status=uncertified, critical=1) | `field_test/v0.1.0/results/S4-regression` |
 | S5 | over-budget | ✅ pass | blocked: run budget exceeded (priced local model + budget-probe) | `field_test/v0.1.0/results/S5-over-budget` |
-| S6 | destructive-tool | ⚠️ incomplete | aborted mid-run three times; no verdict recorded | `field_test/v0.1.0/results/S6-destructive-tool` |
+| S6 | destructive-tool | ✅ pass | escalated, approved, completed | `field_test/v0.1.0/results/S6-destructive-tool` |
 | S7 | large-output | ✅ pass | truncated 40002 -> 16384 bytes | `field_test/v0.1.0/results/S7-large-output` |
-| S8 | pause-restart-resume | ⚠️ incomplete | paused run survived control-plane restart (re-attach proven); resume-to-completion not observed | `field_test/v0.1.0/results/S8-pause-restart-resume` |
+| S8 | pause-restart-resume | ✅ pass | paused, restarted, resumed and completed | `field_test/v0.1.0/results/S8-pause-restart-resume` |
 | S9 | fan-out | ✅ pass | delivery recorded in run story | `field_test/v0.1.0/results/S9-fan-out` |
 | S10 | operator-surface | ✅ pass | inspect+stop 0.04s (cancelled, audit complete); init 0.24s; dashboard + spend render | `field_test/v0.1.0/results/S10-operator-surface` |
 
@@ -69,12 +68,12 @@ covered by [DOCKER_TEST_REPORT.md](DOCKER_TEST_REPORT.md).
 | A4 | Seeded manifest change blocked by re-certification (regression) | ✅ pass |
 | A5 | Attestation signed and verified on read | ✅ pass |
 | A6 | Model-swap blocked (certified on A, running on B) | ✅ pass |
-| A7 | Agents through full lifecycle | ⚠️ incomplete |
+| A7 | Agents through full lifecycle | ✅ pass |
 | A8 | Budget enforcement blocks an over-budget run | ✅ pass |
-| A9 | Execution isolation caps a destructive run | ⚠️ incomplete |
+| A9 | Execution isolation caps a destructive run | ✅ pass |
 | A10 | Tool-output shaping truncates a large payload | ✅ pass |
-| A11 | Guarded tool call requires approval | ⚠️ incomplete |
-| A12 | Paused run survives control-plane restart | ⚠️ incomplete |
+| A11 | Guarded tool call requires approval | ✅ pass |
+| A12 | Paused run survives control-plane restart | ✅ pass |
 | A13 | Operators can inspect and stop any run from one surface | ✅ pass |
 | A14 | Result fan-out delivered to configured destinations | ✅ pass |
 | A15 | Audit trail complete for every run in the field test | ✅ pass |
@@ -283,31 +282,38 @@ zero. Two additions made the local model priceable without a cloud provider:
 ### S6 — destructive-tool
 
 **Scenario:** submit a `support-agent` production run with an unknown-topic task; the agent
-escalates via the destructive `pagerduty.acknowledge` call → run must pause on escalation →
-operator approves via `/approvals` → run resumes and completes.
+escalates via the destructive `pagerduty.acknowledge` call → run pauses on escalation →
+the operator approves → the run resumes and completes.
 
-**Status:** ⚠️ incomplete — aborted mid-run three times (operator interrupts); **no verdict
-recorded**. The scenario directory contains only the harness artifacts written before the
-aborts: the pause wait, approval lookup, and resume were never observed to completion.
+**Run:** direct runner invocation against the live stack (2026-09-25).
 
-### What we know
+### Result
 
-- The **equivalent path passes inside S1**: the support-agent corpus task pos-004
-  (escalation) drives the identical chain — destructive call → escalation → pause →
-  approval → re-dispatch → completion — via benchmark auto-approval, on every
-  certification run, against this exact agent and tool.
-- What S6 adds over S1's version: the approval is granted through the **operator surface**
-  (`GET /approvals` → approve → resume) rather than the benchmark's internal decider, and
-  in **production** context rather than sandbox.
+**PASS — escalated → approved → completed** (production context):
 
-### What remains
+- `submitted.json` — submission + start (`queued` → `running`)
+- `paused.json` — run reached `paused` (escalation)
+- `approvals.json` — pending request → **approved** by `field-test` → resume call
+- `run.json` — final state `completed`, result `{"status": "escalated", "reason":
+  "no_kb_match", "ticket": "TKT-4811"}`
 
-One uninterrupted run. Expected duration: seconds (the escalation pauses near-instantly;
-approve+resume is two API calls; the re-drive completes in <100 ms based on S1 latencies).
+The approval was made through the operator surface (the UI/`/approvals`), proving the
+operator-facing approval path, not just the benchmark's internal auto-approval.
+
+### Learning
+
+- **The scenario was not hung — it was under-instrumented.** It wrote no evidence until
+  after the final poll, so any abort erased the diagnosis. It now writes
+  `submitted.json`/`paused.json`/`approvals.json` *before* each boundary.
+- `approvals.json` previously recorded only the **pre-approval** snapshot (misleading);
+  it now records `pending`, `approved` (with the real decision), and the `resume` response.
+- Note: `POST /runs/{id}/resume` can return **409** when the approval's automatic
+  re-dispatch has already advanced the run; success is defined by the run reaching
+  `completed`, which it did.
 
 ### Evidence
 
-None yet — this is the only scenario directory with no recorded verdict.
+`submitted.json`, `paused.json`, `approvals.json`, `run.json`.
 
 ### S7 — large-output
 
@@ -351,32 +357,33 @@ the graph's human-review `interrupt()` pauses the run → the control plane is r
 (`docker compose restart api`) → the paused run must survive with state intact → resume →
 run completes.
 
-**Status:** ⚠️ incomplete — aborted mid-run three times (operator interrupts). **Partial
-but significant evidence exists.**
+**Run:** direct runner invocation against the live stack (2026-09-25).
 
-### What the evidence shows
+### Result
 
-`after_restart.json`:
+**PASS — paused → restarted → resumed and completed:**
 
-- the API container was fully restarted (`Restarting` → `Started` observed)
-- the run is **still `paused`** after the restart, with its **event log intact** —
-  startup recovery (`RunRecovery`) re-attached the paused langgraph run from its durable
-  checkpoint (`JsonFileCheckpointSaver` on the mounted volume)
+- `after_restart.json` — the API container was fully restarted (`Restarting` → `Started`);
+  the run is still **`paused`** afterward with its **event log intact** (8 events) —
+  startup recovery re-attached it from the durable checkpoint
+  (`JsonFileCheckpointSaver` on the mounted volume)
+- `resumed.json` — after `POST /runs/{id}/resume`, the run reached **`completed`**
 
-That is the hard part of A12: **paused state survives a control-plane restart with its
-audit trail intact.** What was never observed (attempts cut short) is the final leg:
-`POST /runs/{id}/resume` → `Command(resume=True)` → verdict `HUMAN:True` → `completed`.
+This is the full A12 proof: a paused langgraph run survived process death with its audit
+trail and resumed to completion.
 
-### What remains
+### Learning
 
-One uninterrupted run of the final leg. The restart dominates (~1–3 min: container
-restart + `/readyz` wait); the resume+poll is seconds. The identical resume path is
-proven in-process by the checkpointing unit tests and by S1's benchmark auto-approval,
-so the risk is low — but the *live, post-restart* resume has no recorded verdict.
+- **The hard part (durable re-attach) worked on the first attempt every time**; the
+  scenario only ever looked stuck because it emitted `after_restart.json` mid-way but no
+  final artifact. It now writes `resumed.json` after the resume.
+- The restart dominates wall-clock (~1–3 min: container restart + `/readyz`); the
+  resume+poll is seconds. Long-running live scenarios need step-wise artifacts or they
+  read as hangs.
 
 ### Evidence
 
-`after_restart.json` — post-restart run record + full event list.
+`after_restart.json` (restart + re-attach), `resumed.json` (resume + completion).
 
 ### S9 — fan-out
 
@@ -496,14 +503,13 @@ API spend snapshot.
 
 ### What didn't work ❌
 
-1. **S6 never reached a verdict** — aborted mid-run three times; the operator approval
-   path (approve → resume → completed in production) remains unobserved end-to-end.
-2. **S8's final resume leg never observed** — re-attach is proven; resume after the
-   restart was cut short every attempt.
-3. **The heavyweight downloaded agents as Tier 1** — import incompatibilities
+1. **S6/S8 were repeatedly aborted mid-run** — resolved: both completed to a verdict in
+   standalone runs once the runner emitted step-wise evidence before each boundary. The
+   lesson, not the scenario, was the problem.
+2. **The heavyweight downloaded agents as Tier 1** — import incompatibilities
    (`langgraph.checkpoint.sqlite`, `incident_commander` layout, external `openai` SDK)
    and nondeterministic outputs; replaced by the deterministic exectrace pair.
-4. **Fragmented run history** — repeated operator aborts left results spread across
+3. **Fragmented run history** — repeated operator aborts left results spread across
    partial runs, forcing a manual consolidation of `summary.json`; one uninterrupted
    sweep would regenerate everything from a single run.
 ## Fixes Applied + Learnings
@@ -572,8 +578,8 @@ before `relative_to` on macOS.
 
 | Issue | Severity | Status | Workaround / next |
 |---|---|---|---|
-| S6 destructive-approval never completed (aborted ×3) | High | OPEN | One uninterrupted run closes A7/A9/A11; the identical chain passes inside S1's benchmark auto-approval |
-| S8 post-restart resume not observed | High | OPEN | One uninterrupted run of the final leg closes A12; re-attach already proven in `after_restart.json` |
+| S6 destructive-approval resolved in a standalone run | — | CLOSED | Escalated → approved → completed; step-wise evidence (`submitted.json`, `paused.json`, `approvals.json`) |
+| S8 post-restart resume resolved in a standalone run | — | CLOSED | Paused → restarted → still paused → resumed → completed |
 | Audit-trail completeness (A15) asserted for the S10 run only | Low | OPEN | Extend the check to every run in the closing full sweep |
 | `summary.json` fragmented across partial runs | Low | OPEN (process) | One uninterrupted sweep regenerates all evidence from a single run |
 | Heavyweight Tier 3 agents not runnable as-is | Info | CLOSED (documented) | Import incompatibilities documented in `results/NOTES.md`; kept as references |
@@ -583,22 +589,20 @@ oversized-fixture truncation, egress allowlist, corpora-root wiring, evidence ca
 path-case crash.
 ## Gaps Still Open
 
-1. **S6 verdict** — the operator approval path (escalate → approve via `/approvals` →
-   resume → completed, in production context) has no recorded result.
-2. **S8 verdict** — the post-restart resume leg has no recorded result.
-3. **A21 (platform coverage)** — deferred by plan; not a v0.1.0 release gate.
-4. **Cloud-profile run** — a priced cloud provider pass would re-exercise S5/S6 with real
+1. **A21 (platform coverage)** — deferred by plan; not a v0.1.0 release gate.
+2. **Cloud-profile run** — a priced cloud-provider pass would re-exercise S5/S6 with real
    prices end-to-end (local pricing is a field-test profile).
+3. **Evidence as a single run** — the verdicts are consolidated across partial runs; one
+   uninterrupted sweep would regenerate all evidence from one run.
 ## Action Items
 
 ### Short-term (before the v0.1.0 release decision)
 
 | # | Action | Effort | Impact |
 |---|--------|--------|--------|
-| 1 | **Run S6 to a verdict** — submit the escalation task in production, approve, resume, record | Low | Closes A7, A9, A11 |
-| 2 | **Run S8's final leg** — resume the paused run post-restart, record completion | Low | Closes A12 |
-| 3 | **One uninterrupted full sweep** — regenerate `summary.json` + this report from a single run | Low | Evidence integrity (no manual consolidation) |
-| 4 | **Commit the rewire + gap fixes** — shims, manifests, corpora, fixtures, config, tests, docs | Low | Next sweep starts from a known state |
+| 1 | **One uninterrupted full sweep** — regenerate `summary.json` + this report from a single run | Low | Evidence integrity (no manual consolidation) |
+| 2 | **Commit the rewire + gap fixes** — shims, manifests, corpora, fixtures, config, tests, docs | Low | Next sweep starts from a known state |
+| 3 | **Extend the audit-trail check (A15)** to every run in the closing sweep | Low | Closes the last open criterion check |
 
 ### Long-term (v0.2.0+)
 
@@ -621,18 +625,17 @@ path-case crash.
   control-plane behavior has been found.
 ## Conclusions
 
-**Is the certified control loop production-ready? On behavior, yes — every gate held.**
-Certification, admission, regression, budget, shaping, re-attach, fan-out, and the
+**Is the certified control loop production-ready? Yes — every scenario and acceptance
+criterion under test passed.** Certification, admission, regression, model-swap, budget,
+shaping, the operator approval path, durable re-attach and resume, fan-out, and the
 operator surface all passed against real agents on the live stack, with reproducible
-deterministic evidence. The two incomplete scenarios (S6, S8) are operator-aborted runs
-of paths whose equivalents are already proven (S1's benchmark auto-approval drives the
-identical escalation chain; S8's restart evidence shows the paused run re-attached with
-its audit trail intact).
+deterministic evidence.
 
-**Release verdict: INCOMPLETE — pending two scenario verdicts.** Run S6 and S8 to
-completion in one uninterrupted sweep, regenerate this report, and all criteria A1–A20
-are expected pass; the v0.1.0 release gate can then be assessed on a fully green, single-
-run evidence base.
+**Release verdict: PASS — all scenarios S1–S10 and all criteria A1–A20 pass** (A21 is
+deferred by plan and is not a v0.1.0 gate). The two scenarios initially cut short (S6
+destructive approval, S8 post-restart resume) were completed in standalone runs; the
+verdicts are consolidated across partial runs, so a single uninterrupted sweep is the
+recommended final step for a one-run evidence base.
 ## Field Test Plan Reporting Checklist
 
 | # | Required section | Status |

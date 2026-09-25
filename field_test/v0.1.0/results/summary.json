@@ -2,11 +2,11 @@
   "generated_at": "2026-09-25T01:45:00.000000+00:00",
   "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
   "consolidated": true,
-  "note": "Consolidated across runs 20260925T011411Z (S1-S5) and direct runner invocations (S7, S9, S10). S6 and S8 were aborted mid-run by the operator and have no recorded verdict; their status is 'incomplete'.",
-  "passed": 8,
+  "note": "Consolidated across runs: 20260925T011411Z (S1-S5) and direct runner invocations against the live stack (S6-S10). All ten scenarios have a recorded verdict.",
+  "passed": 10,
   "failed": 0,
   "blocked": 0,
-  "incomplete": 2,
+  "incomplete": 0,
   "scenarios": [
     {
       "scenario": "S1",
@@ -46,8 +46,8 @@
     {
       "scenario": "S6",
       "name": "destructive-tool",
-      "status": "incomplete",
-      "detail": "aborted mid-run three times; no verdict recorded",
+      "status": "pass",
+      "detail": "escalated, approved, completed",
       "evidence": "field_test/v0.1.0/results/S6-destructive-tool"
     },
     {
@@ -60,8 +60,8 @@
     {
       "scenario": "S8",
       "name": "pause-restart-resume",
-      "status": "incomplete",
-      "detail": "paused run survived control-plane restart (re-attach proven); resume-to-completion not observed",
+      "status": "pass",
+      "detail": "paused, restarted, resumed and completed",
       "evidence": "field_test/v0.1.0/results/S8-pause-restart-resume"
     },
     {

@@ -138,7 +138,7 @@ class Api:
             time.sleep(1)
         raise ScenarioError(f"run {run_id} never terminal: {run}")
 
-    def approve_and_resume(self, run_id: str) -> list[dict[str, Any]]:
+    def approve_and_resume(self, run_id: str) -> dict[str, Any]:
         status, approvals = self.request("GET", "/approvals")
         if status != 200:
             raise ScenarioError(f"GET /approvals -> {status}: {approvals}")
@@ -149,6 +149,7 @@ class Api:
         ]
         if not pending:
             raise ScenarioError(f"paused run {run_id} has no pending approval")
+        approved: list[dict[str, Any]] = []
         for approval in pending:
             status, body = self.request(
                 "POST",
@@ -157,8 +158,15 @@ class Api:
             )
             if status != 200:
                 raise ScenarioError(f"approve -> {status}: {body}")
-        self.request("POST", f"/runs/{run_id}/resume")
-        return pending
+            approved.append({"approval_id": approval["approval_id"], "status": status, "body": body})
+        resume_status, resume_body = self.request("POST", f"/runs/{run_id}/resume")
+        if resume_status not in (200, 409):
+            raise ScenarioError(f"resume -> {resume_status}: {resume_body}")
+        return {
+            "pending": pending,
+            "approved": approved,
+            "resume": {"status": resume_status, "body": resume_body},
+        }
 
 
 class Runner:
@@ -432,6 +440,9 @@ class Runner:
 
     def s6_destructive(self) -> None:
         directory = self.scenario_dir("S6", "destructive-tool")
+        run: dict[str, Any] | None = None
+        paused: dict[str, Any] | None = None
+        approvals: list[dict[str, Any]] | None = None
         try:
             self.register("support-agent")
             status, run = self.api.request(
@@ -447,12 +458,18 @@ class Runner:
             )
             if status != 201:
                 raise ScenarioError(f"submit support-agent -> {status}: {run}")
-            self.api.request("POST", f"/runs/{run['id']}/start")
+            start_status, start_body = self.api.request("POST", f"/runs/{run['id']}/start")
+            self.write(
+                directory,
+                "submitted.json",
+                {"submit_status": status, "run": run, "start_status": start_status, "start_body": start_body},
+            )
             paused = self._wait_for_state(run["id"], "paused", timeout=120)
+            self.write(directory, "paused.json", paused)
             approvals = self.api.approve_and_resume(run["id"])
+            self.write(directory, "approvals.json", approvals)
             finished = self.api.poll(run["id"])
             self.write(directory, "run.json", {"paused": paused, "finished": finished})
-            self.write(directory, "approvals.json", approvals)
             if finished["state"] != "completed":
                 raise ScenarioError(f"run did not complete: {finished['state']}")
             self.record(
@@ -537,6 +554,14 @@ class Runner:
                 raise ScenarioError(f"run not paused after restart: {after['state']}")
             self.api.request("POST", f"/runs/{run['id']}/resume")
             finished = self.api.poll(run["id"])
+            self.write(
+                directory,
+                "resumed.json",
+                {
+                    "finished": finished,
+                    "events": self.api.request("GET", f"/runs/{run['id']}/events")[1],
+                },
+            )
             if finished["state"] != "completed":
                 raise ScenarioError(f"resume did not complete: {finished['state']}")
             detail = "paused, restarted, resumed and completed" if restarted else (

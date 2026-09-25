@@ -1,0 +1,54 @@
+{
+  "paused": {
+    "id": "run-d81c6ae5535c",
+    "workload_id": "support-agent",
+    "caller": "field-test",
+    "state": "paused",
+    "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+    "created_at": "2026-09-25T01:34:46.024074Z",
+    "updated_at": "2026-09-25T01:34:46.057759Z",
+    "started_at": "2026-09-25T01:34:46.042951Z",
+    "finished_at": null,
+    "trigger_origin": null,
+    "manifest_version": 1,
+    "context": "production",
+    "sandbox": true,
+    "task": {
+      "query": "totally unknown topic",
+      "account_id": "ACC-001"
+    },
+    "result": null,
+    "failure_reason": null,
+    "cost_usd": 0.0,
+    "sandbox_id": "sb-5ff66f3b488c",
+    "trace_id": "84d6f8c45c58dad061113f5b3b9dfdba"
+  },
+  "finished": {
+    "id": "run-d81c6ae5535c",
+    "workload_id": "support-agent",
+    "caller": "field-test",
+    "state": "completed",
+    "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+    "created_at": "2026-09-25T01:34:46.024074Z",
+    "updated_at": "2026-09-25T01:35:38.205658Z",
+    "started_at": "2026-09-25T01:34:46.042951Z",
+    "finished_at": "2026-09-25T01:35:38.205658Z",
+    "trigger_origin": null,
+    "manifest_version": 1,
+    "context": "production",
+    "sandbox": true,
+    "task": {
+      "query": "totally unknown topic",
+      "account_id": "ACC-001"
+    },
+    "result": {
+      "reason": "no_kb_match",
+      "status": "escalated",
+      "ticket": "TKT-4811"
+    },
+    "failure_reason": null,
+    "cost_usd": 0.0,
+    "sandbox_id": "sb-5ff66f3b488c",
+    "trace_id": "0999e44598c1aa982833297d0987b95b"
+  }
+}

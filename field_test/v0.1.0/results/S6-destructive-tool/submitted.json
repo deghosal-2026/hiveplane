@@ -1,0 +1,52 @@
+{
+  "submit_status": 201,
+  "run": {
+    "id": "run-d81c6ae5535c",
+    "workload_id": "support-agent",
+    "caller": "field-test",
+    "state": "queued",
+    "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+    "created_at": "2026-09-25T01:34:46.024074Z",
+    "updated_at": "2026-09-25T01:34:46.024074Z",
+    "started_at": null,
+    "finished_at": null,
+    "trigger_origin": null,
+    "manifest_version": 1,
+    "context": "production",
+    "sandbox": true,
+    "task": {
+      "query": "totally unknown topic",
+      "account_id": "ACC-001"
+    },
+    "result": null,
+    "failure_reason": null,
+    "cost_usd": 0.0,
+    "sandbox_id": null,
+    "trace_id": "5ab08e91e50a1dd48a13764ff91cf0c5"
+  },
+  "start_status": 200,
+  "start_body": {
+    "id": "run-d81c6ae5535c",
+    "workload_id": "support-agent",
+    "caller": "field-test",
+    "state": "running",
+    "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+    "created_at": "2026-09-25T01:34:46.024074Z",
+    "updated_at": "2026-09-25T01:34:46.042951Z",
+    "started_at": "2026-09-25T01:34:46.042951Z",
+    "finished_at": null,
+    "trigger_origin": null,
+    "manifest_version": 1,
+    "context": "production",
+    "sandbox": true,
+    "task": {
+      "query": "totally unknown topic",
+      "account_id": "ACC-001"
+    },
+    "result": null,
+    "failure_reason": null,
+    "cost_usd": 0.0,
+    "sandbox_id": "sb-5ff66f3b488c",
+    "trace_id": "84d6f8c45c58dad061113f5b3b9dfdba"
+  }
+}
