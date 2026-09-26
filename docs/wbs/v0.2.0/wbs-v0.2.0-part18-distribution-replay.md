@@ -28,7 +28,7 @@ Ship the plane to real clusters with a hardened supply chain, and give operators
 - `deploy/helm/` chart + values schema; k3d runbook
 - Backup/restore tooling; air-gapped bundle script
 - Signed release pipeline + SBOM/provenance artifacts
-- `docs/design/distribution-design.md`, `docs/design/federation-design.md` (stretch)
+- `docs/design/reporting-tenancy-distribution-design.md`, `docs/design/reporting-tenancy-distribution-design.md` (stretch)
 
 **Acceptance criteria:**
 - [ ] `helm install` deploys the full stack to a k3d cluster and the loop works end-to-end
@@ -63,7 +63,7 @@ Ship the plane to real clusters with a hardened supply chain, and give operators
 
 **Deliverables:**
 - `hiveplane.replay` package (replay, fork, diff, A/B)
-- `docs/design/replay-fork-design.md`
+- `docs/design/operator-experience-design.md`
 
 **Acceptance criteria:**
 - [ ] A run is replayable frame-by-frame with a deterministic reconstruction

@@ -25,7 +25,7 @@ Make the fleet accountable (weekly digest, audit export, compliance evidence, re
 
 **Deliverables:**
 - `hiveplane.reporting` package (digest, evidence, retention, PII, purge)
-- `docs/design/reporting-design.md`, `docs/design/retention-pii-design.md`
+- `docs/design/reporting-tenancy-distribution-design.md`, `docs/design/reporting-tenancy-distribution-design.md`
 
 **Acceptance criteria:**
 - [ ] The weekly digest generates automatically with accurate spend/drift/approval/ROI content
@@ -59,7 +59,7 @@ Make the fleet accountable (weekly digest, audit export, compliance evidence, re
 
 **Deliverables:**
 - Tenant scoping across the plane + tenant admin
-- `docs/design/multi-tenancy-design.md`
+- `docs/design/reporting-tenancy-distribution-design.md`
 
 **Acceptance criteria:**
 - [ ] A tenant can only see and act on its own resources (verified by an adversarial suite)

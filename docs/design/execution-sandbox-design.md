@@ -1,6 +1,7 @@
 # D11: Execution Sandbox Design
 
 > Status: draft. The design targets container/cgroup isolation. **v0.1.0 ships process-level
+> **v0.2.0:** extended by [Defense & Policy v2 (D29)](defense-policy-v2-design.md).
 > enforcement** (M23, #110): a sandboxed run executes in a capped subprocess that reaches the
 > control-plane boundary over the token-guarded sandbox channel. Container/cgroup isolation and
 > network namespaces remain deferred beyond v0.1.0.

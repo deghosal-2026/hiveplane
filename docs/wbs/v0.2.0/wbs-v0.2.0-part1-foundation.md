@@ -29,7 +29,7 @@ Extend the v0.1.0 data model to represent the fleet primitives every later part 
 **Deliverables:**
 - Typed Pydantic/SQLAlchemy models for all of the above under `src/hiveplane/`
 - One coherent migration series; a v0.1.0 database upgrades cleanly with no data loss
-- `docs/design/fleet-control-data-model.md` documenting the schema and scoping rules
+- `docs/design/fleet-control-data-model-design.md` documenting the schema and scoping rules
 
 **Acceptance criteria:**
 - [ ] A v0.1.0 database migrates to the v0.2.0 schema on startup with existing runs/certs intact

@@ -25,7 +25,7 @@ Make the fleet defend itself. Scan inputs and tool outputs for injection, constr
 
 **Deliverables:**
 - `hiveplane.defense` package (scanner, taint, egress)
-- `docs/design/injection-defense-design.md` and egress policy reference
+- `docs/design/defense-policy-v2-design.md` and egress policy reference
 
 **Acceptance criteria:**
 - [ ] A seeded injection via tool output is blocked with a reason
@@ -60,7 +60,7 @@ Make the fleet defend itself. Scan inputs and tool outputs for injection, constr
 **Deliverables:**
 - Extended policy engine + decision records
 - Policy pack registry; kill-switch control
-- `docs/design/context-policy-design.md` and `docs/design/policy-packs-design.md`
+- `docs/design/defense-policy-v2-design.md` and `docs/design/defense-policy-v2-design.md`
 
 **Acceptance criteria:**
 - [ ] The same tool call is allowed in staging and denied in production per policy

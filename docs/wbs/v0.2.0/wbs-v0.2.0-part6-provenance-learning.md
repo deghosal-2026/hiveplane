@@ -26,7 +26,7 @@ Complete the trust story (certify code identity, not just behavior) and close th
 **Deliverables:**
 - `hiveplane.transparency` package (log, verification, signing, provenance)
 - Public verify endpoint + `hiveplane verify` CLI
-- `docs/design/provenance-design.md` and `docs/design/transparency-log-design.md`
+- `docs/design/certification-v2-design.md` and `docs/design/certification-v2-design.md`
 
 **Acceptance criteria:**
 - [ ] Any attestation verifies publicly by ID without authentication

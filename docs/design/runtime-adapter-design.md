@@ -1,6 +1,7 @@
 # D6: Runtime Adapter Design
 
 > Status: draft (v0.1.0 contract implemented for raw-worker + LangGraph; LLM seam, tool
+> **v0.2.0:** extended by [Runtime Adapter v2 (D25)](runtime-adapter-v2-design.md).
 > execution, and sandbox enforcement are pending — see Implementation Status below)
 
 ## Implementation Status (v0.1.0)

@@ -26,7 +26,7 @@ Monitor quality proactively with synthetic probes, give operators approval analy
 **Deliverables:**
 - `hiveplane.probes` package; probe schedule config
 - Plane `/metrics` exporter + Grafana dashboard JSONs under `deploy/grafana/`
-- `docs/design/synthetic-probes-design.md`, `docs/observability.md` update
+- `docs/design/agent-health-slo-design.md`, `docs/observability.md` update
 
 **Acceptance criteria:**
 - [ ] A synthetic probe flags quality decay before the drift threshold trips
@@ -61,7 +61,7 @@ Monitor quality proactively with synthetic probes, give operators approval analy
 **Deliverables:**
 - `hiveplane.mcp` live transport + registry
 - Tool onboarding CLI/API
-- `docs/design/mcp-tool-registry-design.md` (update)
+- `docs/design/mcp-registry-v2-design.md` (update)
 
 **Acceptance criteria:**
 - [ ] A real MCP server connects and its tools are discovered and callable

@@ -24,7 +24,7 @@ Make cost legible and controllable. Attribute spend by tenant → team → agent
 
 **Deliverables:**
 - `hiveplane.cost` extension (attribution, periods, alerts, cost-per-task)
-- `docs/design/cost-showback-design.md`
+- `docs/design/cost-roi-v2-design.md`
 
 **Acceptance criteria:**
 - [ ] Spend is attributed by tenant → team → agent with no un-attributed usage in the field test
@@ -59,7 +59,7 @@ Make cost legible and controllable. Attribute spend by tenant → team → agent
 
 **Deliverables:**
 - Cost estimation/routing/caps/cache + metering API
-- ROI dashboard views + `docs/design/roi-design.md`
+- ROI dashboard views + `docs/design/cost-roi-v2-design.md`
 
 **Acceptance criteria:**
 - [ ] Pre-admission estimates are within an agreed tolerance of actual cost

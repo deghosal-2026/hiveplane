@@ -24,7 +24,7 @@ Bring canary/blue-green thinking to agents. Shadow runs compare a candidate agai
 
 **Deliverables:**
 - `hiveplane.progressive.shadow` package + shadow report format
-- `docs/design/shadow-runs-design.md`
+- `docs/design/progressive-delivery-design.md`
 
 **Acceptance criteria:**
 - [ ] A shadow run executes the candidate on the same input as the paired production run

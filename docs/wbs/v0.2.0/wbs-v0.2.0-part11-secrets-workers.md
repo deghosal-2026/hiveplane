@@ -26,7 +26,7 @@ Give the plane a secrets store and an identity model, then make execution distri
 
 **Deliverables:**
 - `hiveplane.secrets` package + RBAC/authn layer
-- `docs/design/secrets-design.md` and `docs/design/rbac-design.md`
+- `docs/design/secrets-rbac-design.md` and `docs/design/secrets-rbac-design.md`
 
 **Acceptance criteria:**
 - [ ] A secret never appears in logs, traces, or agent context (verified by automated test)
@@ -61,7 +61,7 @@ Give the plane a secrets store and an identity model, then make execution distri
 **Deliverables:**
 - `hiveplane.worker` daemon + worker registry
 - Worker identity/token issuance
-- `docs/design/worker-design.md`
+- `docs/design/fleet-execution-design.md`
 
 **Acceptance criteria:**
 - [ ] A run executes on a remote worker daemon on a second host

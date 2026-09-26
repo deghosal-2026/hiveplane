@@ -1,6 +1,7 @@
 # D15: Result Fan-out Service Design
 
 > Status: partial (v0.1.0). Slack and generic-webhook transports are implemented. Teams, Jira,
+> **v0.2.0:** extended by [Operator Experience (D36)](operator-experience-design.md).
 > and GitHub PR comments are v0.2.0. Approval re-dispatch is implemented (#129), so
 > `approval.resolved` reflects work that actually completes.
 

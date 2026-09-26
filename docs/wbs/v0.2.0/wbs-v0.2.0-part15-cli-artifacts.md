@@ -25,7 +25,7 @@ Give operators a powerful CLI (including a natural-language copilot that is itse
 **Deliverables:**
 - Extended CLI + completions
 - `hiveplane ask` copilot workload + certification corpus
-- Incident mode control + `docs/design/ask-copilot-design.md`, `docs/design/incident-mode-design.md`
+- Incident mode control + `docs/design/operator-experience-design.md`, `docs/design/operator-experience-design.md`
 
 **Acceptance criteria:**
 - [ ] `hiveplane ask` answers 5 live-state questions correctly, itself under budget + certification
@@ -59,7 +59,7 @@ Give operators a powerful CLI (including a natural-language copilot that is itse
 **Deliverables:**
 - `hiveplane.artifacts` package (local + S3/MinIO)
 - Export/import CLI
-- `docs/design/artifact-store-design.md`, `docs/design/export-import-design.md`
+- `docs/design/operator-experience-design.md`, `docs/design/operator-experience-design.md`
 
 **Acceptance criteria:**
 - [ ] An agent-produced artifact is stored, linked in fan-out/UI, and retrievable

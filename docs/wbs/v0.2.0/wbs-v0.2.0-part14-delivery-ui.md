@@ -26,7 +26,7 @@ Operators should never have to come to HivePlane to learn something happened, an
 **Deliverables:**
 - Expanded `hiveplane.delivery` with 9 channel adapters
 - Interactive approval webhooks + mobile approve page
-- `docs/design/result-fanout-design.md` (update), `docs/design/notification-prefs-design.md`
+- `docs/design/operator-experience-design.md` (update), `docs/design/operator-experience-design.md`
 
 **Acceptance criteria:**
 - [ ] Fan-out delivers to ≥3 channels in the field test (all 9 supported)
@@ -62,7 +62,7 @@ Operators should never have to come to HivePlane to learn something happened, an
 
 **Deliverables:**
 - Operator UI v2 screens + Playwright e2e suite
-- `docs/design/operator-ui-v2-design.md`
+- `docs/design/operator-experience-design.md`
 
 **Acceptance criteria:**
 - [ ] A viewer role sees no approve/promote/kill-switch controls; an approver does

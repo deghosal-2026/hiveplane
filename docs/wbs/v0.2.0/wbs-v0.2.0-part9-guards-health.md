@@ -25,7 +25,7 @@ Add the fourth budget (context) and the guards that keep runaway spend and failu
 
 **Deliverables:**
 - `hiveplane.guards` package (context budget, velocity, retry, breaker)
-- `docs/design/context-budget-design.md` and `docs/design/circuit-breaker-design.md`
+- `docs/design/runtime-guards-design.md` and `docs/design/runtime-guards-design.md`
 
 **Acceptance criteria:**
 - [ ] Exceeding the context budget pauses the run with accounting shown (no crash, no silent truncation)
@@ -59,7 +59,7 @@ Add the fourth budget (context) and the guards that keep runaway spend and failu
 
 **Deliverables:**
 - `hiveplane.health` package (model, SLO, error budget, burn)
-- Health API + dashboard view + `docs/design/agent-health-design.md` (update)
+- Health API + dashboard view + `docs/design/agent-health-slo-design.md` (update)
 
 **Acceptance criteria:**
 - [ ] The health dashboard shows readiness, failure rate, SLO status, burn, drift, and quality score

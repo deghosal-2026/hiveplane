@@ -60,7 +60,7 @@ Broaden the runtime surface (more frameworks, a converter for existing apps) and
 
 **Deliverables:**
 - Promotion gate service integrated with registry + certification
-- `docs/design/promotion-gate-design.md`
+- `docs/design/certification-v2-design.md`
 
 **Acceptance criteria:**
 - [ ] Promoting an unchanged, certified workload to production succeeds

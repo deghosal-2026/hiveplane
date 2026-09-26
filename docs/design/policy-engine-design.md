@@ -1,6 +1,7 @@
 # D4: Policy Engine Design
 
 > Status: draft
+> **v0.2.0:** extended by [Defense & Policy v2 (D29)](defense-policy-v2-design.md).
 
 ## Problem
 

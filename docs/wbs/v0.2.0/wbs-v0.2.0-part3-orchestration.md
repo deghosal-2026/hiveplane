@@ -27,7 +27,7 @@ A fleet OS must run fleets, not just single agents. Add workload pipelines (a DA
 **Deliverables:**
 - `hiveplane.pipelines` package (spec, engine, handoff, budget)
 - Pipeline submission API + CLI (`hiveplane pipelines submit|status`)
-- `docs/design/pipeline-design.md`
+- `docs/design/orchestration-design.md`
 
 **Acceptance criteria:**
 - [ ] A 3-node pipeline runs end-to-end with a validated handoff between each step
@@ -63,7 +63,7 @@ A fleet OS must run fleets, not just single agents. Add workload pipelines (a DA
 **Deliverables:**
 - `hiveplane.router` package + `POST /route` API
 - Agent-as-tool registry integration
-- `docs/design/task-router-design.md` and `docs/design/agent-as-tool-design.md`
+- `docs/design/orchestration-design.md` and `docs/design/orchestration-design.md`
 
 **Acceptance criteria:**
 - [ ] A plain-language task routes to the expected workload on a labeled test set above an agreed threshold

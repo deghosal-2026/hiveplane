@@ -1,6 +1,7 @@
 # D12: Trigger Service Design
 
 > Status: draft
+> **v0.2.0:** superseded by [Trigger Service v2 (D23)](trigger-service-v2-design.md).
 
 ## Problem
 

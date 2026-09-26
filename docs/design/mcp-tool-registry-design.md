@@ -1,6 +1,7 @@
 # D13: MCP Tool Registry Design
 
 > Status: draft
+> **v0.2.0:** extended by [MCP Registry v2 (D32)](mcp-registry-v2-design.md).
 
 ## Problem
 

@@ -1,6 +1,7 @@
 # D10: Certification Pipeline Design
 
 > Status: partial (v0.1.0). Corpus loader/validator, engine, signed attestations, store, diff,
+> **v0.2.0:** extended by [Certification v2 (D26)](certification-v2-design.md), [Learning Loop (D27)](learning-loop-design.md), and [Progressive Delivery (D28)](progressive-delivery-design.md).
 > and API/CLI are implemented. **The benchmark does not yet execute the real agent**: the
 > `ReferenceExecutor` returns the task's own expected value as the output, so every check passes
 > by definition. Real execution is tracked by #105/#117/#109.

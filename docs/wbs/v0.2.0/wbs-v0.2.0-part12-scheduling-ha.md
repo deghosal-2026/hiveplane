@@ -26,7 +26,7 @@ Make fleet execution orderly under load (priorities, limits, backpressure, preem
 
 **Deliverables:**
 - `hiveplane.scheduler` package (queues, limits, QoS, preemption)
-- Queue API + CLI; `docs/design/scheduler-design.md`
+- Queue API + CLI; `docs/design/fleet-execution-design.md`
 
 **Acceptance criteria:**
 - [ ] A higher-priority run is scheduled before a lower-priority one under contention
@@ -60,7 +60,7 @@ Make fleet execution orderly under load (priorities, limits, backpressure, preem
 
 **Deliverables:**
 - Leader-election implementation + HA documentation
-- `hiveplane.chaos` package + drill catalog + `docs/design/chaos-design.md`
+- `hiveplane.chaos` package + drill catalog + `docs/design/fleet-execution-design.md`
 
 **Acceptance criteria:**
 - [ ] A second controller replica does not execute the same reconcile actions (verified)

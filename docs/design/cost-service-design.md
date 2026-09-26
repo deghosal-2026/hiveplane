@@ -1,6 +1,7 @@
 # D14: Cost Service Design
 
 > Status: draft
+> **v0.2.0:** extended by [Cost, Showback & ROI v2 (D35)](cost-roi-v2-design.md).
 
 ## Problem
 

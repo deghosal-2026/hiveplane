@@ -24,7 +24,7 @@ Give the immune system its two most powerful behaviors: an explainable regressio
 
 **Deliverables:**
 - `hiveplane.certification.diff` extension
-- Regression report format + `docs/design/regression-diff-design.md`
+- Regression report format + `docs/design/certification-v2-design.md`
 
 **Acceptance criteria:**
 - [ ] A seeded regression is pinpointed to the exact task(s) with metric deltas
@@ -59,7 +59,7 @@ Give the immune system its two most powerful behaviors: an explainable regressio
 
 **Deliverables:**
 - `hiveplane.drift` package (scheduler, detector, quarantine, reinstatement)
-- `docs/design/drift-detection-design.md`; dashboard additions
+- `docs/design/certification-v2-design.md`; dashboard additions
 
 **Acceptance criteria:**
 - [ ] A seeded drifting agent is auto-quarantined and its owner notified with evidence

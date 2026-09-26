@@ -26,7 +26,7 @@ Make the fleet run itself. Trigger rules ingest events from the outside world (w
 **Deliverables:**
 - `hiveplane.triggers` package (schema, engine, ingest, scheduler)
 - `POST /triggers/webhook/{id}` API; trigger CRUD API
-- `docs/design/trigger-service-design.md` (update) + DSL reference
+- `docs/design/trigger-service-v2-design.md` (update) + DSL reference
 
 **Acceptance criteria:**
 - [ ] A webhook with an invalid/missing HMAC is rejected (401/403) and audited
@@ -63,7 +63,7 @@ Make the fleet run itself. Trigger rules ingest events from the outside world (w
 **Deliverables:**
 - GitHub, Alertmanager, and watch-mode source adapters
 - Admission-rule engine integrated with the policy engine
-- Trigger history/DLQ API + CLI; `docs/design/trigger-admission-design.md`
+- Trigger history/DLQ API + CLI; `docs/design/trigger-service-v2-design.md`
 
 **Acceptance criteria:**
 - [ ] A GitHub PR event starts the intended run and a `/hiveplane` comment re-triggers it

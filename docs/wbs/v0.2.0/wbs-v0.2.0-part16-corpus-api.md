@@ -24,7 +24,7 @@ Make benchmarks easy to author and version, and expose the whole plane through a
 
 **Deliverables:**
 - Corpus CLI + templates + profile support
-- `docs/design/corpus-tooling-design.md`, corpus authoring guide
+- `docs/design/platform-api-design.md`, corpus authoring guide
 
 **Acceptance criteria:**
 - [ ] `hiveplane corpus init` scaffolds a valid corpus that certifies a demo workload
@@ -59,7 +59,7 @@ Make benchmarks easy to author and version, and expose the whole plane through a
 **Deliverables:**
 - API v2 + OpenAPI; Python SDK package
 - Agent-as-service router; plugin interface + example plugin
-- `docs/design/api-v2-design.md`, `docs/design/plugin-hooks-design.md`, SDK docs
+- `docs/design/platform-api-design.md`, `docs/design/platform-api-design.md`, SDK docs
 
 **Acceptance criteria:**
 - [ ] API v2 is paginated and OpenAPI-documented; contract tests pass
