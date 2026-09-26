@@ -29,6 +29,8 @@ from hiveplane.core.run import AdmissionContext, Run, RunState
 from hiveplane.core.sandbox import EgressMode, EgressSpec
 from hiveplane.core.tools import ToolsSpec, ToolTrustLevel
 from hiveplane.core.workload import AgentWorkload
+from hiveplane.defense.guard import DefenseGuard
+from hiveplane.defense.scanner import DetectorAction
 from hiveplane.execution.gates import ApprovalRequests, PolicyGate
 from hiveplane.execution.models import InterventionAction
 from hiveplane.execution.tool_executor import ToolExecutor
@@ -76,6 +78,7 @@ class ToolCallRequest(BaseModel):
     tool_trust: ToolTrustLevel | None = None
     output: str | None = None
     host: str | None = None
+    port: int | None = None
 
 
 class ToolCallResult(BaseModel):
@@ -105,6 +108,7 @@ class ToolGateway:
         shaping: ShapingPipeline | None = None,
         approvals: ApprovalRequests | None = None,
         executor: ToolExecutor | None = None,
+        defense: DefenseGuard | None = None,
         clock: Callable[[], datetime] | None = None,
     ) -> None:
         self._registry = registry
@@ -113,6 +117,7 @@ class ToolGateway:
         self._shaping = shaping
         self._approvals = approvals
         self._executor = executor
+        self._defense = defense
         self._clock = clock or (lambda: datetime.now(UTC))
 
     def invoke(self, run_id: str, request: ToolCallRequest) -> ToolCallResult:
@@ -145,6 +150,21 @@ class ToolGateway:
         """Evaluate and shape a tool call, recording the decision."""
         spec = workload.spec
         tool_trust = request.tool_trust or _trust_for(spec.tools, request.tool_id)
+        if self._defense is not None and _is_destructive(request.action_class, tool_trust):
+            taint = self._defense.gate_destructive(
+                run_id=run_id,
+                workload=workload.name,
+                tool_id=request.tool_id,
+                allow_untrusted=spec.tools.allows_untrusted(request.tool_id),
+            )
+            if taint.blocked:
+                return ToolCallResult(
+                    run_id=run_id,
+                    tool_id=request.tool_id,
+                    outcome=ToolCallOutcome.DENIED,
+                    rule="taint.block",
+                    reason=taint.reason,
+                )
         context = PolicyContext(
             run_id=run_id,
             workload=workload.name,
@@ -193,6 +213,23 @@ class ToolGateway:
             return egress
         output = self._resolve_output(request)
         shaped = self._shape(workload, output)
+        if self._defense is not None and output is not None:
+            scan = self._defense.scan_output(
+                run_id=run_id,
+                workload=workload.name,
+                tool_id=request.tool_id,
+                text=output,
+            )
+            if scan.action is DetectorAction.BLOCK:
+                return ToolCallResult(
+                    run_id=run_id,
+                    tool_id=request.tool_id,
+                    outcome=ToolCallOutcome.BLOCKED_INJECTION,
+                    rule="injection.scan",
+                    reason="tool output contains injection patterns",
+                    shaped_output=shaped,
+                )
+            self._defense.mark_untrusted(run_id=run_id, source_id=request.tool_id)
         if (
             shaped is not None
             and shaped.injection is not None
@@ -251,12 +288,30 @@ class ToolGateway:
     ) -> ToolCallResult | None:
         if request.host is None:
             return None
+        if self._defense is not None:
+            decision = self._defense.check_egress(
+                run_id=run_id,
+                workload=workload.name,
+                tool_id=request.tool_id,
+                host=request.host,
+                port=request.port,
+                sandbox=workload.spec.sandbox,
+            )
+            if not decision.allowed:
+                return ToolCallResult(
+                    run_id=run_id,
+                    tool_id=request.tool_id,
+                    outcome=ToolCallOutcome.DENIED,
+                    rule="egress.denied",
+                    reason=decision.reason,
+                )
+            return None
         sandbox = workload.spec.sandbox
         egress_spec = (
             sandbox.egress if sandbox is not None else EgressSpec(mode=EgressMode.RESTRICTED)
         )
         try:
-            EgressGuard(egress_spec).check(request.host)
+            EgressGuard(egress_spec).check(request.host, request.port)
         except EgressDeniedError as exc:
             return ToolCallResult(
                 run_id=run_id,
@@ -311,3 +366,7 @@ def _trust_for(tools: ToolsSpec, tool_id: str) -> ToolTrustLevel:
         if entry.tool_id == tool_id:
             return entry.trust_level
     return tools.default_trust
+
+
+def _is_destructive(action_class: ActionClass | None, tool_trust: ToolTrustLevel) -> bool:
+    return action_class is ActionClass.DESTRUCTIVE or tool_trust is ToolTrustLevel.DESTRUCTIVE

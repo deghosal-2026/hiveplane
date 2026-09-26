@@ -16,6 +16,7 @@ from hiveplane.budget.pricing import CostTable
 from hiveplane.config import get_settings
 from hiveplane.core.fanout import FanOutType
 from hiveplane.core.spec import RuntimeAdapter
+from hiveplane.defense.guard import DefenseGuard
 from hiveplane.execution.admission import AdmissionPipeline
 from hiveplane.execution.fanout import FanOutService, SlackTransport, WebhookTransport
 from hiveplane.execution.gates import (
@@ -106,6 +107,7 @@ def build_tool_gateway(
     policy_gate: PolicyGate,
     run_service: RunService,
     approvals: ApprovalRequests | None,
+    defense: DefenseGuard | None = None,
 ) -> ToolGateway:
     """Build the tool-call boundary over the live run service.
 
@@ -126,6 +128,7 @@ def build_tool_gateway(
         shaping=ShapingPipeline(InjectionScanner()),
         approvals=approvals,
         executor=executor,
+        defense=defense,
     )
 
 

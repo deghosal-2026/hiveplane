@@ -354,6 +354,23 @@ class DriftAssessmentRow(_TenantScoped, Base):
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
+class SecurityEventRow(_TenantScoped, Base):
+    """Append-only defense telemetry: injection, egress, taint, escalation (M39-06)."""
+
+    __tablename__ = "security_events"
+    __table_args__ = (
+        Index("ix_security_events_workload_created", "workload_id", "created_at"),
+        Index("ix_security_events_run", "run_id"),
+    )
+
+    event_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    run_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    workload_id: Mapped[str | None] = mapped_column(String(253), nullable=True)
+    kind: Mapped[str] = mapped_column(String(32), index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
 class FanOutDeliveryRow(_TenantScoped, Base):
     """Result fan-out delivery attempts."""
 

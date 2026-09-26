@@ -12,29 +12,34 @@ Make the fleet defend itself. Scan inputs and tool outputs for injection, constr
 
 **Work items:**
 
-- [ ] [#279](https://github.com/deghosal-2026/hiveplane/issues/279) — M39-01 — Input/tool-output scanner: deterministic detectors for injection patterns, instruction smuggling, and data-exfiltration attempts
-- [ ] [#280](https://github.com/deghosal-2026/hiveplane/issues/280) — M39-02 — Taint marks + provenance tags: track untrusted content through the run so downstream tools can be gated
-- [ ] [#281](https://github.com/deghosal-2026/hiveplane/issues/281) — M39-03 — Blocking action: quarantine/refuse the offending tool output or input with a recorded reason
-- [ ] [#282](https://github.com/deghosal-2026/hiveplane/issues/282) — M39-04 — Repeated-attempt escalation: repeated injection attempts feed auto-quarantine (shared with M34)
-- [ ] [#283](https://github.com/deghosal-2026/hiveplane/issues/283) — M39-05 — Egress allow-lists: per-workload outbound domain/port policy enforced by the sandbox
-- [ ] [#284](https://github.com/deghosal-2026/hiveplane/issues/284) — M39-06 — Egress denial is audited and surfaced in the run story
-- [ ] [#285](https://github.com/deghosal-2026/hiveplane/issues/285) — M39-07 — Detector configurability + false-positive controls; detectors are versioned
-- [ ] [#286](https://github.com/deghosal-2026/hiveplane/issues/286) — M39-08 — Tests: seeded injection via tool output is blocked; taint propagates; egress to a non-allowed host is denied
+- [x] [#279](https://github.com/deghosal-2026/hiveplane/issues/279) — M39-01 — Input/tool-output scanner: deterministic detectors for injection patterns, instruction smuggling, and data-exfiltration attempts
+- [x] [#280](https://github.com/deghosal-2026/hiveplane/issues/280) — M39-02 — Taint marks + provenance tags: track untrusted content through the run so downstream tools can be gated
+- [x] [#281](https://github.com/deghosal-2026/hiveplane/issues/281) — M39-03 — Blocking action: quarantine/refuse the offending tool output or input with a recorded reason
+- [x] [#282](https://github.com/deghosal-2026/hiveplane/issues/282) — M39-04 — Repeated-attempt escalation: repeated injection attempts feed auto-quarantine (shared with M34)
+- [x] [#283](https://github.com/deghosal-2026/hiveplane/issues/283) — M39-05 — Egress allow-lists: per-workload outbound domain/port policy enforced by the sandbox
+- [x] [#284](https://github.com/deghosal-2026/hiveplane/issues/284) — M39-06 — Egress denial is audited and surfaced in the run story
+- [x] [#285](https://github.com/deghosal-2026/hiveplane/issues/285) — M39-07 — Detector configurability + false-positive controls; detectors are versioned
+- [x] [#286](https://github.com/deghosal-2026/hiveplane/issues/286) — M39-08 — Tests: seeded injection via tool output is blocked; taint propagates; egress to a non-allowed host is denied
 
 **Test ticket:** [#287](https://github.com/deghosal-2026/hiveplane/issues/287) — Test cases for Injection Defense & Egress Allow-Lists
 
 **Deliverables:**
-- `hiveplane.defense` package (scanner, taint, egress)
-- `docs/design/defense-policy-v2-design.md` and egress policy reference
+- `hiveplane.defense` package (scanner, taint, egress, escalation, security events, guard)
+- Public `GET /security/events` endpoint; migration `0014_security_events` (follows M35's `0012`/`0013`)
+- `docs/design/defense-policy-v2-design.md` and egress policy reference (this guide + `USER_GUIDE.md`)
 
 **Acceptance criteria:**
-- [ ] A seeded injection via tool output is blocked with a reason
-- [ ] Taint marks propagate so an untrusted value cannot silently reach a destructive tool
-- [ ] Repeated injection attempts escalate to quarantine
-- [ ] A run attempting egress to a non-allowed domain is denied and audited
-- [ ] Detectors are versioned and configurable per policy pack
+- [x] A seeded injection via tool output is blocked with a reason
+- [x] Taint marks propagate so an untrusted value cannot silently reach a destructive tool
+- [x] Repeated injection attempts escalate to quarantine
+- [x] A run attempting egress to a non-allowed domain is denied and audited
+- [x] Detectors are versioned and configurable per policy pack
 
 **Done when:** injection is blocked deterministically, and network egress is constrained and auditable.
+
+> **Status (M39):** complete. Implemented at the sandbox-channel/tool-call boundary;
+> production netns/CNI egress enforcement is the documented follow-on layer that
+> mirrors the same allow-list.
 
 **Dependencies:** v0.1.0 sandbox + tool-output shaping; M34 (quarantine).
 

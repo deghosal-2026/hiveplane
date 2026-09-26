@@ -549,14 +549,43 @@ in a subprocess with:
 - **Resource caps** — memory (`RLIMIT_AS`), CPU (`RLIMIT_CPU`), and a wall-clock
   watchdog; a run that exceeds the wall-clock cap is terminated and reported as
   `failed` with reason `timeout`.
-- **Restricted egress** — `EgressGuard` enforces the manifest allowlist and
-  always denies cloud metadata endpoints (`169.254.169.254`).
+- **Restricted egress** — `EgressGuard`/`EgressPolicy` enforce the manifest
+  allow-list (host + optional port, with `*.suffix` wildcards under
+  `spec.sandbox.network`) and always deny cloud metadata endpoints
+  (`169.254.169.254`). `spec.sandbox.network` takes precedence over the legacy
+  `spec.sandbox.egress` host-string form.
 - **Isolated filesystem** — an ephemeral scratch directory, removed on exit.
 
 Tool outputs are shaped before they reach the agent via `ShapingPipeline`:
 filter (redact/mask), truncate to `max_bytes` (head/tail/summary), a cumulative
 per-run output budget, and an injection scan. High-confidence injection patterns
 are blocked; lower-confidence patterns escalate; benign output passes unchanged.
+
+## Defense: Injection, Taint & Egress
+
+Every tool output is scanned deterministically by `hiveplane.defense` — no model
+calls — regardless of whether `spec.output_shaping` is configured. Detectors are
+versioned and configurable per policy pack (enable/disable, severity threshold,
+benign-phrase allow-list, escalate-to-block). A block returns
+`blocked_injection` with a recorded reason and emits an immutable
+`security_event`.
+
+- **Taint marks** — third-party tool output enters the run as `untrusted`; a
+  destructive tool call is denied (`taint.block`) while any untrusted value is
+  live, unless the tool is explicitly allow-listed with
+  `allow_untrusted: true`.
+- **Repeated attempts** — injection attempts are counted per workload over a
+  rolling window; crossing `defense.repeat_threshold` feeds the shared
+  quarantine machinery, revoking admission until re-certification.
+- **Egress** — default-deny, port-aware, and audited: a denial is a
+  `security_event` and an audit record (`egress.denied`).
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/security/events` | List defense events (`?workload_id=`, `?run_id=`, `?kind=`, `?since=`) |
+
+Configuration (`HIVEPLANE_DEFENSE__*`): `ENABLED`, `REPEAT_THRESHOLD` (default 3),
+`REPEAT_WINDOW_SECONDS`, `DETECTOR_SEVERITY_THRESHOLD`, `ESCALATE_TO_BLOCK`.
 
 ## Certification
 

@@ -131,6 +131,16 @@ class DriftSettings(BaseModel):
     slack_channel: str = "#agent-certifications"
 
 
+class DefenseSettings(BaseModel):
+    """Injection defense, taint, and egress controls (M39, D29)."""
+
+    enabled: bool = True
+    repeat_threshold: int = Field(default=3, ge=1)
+    repeat_window_seconds: int = Field(default=3600, ge=0)
+    detector_severity_threshold: Literal["low", "medium", "high", "critical"] = "low"
+    escalate_to_block: bool = False
+
+
 class SandboxDefaults(BaseModel):
     """Per-run sandbox defaults applied when a manifest omits them (DD-14)."""
 
@@ -319,6 +329,7 @@ class Settings(BaseSettings):
     otel: OtelSettings = Field(default_factory=OtelSettings)
     certification: CertificationSettings = Field(default_factory=CertificationSettings)
     drift: DriftSettings = Field(default_factory=DriftSettings)
+    defense: DefenseSettings = Field(default_factory=DefenseSettings)
     sandbox: SandboxSettings = Field(default_factory=SandboxSettings)
     execution: ExecutionSettings = Field(default_factory=ExecutionSettings)
     fanout: FanoutSettings = Field(default_factory=FanoutSettings)

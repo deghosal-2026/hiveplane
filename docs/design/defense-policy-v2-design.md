@@ -1,6 +1,9 @@
 # D29: Defense & Policy v2 Design
 
-> Status: draft
+> Status: implemented for M39 (deterministic versioned scanner, taint marks &
+> provenance, port-aware default-deny egress allow-lists, security events,
+> repeated-attempt quarantine); M40 (context-aware policy, what-if, packs,
+> time windows, kill switch) pending.
 
 **Milestones:** M39–M40 · **Extends:** D4, D11
 

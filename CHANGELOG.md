@@ -327,8 +327,40 @@ immune system (drift, quarantine, promotion gate), and fleet scale-out. In progr
   `hiveplane drift {due,schedules,expiries,assess,probe,quarantine,quarantines,reinstate}`.
 - **Tests** — detector thresholds/trends, false-positive controls, scheduler
   cadence and expiry, quarantine admission revocation + notification + audit,
-  reinstatement success/refusal, Postgres round-trip and migration `0011`.
-  Coverage ≥ 95% with a database.
+   reinstatement success/refusal, Postgres round-trip and migration `0011`.
+   Coverage ≥ 95% with a database.
+
+### Added (M39 — injection defense & egress allow-lists)
+
+- **Injection scanner** (`hiveplane.defense.DefenseScanner`) — deterministic,
+  versioned detectors (`detector_set_version`) for instruction override,
+  instruction smuggling (zero-width chars, encoded blobs), tool-call hijack,
+  exfiltration intent, and role manipulation. No model calls: the same input
+  always yields the same block.
+- **Configurable detectors** — per policy pack enable/disable, a severity
+  threshold, benign-phrase allow-lists, and `escalate_to_block`; a block carries
+  detector id, version, span, severity, and reason.
+- **Boundary scanning** — tool output is scanned at the tool-call boundary
+  independent of `spec.output_shaping`; a block returns `blocked_injection`
+  with rule `injection.scan` and never reaches agent context.
+- **Taint marks & provenance** (`hiveplane.defense.TaintTracker`) — untrusted
+  tool/trigger output is marked and propagated by union to derived values; a
+  destructive tool call is denied (`taint.block`) while untrusted input is live,
+  unless the tool declares `allow_untrusted: true`.
+- **Egress allow-lists** (`hiveplane.defense.EgressPolicy`, `spec.sandbox.network`)
+  — deny-by-default, host + optional port, `*.suffix` wildcards, explicit deny
+  wins, cloud-metadata always blocked. Port-aware enforcement at the tool-call
+  boundary; every denial is audited (`egress.denied`).
+- **Security events** (`hiveplane.defense.events`) — append-only, tenant-scoped
+  `security_events` (injection/egress_denied/taint_block/repeated_attempt),
+  surfaced by `GET /security/events`; migration `0014_security_events`.
+- **Repeated-attempt escalation** — attempts counted per workload over a rolling
+  window; crossing `defense.repeat_threshold` (default 3) quarantines the
+  workload through the shared M34 immune machinery.
+- **Tests** — scanner determinism/versioning/config, taint propagation and
+  destructive gating, egress ports/wildcards/legacy spec, security-event store
+  (memory + Postgres), tool-boundary integration, repeated-attempt quarantine,
+  and an end-to-end seeded-injection/taint/egress flow through `create_app`.
 
 ### Added (M35 — attestation transparency, public verification & workload provenance)
 

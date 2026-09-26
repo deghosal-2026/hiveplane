@@ -12,6 +12,7 @@ from hiveplane.agent_tools.store import AgentToolStore
 from hiveplane.budget.store import BudgetStore
 from hiveplane.certification.promotion import PromotionGate
 from hiveplane.certification.workflow import CertificationCoordinator
+from hiveplane.defense.events import SecurityEventStore
 from hiveplane.drift.monitor import DriftMonitor
 from hiveplane.drift.quarantine import QuarantineService
 from hiveplane.drift.reinstatement import ReinstatementService
@@ -86,6 +87,12 @@ def get_approval_service(request: Request) -> ApprovalService:
     """Return the approval service bound to the application state."""
     service: ApprovalService = request.app.state.approval_service
     return service
+
+
+def get_security_event_store(request: Request) -> SecurityEventStore:
+    """Return the security-event store bound to the application state."""
+    store: SecurityEventStore = request.app.state.security_event_store
+    return store
 
 
 def get_budget_store(request: Request) -> BudgetStore:

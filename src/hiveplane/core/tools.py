@@ -31,6 +31,7 @@ class ToolRef(BaseModel):
     tool_id: str = Field(min_length=1)
     trust_level: ToolTrustLevel
     require_approval: bool = False
+    allow_untrusted: bool = False
 
 
 class ToolsSpec(BaseModel):
@@ -57,4 +58,10 @@ class ToolsSpec(BaseModel):
         """Return True if the allowed tool is marked as requiring approval."""
         return any(
             entry.tool_id == tool_id and entry.require_approval for entry in self.allow
+        )
+
+    def allows_untrusted(self, tool_id: str) -> bool:
+        """Return True if the allowed tool may receive untrusted input (M39)."""
+        return any(
+            entry.tool_id == tool_id and entry.allow_untrusted for entry in self.allow
         )

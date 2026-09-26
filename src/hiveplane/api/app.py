@@ -38,6 +38,7 @@ from hiveplane.api.router import router as route_router
 from hiveplane.api.runs import router as runs_router
 from hiveplane.api.sandbox_channel import SandboxChannel
 from hiveplane.api.sandbox_channel import router as sandbox_router
+from hiveplane.api.security import router as security_router
 from hiveplane.api.spend import router as spend_router
 from hiveplane.api.transparency import router as transparency_router
 from hiveplane.api.triggers import router as triggers_router
@@ -68,6 +69,11 @@ from hiveplane.core.fanout import FanOutDestination, FanOutType
 from hiveplane.core.manifest import manifest_json_schema
 from hiveplane.core.run import AdmissionContext
 from hiveplane.core.spec import IOSpec
+from hiveplane.defense.escalation import AttemptEscalator
+from hiveplane.defense.events import build_security_event_store
+from hiveplane.defense.guard import DefenseGuard
+from hiveplane.defense.scanner import DefenseScanner, DetectorConfig, DetectorSeverity
+from hiveplane.defense.taint import TaintRegistry
 from hiveplane.drift.detector import DriftDetector
 from hiveplane.drift.errors import (
     DriftError,
@@ -263,6 +269,28 @@ def create_app(
     app.state.policy_pack_store = policy_pack_store
     app.state.policy_engine = policy_engine
     app.state.approval_service = approval_service
+    app.state.security_event_store = build_security_event_store(settings)
+    defense: DefenseGuard | None = None
+    if settings.defense.enabled:
+        escalator = AttemptEscalator(
+            app.state.security_event_store,
+            threshold=settings.defense.repeat_threshold,
+            window_seconds=settings.defense.repeat_window_seconds,
+            quarantine_provider=lambda: getattr(app.state, "quarantine_service", None),
+        )
+        defense = DefenseGuard(
+            scanner=DefenseScanner(),
+            events=app.state.security_event_store,
+            taint=TaintRegistry(),
+            escalator=escalator,
+            config=DetectorConfig(
+                severity_threshold=DetectorSeverity(
+                    settings.defense.detector_severity_threshold
+                ),
+                escalate_to_block=settings.defense.escalate_to_block,
+            ),
+        )
+        app.state.defense_guard = defense
     app.state.budget_store = budget_store
     app.state.budget_service = budget_service
     app.state.cost_table = cost_table
@@ -272,7 +300,7 @@ def create_app(
         registry, policy_engine, approval_service, budget_service, sandbox_manager
     )
     app.state.tool_gateway = build_tool_gateway(
-        registry, policy_engine, app.state.run_service, approval_service
+        registry, policy_engine, app.state.run_service, approval_service, defense
     )
     reconcile_store = build_reconcile_store(settings)
     reconcile_lock = (
@@ -449,6 +477,8 @@ def create_app(
     app.state.certification_coordinator = certification_coordinator
     app.state.certification_store = getattr(certification_coordinator, "store", None)
     app.state.audit_log = build_audit_log()
+    if settings.defense.enabled:
+        app.state.defense_guard.bind_audit(app.state.audit_log)
     app.state.promotion_store = build_promotion_store(settings)
     app.state.promotion_gate = PromotionGate(
         registry,
@@ -542,6 +572,7 @@ def create_app(
     app.include_router(promotions_router)
     app.include_router(drift_router)
     app.include_router(sandbox_router)
+    app.include_router(security_router)
     app.include_router(spend_router)
     app.include_router(transparency_router)
     app.include_router(reconcile_router)

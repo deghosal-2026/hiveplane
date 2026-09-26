@@ -202,9 +202,39 @@
       "title": "EgressMode",
       "type": "string"
     },
+    "EgressRule": {
+      "additionalProperties": false,
+      "description": "A host (exact or ``*.suffix`` wildcard) and optional port.",
+      "properties": {
+        "host": {
+          "minLength": 1,
+          "title": "Host",
+          "type": "string"
+        },
+        "port": {
+          "anyOf": [
+            {
+              "maximum": 65535,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Port"
+        }
+      },
+      "required": [
+        "host"
+      ],
+      "title": "EgressRule",
+      "type": "object"
+    },
     "EgressSpec": {
       "additionalProperties": false,
-      "description": "Network egress allow/deny lists and mode.",
+      "description": "Network egress allow/deny lists and mode (legacy host-string form).",
       "properties": {
         "allow": {
           "items": {
@@ -568,6 +598,32 @@
       "title": "ModelStrategy",
       "type": "string"
     },
+    "NetworkSpec": {
+      "additionalProperties": false,
+      "description": "Deny-by-default egress allow/deny rules (M39-05).",
+      "properties": {
+        "egress": {
+          "$ref": "#/$defs/EgressMode",
+          "default": "restricted"
+        },
+        "allow": {
+          "items": {
+            "$ref": "#/$defs/EgressRule"
+          },
+          "title": "Allow",
+          "type": "array"
+        },
+        "deny": {
+          "items": {
+            "$ref": "#/$defs/EgressRule"
+          },
+          "title": "Deny",
+          "type": "array"
+        }
+      },
+      "title": "NetworkSpec",
+      "type": "object"
+    },
     "ObservabilitySpec": {
       "additionalProperties": false,
       "description": "Telemetry contract and trace sampling configuration (DD-06).",
@@ -741,6 +797,17 @@
         "egress": {
           "$ref": "#/$defs/EgressSpec"
         },
+        "network": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/NetworkSpec"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "filesystem": {
           "$ref": "#/$defs/FilesystemMode",
           "default": "isolated"
@@ -791,6 +858,11 @@
         "require_approval": {
           "default": false,
           "title": "Require Approval",
+          "type": "boolean"
+        },
+        "allow_untrusted": {
+          "default": false,
+          "title": "Allow Untrusted",
           "type": "boolean"
         }
       },
