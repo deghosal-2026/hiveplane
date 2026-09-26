@@ -840,3 +840,29 @@ approve/deny trends:
 `GET /metrics`. It is deliberately decoupled from the health service and its
 database, so a failing dependency cannot blind the plane. Grafana dashboards for
 fleet, health, cost, and plane health ship in `deploy/grafana/dashboards/`.
+
+## Live MCP Tools (Registry v2)
+
+HivePlane connects to real MCP servers over stdio or HTTP and enforces trust and
+allow-lists at the request boundary.
+
+```bash
+# Connect a server and onboard its discovered tools
+hiveplane tools add --server "stdio://python -m my.tools" --trust read_only
+hiveplane tools add --server "https://mcp.example.com/rpc" --trust destructive
+
+hiveplane tools list
+hiveplane tools show tool-01HW...
+hiveplane tools remove tool-01HW...       # retire; the id is never reused
+
+hiveplane mcp servers                      # connected servers + health
+hiveplane mcp tools --status active        # discovered|active|absent|retired
+```
+
+**Trust** is assigned at onboarding and enforced at the boundary, not inside the
+agent. **Allow-lists** are evaluated before policy, so even a permissive pack
+cannot widen a workload's tool surface; a call outside the list is denied with
+`tool_not_allowed`. Every call flows through shaping and injection scanning, and
+tool output is treated as untrusted by default. The kill switch disables a tool
+fleet-wide instantly and is checked before the transport, so discovery refreshes
+cannot resurrect a killed tool.

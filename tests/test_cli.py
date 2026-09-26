@@ -1184,3 +1184,69 @@ def test_eval_quality_prints_score(monkeypatch: Any) -> None:
     assert result.exit_code == 0
     assert "0.72" in result.output
     assert "dip" in result.output.lower()
+
+
+def test_tools_add_from_server_onboards_discovered_tools(monkeypatch: Any) -> None:
+    calls: list[tuple[str, str]] = []
+
+    def fake_request(
+        method: str, url: str, payload: dict[str, Any] | None = None
+    ) -> tuple[int, str]:
+        calls.append((method, url))
+        if url.endswith("/mcp/servers") and method == "POST":
+            return 201, json.dumps({"server_id": "srv-1", "status": "connected"})
+        if url.endswith("/mcp/tools"):
+            return 200, json.dumps(
+                [
+                    {"tool_id": "tool-1", "tool_name": "read_file", "server_id": "srv-1"},
+                    {"tool_id": "tool-2", "tool_name": "other", "server_id": "srv-2"},
+                ]
+            )
+        if url.endswith("/mcp/tools/tool-1/onboard"):
+            return 200, json.dumps({"tool_id": "tool-1"})
+        raise AssertionError(f"unexpected {method} {url}")
+
+    monkeypatch.setattr("hiveplane.cli._request", fake_request)
+
+    result = runner.invoke(app, ["tools", "add", "--server", "stdio://python -m x"])
+
+    assert result.exit_code == 0
+    assert "onboarded tool-1" in result.output
+    assert ("POST", "/mcp/servers") not in calls  # base URL includes more path
+    assert any(url.endswith("/mcp/tools/tool-1/onboard") for _, url in calls)
+    assert not any("tool-2" in url for _, url in calls)
+
+
+def test_mcp_servers_and_tools_commands(monkeypatch: Any) -> None:
+    def fake_request(
+        method: str, url: str, payload: dict[str, Any] | None = None
+    ) -> tuple[int, str]:
+        if url.endswith("/mcp/servers"):
+            return 200, json.dumps(
+                [{"server_id": "srv-1", "status": "connected", "fingerprint": "abc123"}]
+            )
+        if "/mcp/tools" in url:
+            return 200, json.dumps(
+                [{"tool_id": "tool-1", "tool_name": "read_file", "status": "active"}]
+            )
+        raise AssertionError(f"unexpected {method} {url}")
+
+    monkeypatch.setattr("hiveplane.cli._request", fake_request)
+
+    servers = runner.invoke(app, ["mcp", "servers"])
+    tools = runner.invoke(app, ["mcp", "tools", "--status", "active"])
+
+    assert servers.exit_code == 0 and "srv-1" in servers.output
+    assert tools.exit_code == 0 and "tool-1" in tools.output
+
+
+def test_parse_server_uri_variants() -> None:
+    from hiveplane.cli import _parse_server_uri
+
+    assert _parse_server_uri("stdio://python -m my.tools") == {
+        "kind": "stdio",
+        "target": "python",
+        "args": ["-m", "my.tools"],
+    }
+    assert _parse_server_uri("https://mcp.example.com/rpc")["kind"] == "http"
+    assert _parse_server_uri("sse://mcp.example.com/sse")["target"] == "mcp.example.com/sse"

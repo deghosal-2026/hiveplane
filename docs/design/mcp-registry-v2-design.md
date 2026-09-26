@@ -1,6 +1,6 @@
 # D32: MCP Registry v2 Design
 
-> Status: draft
+> Status: implemented (M44)
 
 **Milestones:** M44 · **Extends:** D13
 

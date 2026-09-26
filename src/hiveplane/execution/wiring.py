@@ -31,7 +31,11 @@ from hiveplane.execution.gates import (
 from hiveplane.execution.service import RunService
 from hiveplane.execution.store import InMemoryRunStore, JsonFileRunStore, RunStore
 from hiveplane.execution.subprocess_spawner import SubprocessSpawner
-from hiveplane.execution.tool_executor import FixtureToolExecutor
+from hiveplane.execution.tool_executor import (
+    CompositeToolExecutor,
+    FixtureToolExecutor,
+    ToolExecutor,
+)
 from hiveplane.execution.tools import ToolGateway
 from hiveplane.guards.breaker import CircuitBreakerRegistry
 from hiveplane.llm.provider import LLMProvider
@@ -112,6 +116,7 @@ def build_tool_gateway(
     defense: DefenseGuard | None = None,
     kill_switch: KillSwitch | None = None,
     breaker: CircuitBreakerRegistry | None = None,
+    mcp_executor: ToolExecutor | None = None,
 ) -> ToolGateway:
     """Build the tool-call boundary over the live run service.
 
@@ -120,11 +125,21 @@ def build_tool_gateway(
     ``tool_fixtures`` setting disables the executor (caller output only).
     """
     settings = get_settings()
-    executor: FixtureToolExecutor | None = (
+    fixture: FixtureToolExecutor | None = (
         FixtureToolExecutor(settings.execution.tool_fixtures)
         if settings.execution.tool_fixtures
         else None
     )
+    executors: list[ToolExecutor] = []
+    if fixture is not None:
+        executors.append(fixture)
+    if mcp_executor is not None:
+        executors.append(mcp_executor)
+    executor: ToolExecutor | None = None
+    if len(executors) == 1:
+        executor = executors[0]
+    elif executors:
+        executor = CompositeToolExecutor(executors)
     return ToolGateway(
         registry_service,
         policy_gate,

@@ -465,6 +465,45 @@ class ToolRow(_TenantScoped, Base):
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
+class McpServerRow(_TenantScoped, Base):
+    """Registered live MCP servers (M44)."""
+
+    __tablename__ = "mcp_servers"
+
+    server_id: Mapped[str] = mapped_column(String(253), primary_key=True)
+    fingerprint: Mapped[str] = mapped_column(String(64), index=True)
+    status: Mapped[str] = mapped_column(String(32), index=True)
+    last_seen: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class McpToolRow(_TenantScoped, Base):
+    """Discovered/onboarded MCP tools with stable IDs (M44)."""
+
+    __tablename__ = "mcp_tools"
+
+    tool_id: Mapped[str] = mapped_column(String(253), primary_key=True)
+    server_id: Mapped[str] = mapped_column(String(253), index=True)
+    tool_name: Mapped[str] = mapped_column(String(253), index=True)
+    status: Mapped[str] = mapped_column(String(32), index=True)
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class McpToolVersionRow(_TenantScoped, Base):
+    """Append-only MCP tool schema versions (M44)."""
+
+    __tablename__ = "mcp_tool_versions"
+    __table_args__ = (
+        UniqueConstraint("tool_id", "tenant_id", "version", name="uq_mcp_tool_versions"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    tool_id: Mapped[str] = mapped_column(String(253), index=True)
+    version: Mapped[int] = mapped_column(Integer)
+    registered_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
 class TriggerRuleRow(_TenantScoped, Base):
     """Trigger rules per workload."""
 

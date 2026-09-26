@@ -156,6 +156,16 @@ class ToolGateway:
         """Evaluate and shape a tool call, recording the decision."""
         spec = workload.spec
         tool_trust = request.tool_trust or _trust_for(spec.tools, request.tool_id)
+        if not spec.tools.is_allowed(request.tool_id) and not spec.tools.is_denied(
+            request.tool_id
+        ):
+            return ToolCallResult(
+                run_id=run_id,
+                tool_id=request.tool_id,
+                outcome=ToolCallOutcome.DENIED,
+                rule="tool_not_allowed",
+                reason=f"tool {request.tool_id!r} is not in the workload allow-list",
+            )
         if self._kill_switch is not None and self._kill_switch.is_disabled(request.tool_id):
             return ToolCallResult(
                 run_id=run_id,

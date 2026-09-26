@@ -24,6 +24,7 @@ from hiveplane.health.service import HealthService
 from hiveplane.learning.candidates import CandidateService
 from hiveplane.learning.eval import EvalService
 from hiveplane.learning.feedback import FeedbackService
+from hiveplane.mcp.registry import McpRegistry
 from hiveplane.pipelines.engine import PipelineEngine
 from hiveplane.pipelines.store import PipelineStore
 from hiveplane.policy.approvals import ApprovalService
@@ -97,6 +98,12 @@ def get_policy_pack_store(request: Request) -> PolicyPackStore:
 def get_policy_pack_registry(request: Request) -> PolicyPackRegistry:
     """Return the policy pack registry bound to the application state."""
     registry: PolicyPackRegistry = request.app.state.policy_pack_registry
+    return registry
+
+
+def get_mcp_registry(request: Request) -> McpRegistry:
+    """Return the live MCP registry bound to the application state."""
+    registry: McpRegistry = request.app.state.mcp_registry
     return registry
 
 

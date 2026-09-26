@@ -30,6 +30,7 @@ from hiveplane.api.certifications import router as certifications_router
 from hiveplane.api.drift import router as drift_router
 from hiveplane.api.health import router as health_router
 from hiveplane.api.learning import router as learning_router
+from hiveplane.api.mcp import router as mcp_router
 from hiveplane.api.pipelines import router as pipelines_router
 from hiveplane.api.policy import router as policy_router
 from hiveplane.api.progressive import router as progressive_router
@@ -136,6 +137,8 @@ from hiveplane.learning.judge import RubricJudge
 from hiveplane.learning.rubrics import RubricRegistry, default_rubric
 from hiveplane.learning.store import build_feedback_store
 from hiveplane.llm.factory import build_provider
+from hiveplane.mcp.executor import McpToolExecutor
+from hiveplane.mcp.factory import build_mcp_registry
 from hiveplane.persistence.base import create_engine_from_settings
 from hiveplane.persistence.migrate import run_migrations
 from hiveplane.pipelines.engine import PipelineEngine
@@ -252,6 +255,9 @@ async def _lifespan(app: FastAPI) -> AsyncIterator[None]:
                 report.skipped,
             )
     yield
+    mcp_registry = getattr(app.state, "mcp_registry", None)
+    if mcp_registry is not None:
+        mcp_registry.close()
     provider.force_flush()
     meter_provider.force_flush()
 
@@ -351,6 +357,10 @@ def create_app(
         open_for_seconds=settings.guards.breaker_open_for_seconds,
     )
     app.state.circuit_breakers = circuit_breakers
+    app.state.mcp_registry = build_mcp_registry(settings)
+    mcp_executor = (
+        McpToolExecutor(app.state.mcp_registry) if settings.mcp.enabled else None
+    )
     app.state.tool_gateway = build_tool_gateway(
         registry,
         policy_engine,
@@ -359,6 +369,7 @@ def create_app(
         defense,
         kill_switch,
         circuit_breakers,
+        mcp_executor,
     )
     if settings.guards.enabled:
         guard_limits = GuardLimits(
@@ -726,6 +737,7 @@ def create_app(
     app.include_router(pipelines_router)
     app.include_router(learning_router)
     app.include_router(health_router)
+    app.include_router(mcp_router)
     app.include_router(route_router)
     app.include_router(agent_tools_router)
     app.include_router(adapters_router)

@@ -297,6 +297,13 @@ class HealthSettings(BaseModel):
     min_runs_for_score: int = Field(default=5, ge=1)
 
 
+class McpSettings(BaseModel):
+    """Live MCP Registry v2 transport settings (M44)."""
+
+    enabled: bool = True
+    timeout_seconds: float = Field(default=30.0, gt=0.0)
+
+
 class ProbesSettings(BaseModel):
     """Synthetic probe budget and cadence (M43)."""
 
@@ -390,6 +397,7 @@ class Settings(BaseSettings):
     guards: GuardsSettings = Field(default_factory=GuardsSettings)
     health: HealthSettings = Field(default_factory=HealthSettings)
     probes: ProbesSettings = Field(default_factory=ProbesSettings)
+    mcp: McpSettings = Field(default_factory=McpSettings)
     eval: EvalSettings = Field(default_factory=EvalSettings)
 
 

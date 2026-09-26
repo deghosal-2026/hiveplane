@@ -525,6 +525,30 @@ immune system (drift, quarantine, promotion gate), and fleet scale-out. In progr
 - **API + CLI** — `GET /health/probes`, `GET /analytics/approvals`, `GET /metrics`;
   CLI `hiveplane probes list`.
 
+### Added (M44 — MCP Registry v2: live transport)
+
+- **Live MCP transport** (`hiveplane.mcp`) — connect real MCP servers over **stdio**
+  and **HTTP** JSON-RPC; `list_tools` and `tools/call` return real results (never
+  fabricated), with normalized errors (`tool_unreachable`, `tool_error`,
+  `tool_timeout`, `schema_mismatch`) and bounded per-call timeouts.
+- **Dynamic discovery & stable IDs** — refresh the catalog on demand; tools appear
+  as `discovered` (not callable) until onboarded; removed tools become `absent`;
+  tool IDs are ULIDs assigned once and reused across server restarts (identity is
+  `server fingerprint + tool name`); versions are append-only.
+- **Onboarding & trust** — `hiveplane tools add --server <uri> --trust ...`,
+  `tools show|remove`, `hiveplane mcp servers|tools`; trust is assigned at
+  onboarding and enforced at the request boundary.
+- **Manifest allow-lists** — a workload may only call tools in its manifest;
+  calls outside the list are denied with `tool_not_allowed` before policy.
+- **Execution through the boundary** — a composite (fixture + live MCP) executor
+  serves real tool output through shaping and injection scanning; a fixture MCP
+  server ships for tests.
+- **Policy & kill switch** — the M40 kill switch is checked at the boundary
+  before the transport; discovery refreshes cannot resurrect a killed tool.
+- **API + persistence** — `POST/GET /mcp/servers`, `POST /mcp/servers/{id}/refresh`,
+  `GET /mcp/tools`, `POST /mcp/tools/{id}/onboard`, `DELETE /mcp/tools/{id}`; tables
+  `mcp_servers`, `mcp_tools`, `mcp_tool_versions` (migration `0022`).
+
 ## [0.1.0] - 2026-09-25
 
 The first release: the certified control loop. Register agents, certify them against a

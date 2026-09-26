@@ -33,6 +33,7 @@ runs_app = typer.Typer(help="Inspect and intervene on runs.", no_args_is_help=Tr
 approvals_app = typer.Typer(help="Review and resolve approvals.", no_args_is_help=True)
 triggers_app = typer.Typer(help="Inspect and add workload triggers.", no_args_is_help=True)
 tools_app = typer.Typer(help="Inspect and register MCP tools.", no_args_is_help=True)
+mcp_app = typer.Typer(help="Manage live MCP servers and tools.", no_args_is_help=True)
 reconcile_app = typer.Typer(help="Reconcile desired state (GitOps).", no_args_is_help=True)
 pipelines_app = typer.Typer(help="Submit and inspect pipeline runs.", no_args_is_help=True)
 agents_app = typer.Typer(
@@ -65,6 +66,7 @@ app.add_typer(runs_app, name="runs")
 app.add_typer(approvals_app, name="approvals")
 app.add_typer(triggers_app, name="triggers")
 app.add_typer(tools_app, name="tools")
+app.add_typer(mcp_app, name="mcp")
 app.add_typer(reconcile_app, name="reconcile")
 app.add_typer(pipelines_app, name="pipelines")
 app.add_typer(agents_app, name="agents")
@@ -976,14 +978,28 @@ def tools_list(
 @tools_app.command("add")
 def tools_add(
     file: Annotated[
-        Path,
+        Path | None,
         typer.Option(
             "--file", exists=True, dir_okay=False, readable=True, help="Tool YAML/JSON."
         ),
-    ],
+    ] = None,
+    server: Annotated[
+        str | None,
+        typer.Option("--server", help="Connect an MCP server: stdio://cmd, http(s)://url."),
+    ] = None,
+    trust: Annotated[
+        str, typer.Option("--trust", help="Trust level for discovered tools.")
+    ] = "read_only",
+    actor: Annotated[str, typer.Option("--actor", help="Onboarding operator.")] = "cli",
     api_url: ApiUrl = "http://localhost:8100",
 ) -> None:
-    """Register an MCP tool from a YAML or JSON document."""
+    """Onboard tools from a live MCP server, or register one from a document."""
+    if server is not None:
+        _add_from_server(server, trust, actor, api_url)
+        return
+    if file is None:
+        typer.secho("provide --server or --file", fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=2)
     try:
         registration = ToolRegistration.model_validate(_load_document(file))
     except ValidationError as exc:
@@ -1834,3 +1850,102 @@ def probes_list(
             f"{probe['probe_id']}  {probe['workload_id']}  "
             f"{probe['status']}  {probe['latency_ms']}ms"
         )
+
+
+def _parse_server_uri(value: str) -> dict[str, object]:
+    """Parse an MCP server URI into a connect request payload."""
+    import shlex
+
+    if value.startswith("stdio://"):
+        parts = shlex.split(value[len("stdio://") :])
+        if not parts:
+            typer.secho("stdio server needs a command", fg=typer.colors.RED, err=True)
+            raise typer.Exit(code=2)
+        return {"kind": "stdio", "target": parts[0], "args": parts[1:]}
+    if value.startswith(("http://", "https://")):
+        return {"kind": "http", "target": value, "args": []}
+    if value.startswith("sse://"):
+        return {"kind": "sse", "target": value[len("sse://") :], "args": []}
+    typer.secho(f"unsupported server URI: {value!r}", fg=typer.colors.RED, err=True)
+    raise typer.Exit(code=2)
+
+
+def _add_from_server(server: str, trust: str, actor: str, api_url: str) -> None:
+    endpoint = _parse_server_uri(server)
+    base = api_url.rstrip("/")
+    status_code, body = _request("POST", f"{base}/mcp/servers", {"endpoint": endpoint})
+    if status_code >= 400 or status_code == 0:
+        _fail("connect server", status_code, body)
+    connected = json.loads(body)
+    status_code, body = _request("GET", f"{base}/mcp/tools")
+    if status_code >= 400 or status_code == 0:
+        _fail("list tools", status_code, body)
+    tools = [
+        tool for tool in json.loads(body) if tool["server_id"] == connected["server_id"]
+    ]
+    for tool in tools:
+        status_code, body = _request(
+            "POST",
+            f"{base}/mcp/tools/{tool['tool_id']}/onboard",
+            {"trust_level": trust, "actor": actor},
+        )
+        if status_code >= 400 or status_code == 0:
+            _fail("onboard tool", status_code, body)
+        typer.secho(f"onboarded {tool['tool_id']} ({tool['tool_name']})", fg=typer.colors.GREEN)
+
+
+@tools_app.command("show")
+def tools_show(
+    tool_id: Annotated[str, typer.Argument(help="Stable tool id.")],
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Show one live MCP tool by its stable id."""
+    status_code, body = _request("GET", f"{api_url.rstrip('/')}/mcp/tools/{tool_id}")
+    if status_code >= 400 or status_code == 0:
+        _fail("show tool", status_code, body)
+    tool = json.loads(body)
+    typer.echo(
+        f"{tool['tool_id']}  {tool['tool_name']}  {tool['status']}  {tool['trust_level']}"
+    )
+
+
+@tools_app.command("remove")
+def tools_remove(
+    tool_id: Annotated[str, typer.Argument(help="Stable tool id.")],
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Retire a live MCP tool (its id is never reused)."""
+    status_code, body = _request("DELETE", f"{api_url.rstrip('/')}/mcp/tools/{tool_id}")
+    if status_code >= 400 or status_code == 0:
+        _fail("remove tool", status_code, body)
+    data = json.loads(body)
+    typer.secho(f"OK: retired {data['tool_id']}", fg=typer.colors.GREEN)
+
+
+@mcp_app.command("servers")
+def mcp_servers(api_url: ApiUrl = "http://localhost:8100") -> None:
+    """List registered live MCP servers."""
+    status_code, body = _request("GET", f"{api_url.rstrip('/')}/mcp/servers")
+    if status_code >= 400 or status_code == 0:
+        _fail("list servers", status_code, body)
+    for server in json.loads(body):
+        typer.echo(f"{server['server_id']}  {server['status']}  {server['fingerprint']}")
+
+
+@mcp_app.command("tools")
+def mcp_tools(
+    status_filter: Annotated[
+        str | None, typer.Option("--status", help="Filter by tool status.")
+    ] = None,
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """List live MCP tools (discovered/active/absent/retired)."""
+    query = urlencode({"status": status_filter}) if status_filter else ""
+    url = f"{api_url.rstrip('/')}/mcp/tools"
+    if query:
+        url = f"{url}?{query}"
+    status_code, body = _request("GET", url)
+    if status_code >= 400 or status_code == 0:
+        _fail("list MCP tools", status_code, body)
+    for tool in json.loads(body):
+        typer.echo(f"{tool['tool_id']}  {tool['tool_name']}  {tool['status']}")
