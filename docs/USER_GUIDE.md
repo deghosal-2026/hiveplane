@@ -770,3 +770,24 @@ To be completed alongside v0.1.0.
 - [Docs index](README.md)
 - [Workload manifest format](design/workload-manifest-design.md)
 - [Adapters](ADAPTERS.md)
+
+## Runtime Guards
+
+Three runtime failure modes are governed live, at the control-plane boundary:
+
+- **Context budget** — a per-run context ceiling enforced from real provider
+  token counts. A breach **pauses the run cleanly** (no crash, no truncation) and
+  records the accounting; resume with a larger budget or cancel.
+- **Spend velocity** — a workload within budget but burning anomalously fast
+  (over a rolling window or N× its baseline) is paused before it exhausts the
+  budget, with rate and projected time-to-exhaustion.
+- **Circuit breakers** — a flaky tool trips a breaker after its failure
+  threshold; while open, calls are denied immediately with `circuit_open`, then a
+  single half-open probe either recovers or reopens the breaker. Retries use
+  exponential backoff with jitter and stop at `max_attempts`.
+
+Every guard activation carries a `reason` and `rule_id` and appears in the run
+story (`guard` events) and the audit log. Configure with
+`HIVEPLANE_GUARDS__CONTEXT_TOKENS`, `HIVEPLANE_GUARDS__VELOCITY_LIMIT_USD`,
+`HIVEPLANE_GUARDS__VELOCITY_MULTIPLIER`, and the `HIVEPLANE_GUARDS__BREAKER_*`
+thresholds.

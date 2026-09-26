@@ -1,6 +1,10 @@
 # D30: Runtime Guards Design
 
-> Status: draft
+> Status: implemented (M41). Context/velocity breaches pause the run (recorded
+> accounting), retries use exponential backoff + jitter, and per-tool circuit
+> breakers trip/half-open/recover. Guard events reuse the policy reason/rule-id
+> shape and appear in the run story + audit. Durable guard-event persistence and
+> breaker surfacing in health land with M42/D31.
 
 **Milestones:** M41 · **Extends:** D5
 

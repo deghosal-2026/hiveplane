@@ -12,14 +12,14 @@ Add the fourth budget (context) and the guards that keep runaway spend and failu
 
 **Work items:**
 
-- [ ] [#297](https://github.com/deghosal-2026/hiveplane/issues/297) — M41-01 — Context-window budget: per-run max-context limit enforced live; per-step context accounting
-- [ ] [#298](https://github.com/deghosal-2026/hiveplane/issues/298) — M41-02 — Breach behavior: pause the run cleanly (not crash) and record the accounting at breach
-- [ ] [#299](https://github.com/deghosal-2026/hiveplane/issues/299) — M41-03 — Spend-velocity guards: burn-rate anomaly detection (e.g., $X in Y minutes) → auto-pause + alert
-- [ ] [#300](https://github.com/deghosal-2026/hiveplane/issues/300) — M41-04 — Retry policies: per-workload/tool retry with exponential backoff, jitter, and max attempts
-- [ ] [#301](https://github.com/deghosal-2026/hiveplane/issues/301) — M41-05 — Circuit breakers: per-tool and per-workload; trip on failure rate, half-open probe, recover
-- [ ] [#302](https://github.com/deghosal-2026/hiveplane/issues/302) — M41-06 — Breaker/trip events audited and surfaced in the run story + health
-- [ ] [#303](https://github.com/deghosal-2026/hiveplane/issues/303) — M41-07 — Guards integrate with policy (context/velocity breaches are policy decisions with reasons)
-- [ ] [#304](https://github.com/deghosal-2026/hiveplane/issues/304) — M41-08 — Tests: context breach pauses cleanly; velocity guard pauses; breaker trips and recovers; retries honor backoff
+- [x] [#297](https://github.com/deghosal-2026/hiveplane/issues/297) — M41-01 — Context-window budget: per-run max-context limit enforced live; per-step context accounting
+- [x] [#298](https://github.com/deghosal-2026/hiveplane/issues/298) — M41-02 — Breach behavior: pause the run cleanly (not crash) and record the accounting at breach
+- [x] [#299](https://github.com/deghosal-2026/hiveplane/issues/299) — M41-03 — Spend-velocity guards: burn-rate anomaly detection (e.g., $X in Y minutes) → auto-pause + alert
+- [x] [#300](https://github.com/deghosal-2026/hiveplane/issues/300) — M41-04 — Retry policies: per-workload/tool retry with exponential backoff, jitter, and max attempts
+- [x] [#301](https://github.com/deghosal-2026/hiveplane/issues/301) — M41-05 — Circuit breakers: per-tool and per-workload; trip on failure rate, half-open probe, recover
+- [x] [#302](https://github.com/deghosal-2026/hiveplane/issues/302) — M41-06 — Breaker/trip events audited and surfaced in the run story + health
+- [x] [#303](https://github.com/deghosal-2026/hiveplane/issues/303) — M41-07 — Guards integrate with policy (context/velocity breaches are policy decisions with reasons)
+- [x] [#304](https://github.com/deghosal-2026/hiveplane/issues/304) — M41-08 — Tests: context breach pauses cleanly; velocity guard pauses; breaker trips and recovers; retries honor backoff
 
 **Test ticket:** [#305](https://github.com/deghosal-2026/hiveplane/issues/305) — Test cases for Context-Window Budgets, Spend-Velocity Guards, Retries & Circuit Breakers
 
@@ -28,13 +28,15 @@ Add the fourth budget (context) and the guards that keep runaway spend and failu
 - `docs/design/runtime-guards-design.md` and `docs/design/runtime-guards-design.md`
 
 **Acceptance criteria:**
-- [ ] Exceeding the context budget pauses the run with accounting shown (no crash, no silent truncation)
-- [ ] A spend-velocity anomaly pauses the run and alerts the owner
-- [ ] A circuit breaker trips after the configured failure threshold and recovers after a successful probe
-- [ ] Retries apply backoff and stop at max attempts
-- [ ] All guard activations carry a reason and are audited
+- [x] Exceeding the context budget pauses the run with accounting shown (no crash, no silent truncation)
+- [x] A spend-velocity anomaly pauses the run and alerts the owner
+- [x] A circuit breaker trips after the configured failure threshold and recovers after a successful probe
+- [x] Retries apply backoff and stop at max attempts
+- [x] All guard activations carry a reason and are audited
 
 **Done when:** context, spend velocity, and repeated failures are all governed at runtime with clean, explainable interventions.
+
+> **Status:** M41 complete. `hiveplane.guards` (context budget, spend-velocity, retry, circuit breaker + `GuardManager`) enforces live at the execution boundary: a context or velocity breach pauses the run cleanly with accounting recorded, an open breaker denies at the tool boundary (`circuit_open`), retries use exponential backoff + jitter, and every activation carries a policy-shaped reason/rule id and is recorded in the run story + audit. Issues #297–#305 closed; all tests pass with a database, coverage >95%, ruff and mypy strict clean.
 
 **Dependencies:** v0.1.0 budget + sandbox; M40 (policy context).
 

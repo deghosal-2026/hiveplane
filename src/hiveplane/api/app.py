@@ -109,6 +109,10 @@ from hiveplane.execution.wiring import (
     build_run_service,
     build_tool_gateway,
 )
+from hiveplane.guards.breaker import CircuitBreakerRegistry
+from hiveplane.guards.context import ContextBudgetGuard
+from hiveplane.guards.manager import GuardLimits, GuardManager
+from hiveplane.guards.velocity import SpendVelocityGuard
 from hiveplane.learning.candidate_store import build_candidate_store
 from hiveplane.learning.candidates import CandidateService
 from hiveplane.learning.corpus_store import build_corpus_version_store
@@ -336,6 +340,12 @@ def create_app(
     )
     kill_switch = KillSwitch(build_kill_switch_store(settings))
     app.state.kill_switch = kill_switch
+    circuit_breakers = CircuitBreakerRegistry(
+        failure_threshold=settings.guards.breaker_failure_threshold,
+        min_calls=settings.guards.breaker_min_calls,
+        open_for_seconds=settings.guards.breaker_open_for_seconds,
+    )
+    app.state.circuit_breakers = circuit_breakers
     app.state.tool_gateway = build_tool_gateway(
         registry,
         policy_engine,
@@ -343,7 +353,23 @@ def create_app(
         approval_service,
         defense,
         kill_switch,
+        circuit_breakers,
     )
+    if settings.guards.enabled:
+        guard_limits = GuardLimits(
+            context_tokens=settings.guards.context_tokens,
+            context_warn_at=settings.guards.context_warn_at,
+            velocity_window_seconds=settings.guards.velocity_window_seconds,
+            velocity_limit_usd=settings.guards.velocity_limit_usd,
+            velocity_multiplier=settings.guards.velocity_multiplier,
+        )
+        app.state.run_service.attach_guards(
+            GuardManager(
+                ContextBudgetGuard(),
+                SpendVelocityGuard(),
+                limit_lookup=lambda _workload: guard_limits,
+            )
+        )
     app.state.candidate_service = CandidateService(build_candidate_store(settings))
     app.state.corpus_version_service = CorpusVersionService(
         build_corpus_version_store(settings),

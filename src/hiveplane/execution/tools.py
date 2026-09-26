@@ -34,6 +34,7 @@ from hiveplane.defense.scanner import DetectorAction
 from hiveplane.execution.gates import ApprovalRequests, PolicyGate
 from hiveplane.execution.models import InterventionAction
 from hiveplane.execution.tool_executor import ToolExecutor
+from hiveplane.guards.breaker import CircuitBreakerRegistry
 from hiveplane.policy.kill_switch import KillSwitch
 from hiveplane.registry.service import RegistryService
 from hiveplane.sandbox.egress import EgressGuard
@@ -111,6 +112,7 @@ class ToolGateway:
         executor: ToolExecutor | None = None,
         defense: DefenseGuard | None = None,
         kill_switch: KillSwitch | None = None,
+        breaker: CircuitBreakerRegistry | None = None,
         clock: Callable[[], datetime] | None = None,
     ) -> None:
         self._registry = registry
@@ -121,6 +123,7 @@ class ToolGateway:
         self._executor = executor
         self._defense = defense
         self._kill_switch = kill_switch
+        self._breaker = breaker
         self._clock = clock or (lambda: datetime.now(UTC))
 
     def invoke(self, run_id: str, request: ToolCallRequest) -> ToolCallResult:
@@ -160,6 +163,14 @@ class ToolGateway:
                 outcome=ToolCallOutcome.DENIED,
                 rule="kill_switch",
                 reason=f"tool {request.tool_id!r} is disabled fleet-wide",
+            )
+        if self._breaker is not None and not self._breaker.allow("tool", request.tool_id):
+            return ToolCallResult(
+                run_id=run_id,
+                tool_id=request.tool_id,
+                outcome=ToolCallOutcome.DENIED,
+                rule="circuit_open",
+                reason=f"circuit breaker is open for tool {request.tool_id!r}",
             )
         if run.read_only and _is_destructive(request.action_class, tool_trust):
             return ToolCallResult(
@@ -232,7 +243,14 @@ class ToolGateway:
         egress = self._check_egress(run_id, workload, request)
         if egress is not None:
             return egress
-        output = self._resolve_output(request)
+        try:
+            output = self._resolve_output(request)
+        except Exception:
+            if self._breaker is not None:
+                self._breaker.record("tool", request.tool_id, success=False)
+            raise
+        if self._breaker is not None:
+            self._breaker.record("tool", request.tool_id, success=True)
         shaped = self._shape(workload, output)
         if self._defense is not None and output is not None:
             scan = self._defense.scan_output(

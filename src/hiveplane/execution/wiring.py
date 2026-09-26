@@ -33,6 +33,7 @@ from hiveplane.execution.store import InMemoryRunStore, JsonFileRunStore, RunSto
 from hiveplane.execution.subprocess_spawner import SubprocessSpawner
 from hiveplane.execution.tool_executor import FixtureToolExecutor
 from hiveplane.execution.tools import ToolGateway
+from hiveplane.guards.breaker import CircuitBreakerRegistry
 from hiveplane.llm.provider import LLMProvider
 from hiveplane.persistence.audit import AuditLog, InMemoryAuditLog
 from hiveplane.persistence.base import create_engine_from_settings
@@ -110,6 +111,7 @@ def build_tool_gateway(
     approvals: ApprovalRequests | None,
     defense: DefenseGuard | None = None,
     kill_switch: KillSwitch | None = None,
+    breaker: CircuitBreakerRegistry | None = None,
 ) -> ToolGateway:
     """Build the tool-call boundary over the live run service.
 
@@ -132,6 +134,7 @@ def build_tool_gateway(
         executor=executor,
         defense=defense,
         kill_switch=kill_switch,
+        breaker=breaker,
     )
 
 

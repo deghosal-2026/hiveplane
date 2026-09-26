@@ -290,6 +290,20 @@ class EvalSettings(BaseModel):
         return [] if value == "" else value
 
 
+class GuardsSettings(BaseModel):
+    """Runtime guards: context, spend-velocity, and circuit breakers (M41)."""
+
+    enabled: bool = True
+    context_tokens: int | None = Field(default=None, ge=1)
+    context_warn_at: float = Field(default=0.8, ge=0.0, le=1.0)
+    velocity_window_seconds: int = Field(default=300, gt=0)
+    velocity_limit_usd: float | None = Field(default=None, gt=0.0)
+    velocity_multiplier: float | None = Field(default=None, gt=0.0)
+    breaker_failure_threshold: float = Field(default=0.5, ge=0.0, le=1.0)
+    breaker_min_calls: int = Field(default=5, ge=1)
+    breaker_open_for_seconds: int = Field(default=30, ge=0)
+
+
 class A2ASettings(BaseModel):
     """Agent2Agent interop feature flag and allow-list (M30-07)."""
 
@@ -358,6 +372,7 @@ class Settings(BaseSettings):
     triggers: TriggerSettings = Field(default_factory=TriggerSettings)
     router: RouterSettings = Field(default_factory=RouterSettings)
     a2a: A2ASettings = Field(default_factory=A2ASettings)
+    guards: GuardsSettings = Field(default_factory=GuardsSettings)
     eval: EvalSettings = Field(default_factory=EvalSettings)
 
 

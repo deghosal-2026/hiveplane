@@ -46,6 +46,8 @@ from hiveplane.execution.models import (
 )
 from hiveplane.execution.store import RunStore
 from hiveplane.execution.story import RunStory, build_run_story
+from hiveplane.guards.manager import GuardManager
+from hiveplane.guards.models import GuardAction
 from hiveplane.persistence.audit import AuditLog
 from hiveplane.registry.service import RegistryService
 from hiveplane.tenancy import DEFAULT_CONTEXT, TenantContext
@@ -72,6 +74,7 @@ class RunService:
         clock: Callable[[], datetime] | None = None,
         id_factory: Callable[[], str] | None = None,
         eval_hook: Callable[[Run], None] | None = None,
+        guards: GuardManager | None = None,
     ) -> None:
         self._store = store
         self._registry = registry
@@ -85,10 +88,15 @@ class RunService:
         self._clock = clock or (lambda: datetime.now(UTC))
         self._id_factory = id_factory or (lambda: f"run-{uuid4().hex[:12]}")
         self._eval_hook = eval_hook
+        self._guards = guards
 
     def attach_eval_hook(self, hook: Callable[[Run], None] | None) -> None:
         """Bind the online-eval hook invoked when a production run finishes."""
         self._eval_hook = hook
+
+    def attach_guards(self, guards: GuardManager | None) -> None:
+        """Bind the runtime guards (context/velocity) evaluated on usage."""
+        self._guards = guards
 
     def attach_executor(self, executor: RunExecutor) -> None:
         """Bind the runtime adapter that executes runs after service construction."""
@@ -592,4 +600,32 @@ class RunService:
                     ctx=ctx,
                 )
             active.set_attribute("outcome", "recorded")
+            if self._guards is not None:
+                event = self._guards.on_usage(
+                    updated,
+                    report,
+                    budget_remaining_usd=(check.remaining_usd if check is not None else None),
+                    ctx=run_ctx,
+                )
+                if event is not None:
+                    self._append_event(
+                        run_id,
+                        EventType.GUARD,
+                        "guard",
+                        ctx=run_ctx,
+                        detail=f"{event.guard.value}: {event.reason}",
+                    )
+                    if event.action is GuardAction.PAUSE and can_transition(
+                        updated.state, RunState.PAUSED
+                    ):
+                        self._record_audit(
+                            "guard", "guard.pause", run_id, detail=event.reason, ctx=run_ctx
+                        )
+                        return self.transition(
+                            run_id,
+                            RunState.PAUSED,
+                            actor="guard",
+                            detail=event.reason,
+                            ctx=ctx,
+                        )
             return updated

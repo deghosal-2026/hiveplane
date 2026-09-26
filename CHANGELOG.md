@@ -473,6 +473,23 @@ immune system (drift, quarantine, promotion gate), and fleet scale-out. In progr
 - **API + CLI** — `POST /policy/evaluate`, `/policy-packs/{name}/apply`; CLI
   `hiveplane policies lint|publish|apply`.
 
+### Added (M41 — context budget, spend velocity, retries & circuit breakers)
+
+- **Context-window budget** (`hiveplane.guards`) — a fourth runtime budget tracked
+  live from real provider token counts; per-step accounting; a breach pauses the
+  run cleanly (no crash, no silent truncation) and records the accounting.
+- **Spend-velocity guard** — a rolling-window burn-rate guard pauses a workload
+  that is spending anomalously before it exhausts its budget, with the observed
+  rate and projected time-to-exhaustion.
+- **Retry policies** — per-workload/tool exponential backoff with optional full
+  jitter, clamped and capped at `max_attempts`.
+- **Circuit breakers** — per-tool (and per-workload) breakers trip on failure
+  rate, half-open for one bounded probe, and recover or reopen; while open, calls
+  are denied immediately with `circuit_open`.
+- **Guard ↔ policy integration** — every activation is a policy-shaped event
+  (`guard`, `action`, `reason`, `rule_id`, observed/threshold) recorded in the run
+  story (`guard` events) and the audit log; a breach pauses via the run lifecycle.
+
 ## [0.1.0] - 2026-09-25
 
 The first release: the certified control loop. Register agents, certify them against a
