@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "hiveplane"
-version = "0.1.0"
+version = "0.2.0"
 description = "Control plane for production agent fleets: registry, certification, run lifecycle, policy, budget, and observability."
 readme = "README.md"
 requires-python = ">=3.12"

@@ -5,7 +5,31 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.2.0] - Unreleased
+
+The Complete Fleet OS release: tenancy, autonomy (triggers, pipelines, GitOps), the
+immune system (drift, quarantine, promotion gate), and fleet scale-out. In progress.
+
+### Added (M25-01 partial — tenancy foundation)
+
+- **Tenancy package (`hiveplane.tenancy`)** — `Tenant`/`Team`/`Membership` domain models
+  (`Role`: admin/approver/viewer), `TenantScopeError`, and a frozen `TenantContext`
+  (`SYSTEM_CONTEXT`, `DEFAULT_CONTEXT`) that later milestones thread explicitly through
+  every store call. Reserved ids: `default` (legacy backfill) and `system`.
+- **Tenant store** — protocol + in-memory + PostgreSQL implementations for
+  tenants/teams/memberships, tenant-qualified uniqueness, and composite team identity
+  `(tenant_id, team_id)`.
+- **Tenant-scoped schema** — every existing table gains a non-null `tenant_id` (plus
+  `team_id`/`attribution_key` on run/usage/cost tables); composite `(parent_id, tenant_id)`
+  foreign keys and tenant-qualified unique constraints throughout.
+- **Migration `0003`** — forward-only: seeds `default`/`system` tenants, backfills legacy
+  rows to `default`, deletes orphan runs and dangling workload references, then enforces
+  the new constraints. Auto-migration on startup preserved; verified against Postgres 16
+  on fresh and real v0.1.0 databases.
+
+### Changed
+
+- Version bumped to 0.2.0 (in-progress release line).
 
 ## [0.1.0] - 2026-09-25
 

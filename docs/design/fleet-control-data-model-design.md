@@ -1,6 +1,11 @@
 # D21: Fleet Control Data Model Design
 
 > Status: draft
+>
+> **Implementation status (M25-01, in progress):** tenancy package, ORM schema, and migration
+> `0003` are landed. Store-layer `TenantContext` enforcement and API header resolution are the
+> remaining scope — decisions and task sequence live in
+> [`docs/plans/m25-01-tenancy-scoping.md`](../plans/m25-01-tenancy-scoping.md).
 
 **Milestones:** M25 · **Extends:** D7
 
