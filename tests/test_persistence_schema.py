@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from sqlalchemy import UniqueConstraint
+
 from hiveplane.core.run import Run
 from hiveplane.persistence import models  # noqa: F401  (registers tables)
 from hiveplane.persistence.base import Base, create_engine_from_settings
@@ -66,7 +68,9 @@ def test_tenant_qualified_uniques_include_tenant_id() -> None:
     uniques = {
         constraint.name: {column.name for column in constraint.columns}
         for constraint in Base.metadata.tables["teams"].constraints
-        if constraint.name and constraint.name.startswith("uq_")
+        if isinstance(constraint, UniqueConstraint)
+        and isinstance(constraint.name, str)
+        and constraint.name.startswith("uq_")
     }
     assert uniques["uq_teams_tenant_name"] == {"tenant_id", "name"}
     assert uniques["uq_teams_tenant_attribution"] == {"tenant_id", "attribution_key"}

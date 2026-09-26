@@ -59,6 +59,14 @@ _ATTRIBUTED_TABLES = (
 )
 _TENANT_COLUMN = "tenant_id"
 _ATTRIBUTED_COLUMNS = ("team_id", "attribution_key")
+_WORKLOAD_REF_TABLES = (
+    "certifications",
+    "attestations",
+    "trigger_rules",
+    "drift_schedules",
+    "health_signals",
+    "cost_attributions",
+)
 _LEGACY_UNIQUES: dict[str, dict[str, tuple[str, ...]]] = {
     "workload_versions": {"uq_workload_versions": ("workload", "version")},
 }
@@ -139,6 +147,13 @@ def _delete_orphan_runs() -> None:
         "(SELECT id FROM runs WHERE workload_id NOT IN (SELECT name FROM workloads))"
     )
     op.execute("DELETE FROM runs WHERE workload_id NOT IN (SELECT name FROM workloads)")
+
+
+def _delete_orphan_workload_refs(bind: Connection | None) -> None:
+    if bind is None:
+        return
+    for table in _WORKLOAD_REF_TABLES:
+        op.execute(f"DELETE FROM {table} WHERE workload NOT IN (SELECT name FROM workloads)")
 
 
 def _add_tenant_columns(bind: Connection | None) -> None:
@@ -328,6 +343,7 @@ def upgrade() -> None:
     _upgrade_primary_keys(bind)
     _upgrade_unique_constraints(bind)
     _upgrade_indexes(bind)
+    _delete_orphan_workload_refs(bind)
     _upgrade_foreign_keys(bind)
 
 

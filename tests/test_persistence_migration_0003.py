@@ -94,3 +94,47 @@ def test_orphan_runs_are_deleted_before_fk(pg_engine: Engine) -> None:
             text("SELECT count(*) FROM runs WHERE id = 'orphan'")
         ).scalar_one()
     assert remaining == 0
+
+
+def test_orphan_workload_refs_are_deleted_before_fk(pg_engine: Engine) -> None:
+    config = _config()
+    command.downgrade(config, "0002")
+    with pg_engine.begin() as conn:
+        now = datetime(2026, 9, 25, tzinfo=UTC)
+        conn.execute(
+            text(
+                "INSERT INTO workloads (name, owner, team, certification_status, "
+                "current_version, created_at, updated_at, payload) VALUES "
+                "('agent-1', 'alice', 'platform', 'certified', 1, :now, :now, '{}') "
+                "ON CONFLICT (name) DO NOTHING"
+            ),
+            {"now": now},
+        )
+        conn.execute(
+            text(
+                "INSERT INTO certifications (certification_id, workload, status, "
+                "created_at, payload) VALUES "
+                "('cert-orphan', 'ghost', 'certified', :now, '{}') "
+                "ON CONFLICT (certification_id) DO NOTHING"
+            ),
+            {"now": now},
+        )
+        conn.execute(
+            text(
+                "INSERT INTO attestations (attestation_id, workload, model_identity, "
+                "created_at, payload) VALUES "
+                "('att-orphan', 'ghost', 'gpt-4o', :now, '{}') "
+                "ON CONFLICT (attestation_id) DO NOTHING"
+            ),
+            {"now": now},
+        )
+    command.upgrade(config, "head")
+    with pg_engine.connect() as conn:
+        certifications = conn.execute(
+            text("SELECT count(*) FROM certifications WHERE certification_id = 'cert-orphan'")
+        ).scalar_one()
+        attestations = conn.execute(
+            text("SELECT count(*) FROM attestations WHERE attestation_id = 'att-orphan'")
+        ).scalar_one()
+    assert certifications == 0
+    assert attestations == 0

@@ -21,7 +21,7 @@ def test_tenant_rejects_empty_id() -> None:
 
 def test_tenant_forbids_extra_fields() -> None:
     with pytest.raises(ValidationError):
-        Tenant(tenant_id="acme", name="Acme", created_at=_NOW, nope=1)
+        Tenant(tenant_id="acme", name="Acme", created_at=_NOW, nope=1)  # type: ignore[call-arg]
 
 
 def test_team_is_tenant_qualified() -> None:
@@ -41,7 +41,7 @@ def test_membership_role_is_enum() -> None:
         tenant_id="acme",
         team_id="platform",
         operator_id="alice",
-        role="admin",
+        role="admin",  # type: ignore[arg-type]
         created_at=_NOW,
     )
     assert membership.role is Role.ADMIN
