@@ -6,6 +6,8 @@ from enum import StrEnum
 
 from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, JsonValue
 
+from hiveplane.tenancy.context import DEFAULT_TENANT_ID
+
 
 class RunState(StrEnum):
     """Observable states of a run."""
@@ -80,3 +82,6 @@ class Run(BaseModel):
     cost_usd: float = Field(default=0.0, ge=0.0)
     sandbox_id: str | None = None
     trace_id: str | None = None
+    tenant_id: str = Field(default=DEFAULT_TENANT_ID, min_length=1, max_length=64)
+    team_id: str | None = None
+    attribution_key: str | None = None

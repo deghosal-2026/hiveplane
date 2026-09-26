@@ -7,6 +7,7 @@ from enum import StrEnum
 from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 
 from hiveplane.core.decision import ActionClass
+from hiveplane.tenancy.context import DEFAULT_TENANT_ID
 
 
 class ApprovalStatus(StrEnum):
@@ -33,3 +34,4 @@ class ApprovalRecord(BaseModel):
     decided_at: AwareDatetime | None = None
     decided_by: str | None = None
     decision_reason: str | None = None
+    tenant_id: str = Field(default=DEFAULT_TENANT_ID, min_length=1, max_length=64)

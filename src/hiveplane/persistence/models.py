@@ -14,7 +14,6 @@ from sqlalchemy import (
     Boolean,
     DateTime,
     Float,
-    ForeignKey,
     ForeignKeyConstraint,
     Index,
     Integer,
@@ -30,10 +29,20 @@ from hiveplane.persistence.base import Base
 _PAYLOAD = JSONB
 
 
-class WorkloadRow(Base):
+class _TenantScoped:
+    tenant_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+
+
+class _Attributed:
+    team_id: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+    attribution_key: Mapped[str | None] = mapped_column(String(253), nullable=True)
+
+
+class WorkloadRow(_TenantScoped, Base):
     """Current manifest and certification status for a workload."""
 
     __tablename__ = "workloads"
+    __table_args__ = (UniqueConstraint("name", "tenant_id", name="uq_workloads_name_tenant"),)
 
     name: Mapped[str] = mapped_column(String(253), primary_key=True)
     owner: Mapped[str] = mapped_column(String(253))
@@ -45,25 +54,39 @@ class WorkloadRow(Base):
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
-class WorkloadVersionRow(Base):
+class WorkloadVersionRow(_TenantScoped, Base):
     """Append-only manifest version history."""
 
     __tablename__ = "workload_versions"
-    __table_args__ = (UniqueConstraint("workload", "version", name="uq_workload_versions"),)
+    __table_args__ = (
+        UniqueConstraint(
+            "workload", "tenant_id", "version", name="uq_workload_versions"
+        ),
+        ForeignKeyConstraint(
+            ["workload", "tenant_id"],
+            ["workloads.name", "workloads.tenant_id"],
+            ondelete="CASCADE",
+        ),
+    )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    workload: Mapped[str] = mapped_column(ForeignKey("workloads.name", ondelete="CASCADE"))
+    workload: Mapped[str] = mapped_column(String(253))
     version: Mapped[int] = mapped_column(Integer)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
-class RunRow(Base):
+class RunRow(_Attributed, _TenantScoped, Base):
     """A single run and its current state."""
 
     __tablename__ = "runs"
     __table_args__ = (
         Index("ix_runs_workload_state_created", "workload_id", "state", "created_at"),
+        UniqueConstraint("id", "tenant_id", name="uq_runs_id_tenant"),
+        ForeignKeyConstraint(
+            ["workload_id", "tenant_id"],
+            ["workloads.name", "workloads.tenant_id"],
+        ),
     )
 
     id: Mapped[str] = mapped_column(String(64), primary_key=True)
@@ -81,15 +104,18 @@ class RunRow(Base):
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
-class RunEventRow(Base):
+class RunEventRow(_TenantScoped, Base):
     """Append-only run transition log."""
 
     __tablename__ = "run_events"
-    __table_args__ = (Index("ix_run_events_run_timestamp", "run_id", "timestamp"),)
-
-    run_id: Mapped[str] = mapped_column(
-        ForeignKey("runs.id", ondelete="CASCADE"), primary_key=True
+    __table_args__ = (
+        Index("ix_run_events_run_timestamp", "run_id", "timestamp"),
+        ForeignKeyConstraint(
+            ["run_id", "tenant_id"], ["runs.id", "runs.tenant_id"], ondelete="CASCADE"
+        ),
     )
+
+    run_id: Mapped[str] = mapped_column(String(64), primary_key=True)
     sequence: Mapped[int] = mapped_column(Integer, primary_key=True)
     type: Mapped[str] = mapped_column(String(32), index=True)
     actor: Mapped[str] = mapped_column(String(253))
@@ -97,37 +123,43 @@ class RunEventRow(Base):
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
-class UsageEventRow(Base):
+class UsageEventRow(_Attributed, _TenantScoped, Base):
     """Token/tool usage for budget and cost attribution."""
 
     __tablename__ = "usage_events"
     __table_args__ = (
         Index("ix_usage_events_run_timestamp", "run_id", "timestamp"),
         Index("ix_usage_events_model_timestamp", "model_identity", "timestamp"),
+        ForeignKeyConstraint(
+            ["run_id", "tenant_id"], ["runs.id", "runs.tenant_id"], ondelete="CASCADE"
+        ),
     )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    run_id: Mapped[str] = mapped_column(ForeignKey("runs.id", ondelete="CASCADE"))
+    run_id: Mapped[str] = mapped_column(String(64))
     model_identity: Mapped[str | None] = mapped_column(String(253), nullable=True)
     cost_usd: Mapped[float] = mapped_column(Float)
     timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
-class RunAdmissionRow(Base):
+class RunAdmissionRow(_TenantScoped, Base):
     """The admission decision recorded for a run."""
 
     __tablename__ = "run_admissions"
-
-    run_id: Mapped[str] = mapped_column(
-        ForeignKey("runs.id", ondelete="CASCADE"), primary_key=True
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["run_id", "tenant_id"], ["runs.id", "runs.tenant_id"], ondelete="CASCADE"
+        ),
     )
+
+    run_id: Mapped[str] = mapped_column(String(64), primary_key=True)
     outcome: Mapped[str] = mapped_column(String(32))
     context: Mapped[str] = mapped_column(String(32))
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
-class AuditRow(Base):
+class AuditRow(_TenantScoped, Base):
     """Tamper-evident operator/policy audit records (chained hash)."""
 
     __tablename__ = "audit_log"
@@ -146,7 +178,7 @@ class AuditRow(Base):
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
-class ApprovalRow(Base):
+class ApprovalRow(_TenantScoped, Base):
     """Pending and resolved approval requests."""
 
     __tablename__ = "approvals"
@@ -158,10 +190,16 @@ class ApprovalRow(Base):
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
-class CertificationRow(Base):
+class CertificationRow(_TenantScoped, Base):
     """Certification pipeline records."""
 
     __tablename__ = "certifications"
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["workload", "tenant_id"],
+            ["workloads.name", "workloads.tenant_id"],
+        ),
+    )
 
     certification_id: Mapped[str] = mapped_column(String(64), primary_key=True)
     workload: Mapped[str] = mapped_column(String(253), index=True)
@@ -170,11 +208,17 @@ class CertificationRow(Base):
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
-class AttestationRow(Base):
+class AttestationRow(_TenantScoped, Base):
     """Immutable signed attestations."""
 
     __tablename__ = "attestations"
-    __table_args__ = (Index("ix_attestations_workload_created", "workload", "created_at"),)
+    __table_args__ = (
+        Index("ix_attestations_workload_created", "workload", "created_at"),
+        ForeignKeyConstraint(
+            ["workload", "tenant_id"],
+            ["workloads.name", "workloads.tenant_id"],
+        ),
+    )
 
     attestation_id: Mapped[str] = mapped_column(String(64), primary_key=True)
     workload: Mapped[str] = mapped_column(String(253))
@@ -183,7 +227,7 @@ class AttestationRow(Base):
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
-class ToolRow(Base):
+class ToolRow(_TenantScoped, Base):
     """MCP tool registry entries."""
 
     __tablename__ = "tools"
@@ -195,11 +239,17 @@ class ToolRow(Base):
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
-class TriggerRuleRow(Base):
+class TriggerRuleRow(_TenantScoped, Base):
     """Trigger rules per workload."""
 
     __tablename__ = "trigger_rules"
-    __table_args__ = (Index("ix_trigger_rules_workload_type", "workload", "type"),)
+    __table_args__ = (
+        Index("ix_trigger_rules_workload_type", "workload", "type"),
+        ForeignKeyConstraint(
+            ["workload", "tenant_id"],
+            ["workloads.name", "workloads.tenant_id"],
+        ),
+    )
 
     trigger_id: Mapped[str] = mapped_column(String(64), primary_key=True)
     workload: Mapped[str] = mapped_column(String(253))
@@ -207,11 +257,17 @@ class TriggerRuleRow(Base):
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
-class DriftScheduleRow(Base):
+class DriftScheduleRow(_TenantScoped, Base):
     """Re-certification schedules."""
 
     __tablename__ = "drift_schedules"
-    __table_args__ = (Index("ix_drift_schedules_next_run", "next_re_cert_run"),)
+    __table_args__ = (
+        Index("ix_drift_schedules_next_run", "next_re_cert_run"),
+        ForeignKeyConstraint(
+            ["workload", "tenant_id"],
+            ["workloads.name", "workloads.tenant_id"],
+        ),
+    )
 
     schedule_id: Mapped[str] = mapped_column(String(64), primary_key=True)
     workload: Mapped[str] = mapped_column(String(253), index=True)
@@ -222,11 +278,16 @@ class DriftScheduleRow(Base):
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
-class FanOutDeliveryRow(Base):
+class FanOutDeliveryRow(_TenantScoped, Base):
     """Result fan-out delivery attempts."""
 
     __tablename__ = "fan_out_deliveries"
-    __table_args__ = (Index("ix_fan_out_deliveries_run_status", "run_id", "status"),)
+    __table_args__ = (
+        Index("ix_fan_out_deliveries_run_status", "run_id", "status"),
+        ForeignKeyConstraint(
+            ["run_id", "tenant_id"], ["runs.id", "runs.tenant_id"], ondelete="CASCADE"
+        ),
+    )
 
     delivery_id: Mapped[str] = mapped_column(String(160), primary_key=True)
     run_id: Mapped[str] = mapped_column(String(64))
@@ -236,11 +297,17 @@ class FanOutDeliveryRow(Base):
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
-class HealthSignalRow(Base):
+class HealthSignalRow(_TenantScoped, Base):
     """Agent health signals."""
 
     __tablename__ = "health_signals"
-    __table_args__ = (Index("ix_health_signals_workload_updated", "workload", "last_updated"),)
+    __table_args__ = (
+        Index("ix_health_signals_workload_updated", "workload", "last_updated"),
+        ForeignKeyConstraint(
+            ["workload", "tenant_id"],
+            ["workloads.name", "workloads.tenant_id"],
+        ),
+    )
 
     signal_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     workload: Mapped[str] = mapped_column(String(253))
@@ -248,11 +315,17 @@ class HealthSignalRow(Base):
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
-class CostAttributionRow(Base):
+class CostAttributionRow(_Attributed, _TenantScoped, Base):
     """Cost showback records."""
 
     __tablename__ = "cost_attributions"
-    __table_args__ = (Index("ix_cost_attributions_team_period", "team", "period", "workload"),)
+    __table_args__ = (
+        Index("ix_cost_attributions_team_period", "team", "period", "workload"),
+        ForeignKeyConstraint(
+            ["workload", "tenant_id"],
+            ["workloads.name", "workloads.tenant_id"],
+        ),
+    )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     team: Mapped[str | None] = mapped_column(String(253), nullable=True)
@@ -262,30 +335,33 @@ class CostAttributionRow(Base):
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
-class BudgetRunSpendRow(Base):
+class BudgetRunSpendRow(_Attributed, _TenantScoped, Base):
     """Durable per-run spend total for budget enforcement (#128)."""
 
     __tablename__ = "budget_run_spend"
 
+    tenant_id: Mapped[str] = mapped_column(String(64), primary_key=True)
     run_id: Mapped[str] = mapped_column(String(64), primary_key=True)
     amount_usd: Mapped[float] = mapped_column(Float)
 
 
-class BudgetDaySpendRow(Base):
+class BudgetDaySpendRow(_Attributed, _TenantScoped, Base):
     """Durable per-workload, per-day spend total for budget enforcement (#128)."""
 
     __tablename__ = "budget_day_spend"
 
+    tenant_id: Mapped[str] = mapped_column(String(64), primary_key=True)
     workload: Mapped[str] = mapped_column(String(253), primary_key=True)
     day: Mapped[str] = mapped_column(String(32), primary_key=True)
     amount_usd: Mapped[float] = mapped_column(Float)
 
 
-class BudgetTeamSpendRow(Base):
+class BudgetTeamSpendRow(_Attributed, _TenantScoped, Base):
     """Durable per-team, per-day spend total for budget enforcement (#128)."""
 
     __tablename__ = "budget_team_spend"
 
+    tenant_id: Mapped[str] = mapped_column(String(64), primary_key=True)
     team: Mapped[str] = mapped_column(String(253), primary_key=True)
     day: Mapped[str] = mapped_column(String(32), primary_key=True)
     amount_usd: Mapped[float] = mapped_column(Float)

@@ -13,6 +13,7 @@ from hiveplane.core.spec import RuntimeAdapter
 from hiveplane.core.tools import ToolTrustLevel
 from hiveplane.core.triggers import TriggerRule
 from hiveplane.core.workload import AgentWorkload
+from hiveplane.tenancy.context import DEFAULT_TENANT_ID
 
 
 class VersionStatus(StrEnum):
@@ -42,6 +43,7 @@ class WorkloadRecord(BaseModel):
     last_run_at: AwareDatetime | None = None
     failure_count: int = Field(default=0, ge=0)
     last_failure_at: AwareDatetime | None = None
+    tenant_id: str = Field(default=DEFAULT_TENANT_ID, min_length=1, max_length=64)
 
 
 class WorkloadVersion(BaseModel):

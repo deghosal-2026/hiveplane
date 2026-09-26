@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from hiveplane.core.run import Run
 from hiveplane.persistence import models  # noqa: F401  (registers tables)
 from hiveplane.persistence.base import Base, create_engine_from_settings
 
@@ -48,3 +49,28 @@ def test_engine_is_created_from_settings() -> None:
     engine = create_engine_from_settings()
     assert engine.url.drivername == "postgresql+psycopg"
     engine.dispose()
+
+
+def test_every_table_is_tenant_scoped() -> None:
+    exempt = {"tenants", "teams", "memberships"}
+    missing = {
+        name
+        for name in Base.metadata.tables
+        if name not in exempt
+        and "tenant_id" not in Base.metadata.tables[name].columns
+    }
+    assert missing == set()
+
+
+def test_tenant_qualified_uniques_include_tenant_id() -> None:
+    uniques = {
+        constraint.name: {column.name for column in constraint.columns}
+        for constraint in Base.metadata.tables["teams"].constraints
+        if constraint.name and constraint.name.startswith("uq_")
+    }
+    assert uniques["uq_teams_tenant_name"] == {"tenant_id", "name"}
+    assert uniques["uq_teams_tenant_attribution"] == {"tenant_id", "attribution_key"}
+
+
+def test_run_carries_tenant_attribution() -> None:
+    assert {"tenant_id", "team_id", "attribution_key"} <= set(Run.model_fields)
