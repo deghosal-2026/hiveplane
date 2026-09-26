@@ -32,12 +32,14 @@ approvals_app = typer.Typer(help="Review and resolve approvals.", no_args_is_hel
 triggers_app = typer.Typer(help="Inspect and add workload triggers.", no_args_is_help=True)
 tools_app = typer.Typer(help="Inspect and register MCP tools.", no_args_is_help=True)
 reconcile_app = typer.Typer(help="Reconcile desired state (GitOps).", no_args_is_help=True)
+pipelines_app = typer.Typer(help="Submit and inspect pipeline runs.", no_args_is_help=True)
 app.add_typer(certs_app, name="certs")
 app.add_typer(runs_app, name="runs")
 app.add_typer(approvals_app, name="approvals")
 app.add_typer(triggers_app, name="triggers")
 app.add_typer(tools_app, name="tools")
 app.add_typer(reconcile_app, name="reconcile")
+app.add_typer(pipelines_app, name="pipelines")
 
 ManifestArg = Annotated[
     Path,
@@ -795,6 +797,93 @@ def reconcile_apply(
     """Apply a reconcile, gated by the configured guardrails."""
     payload = _reconcile_payload(kind, path, git_url, git_ref, confirmed)
     _run_reconcile("apply", source, payload, api_url)
+
+
+# --------------------------------------------------------------------------- #
+# Pipelines (multi-agent orchestration)
+# --------------------------------------------------------------------------- #
+def _print_timeline(data: dict[str, Any]) -> None:
+    """Print a pipeline run's state and per-node timeline."""
+    typer.echo(
+        f"{data['pipeline_id']}  {data['state']}  "
+        f"${data['spent_usd']:.4f}/${data['budget_usd']:.2f}"
+    )
+    for node in data["nodes"]:
+        typer.echo(f"  {node['status']:<18} {node['node_id']:<20} ${node['cost_usd']:.4f}")
+
+
+@pipelines_app.command("list")
+def pipelines_list(api_url: ApiUrl = "http://localhost:8100") -> None:
+    """List registered pipeline specs."""
+    status_code, body = _request("GET", f"{api_url.rstrip('/')}/pipelines")
+    if status_code >= 400 or status_code == 0:
+        _fail("list pipelines", status_code, body)
+    for spec in json.loads(body):
+        typer.echo(f"{spec['id']}  v{spec['version']}  {spec['name']}")
+
+
+@pipelines_app.command("show")
+def pipelines_show(
+    pipeline_id: Annotated[str, typer.Argument(help="Pipeline id.")],
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Show a pipeline spec as JSON."""
+    status_code, body = _request("GET", f"{api_url.rstrip('/')}/pipelines/{pipeline_id}")
+    if status_code >= 400 or status_code == 0:
+        _fail("show pipeline", status_code, body)
+    typer.echo(json.dumps(json.loads(body), indent=2))
+
+
+@pipelines_app.command("submit")
+def pipelines_submit(
+    pipeline_id: Annotated[str, typer.Option("--pipeline", help="Pipeline id.")],
+    inputs: Annotated[
+        Path | None,
+        typer.Option(
+            "--inputs",
+            exists=True,
+            dir_okay=False,
+            readable=True,
+            help="Inputs YAML/JSON.",
+        ),
+    ] = None,
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Submit a pipeline run and print its timeline."""
+    payload = {"inputs": _load_document(inputs) if inputs is not None else {}}
+    status_code, body = _request(
+        "POST", f"{api_url.rstrip('/')}/pipelines/{pipeline_id}/runs", payload
+    )
+    if status_code >= 400 or status_code == 0:
+        _fail("submit pipeline", status_code, body)
+    _print_timeline(json.loads(body))
+
+
+@pipelines_app.command("status")
+def pipelines_status(
+    run_id: Annotated[str, typer.Argument(help="Pipeline run id.")],
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Show a pipeline run's parent state and node timeline."""
+    status_code, body = _request("GET", f"{api_url.rstrip('/')}/pipeline-runs/{run_id}")
+    if status_code >= 400 or status_code == 0:
+        _fail("pipeline status", status_code, body)
+    _print_timeline(json.loads(body))
+
+
+@pipelines_app.command("retry")
+def pipelines_retry(
+    run_id: Annotated[str, typer.Option("--run", help="Pipeline run id.")],
+    node_id: Annotated[str, typer.Option("--node", help="Node id to retry.")],
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Retry a failed pipeline node."""
+    status_code, body = _request(
+        "POST", f"{api_url.rstrip('/')}/pipeline-runs/{run_id}/nodes/{node_id}/retry"
+    )
+    if status_code >= 400 or status_code == 0:
+        _fail("retry pipeline node", status_code, body)
+    _print_timeline(json.loads(body))
 
 
 # --------------------------------------------------------------------------- #

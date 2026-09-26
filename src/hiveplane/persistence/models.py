@@ -584,6 +584,43 @@ class PipelineRunRow(_TenantScoped, Base):
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
+class PipelineRunHeaderRow(_TenantScoped, Base):
+    """The parent record of one pipeline execution (M29-02)."""
+
+    __tablename__ = "pipeline_run_headers"
+    __table_args__ = (
+        Index("ix_pipeline_run_headers_pipeline_state", "pipeline_id", "state"),
+    )
+
+    pipeline_run_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    pipeline_id: Mapped[str] = mapped_column(String(64), index=True)
+    version: Mapped[int] = mapped_column(Integer)
+    state: Mapped[str] = mapped_column(String(32), index=True)
+    budget_usd: Mapped[float] = mapped_column(Float, default=0.0)
+    spent_usd: Mapped[float] = mapped_column(Float, default=0.0)
+    parent_run_id: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+    started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class PipelineNodeRunRow(_TenantScoped, Base):
+    """One node execution within a pipeline run (M29-02)."""
+
+    __tablename__ = "pipeline_node_runs"
+    __table_args__ = (
+        Index("ix_pipeline_node_runs_run_node", "pipeline_run_id", "node_id"),
+    )
+
+    pipeline_run_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    node_id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    attempt: Mapped[int] = mapped_column(Integer, primary_key=True)
+    child_run_id: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+    status: Mapped[str] = mapped_column(String(32), index=True)
+    cost_usd: Mapped[float] = mapped_column(Float, default=0.0)
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
 class PolicyPackVersionRow(_TenantScoped, Base):
     """Versioned, inheritable policy packs (M25-04)."""
 

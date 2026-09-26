@@ -58,6 +58,8 @@ def test_all_design_tables_exist() -> None:
         "reconcile_runs",
         "trigger_nonces",
         "trigger_freezes",
+        "pipeline_run_headers",
+        "pipeline_node_runs",
     }
     assert expected <= set(Base.metadata.tables)
 

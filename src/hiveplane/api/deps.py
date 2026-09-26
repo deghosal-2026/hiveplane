@@ -8,6 +8,8 @@ from hiveplane.budget.store import BudgetStore
 from hiveplane.certification.workflow import CertificationCoordinator
 from hiveplane.execution.service import RunService
 from hiveplane.execution.tools import ToolGateway
+from hiveplane.pipelines.engine import PipelineEngine
+from hiveplane.pipelines.store import PipelineStore
 from hiveplane.policy.approvals import ApprovalService
 from hiveplane.policy.engine import PolicyEngine
 from hiveplane.policy.packs import PolicyPackStore
@@ -131,3 +133,15 @@ def get_freeze_service(request: Request) -> FreezeService:
     """Return the freeze service bound to the application state."""
     service: FreezeService = request.app.state.freeze_service
     return service
+
+
+def get_pipeline_store(request: Request) -> PipelineStore:
+    """Return the pipeline store bound to the application state."""
+    store: PipelineStore = request.app.state.pipeline_store
+    return store
+
+
+def get_pipeline_engine(request: Request) -> PipelineEngine:
+    """Return the pipeline engine bound to the application state."""
+    engine: PipelineEngine = request.app.state.pipeline_engine
+    return engine

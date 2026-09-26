@@ -20,6 +20,7 @@ from fastapi.responses import JSONResponse
 from hiveplane import __version__, telemetry
 from hiveplane.api.approvals import router as approvals_router
 from hiveplane.api.certifications import router as certifications_router
+from hiveplane.api.pipelines import router as pipelines_router
 from hiveplane.api.policy import router as policy_router
 from hiveplane.api.readiness import build_readiness_probe
 from hiveplane.api.reconcile import router as reconcile_router
@@ -51,6 +52,7 @@ from hiveplane.certification.store import build_certification_store
 from hiveplane.certification.workflow import CertificationCoordinator
 from hiveplane.config import Settings, get_settings
 from hiveplane.core.manifest import manifest_json_schema
+from hiveplane.core.spec import IOSpec
 from hiveplane.execution.errors import (
     IllegalTransitionError,
     RunAdmissionRefusedError,
@@ -70,6 +72,9 @@ from hiveplane.execution.wiring import (
 from hiveplane.llm.factory import build_provider
 from hiveplane.persistence.base import create_engine_from_settings
 from hiveplane.persistence.migrate import run_migrations
+from hiveplane.pipelines.engine import PipelineEngine
+from hiveplane.pipelines.executor import RunNodeExecutor, ServiceApprovalGate
+from hiveplane.pipelines.store import build_pipeline_store
 from hiveplane.policy.approvals import ApprovalService
 from hiveplane.policy.engine import PolicyEngine
 from hiveplane.policy.errors import (
@@ -258,6 +263,16 @@ def create_app(
     app.state.trigger_engine = TriggerEngine(
         trigger_store, trigger_limiter, app.state.run_service, freeze_check=_freeze_reason
     )
+    pipeline_store = build_pipeline_store(settings)
+    pipeline_engine = PipelineEngine(
+        pipeline_store,
+        RunNodeExecutor(app.state.run_service),
+        approvals=ServiceApprovalGate(approval_service),
+        schema_lookup=lambda workload: _workload_io(registry, workload),
+        budget_lookup=lambda workload: _workload_budget(registry, workload),
+    )
+    app.state.pipeline_store = pipeline_store
+    app.state.pipeline_engine = pipeline_engine
     provider = build_provider(settings)
     app.state.provider = provider
     if settings.model.provider == "fake" and settings.environment != "local":
@@ -406,6 +421,7 @@ def create_app(
     app.include_router(spend_router)
     app.include_router(reconcile_router)
     app.include_router(triggers_router)
+    app.include_router(pipelines_router)
     return app
 
 
@@ -488,6 +504,22 @@ def _select_task_executor(
             "falling back to the unconfigured executor"
         )
     return UnconfiguredTaskExecutor(), None
+
+
+def _workload_io(registry: RegistryService, workload: str) -> IOSpec | None:
+    """Return a workload's declared handoff schemas, or None when unregistered."""
+    try:
+        return registry.get(workload).manifest.spec.io
+    except WorkloadNotFoundError:
+        return None
+
+
+def _workload_budget(registry: RegistryService, workload: str) -> float | None:
+    """Return a workload's per-run budget, or None when unregistered."""
+    try:
+        return registry.get(workload).manifest.spec.budget.per_run_usd
+    except WorkloadNotFoundError:
+        return None
 
 
 def _adapter_executor_factory() -> Any | None:

@@ -12,17 +12,17 @@ A fleet OS must run fleets, not just single agents. Add workload pipelines (a DA
 
 **Work items:**
 
-- [ ] [#189](https://github.com/deghosal-2026/hiveplane/issues/189) — M29-01 — Pipeline spec (nodes = workloads/steps, edges = data/ordering, handoff mappings) with strict validation + cycle detection
-- [ ] [#190](https://github.com/deghosal-2026/hiveplane/issues/190) — M29-02 — Pipeline execution engine on top of the run lifecycle: parent run + child runs, state aggregation
-- [ ] [#191](https://github.com/deghosal-2026/hiveplane/issues/191) — M29-03 — Handoff layer: map a step's structured output into the next step's input; schema-validated at the boundary
-- [ ] [#192](https://github.com/deghosal-2026/hiveplane/issues/192) — M29-04 — Fan-out/fan-in (map over N items, reduce aggregate) using parallel child runs
-- [ ] [#193](https://github.com/deghosal-2026/hiveplane/issues/193) — M29-05 — Per-step approval gates (interrupt before/after a node) reusing the approval queue
-- [ ] [#194](https://github.com/deghosal-2026/hiveplane/issues/194) — M29-06 — Pipeline-level budget: cumulative cap across child runs; per-step budget overrides
-- [ ] [#195](https://github.com/deghosal-2026/hiveplane/issues/195) — M29-07 — Pipeline failure semantics (fail-fast vs. continue-on-error per node) + retry of a failed node
-- [ ] [#196](https://github.com/deghosal-2026/hiveplane/issues/196) — M29-08 — Pipeline state/observability: parent timeline shows each node's status, cost, and artifacts
-- [ ] [#197](https://github.com/deghosal-2026/hiveplane/issues/197) — M29-09 — Tests: linear, fan-out/fan-in, handoff validation, gate blocking, budget aggregation, node retry
+- [x] [#189](https://github.com/deghosal-2026/hiveplane/issues/189) — M29-01 — Pipeline spec (nodes = workloads/steps, edges = data/ordering, handoff mappings) with strict validation + cycle detection
+- [x] [#190](https://github.com/deghosal-2026/hiveplane/issues/190) — M29-02 — Pipeline execution engine on top of the run lifecycle: parent run + child runs, state aggregation
+- [x] [#191](https://github.com/deghosal-2026/hiveplane/issues/191) — M29-03 — Handoff layer: map a step's structured output into the next step's input; schema-validated at the boundary
+- [x] [#192](https://github.com/deghosal-2026/hiveplane/issues/192) — M29-04 — Fan-out/fan-in (map over N items, reduce aggregate) using parallel child runs
+- [x] [#193](https://github.com/deghosal-2026/hiveplane/issues/193) — M29-05 — Per-step approval gates (interrupt before/after a node) reusing the approval queue
+- [x] [#194](https://github.com/deghosal-2026/hiveplane/issues/194) — M29-06 — Pipeline-level budget: cumulative cap across child runs; per-step budget overrides
+- [x] [#195](https://github.com/deghosal-2026/hiveplane/issues/195) — M29-07 — Pipeline failure semantics (fail-fast vs. continue-on-error per node) + retry of a failed node
+- [x] [#196](https://github.com/deghosal-2026/hiveplane/issues/196) — M29-08 — Pipeline state/observability: parent timeline shows each node's status, cost, and artifacts
+- [x] [#197](https://github.com/deghosal-2026/hiveplane/issues/197) — M29-09 — Tests: linear, fan-out/fan-in, handoff validation, gate blocking, budget aggregation, node retry
 
-**Test ticket:** [#198](https://github.com/deghosal-2026/hiveplane/issues/198) — Test cases for Multi-Agent Pipelines
+**Test ticket:** [x] [#198](https://github.com/deghosal-2026/hiveplane/issues/198) — Test cases for Multi-Agent Pipelines
 
 **Deliverables:**
 - `hiveplane.pipelines` package (spec, engine, handoff, budget)
@@ -30,14 +30,21 @@ A fleet OS must run fleets, not just single agents. Add workload pipelines (a DA
 - `docs/design/orchestration-design.md`
 
 **Acceptance criteria:**
-- [ ] A 3-node pipeline runs end-to-end with a validated handoff between each step
-- [ ] A cycle in a pipeline spec is rejected at validation
-- [ ] A per-step approval gate pauses the pipeline and resumes after approval
-- [ ] Fan-out over N items produces N child runs and a reduced aggregate
-- [ ] Cumulative pipeline spend never exceeds the pipeline budget (verified by test)
-- [ ] A failed node honors its fail-fast/continue policy and can be retried
+- [x] A 3-node pipeline runs end-to-end with a validated handoff between each step
+- [x] A cycle in a pipeline spec is rejected at validation
+- [x] A per-step approval gate pauses the pipeline and resumes after approval
+- [x] Fan-out over N items produces N child runs and a reduced aggregate
+- [x] Cumulative pipeline spend never exceeds the pipeline budget (verified by test)
+- [x] A failed node honors its fail-fast/continue policy and can be retried
 
 **Done when:** a multi-agent DAG runs end-to-end with per-step gates, handoffs, and an enforced pipeline budget.
+
+> **Status:** M29 complete. `hiveplane.pipelines` (spec DSL, handoff layer, store,
+> engine, executor adapters), migration `0008` (`pipeline_run_headers` +
+> `pipeline_node_runs`), `Run.pipeline_origin` / `WorkloadSpec.io`, the pipeline
+> API, and `hiveplane pipelines` CLI landed. All tests pass with a database;
+> coverage 95% total, ruff and mypy strict clean. Issues #189–#198 to be closed at
+> the exit gate.
 
 **Dependencies:** M25 (pipeline model); v0.1.0 run lifecycle, policy/approvals, budget.
 
@@ -80,13 +87,13 @@ A fleet OS must run fleets, not just single agents. Add workload pipelines (a DA
 
 ## Exit Gate (M29, M30)
 
-- [ ] All tests in the system pass: `pytest`
-- [ ] Code coverage total > 95%
-- [ ] Ruff clean
-- [ ] Mypy strict clean
-- [ ] All relevant docs updated (pipeline design, router design, user guide)
-- [ ] All M29–M30 issues done and closed
-- [ ] Commit and push changes
+- [x] All tests in the system pass: `pytest`
+- [x] Code coverage total ≥ 95%
+- [x] Ruff clean
+- [x] Mypy strict clean
+- [x] All relevant docs updated (pipeline design, router design, user guide)
+- [ ] All M29–M30 issues done and closed (M30 pending)
+- [ ] Commit and push changes (M29 committed; phase gate completes with M30)
 
 ## See Also
 

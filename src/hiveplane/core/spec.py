@@ -7,10 +7,19 @@ sandbox, output shaping, tools, fan-out, health, and observability blocks.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from datetime import UTC, datetime
 from enum import StrEnum
+from typing import Any
 
-from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, model_validator
+from pydantic import (
+    AwareDatetime,
+    BaseModel,
+    ConfigDict,
+    Field,
+    JsonValue,
+    model_validator,
+)
 
 from hiveplane.certification.models import CertificationStatus
 from hiveplane.core.decision import ActionClass
@@ -124,6 +133,22 @@ class ObservabilitySpec(BaseModel):
     trace_sampling: float = Field(default=1.0, gt=0.0, le=1.0)
 
 
+class IOSpec(BaseModel):
+    """Declared input/output schemas for pipeline handoff validation (M29-03)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    input_schema: dict[str, JsonValue] | None = None
+    output_schema: dict[str, JsonValue] | None = None
+
+
+def parse_io_spec(data: Mapping[str, Any] | None) -> IOSpec | None:
+    """Validate a manifest ``spec.io`` block, or return None when absent."""
+    if data is None:
+        return None
+    return IOSpec.model_validate(dict(data))
+
+
 class CertificationSpec(BaseModel):
     """Benchmark reference, thresholds, and current certification status."""
 
@@ -172,6 +197,7 @@ class WorkloadSpec(BaseModel):
     fan_out: FanOutSpec = Field(default_factory=FanOutSpec)
     health: HealthSpec = Field(default_factory=HealthSpec)
     observability: ObservabilitySpec = Field(default_factory=ObservabilitySpec)
+    io: IOSpec | None = None
 
     @model_validator(mode="after")
     def _certification_requires_model_identity(self) -> WorkloadSpec:

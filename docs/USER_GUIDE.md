@@ -139,6 +139,44 @@ curl -X POST localhost:8100/triggers/freezes -H 'content-type: application/json'
 service; `test` renders a payload without submitting, and `replay <dlq-id>` re-drives a
 parked delivery. Every decision is recorded with a reason and audited.
 
+## Multi-Agent Pipelines
+
+A pipeline is a declarative DAG of workloads and control steps. Nodes hand off
+structured outputs (`${node.output.field}`), fan out over a list and reduce the
+aggregate, pause on approval gates, and share a cumulative budget. Validation rejects
+cycles before any run starts, and every handoff is schema-checked at both boundaries
+against a workload's `spec.io` schemas.
+
+```yaml
+# pipeline.yaml
+id: incident-response
+name: Incident response
+budget: { usd: 25.00, on_exceed: pause }
+nodes:
+  - { id: triage, kind: workload, workload: incident-triage-agent }
+  - { id: remediate, kind: workload, workload: remediation-agent,
+      inputs: { diagnosis: "${triage.output.diagnosis}" }, requires_approval: before }
+  - { id: notify, kind: workload, workload: notify-agent,
+      inputs: { summary: "${remediate.output.summary}" } }
+edges:
+  - { from: triage, to: remediate }
+  - { from: remediate, to: notify }
+```
+
+```bash
+curl -X POST localhost:8100/pipelines -H 'content-type: application/json' -d @pipeline.yaml
+hiveplane pipelines submit --pipeline incident-response --inputs inputs.json
+hiveplane pipelines status <pipeline-run-id>
+hiveplane pipelines retry --run <pipeline-run-id> --node remediate
+```
+
+Node kinds are `workload`, `fan_out` (map over a list), `fan_in` (reduce with
+`json_merge`/`concat`/`sum`/`first_success`), `gate` (approval only), and `transform`
+(deterministic data step). `on_failure` is `fail_fast` (cancel siblings, skip the rest)
+or `continue` (independent nodes finish); `retry.max_attempts` re-runs a failed node.
+Child runs carry `pipeline_origin` attribution and go through the same admission,
+policy, and budget path as any run.
+
 ## Operator UI
 
 The operator UI is a server-rendered web app that reads the same HTTP API as the

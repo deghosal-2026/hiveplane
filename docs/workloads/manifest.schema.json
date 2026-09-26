@@ -15,10 +15,12 @@
       "additionalProperties": false,
       "description": "Which action classes require human approval.",
       "properties": {
-        "auto_escalate_after": {
-          "default": 300,
-          "title": "Auto Escalate After",
-          "type": "integer"
+        "required_for": {
+          "items": {
+            "$ref": "#/$defs/ActionClass"
+          },
+          "title": "Required For",
+          "type": "array"
         },
         "contact": {
           "anyOf": [
@@ -32,12 +34,10 @@
           "default": null,
           "title": "Contact"
         },
-        "required_for": {
-          "items": {
-            "$ref": "#/$defs/ActionClass"
-          },
-          "title": "Required For",
-          "type": "array"
+        "auto_escalate_after": {
+          "default": 300,
+          "title": "Auto Escalate After",
+          "type": "integer"
         }
       },
       "title": "ApprovalsSpec",
@@ -47,14 +47,14 @@
       "additionalProperties": false,
       "description": "Per-run, per-day, and per-team spend ceilings (DD-04).",
       "properties": {
-        "per_day_usd": {
-          "exclusiveMinimum": 0.0,
-          "title": "Per Day Usd",
-          "type": "number"
-        },
         "per_run_usd": {
           "exclusiveMinimum": 0.0,
           "title": "Per Run Usd",
+          "type": "number"
+        },
+        "per_day_usd": {
+          "exclusiveMinimum": 0.0,
+          "title": "Per Day Usd",
           "type": "number"
         },
         "per_team_usd": {
@@ -81,18 +81,6 @@
       "additionalProperties": false,
       "description": "Benchmark reference, thresholds, and current certification status.",
       "properties": {
-        "attestation_id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Attestation Id"
-        },
         "benchmark_corpus": {
           "anyOf": [
             {
@@ -104,6 +92,52 @@
           ],
           "default": null,
           "title": "Benchmark Corpus"
+        },
+        "staging_threshold": {
+          "default": 0.8,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Staging Threshold",
+          "type": "number"
+        },
+        "production_threshold": {
+          "default": 0.9,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Production Threshold",
+          "type": "number"
+        },
+        "no_critical_failures": {
+          "default": true,
+          "title": "No Critical Failures",
+          "type": "boolean"
+        },
+        "latency_budget_ms": {
+          "default": 30000,
+          "exclusiveMinimum": 0,
+          "title": "Latency Budget Ms",
+          "type": "integer"
+        },
+        "re_cert_interval": {
+          "default": 1209600,
+          "title": "Re Cert Interval",
+          "type": "integer"
+        },
+        "status": {
+          "$ref": "#/$defs/CertificationStatus",
+          "default": "uncertified"
+        },
+        "attestation_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Attestation Id"
         },
         "certified_at": {
           "anyOf": [
@@ -142,40 +176,6 @@
           ],
           "default": null,
           "title": "Expires At"
-        },
-        "latency_budget_ms": {
-          "default": 30000,
-          "exclusiveMinimum": 0,
-          "title": "Latency Budget Ms",
-          "type": "integer"
-        },
-        "no_critical_failures": {
-          "default": true,
-          "title": "No Critical Failures",
-          "type": "boolean"
-        },
-        "production_threshold": {
-          "default": 0.9,
-          "maximum": 1.0,
-          "minimum": 0.0,
-          "title": "Production Threshold",
-          "type": "number"
-        },
-        "re_cert_interval": {
-          "default": 1209600,
-          "title": "Re Cert Interval",
-          "type": "integer"
-        },
-        "staging_threshold": {
-          "default": 0.8,
-          "maximum": 1.0,
-          "minimum": 0.0,
-          "title": "Staging Threshold",
-          "type": "number"
-        },
-        "status": {
-          "$ref": "#/$defs/CertificationStatus",
-          "default": "uncertified"
         }
       },
       "title": "CertificationSpec",
@@ -232,6 +232,9 @@
       "additionalProperties": false,
       "description": "A single result-delivery destination.",
       "properties": {
+        "type": {
+          "$ref": "#/$defs/FanOutType"
+        },
         "channel": {
           "anyOf": [
             {
@@ -244,7 +247,7 @@
           "default": null,
           "title": "Channel"
         },
-        "issue_type": {
+        "url": {
           "anyOf": [
             {
               "type": "string"
@@ -254,7 +257,7 @@
             }
           ],
           "default": null,
-          "title": "Issue Type"
+          "title": "Url"
         },
         "project": {
           "anyOf": [
@@ -268,10 +271,7 @@
           "default": null,
           "title": "Project"
         },
-        "type": {
-          "$ref": "#/$defs/FanOutType"
-        },
-        "url": {
+        "issue_type": {
           "anyOf": [
             {
               "type": "string"
@@ -281,7 +281,7 @@
             }
           ],
           "default": null,
-          "title": "Url"
+          "title": "Issue Type"
         }
       },
       "required": [
@@ -294,18 +294,18 @@
       "additionalProperties": false,
       "description": "Destinations notified on each terminal outcome.",
       "properties": {
-        "always_include": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Always Include",
-          "type": "array"
-        },
         "on_completed": {
           "items": {
             "$ref": "#/$defs/FanOutDestination"
           },
           "title": "On Completed",
+          "type": "array"
+        },
+        "on_failed": {
+          "items": {
+            "$ref": "#/$defs/FanOutDestination"
+          },
+          "title": "On Failed",
           "type": "array"
         },
         "on_escalation": {
@@ -315,11 +315,11 @@
           "title": "On Escalation",
           "type": "array"
         },
-        "on_failed": {
+        "always_include": {
           "items": {
-            "$ref": "#/$defs/FanOutDestination"
+            "type": "string"
           },
-          "title": "On Failed",
+          "title": "Always Include",
           "type": "array"
         }
       },
@@ -358,12 +358,12 @@
       "additionalProperties": false,
       "description": "A regex rule applied to tool output before it reaches the agent.",
       "properties": {
-        "action": {
-          "$ref": "#/$defs/FilterAction"
-        },
         "pattern": {
           "title": "Pattern",
           "type": "string"
+        },
+        "action": {
+          "$ref": "#/$defs/FilterAction"
         }
       },
       "required": [
@@ -377,35 +377,74 @@
       "additionalProperties": false,
       "description": "Health configuration for a workload.",
       "properties": {
+        "readiness_probe": {
+          "$ref": "#/$defs/ReadinessProbe"
+        },
+        "slo": {
+          "$ref": "#/$defs/Slo"
+        },
         "failure_rate_threshold": {
           "default": 0.15,
           "maximum": 1.0,
           "minimum": 0.0,
           "title": "Failure Rate Threshold",
           "type": "number"
-        },
-        "readiness_probe": {
-          "$ref": "#/$defs/ReadinessProbe"
-        },
-        "slo": {
-          "$ref": "#/$defs/Slo"
         }
       },
       "title": "HealthSpec",
       "type": "object"
     },
+    "IOSpec": {
+      "additionalProperties": false,
+      "description": "Declared input/output schemas for pipeline handoff validation (M29-03).",
+      "properties": {
+        "input_schema": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "$ref": "#/$defs/JsonValue"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Input Schema"
+        },
+        "output_schema": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "$ref": "#/$defs/JsonValue"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Output Schema"
+        }
+      },
+      "title": "IOSpec",
+      "type": "object"
+    },
+    "JsonValue": {},
     "McpServer": {
       "additionalProperties": false,
       "description": "An MCP server the workload may use, served by mcp-fabric.",
       "properties": {
-        "endpoint": {
-          "minLength": 1,
-          "title": "Endpoint",
-          "type": "string"
-        },
         "name": {
           "minLength": 1,
           "title": "Name",
+          "type": "string"
+        },
+        "endpoint": {
+          "minLength": 1,
+          "title": "Endpoint",
           "type": "string"
         }
       },
@@ -420,25 +459,6 @@
       "additionalProperties": false,
       "description": "Workload identity and ownership metadata.",
       "properties": {
-        "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Description"
-        },
-        "labels": {
-          "additionalProperties": {
-            "type": "string"
-          },
-          "title": "Labels",
-          "type": "object"
-        },
         "name": {
           "title": "Name",
           "type": "string"
@@ -459,6 +479,25 @@
           ],
           "default": null,
           "title": "Team"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "labels": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Labels",
+          "type": "object"
         }
       },
       "required": [
@@ -472,14 +511,14 @@
       "additionalProperties": false,
       "description": "The exact model identity a certification binds to (DD-10).",
       "properties": {
-        "family": {
-          "minLength": 1,
-          "title": "Family",
-          "type": "string"
-        },
         "provider": {
           "minLength": 1,
           "title": "Provider",
+          "type": "string"
+        },
+        "family": {
+          "minLength": 1,
+          "title": "Family",
           "type": "string"
         },
         "version": {
@@ -500,6 +539,10 @@
       "additionalProperties": false,
       "description": "Model strategy and the certification-bound model identity.",
       "properties": {
+        "strategy": {
+          "$ref": "#/$defs/ModelStrategy",
+          "default": "tiered"
+        },
         "identity": {
           "anyOf": [
             {
@@ -510,10 +553,6 @@
             }
           ],
           "default": null
-        },
-        "strategy": {
-          "$ref": "#/$defs/ModelStrategy",
-          "default": "tiered"
         }
       },
       "title": "ModelSpec",
@@ -553,6 +592,15 @@
       "additionalProperties": false,
       "description": "Tool-output boundary configuration for a workload.",
       "properties": {
+        "max_bytes": {
+          "exclusiveMinimum": 0,
+          "title": "Max Bytes",
+          "type": "integer"
+        },
+        "truncate_strategy": {
+          "$ref": "#/$defs/TruncateStrategy",
+          "default": "head"
+        },
         "filter_rules": {
           "items": {
             "$ref": "#/$defs/FilterRule"
@@ -564,15 +612,6 @@
           "default": true,
           "title": "Injection Scan",
           "type": "boolean"
-        },
-        "max_bytes": {
-          "exclusiveMinimum": 0,
-          "title": "Max Bytes",
-          "type": "integer"
-        },
-        "truncate_strategy": {
-          "$ref": "#/$defs/TruncateStrategy",
-          "default": "head"
         }
       },
       "required": [
@@ -593,14 +632,14 @@
       "additionalProperties": false,
       "description": "How the control plane checks agent readiness.",
       "properties": {
+        "type": {
+          "$ref": "#/$defs/ProbeType",
+          "default": "dry_run"
+        },
         "interval": {
           "default": 60,
           "title": "Interval",
           "type": "integer"
-        },
-        "type": {
-          "$ref": "#/$defs/ProbeType",
-          "default": "dry_run"
         }
       },
       "title": "ReadinessProbe",
@@ -610,15 +649,15 @@
       "additionalProperties": false,
       "description": "Per-run resource ceilings.",
       "properties": {
-        "cpu_cores": {
-          "exclusiveMinimum": 0,
-          "title": "Cpu Cores",
-          "type": "number"
-        },
         "memory_mb": {
           "exclusiveMinimum": 0,
           "title": "Memory Mb",
           "type": "integer"
+        },
+        "cpu_cores": {
+          "exclusiveMinimum": 0,
+          "title": "Cpu Cores",
+          "type": "number"
         },
         "wall_clock_s": {
           "exclusiveMinimum": 0,
@@ -674,17 +713,10 @@
       "additionalProperties": false,
       "description": "Execution isolation configuration for a workload.",
       "properties": {
-        "egress": {
-          "$ref": "#/$defs/EgressSpec"
-        },
         "enabled": {
           "default": true,
           "title": "Enabled",
           "type": "boolean"
-        },
-        "filesystem": {
-          "$ref": "#/$defs/FilesystemMode",
-          "default": "isolated"
         },
         "resource_caps": {
           "anyOf": [
@@ -696,6 +728,13 @@
             }
           ],
           "default": null
+        },
+        "egress": {
+          "$ref": "#/$defs/EgressSpec"
+        },
+        "filesystem": {
+          "$ref": "#/$defs/FilesystemMode",
+          "default": "isolated"
         }
       },
       "title": "SandboxSpec",
@@ -712,17 +751,17 @@
           "title": "Availability Target",
           "type": "number"
         },
-        "error_budget_window": {
-          "default": 86400,
-          "title": "Error Budget Window",
-          "type": "integer"
-        },
         "quality_target": {
           "default": 0.9,
           "exclusiveMinimum": 0.0,
           "maximum": 1.0,
           "title": "Quality Target",
           "type": "number"
+        },
+        "error_budget_window": {
+          "default": 86400,
+          "title": "Error Budget Window",
+          "type": "integer"
         }
       },
       "title": "Slo",
@@ -732,11 +771,6 @@
       "additionalProperties": false,
       "description": "A reference to a registered MCP tool with its trust level.",
       "properties": {
-        "require_approval": {
-          "default": false,
-          "title": "Require Approval",
-          "type": "boolean"
-        },
         "tool_id": {
           "minLength": 1,
           "title": "Tool Id",
@@ -744,6 +778,11 @@
         },
         "trust_level": {
           "$ref": "#/$defs/ToolTrustLevel"
+        },
+        "require_approval": {
+          "default": false,
+          "title": "Require Approval",
+          "type": "boolean"
         }
       },
       "required": [
@@ -773,10 +812,6 @@
           "title": "Allow",
           "type": "array"
         },
-        "default_trust": {
-          "$ref": "#/$defs/ToolTrustLevel",
-          "default": "read_only"
-        },
         "deny": {
           "items": {
             "type": "string"
@@ -790,6 +825,10 @@
           },
           "title": "Mcp Servers",
           "type": "array"
+        },
+        "default_trust": {
+          "$ref": "#/$defs/ToolTrustLevel",
+          "default": "read_only"
         }
       },
       "title": "ToolsSpec",
@@ -799,11 +838,11 @@
       "additionalProperties": false,
       "description": "Event-matching criteria shared by trigger types.",
       "properties": {
-        "paths": {
+        "severity": {
           "items": {
             "type": "string"
           },
-          "title": "Paths",
+          "title": "Severity",
           "type": "array"
         },
         "service": {
@@ -818,11 +857,11 @@
           "default": null,
           "title": "Service"
         },
-        "severity": {
+        "paths": {
           "items": {
             "type": "string"
           },
-          "title": "Severity",
+          "title": "Paths",
           "type": "array"
         }
       },
@@ -843,6 +882,44 @@
       "additionalProperties": false,
       "description": "A rule that matches an external event to this workload.",
       "properties": {
+        "type": {
+          "$ref": "#/$defs/TriggerType"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Url"
+        },
+        "match": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TriggerMatch"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "source": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source"
+        },
         "events": {
           "items": {
             "type": "string"
@@ -850,10 +927,22 @@
           "title": "Events",
           "type": "array"
         },
-        "match": {
+        "schedule": {
           "anyOf": [
             {
-              "$ref": "#/$defs/TriggerMatch"
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Schedule"
+        },
+        "mode": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TriggerMode"
             },
             {
               "type": "null"
@@ -873,56 +962,6 @@
           ],
           "default": null,
           "title": "Max Concurrent"
-        },
-        "mode": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/TriggerMode"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "schedule": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Schedule"
-        },
-        "source": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Source"
-        },
-        "type": {
-          "$ref": "#/$defs/TriggerType"
-        },
-        "url": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Url"
         }
       },
       "required": [
@@ -956,11 +995,14 @@
       "additionalProperties": false,
       "description": "The complete specification block of an agent workload manifest.",
       "properties": {
-        "approvals": {
-          "$ref": "#/$defs/ApprovalsSpec"
+        "runtime": {
+          "$ref": "#/$defs/RuntimeSpec"
         },
         "budget": {
           "$ref": "#/$defs/BudgetSpec"
+        },
+        "model": {
+          "$ref": "#/$defs/ModelSpec"
         },
         "certification": {
           "anyOf": [
@@ -973,31 +1015,12 @@
           ],
           "default": null
         },
-        "fan_out": {
-          "$ref": "#/$defs/FanOutSpec"
-        },
-        "health": {
-          "$ref": "#/$defs/HealthSpec"
-        },
-        "model": {
-          "$ref": "#/$defs/ModelSpec"
-        },
-        "observability": {
-          "$ref": "#/$defs/ObservabilitySpec"
-        },
-        "output_shaping": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/OutputShapingSpec"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "runtime": {
-          "$ref": "#/$defs/RuntimeSpec"
+        "triggers": {
+          "items": {
+            "$ref": "#/$defs/TriggerRule"
+          },
+          "title": "Triggers",
+          "type": "array"
         },
         "sandbox": {
           "anyOf": [
@@ -1010,15 +1033,42 @@
           ],
           "default": null
         },
+        "output_shaping": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OutputShapingSpec"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "tools": {
           "$ref": "#/$defs/ToolsSpec"
         },
-        "triggers": {
-          "items": {
-            "$ref": "#/$defs/TriggerRule"
-          },
-          "title": "Triggers",
-          "type": "array"
+        "approvals": {
+          "$ref": "#/$defs/ApprovalsSpec"
+        },
+        "fan_out": {
+          "$ref": "#/$defs/FanOutSpec"
+        },
+        "health": {
+          "$ref": "#/$defs/HealthSpec"
+        },
+        "observability": {
+          "$ref": "#/$defs/ObservabilitySpec"
+        },
+        "io": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/IOSpec"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         }
       },
       "required": [
@@ -1029,7 +1079,6 @@
       "type": "object"
     }
   },
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "description": "A registered agent workload and its desired state.",
   "properties": {
@@ -1057,5 +1106,6 @@
     "spec"
   ],
   "title": "AgentWorkload",
-  "type": "object"
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
 }

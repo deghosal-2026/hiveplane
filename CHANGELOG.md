@@ -152,6 +152,35 @@ immune system (drift, quarantine, promotion gate), and fleet scale-out. In progr
 - **Tests** — each source end-to-end, admission gating, freeze suppression/drain,
   and DLQ replay. Coverage ≥ 95% with a database.
 
+### Added (M29 — multi-agent pipelines)
+
+- **`hiveplane.pipelines` package** — the pipeline runtime:
+  - **Spec DSL** (`spec`) — a validated DAG of `workload`/`fan_out`/`fan_in`/
+    `gate`/`transform` nodes with edges, handoff mappings, `on_failure`, `retry`,
+    per-step approval, per-step budget, and a cumulative budget. Cycles are
+    rejected with Kahn's algorithm, naming the offending nodes.
+  - **Handoff layer** (`handoff`) — restricted `${node.output.path}` resolution
+    and producer/consumer schema validation from a workload's `spec.io`; a
+    mismatch fails the node before a partial input reaches an agent.
+  - **Engine** (`engine`) — topological execution over child runs carrying a
+    `PipelineOrigin`; parent state is derived from node records. Supports
+    fan-out/fan-in (with `json_merge`/`concat`/`sum`/`first_success` reducers),
+    `requires_approval: before` and `gate` nodes on the approval queue, budget
+    pause/fail on `on_exceed`, per-step overrides, `fail_fast`/`continue`, node
+    retry, and a derived timeline (status/cost/artifacts/attempts).
+  - **Store** (`store`) — specs and run headers/node runs (memory + Postgres);
+    migration `0008` adds `pipeline_run_headers` and `pipeline_node_runs`.
+  - **Adapters** (`executor`) — `RunNodeExecutor` submits nodes as child runs;
+    `ServiceApprovalGate` reuses the approval queue.
+- **Run lifecycle** — `Run.pipeline_origin` and `RunService.submit(pipeline_origin=...)`
+  attribute child runs to their pipeline node; `WorkloadSpec.io` declares handoff
+  schemas.
+- **API + CLI** — `/pipelines` CRUD, `/pipelines/{id}/runs`, `/pipeline-runs/{id}`,
+  node retry; `hiveplane pipelines list|show|submit|status|retry`.
+- **Tests** — linear end-to-end, cycle rejection, handoff mismatch, gates,
+  fan-out/in, budget, `fail_fast`/`continue`, retry, and Postgres round-trips.
+  Coverage ≥ 95% with a database.
+
 ## [0.1.0] - 2026-09-25
 
 The first release: the certified control loop. Register agents, certify them against a

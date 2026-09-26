@@ -14,6 +14,7 @@ from hiveplane.core.approval import ApprovalRecord
 from hiveplane.core.event import EventType, RunEvent
 from hiveplane.core.run import (
     AdmissionContext,
+    PipelineOrigin,
     Run,
     RunState,
     TriggerOrigin,
@@ -150,6 +151,7 @@ class RunService:
         task: dict[str, JsonValue] | None = None,
         model_identity: str | None = None,
         trigger_origin: TriggerOrigin | None = None,
+        pipeline_origin: PipelineOrigin | None = None,
         require_approval: bool = False,
         ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> Run:
@@ -172,6 +174,7 @@ class RunService:
             task=task or {},
             trace_id=telemetry.current_trace_id(),
             trigger_origin=trigger_origin,
+            pipeline_origin=pipeline_origin,
             tenant_id=ctx.tenant_id,
             team_id=ctx.team_id,
             attribution_key=ctx.attribution_key,

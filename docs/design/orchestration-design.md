@@ -1,6 +1,6 @@
 # D24: Multi-Agent Orchestration Design
 
-> Status: draft
+> Status: implemented (M29; M30 router/agent-as-tool pending)
 
 **Milestones:** M29–M30 · **Extends:** D2
 
@@ -203,6 +203,32 @@ Linear DAG end-to-end with validated handoffs; cycle rejection; fan-out over N i
 - Reducer workloads vs. built-in reducers — when is a model-backed reduce worth the cost?
 - Should the router be exposed as a certified workload (dogfooded) rather than a service?
 - A2A mapping for streaming and long-running tasks.
+
+## Implementation (M29)
+
+| Module | Responsibility |
+|--------|----------------|
+| `hiveplane.pipelines.spec` | The declarative DAG DSL and validation (Kahn cycle detection) |
+| `hiveplane.pipelines.handoff` | `${node.output.path}` resolution and producer/consumer schema validation |
+| `hiveplane.pipelines.models` | Parent run, node run, fan-out instance, timeline models |
+| `hiveplane.pipelines.store` | Specs + run headers + node runs (memory + Postgres, migration `0008`) |
+| `hiveplane.pipelines.engine` | The topological execution engine (`PipelineEngine`) |
+| `hiveplane.pipelines.executor` | `RunNodeExecutor` (child runs) and `ServiceApprovalGate` (approval queue) |
+
+**Execution.** A submission creates a `PipelineRunHeader`; each ready node
+submits a child run carrying a `PipelineOrigin` (`pipeline_run_id`, `pipeline_id`,
+`node_id`, `attempt`). Parent state is derived from node records. Handoffs are
+schema-validated at the producer and consumer via `spec.io`; a mismatch fails the
+node. `fan_out` maps over a resolved list (one child per item, output keyed by
+item) and `fan_in` reduces (`json_merge`/`concat`/`sum`/`first_success`).
+`requires_approval: before` and `gate` nodes pause on the approval queue and
+resume on approval. The cumulative pipeline budget pauses or fails on exhaustion
+(`on_exceed`), and a per-step override caps a node's cost. `on_failure`
+`fail_fast` cancels in-flight siblings and skips the rest; `continue` lets
+independent nodes finish; `retry` re-executes a node up to `max_attempts`. The
+timeline reports per-node status, cost, artifacts, and attempts.
+
+M30 adds the smart task router and agent-as-tool composition.
 
 ## See Also
 
