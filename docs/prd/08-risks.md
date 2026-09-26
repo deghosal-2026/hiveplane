@@ -14,7 +14,7 @@ The hardest parts are certification design, abstraction, and timing: designing a
 | R4 | **Drift detector over-triggers** — false quarantines erode trust | Medium | Drift is measured against the agent's own baseline, not a global standard; include a grace margin; false-quarantine rate is a tracked metric |
 | R5 | **Drift detector under-triggers** — slow decay evades detection | Medium | Combine scheduled re-cert with trigger-based re-cert (failure spike → immediate re-cert) |
 | R6 | Abstracting runtimes without becoming vague | High | Start with two concrete adapters and force the common contract from real workloads |
-| R7 | Over-designing for scale too early | High | Local-first Docker Compose; defer multi-tenancy to v0.4.0 |
+| R7 | Over-designing for scale too early | High | Local-first Docker Compose; multi-tenancy and Helm ship only in the final v0.2.0 Complete Fleet OS release |
 | R8 | Policy becomes annoying rather than usable | Medium | Policy is visible config; ship sensible defaults and inspect why a decision was made |
 | R9 | Proving value beyond a dashboard | High | The control loop + certification gate ships before rich UI |
 | R10 | Building too much UI before the control loop is solid | High | MVP UI is a fleet list, run detail, and certification dashboard only |

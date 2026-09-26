@@ -289,24 +289,25 @@ If three real agents can run through the same lifecycle and operators can meanin
 
 ## Milestones
 
-### v0.2.0
+### v0.2.0 — The Complete Fleet OS (final big release)
 
-- approval queue UI
-- richer policy conditions
-- budget analytics by agent/team
-- stronger adapter contract
+- triggers (webhook/PR/alert/cron/watch) + trigger DSL, freeze windows, DLQ
+- promotion gate + re-certification + regression diff + drift auto-quarantine
+- certification learns from production: feedback → corpus, online eval sampling, agent signing
+- progressive delivery: shadow runs, canary routing, auto-promote
+- multi-agent pipelines + smart task router + agent-as-tool composition
+- fleet control: GitOps desired-state reconciliation, distributed workers, preemption + QoS, backlog autoscaling, worker identity, leader election (HA), chaos mode
+- defense: injection scanning, tool kill switch, context-window budgets, spend-velocity guards
+- health: SLO/error budget, burn throttle, retries, circuit breakers, synthetic probes
+- MCP registry v2 (live transport), secrets store + RBAC-lite
+- 9-channel fan-out + Slack interactive + mobile approvals
+- cost: showback, cost-per-completed-task, ROI flags, chargeback metering API
+- multi-tenant isolation, Helm chart + k3d reference deploy, backup/restore, air-gapped bundle
+- API v2 + Python SDK + agent-as-service endpoints + plugin hooks; weekly fleet digest + compliance evidence pack
+- `ask` NL operator copilot, incident mode, global search
+- PydanticAI + OpenAI Agents SDK/CrewAI adapters; alpha → beta
 
-### v0.3.0
-
-- multi-runtime support
-- state diff and replay helpers
-- reliability metrics and SLO hooks
-
-### v0.4.0
-
-- multi-tenant support
-- ROI dashboards
-- Helm chart and reference cluster deployment
+After v0.2.0: maintenance mode (docs, community, security patches). Full scope: [roadmap](docs/prd/09-roadmap.md).
 
 ---
 
