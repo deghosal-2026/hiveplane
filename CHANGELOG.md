@@ -490,6 +490,22 @@ immune system (drift, quarantine, promotion gate), and fleet scale-out. In progr
   (`guard`, `action`, `reason`, `rule_id`, observed/threshold) recorded in the run
   story (`guard` events) and the audit log; a breach pauses via the run lifecycle.
 
+### Added (M42 — agent health, SLO/error budget & burn throttle)
+
+- **Health model** (`hiveplane.health`) — per-workload readiness, recent failure
+  rate, **MTTR** (from real failure→recovery gaps), drift status, online-eval
+  **quality score**, and circuit-breaker state over a rolling window.
+- **SLO hooks** — per-workload availability and quality objectives from
+  `spec.health.slo`, with **error-budget** accounting (target, consumed,
+  remaining) computed from real failures and quality dips.
+- **Burn-rate monitoring** — observed vs. allowed error rate with fast/slow
+  windows and `critical`/`alert` thresholds.
+- **Burn-through action** — an exhausted availability budget or a critical fast
+  burn triggers auto-quarantine/throttle through the shared immune machinery
+  (M34), carrying the objective, reason, and rule id, and audited.
+- **API + CLI** — `GET /health`, `/health/workloads/{id}`, `/slo`, `/burn`,
+  `POST /health/workloads/{id}/enforce`; CLI `hiveplane health list|show`.
+
 ## [0.1.0] - 2026-09-25
 
 The first release: the certified control loop. Register agents, certify them against a

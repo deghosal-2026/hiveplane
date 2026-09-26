@@ -19,6 +19,7 @@ from hiveplane.drift.reinstatement import ReinstatementService
 from hiveplane.drift.scheduler import DriftScheduler
 from hiveplane.execution.service import RunService
 from hiveplane.execution.tools import ToolGateway
+from hiveplane.health.service import HealthService
 from hiveplane.learning.candidates import CandidateService
 from hiveplane.learning.eval import EvalService
 from hiveplane.learning.feedback import FeedbackService
@@ -95,6 +96,12 @@ def get_policy_pack_registry(request: Request) -> PolicyPackRegistry:
     """Return the policy pack registry bound to the application state."""
     registry: PolicyPackRegistry = request.app.state.policy_pack_registry
     return registry
+
+
+def get_health_service(request: Request) -> HealthService:
+    """Return the agent health service bound to the application state."""
+    service: HealthService = request.app.state.health_service
+    return service
 
 
 def get_kill_switch(request: Request) -> KillSwitch:

@@ -290,6 +290,13 @@ class EvalSettings(BaseModel):
         return [] if value == "" else value
 
 
+class HealthSettings(BaseModel):
+    """Agent health window and scoring thresholds (M42)."""
+
+    window_seconds: int = Field(default=86400, gt=0)
+    min_runs_for_score: int = Field(default=5, ge=1)
+
+
 class GuardsSettings(BaseModel):
     """Runtime guards: context, spend-velocity, and circuit breakers (M41)."""
 
@@ -373,6 +380,7 @@ class Settings(BaseSettings):
     router: RouterSettings = Field(default_factory=RouterSettings)
     a2a: A2ASettings = Field(default_factory=A2ASettings)
     guards: GuardsSettings = Field(default_factory=GuardsSettings)
+    health: HealthSettings = Field(default_factory=HealthSettings)
     eval: EvalSettings = Field(default_factory=EvalSettings)
 
 

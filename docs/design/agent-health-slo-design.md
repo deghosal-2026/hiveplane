@@ -1,6 +1,9 @@
 # D31: Agent Health & SLO v2 Design
 
-> Status: draft
+> Status: implemented for M42 (health model with MTTR + quality, SLO/error-budget
+> accounting, fast/slow burn alerting, auto-quarantine/throttle on burn-through, and
+> health API/CLI). M43 adds synthetic probes, approval analytics, plane `/metrics`,
+> and Grafana dashboards.
 
 **Milestones:** M42–M43 · **Extends:** D16
 

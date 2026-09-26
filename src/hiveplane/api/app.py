@@ -28,6 +28,7 @@ from hiveplane.api.agent_tools import router as agent_tools_router
 from hiveplane.api.approvals import router as approvals_router
 from hiveplane.api.certifications import router as certifications_router
 from hiveplane.api.drift import router as drift_router
+from hiveplane.api.health import router as health_router
 from hiveplane.api.learning import router as learning_router
 from hiveplane.api.pipelines import router as pipelines_router
 from hiveplane.api.policy import router as policy_router
@@ -113,6 +114,8 @@ from hiveplane.guards.breaker import CircuitBreakerRegistry
 from hiveplane.guards.context import ContextBudgetGuard
 from hiveplane.guards.manager import GuardLimits, GuardManager
 from hiveplane.guards.velocity import SpendVelocityGuard
+from hiveplane.health.models import SloTarget
+from hiveplane.health.service import HealthService
 from hiveplane.learning.candidate_store import build_candidate_store
 from hiveplane.learning.candidates import CandidateService
 from hiveplane.learning.corpus_store import build_corpus_version_store
@@ -599,6 +602,7 @@ def create_app(
         progressive_store, registry=registry, audit=app.state.audit_log
     )
     app.state.experiment_service = ExperimentService(progressive_store)
+    _wire_health(app, registry, settings)
     if settings.drift.enabled and certification_coordinator is not None:
         _wire_drift(app, registry, certification_coordinator, settings)
     app.state.run_recovery = RunRecovery(app.state.run_service)
@@ -714,6 +718,7 @@ def create_app(
     app.include_router(triggers_router)
     app.include_router(pipelines_router)
     app.include_router(learning_router)
+    app.include_router(health_router)
     app.include_router(route_router)
     app.include_router(agent_tools_router)
     app.include_router(adapters_router)
@@ -758,6 +763,51 @@ def _wire_drift(
     app.state.quarantine_service = quarantine_service
     app.state.reinstatement_service = ReinstatementService(
         registry, store, coordinator, audit=app.state.audit_log
+    )
+
+
+def _wire_health(
+    app: FastAPI, registry: RegistryService, settings: Settings
+) -> None:
+    """Install the agent health service with real event lookups (M42)."""
+
+    def _slo(workload: str) -> SloTarget:
+        slo = registry.get(workload).manifest.spec.health.slo
+        return SloTarget(
+            availability_target=slo.availability_target,
+            quality_target=slo.quality_target,
+            window_seconds=int(slo.error_budget_window),
+        )
+
+    def _drift(workload: str) -> str:
+        store = getattr(app.state, "drift_store", None)
+        if store is not None and store.active_quarantine(workload) is not None:
+            return "detected"
+        return "clean"
+
+    def _breaker(workload: str) -> bool:
+        breakers: CircuitBreakerRegistry = app.state.circuit_breakers
+        snapshot = breakers.snapshot("workload", workload)
+        return snapshot.state.value == "open"
+
+    def _quality(workload: str) -> float | None:
+        quality = app.state.eval_service.quality(workload)
+        return quality.mean_score if quality.sample_count > 0 else None
+
+    def _quarantine(workload: str, _reason: str) -> None:
+        registry.quarantine(workload)
+
+    app.state.health_service = HealthService(
+        run_history=lambda workload: app.state.run_service.list_runs(workload=workload),
+        quality_lookup=_quality,
+        drift_lookup=_drift,
+        breaker_lookup=_breaker,
+        status_lookup=lambda workload: registry.get(workload).certification_status.value,
+        slo_lookup=_slo,
+        workload_lookup=lambda: [record.name for record in registry.list_workloads()],
+        window_seconds=settings.health.window_seconds,
+        min_runs_for_score=settings.health.min_runs_for_score,
+        quarantine=_quarantine,
     )
 
 

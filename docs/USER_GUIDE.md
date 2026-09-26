@@ -791,3 +791,29 @@ story (`guard` events) and the audit log. Configure with
 `HIVEPLANE_GUARDS__CONTEXT_TOKENS`, `HIVEPLANE_GUARDS__VELOCITY_LIMIT_USD`,
 `HIVEPLANE_GUARDS__VELOCITY_MULTIPLIER`, and the `HIVEPLANE_GUARDS__BREAKER_*`
 thresholds.
+
+## Agent Health & SLOs
+
+Health is a first-class fleet signal. Per workload, `hiveplane health` reports
+readiness, recent failure rate, **MTTR**, drift status, the online-eval **quality
+score**, and breaker state over a rolling window, plus each SLO objective's
+**error budget** (target, consumed, remaining).
+
+```bash
+hiveplane health list
+hiveplane health show <workload>
+# -> GET /health, /health/workloads/<id>[/slo|/burn]
+```
+
+**Burn-rate** monitoring compares the observed error rate to the allowed rate over
+fast and slow windows. When an availability error budget is exhausted (or a fast
+burn crosses the critical threshold) health auto-quarantines or throttles the
+workload through the same immune machinery drift uses, and audits the action:
+
+```bash
+# Apply the burn-through action explicitly (idempotent).
+# -> POST /health/workloads/<id>/enforce
+```
+
+SLO targets come from the manifest (`spec.health.slo`); tune the window and
+minimum-sample thresholds with `HIVEPLANE_HEALTH__*`.
