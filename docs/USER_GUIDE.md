@@ -57,6 +57,35 @@ Every command talks to the control-plane API and accepts `--api-url`
 | `hiveplane triggers add --workload <name> --file <rule>` | Add a trigger rule |
 | `hiveplane tools list [--trust-level ...] [--mcp-server ...]` | List registered MCP tools |
 | `hiveplane tools add --file <tool>` | Register an MCP tool |
+| `hiveplane reconcile status --source <id>` | Show a source's last revision, reconcile time, and open drift |
+| `hiveplane reconcile plan\|apply --source <id> --path <dir>` | Dry-run or apply a GitOps reconcile of a directory source |
+| `hiveplane reconcile plan\|apply --source <id> --kind git --git-url <url> [--git-ref <ref>]` | Dry-run or apply a reconcile of a git source |
+
+## Desired-State Reconciliation (GitOps)
+
+Declare the fleet as a manifest set (workloads, policy packs, triggers, budgets) in a
+directory or git repo, and let the controller converge actual state to it. A reconcile
+pass observes, diffs, plans, acts, and records — and `plan` mutates nothing.
+
+```bash
+# Dry-run: show the action set without changing anything
+hiveplane reconcile plan --source fleet-main --path ./fleet
+
+# Apply: register missing workloads, update changed manifests, re-cert on threshold changes
+hiveplane reconcile apply --source fleet-main --path ./fleet
+
+# Status: last revision, last reconcile, open drift
+hiveplane reconcile status --source fleet-main
+```
+
+Guardrails are safe by default: destructive actions (deregister, quarantine) are blocked
+unless `HIVEPLANE_RECONCILE__ALLOW_DESTRUCTIVE=true`, an empty desired set cannot cascade
+to mass deregistration (`ALLOW_EMPTY`), the first reconcile against unknown state needs
+`--confirmed`, and destructive actions are rate-limited per pass. Declarative `spec.*`
+fields are declared-wins; runtime, certification status, and pinned fields are
+observed-wins and are recorded as drift rather than overwritten. Reconcile is
+single-writer: a PostgreSQL advisory lock keyed by source id stops a second replica from
+double-acting.
 
 ## Operator UI
 

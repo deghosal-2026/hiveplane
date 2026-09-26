@@ -369,6 +369,37 @@ class RegistryService:
         self._store.save_workload(updated)
         return updated
 
+    def request_re_certification(self, name: str) -> WorkloadRecord:
+        """Flag a workload as requiring re-certification (M26 reconcile action).
+
+        The controller calls this when desired state changes a certification
+        threshold, which :meth:`update` alone does not treat as cert-relevant.
+        """
+        record = self.get(name)
+        updated = record.model_copy(
+            update={"needs_re_certification": True, "updated_at": self._now()}
+        )
+        self._store.save_workload(updated)
+        return updated
+
+    def quarantine(self, name: str) -> WorkloadRecord:
+        """Force a workload into quarantine, blocking staging/production admission.
+
+        Quarantine preserves the record, its history, and its attestations; it
+        only changes the certification status so the workload cannot be admitted.
+        """
+        record = self.get(name)
+        manifest = self._with_status(record.manifest, CertificationStatus.QUARANTINED)
+        updated = record.model_copy(
+            update={
+                "certification_status": CertificationStatus.QUARANTINED,
+                "manifest": manifest,
+                "updated_at": self._now(),
+            }
+        )
+        self._store.save_workload(updated)
+        return updated
+
     @staticmethod
     def _with_status(manifest: AgentWorkload, status: CertificationStatus) -> AgentWorkload:
         certification = manifest.spec.certification

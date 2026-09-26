@@ -22,6 +22,7 @@ from hiveplane.api.approvals import router as approvals_router
 from hiveplane.api.certifications import router as certifications_router
 from hiveplane.api.policy import router as policy_router
 from hiveplane.api.readiness import build_readiness_probe
+from hiveplane.api.reconcile import router as reconcile_router
 from hiveplane.api.registry import router as registry_router
 from hiveplane.api.runs import router as runs_router
 from hiveplane.api.sandbox_channel import SandboxChannel
@@ -78,6 +79,13 @@ from hiveplane.policy.errors import (
 )
 from hiveplane.policy.packs import InMemoryPolicyPackStore
 from hiveplane.policy.store import build_approval_store
+from hiveplane.reconcile.conflict import ConflictPolicy
+from hiveplane.reconcile.controller import ReconcileController
+from hiveplane.reconcile.executor import ActionExecutor
+from hiveplane.reconcile.locking import InMemoryReconcileLock, PostgresReconcileLock
+from hiveplane.reconcile.observe import ServiceObserver
+from hiveplane.reconcile.planner import Guardrails
+from hiveplane.reconcile.store import build_reconcile_store
 from hiveplane.registry.errors import (
     AdmissionRefusedError,
     AttestationAlreadyExistsError,
@@ -190,6 +198,28 @@ def create_app(
     )
     app.state.tool_gateway = build_tool_gateway(
         registry, policy_engine, app.state.run_service, approval_service
+    )
+    reconcile_store = build_reconcile_store(settings)
+    reconcile_lock = (
+        PostgresReconcileLock(create_engine_from_settings(settings))
+        if settings.execution.store == "postgres"
+        else InMemoryReconcileLock()
+    )
+    app.state.reconcile_store = reconcile_store
+    app.state.reconcile_controller = ReconcileController(
+        store=reconcile_store,
+        observer=ServiceObserver(registry, policy_pack_store),
+        executor=ActionExecutor(registry),
+        lock=reconcile_lock,
+        guardrails=Guardrails(
+            allow_destructive=settings.reconcile.allow_destructive,
+            allow_empty=settings.reconcile.allow_empty,
+            max_destructive_per_run=settings.reconcile.max_destructive_per_run,
+            require_destructive_confirmation=(
+                settings.reconcile.require_destructive_confirmation
+            ),
+        ),
+        policy=ConflictPolicy(pinned_fields=frozenset(settings.reconcile.pinned_fields)),
     )
     provider = build_provider(settings)
     app.state.provider = provider
@@ -337,6 +367,7 @@ def create_app(
     app.include_router(certifications_router)
     app.include_router(sandbox_router)
     app.include_router(spend_router)
+    app.include_router(reconcile_router)
     return app
 
 

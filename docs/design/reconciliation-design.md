@@ -1,6 +1,6 @@
 # D22: Reconciliation Design
 
-> Status: draft
+> Status: implemented (M26)
 
 **Milestones:** M26 · **Extends:** —
 
@@ -67,7 +67,7 @@ Deregistration marks a workload inactive and removes it from admission; it never
 
 ### Drift Records, History, and Conflict Policy
 
-Every field-level mismatch produces a `drift_record` (`object_ref`, `field`, `desired_value`, `observed_value`, `detected_at`, `resolution` ∈ `reconciled`/`ignored`/`blocked`). `reconcile_runs` records revision, tick, action counts, duration, and outcome; both surface via API and `hiveplane reconcile status`. Conflicts resolve per field class, not globally:
+Every field-level mismatch produces a `drift_record` (`object_ref`, `field`, `desired_value`, `observed_value`, `detected_at`, `resolution` ∈ `declared_wins`/`observed_wins`/`unresolved`). `reconcile_runs` records revision, mode, action counts, outcome, and timestamps; both surface via API and `hiveplane reconcile status`. Conflicts resolve per field class, not globally:
 
 | Field class | Default | Rationale |
 |-------------|---------|-----------|
@@ -127,6 +127,27 @@ Desired state is untrusted input: strict schema validation, no code execution, n
 - Concurrency: two controller processes, one lock — exactly one acts.
 - Guardrails: destructive action without permission is planned but blocked; rate limit caps mass actions.
 - Conflict policy: pinned fields stay observed-wins and are recorded as ignored drift.
+
+## Implementation (M26)
+
+| Module | Responsibility |
+|--------|----------------|
+| `hiveplane.reconcile.loader` | Fleet-manifest-set validation and directory/git loading (`DesiredStateLoader`, `GitSource`) |
+| `hiveplane.reconcile.observe` | Read-only snapshot of registry/policy state (`ServiceObserver`, `ObservedState`) |
+| `hiveplane.reconcile.conflict` | Per-field conflict classes and payload merge (`ConflictPolicy`, `merge_declared_wins`) |
+| `hiveplane.reconcile.differ` | Desired-vs-observed deltas and drift records (`Differ`) |
+| `hiveplane.reconcile.planner` | Action classification and guardrails (`Planner`, `Guardrails`) |
+| `hiveplane.reconcile.executor` | Action execution through `RegistryService` (`ActionExecutor`) |
+| `hiveplane.reconcile.controller` | The observe→diff→plan→act→record loop (`ReconcileController`) |
+| `hiveplane.reconcile.locking` | Single-writer per-source lock (in-memory and Postgres advisory) |
+| `hiveplane.reconcile.source` | Source references, poll-on-change, webhook HMAC verification (`SourceWatcher`) |
+
+Drift resolution uses the frozen M25 `DriftResolution` values: declarative mismatches
+resolve `declared_wins` once applied, observed-wins mismatches are recorded
+`observed_wins`, and drift that a guardrail left unacted stays `unresolved`.
+Re-certification on a threshold change is requested through the additive
+`RegistryService.request_re_certification`; quarantine forces
+`CertificationStatus.QUARANTINED` without deleting history.
 
 ## Open Questions
 

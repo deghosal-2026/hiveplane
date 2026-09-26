@@ -3,7 +3,8 @@
 > Status: draft
 >
 > **Implementation status (M25):** complete. The `hiveplane.tenancy` package, tenant-scoped
-> ORM schema with composite FKs, migrations `0003`/`0004`, store-layer `TenantContext`
+> ORM schema with composite FKs, migrations `0003`/`0004` (plus `0005`, the M26
+> `reconcile_runs` history table), store-layer `TenantContext`
 > enforcement across every durable store, API tenant resolution (`X-Hiveplane-Tenant`), and
 > the full `hiveplane.fleet` model surface (triggers, pipelines, policy packs/decisions,
 > secrets, workers, artifacts, metering/cost, reconciliation) are all in place and verified
@@ -104,7 +105,7 @@ A trigger stores `source` (`webhook` / `github` / `alertmanager` / `cron` / `wat
 | `workers` / `worker_leases` / `worker_heartbeats` | `worker_id`, `capabilities`, `status`, `run_id`, `expires_at`, `last_seen` |
 | `artifacts` / `retention_policies` | `id`, `run_id`, `location`, `size_bytes`, `content_hash`, `expires_at` |
 | `metering_events` / `cost_periods` | `id`, `tenant_id`, `team_id`, `period`, `cost`, `cost_per_completed_task`, `roi_flag` |
-| `desired_specs` / `reconcile_state` / `drift_records` | `source_id`, `revision`, `object_ref`, `field`, `desired_value`, `observed_value`, `resolution` |
+| `desired_specs` / `reconcile_state` / `drift_records` / `reconcile_runs` | `source_id`, `revision`, `mode`, `outcome`, `object_ref`, `field`, `desired_value`, `observed_value`, `resolution` |
 
 ## Failure Modes
 

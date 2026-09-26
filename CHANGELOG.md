@@ -58,6 +58,39 @@ immune system (drift, quarantine, promotion gate), and fleet scale-out. In progr
   rejected with actionable errors), schema coverage, tenant scoping, and
   migration up/down. Coverage ≥ 95% with a database (as CI runs).
 
+### Added (M26 — desired-state reconciliation / GitOps)
+
+- **`hiveplane.reconcile` package** — the Kubernetes-defining controller:
+  - **Loader** (`loader`) — validates a fleet manifest set (workloads, policy packs,
+    triggers, budgets) from a local directory or a read-only git source pinned to a ref;
+    a bad revision is rejected whole with nothing applied and content hashes are
+    deterministic across formatting.
+  - **Observer / differ / conflict policy** — reads actual state through existing
+    services and diffs it field by field. Declarative `spec.*` fields are
+    declared-wins; runtime, certification-status, and operator-pinned fields are
+    observed-wins and recorded as drift rather than overwritten.
+  - **Planner + guardrails** — classifies actions additive/soft/destructive and gates
+    destructive ones: they require explicit permission, an empty desired set cannot
+    cascade to mass deregistration, the first reconcile needs confirmation, and
+    destructive actions are rate-limited per pass.
+  - **Executor** — applies actions only through `RegistryService` (register, update,
+    re-certify, deregister, quarantine, policy-version enforcement), so reconcile
+    cannot bypass certification, policy, or budget enforcement.
+  - **Controller** — one pass is observe → diff → plan → act → record, with a dry-run
+    `plan` mode that mutates nothing.
+- **Single-writer safety** — per-source in-memory lock and a PostgreSQL advisory lock
+  keyed by source id, so a second replica stays passive and cannot double-act.
+- **Git change detection** — poll-on-revision-change and HMAC-SHA256 webhook triggers;
+  git credentials resolve from a secret reference, never inline, and the source is
+  never written back to.
+- **Migration `0005`** — append-only `reconcile_runs` history table (revision, mode,
+  outcome, counts, timestamps); forward-only and idempotent.
+- **API + CLI** — `GET /reconcile/{source}` (status), `/runs`, `/drift`,
+  `POST /reconcile/{source}/plan|apply`, and `hiveplane reconcile status|plan|apply`.
+- **Tests** — idempotency, add/remove/update paths, dry-run safety, concurrent-controller
+  safety, guardrails, conflict policy, and Postgres store/migration round-trips.
+  Coverage ≥ 95% with a database.
+
 ## [0.1.0] - 2026-09-25
 
 The first release: the certified control loop. Register agents, certify them against a

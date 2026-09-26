@@ -31,11 +31,13 @@ runs_app = typer.Typer(help="Inspect and intervene on runs.", no_args_is_help=Tr
 approvals_app = typer.Typer(help="Review and resolve approvals.", no_args_is_help=True)
 triggers_app = typer.Typer(help="Inspect and add workload triggers.", no_args_is_help=True)
 tools_app = typer.Typer(help="Inspect and register MCP tools.", no_args_is_help=True)
+reconcile_app = typer.Typer(help="Reconcile desired state (GitOps).", no_args_is_help=True)
 app.add_typer(certs_app, name="certs")
 app.add_typer(runs_app, name="runs")
 app.add_typer(approvals_app, name="approvals")
 app.add_typer(triggers_app, name="triggers")
 app.add_typer(tools_app, name="tools")
+app.add_typer(reconcile_app, name="reconcile")
 
 ManifestArg = Annotated[
     Path,
@@ -580,6 +582,111 @@ def tools_seed(
         f"OK: {len(registered)} registered, {len(existing)} already present",
         fg=typer.colors.GREEN,
     )
+
+
+# --------------------------------------------------------------------------- #
+# Reconcile (GitOps)
+# --------------------------------------------------------------------------- #
+def _reconcile_payload(
+    kind: str,
+    path: str | None,
+    git_url: str | None,
+    git_ref: str,
+    confirmed: bool,
+) -> dict[str, Any]:
+    """Build a reconcile request body for the control-plane API."""
+    payload: dict[str, Any] = {"kind": kind, "confirmed": confirmed}
+    if kind == "directory":
+        if path is None:
+            typer.secho("--path is required for a directory source", fg=typer.colors.RED, err=True)
+            raise typer.Exit(code=1)
+        payload["path"] = path
+    else:
+        if git_url is None:
+            typer.secho("--git-url is required for a git source", fg=typer.colors.RED, err=True)
+            raise typer.Exit(code=1)
+        payload["git"] = {"url": git_url, "ref": git_ref}
+    return payload
+
+
+def _print_reconcile_run(data: dict[str, Any]) -> None:
+    """Print a reconcile run's outcome and action set."""
+    actions = data.get("actions", [])
+    typer.echo(f"{data['outcome']}: {len(actions)} action(s)")
+    for action in actions:
+        typer.echo(
+            f"  {action['status']:<8} {action['kind']:<24} {action['object_ref']}"
+        )
+
+
+def _run_reconcile(
+    action: str,
+    source: str,
+    payload: dict[str, Any],
+    api_url: str,
+) -> None:
+    status_code, body = _request(
+        "POST", f"{api_url.rstrip('/')}/reconcile/{source}/{action}", payload
+    )
+    if status_code >= 400 or status_code == 0:
+        _fail(f"reconcile {action}", status_code, body)
+    _print_reconcile_run(json.loads(body))
+
+
+@reconcile_app.command("status")
+def reconcile_status(
+    source: Annotated[str, typer.Option("--source", help="Source id.")],
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Show a source's last revision, last reconcile, and open drift count."""
+    status_code, body = _request(
+        "GET", f"{api_url.rstrip('/')}/reconcile/{source}"
+    )
+    if status_code >= 400 or status_code == 0:
+        _fail("reconcile status", status_code, body)
+    view = json.loads(body)
+    typer.echo(
+        f"{view['source_id']}  {view['status']}  "
+        f"revision={view.get('last_revision') or '-'}  drift={view['open_drift']}"
+    )
+
+
+@reconcile_app.command("plan")
+def reconcile_plan(
+    source: Annotated[str, typer.Option("--source", help="Source id.")],
+    kind: Annotated[
+        str, typer.Option("--kind", help="Source kind: directory or git.")
+    ] = "directory",
+    path: Annotated[str | None, typer.Option("--path", help="Directory source path.")] = None,
+    git_url: Annotated[str | None, typer.Option("--git-url", help="Git repository URL.")] = None,
+    git_ref: Annotated[str, typer.Option("--git-ref", help="Git ref to pin.")] = "HEAD",
+    confirmed: Annotated[
+        bool, typer.Option("--confirmed", help="Confirm destructive actions.")
+    ] = False,
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Dry-run a reconcile: print the plan without mutating state."""
+    payload = _reconcile_payload(kind, path, git_url, git_ref, confirmed)
+    _run_reconcile("plan", source, payload, api_url)
+
+
+@reconcile_app.command("apply")
+def reconcile_apply(
+    source: Annotated[str, typer.Option("--source", help="Source id.")],
+    kind: Annotated[
+        str, typer.Option("--kind", help="Source kind: directory or git.")
+    ] = "directory",
+    path: Annotated[str | None, typer.Option("--path", help="Directory source path.")] = None,
+    git_url: Annotated[str | None, typer.Option("--git-url", help="Git repository URL.")] = None,
+    git_ref: Annotated[str, typer.Option("--git-ref", help="Git ref to pin.")] = "HEAD",
+    confirmed: Annotated[
+        bool, typer.Option("--confirmed", help="Confirm destructive actions.")
+    ] = False,
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Apply a reconcile, gated by the configured guardrails."""
+    payload = _reconcile_payload(kind, path, git_url, git_ref, confirmed)
+    _run_reconcile("apply", source, payload, api_url)
 
 
 # --------------------------------------------------------------------------- #

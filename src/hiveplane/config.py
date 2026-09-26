@@ -184,7 +184,6 @@ class BudgetSettings(BaseModel):
 
 class ModelSettings(BaseModel):
     """LLM provider selection and credentials (M23, #107)."""
-
     provider: Literal["local", "cloud", "fake"] = "fake"
     base_url: str | None = None
     api_key: SecretStr | None = None
@@ -211,6 +210,24 @@ class ModelSettings(BaseModel):
         return value
 
 
+class ReconcileSettings(BaseModel):
+    """Desired-state reconciliation guardrails and cadence (M26)."""
+
+    enabled: bool = False
+    poll_interval_s: int = Field(default=60, gt=0)
+    allow_destructive: bool = False
+    allow_empty: bool = False
+    max_destructive_per_run: int = Field(default=10, ge=0)
+    require_destructive_confirmation: bool = True
+    pinned_fields: list[str] = Field(default_factory=list)
+
+    @field_validator("pinned_fields", mode="before")
+    @classmethod
+    def _empty_pinned_fields_become_empty_list(cls, value: object) -> object:
+        """Treat an unset env var as no pinned fields."""
+        return [] if value == "" else value
+
+
 class Settings(BaseSettings):
     """Root settings object; instantiate via :func:`get_settings`."""
 
@@ -235,6 +252,7 @@ class Settings(BaseSettings):
     ui: UiSettings = Field(default_factory=UiSettings)
     model: ModelSettings = Field(default_factory=ModelSettings)
     budget: BudgetSettings = Field(default_factory=BudgetSettings)
+    reconcile: ReconcileSettings = Field(default_factory=ReconcileSettings)
 
 
 @lru_cache(maxsize=1)

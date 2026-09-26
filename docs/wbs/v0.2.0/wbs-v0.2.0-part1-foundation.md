@@ -53,16 +53,16 @@ Extend the v0.1.0 data model to represent the fleet primitives every later part 
 
 **Work items:**
 
-- [ ] [#161](https://github.com/deghosal-2026/hiveplane/issues/161) — M26-01 — Desired-state spec format (fleet manifest set: workloads, policies, triggers, budgets) + loader from git repo or directory
-- [ ] [#162](https://github.com/deghosal-2026/hiveplane/issues/162) — M26-02 — Reconciliation controller loop (observe → diff → plan → act → record) with dry-run mode
-- [ ] [#163](https://github.com/deghosal-2026/hiveplane/issues/163) — M26-03 — Reconcile actions: register missing workload, deregister removed workload, update manifest, trigger re-cert on config change, quarantine unmanaged workload
-- [ ] [#164](https://github.com/deghosal-2026/hiveplane/issues/164) — M26-04 — Drift record + reconcile history persisted and surfaced via API/CLI (`hiveplane reconcile status`)
-- [ ] [#165](https://github.com/deghosal-2026/hiveplane/issues/165) — M26-05 — Conflict policy (declared-wins vs. observed-wins per field) and guardrails against destructive reconcile
-- [ ] [#166](https://github.com/deghosal-2026/hiveplane/issues/166) — M26-06 — Git source integration (repo URL, path, ref, auth) with poll/webhook trigger; no writes back to git
-- [ ] [#167](https://github.com/deghosal-2026/hiveplane/issues/167) — M26-07 — Controller concurrency safety (advisory lock / leader-aware) so a second replica cannot double-act
-- [ ] [#168](https://github.com/deghosal-2026/hiveplane/issues/168) — M26-08 — Tests: reconcile idempotency, add/remove/update paths, dry-run safety, concurrent-controller safety
+- [x] [#161](https://github.com/deghosal-2026/hiveplane/issues/161) — M26-01 — Desired-state spec format (fleet manifest set: workloads, policies, triggers, budgets) + loader from git repo or directory
+- [x] [#162](https://github.com/deghosal-2026/hiveplane/issues/162) — M26-02 — Reconciliation controller loop (observe → diff → plan → act → record) with dry-run mode
+- [x] [#163](https://github.com/deghosal-2026/hiveplane/issues/163) — M26-03 — Reconcile actions: register missing workload, deregister removed workload, update manifest, trigger re-cert on config change, quarantine unmanaged workload
+- [x] [#164](https://github.com/deghosal-2026/hiveplane/issues/164) — M26-04 — Drift record + reconcile history persisted and surfaced via API/CLI (`hiveplane reconcile status`)
+- [x] [#165](https://github.com/deghosal-2026/hiveplane/issues/165) — M26-05 — Conflict policy (declared-wins vs. observed-wins per field) and guardrails against destructive reconcile
+- [x] [#166](https://github.com/deghosal-2026/hiveplane/issues/166) — M26-06 — Git source integration (repo URL, path, ref, auth) with poll/webhook trigger; no writes back to git
+- [x] [#167](https://github.com/deghosal-2026/hiveplane/issues/167) — M26-07 — Controller concurrency safety (advisory lock / leader-aware) so a second replica cannot double-act
+- [x] [#168](https://github.com/deghosal-2026/hiveplane/issues/168) — M26-08 — Tests: reconcile idempotency, add/remove/update paths, dry-run safety, concurrent-controller safety
 
-**Test ticket:** [#169](https://github.com/deghosal-2026/hiveplane/issues/169) — Test cases for Desired-State Reconciliation (GitOps) Core
+**Test ticket:** [x] [#169](https://github.com/deghosal-2026/hiveplane/issues/169) — Test cases for Desired-State Reconciliation (GitOps) Core
 
 **Deliverables:**
 - `hiveplane.reconcile` package with a controller, planner, and action executor
@@ -70,13 +70,20 @@ Extend the v0.1.0 data model to represent the fleet primitives every later part 
 - `docs/design/reconciliation-design.md`
 
 **Acceptance criteria:**
-- [ ] Deleting a workload from desired state deregisters it (never deletes its history)
-- [ ] Editing a cert threshold in desired state triggers re-certification on the next reconcile
-- [ ] Running reconcile twice produces no second action set (idempotent)
-- [ ] Dry-run reports the plan without mutating state
-- [ ] A second controller replica does not execute the same actions (leader/advisory lock verified)
+- [x] Deleting a workload from desired state deregisters it (never deletes its history)
+- [x] Editing a cert threshold in desired state triggers re-certification on the next reconcile
+- [x] Running reconcile twice produces no second action set (idempotent)
+- [x] Dry-run reports the plan without mutating state
+- [x] A second controller replica does not execute the same actions (leader/advisory lock verified)
 
 **Done when:** the fleet can be declared in git and the controller converges actual state to it, safely and idempotently.
+
+> **Status:** M26 implementation complete. `hiveplane.reconcile` (loader, observer,
+> differ, conflict policy, planner, executor, controller, advisory lock, git
+> poll/webhook), migration `0005` (`reconcile_runs`), API endpoints, and
+> `hiveplane reconcile status|plan|apply` landed. All tests pass with a database;
+> coverage 96% total, ruff and mypy strict clean. Issues #161–#169 to be closed and
+> changes committed at the exit gate.
 
 **Dependencies:** M25; registry/certification services from v0.1.0.
 
@@ -84,11 +91,11 @@ Extend the v0.1.0 data model to represent the fleet primitives every later part 
 
 ## Exit Gate (M25, M26)
 
-- [ ] All tests in the system pass: `pytest`
-- [ ] Code coverage total > 95%
-- [ ] Ruff clean
-- [ ] Mypy strict clean
-- [ ] All relevant docs updated (data model, reconciliation design, PRD/WBS references)
+- [x] All tests in the system pass: `pytest`
+- [x] Code coverage total ≥ 95%
+- [x] Ruff clean
+- [x] Mypy strict clean
+- [x] All relevant docs updated (data model, reconciliation design, PRD/WBS references)
 - [ ] All M25–M26 issues done and closed
 - [ ] Commit and push changes
 

@@ -11,6 +11,8 @@ from hiveplane.execution.tools import ToolGateway
 from hiveplane.policy.approvals import ApprovalService
 from hiveplane.policy.engine import PolicyEngine
 from hiveplane.policy.packs import PolicyPackStore
+from hiveplane.reconcile.controller import ReconcileController
+from hiveplane.reconcile.store import ReconcileStore
 from hiveplane.registry.service import RegistryService
 from hiveplane.tenancy import Role, TenantContext
 from hiveplane.tenancy.context import DEFAULT_CONTEXT
@@ -83,3 +85,15 @@ def get_tool_gateway(request: Request) -> ToolGateway:
     """Return the tool-call boundary bound to the application state."""
     gateway: ToolGateway = request.app.state.tool_gateway
     return gateway
+
+
+def get_reconcile_controller(request: Request) -> ReconcileController:
+    """Return the reconcile controller bound to the application state."""
+    controller: ReconcileController = request.app.state.reconcile_controller
+    return controller
+
+
+def get_reconcile_store(request: Request) -> ReconcileStore:
+    """Return the reconcile store bound to the application state."""
+    store: ReconcileStore = request.app.state.reconcile_store
+    return store

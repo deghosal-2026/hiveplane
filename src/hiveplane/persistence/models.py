@@ -837,3 +837,20 @@ class DriftRecordRow(_TenantScoped, Base):
     resolution: Mapped[str] = mapped_column(String(32), index=True)
     reconcile_run_id: Mapped[str | None] = mapped_column(String(128), nullable=True)
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class ReconcileRunRow(_TenantScoped, Base):
+    """Append-only reconcile pass history per source (M26-04)."""
+
+    __tablename__ = "reconcile_runs"
+    __table_args__ = (Index("ix_reconcile_runs_source", "source_id", "started_at"),)
+
+    run_id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    source_id: Mapped[str] = mapped_column(String(128), index=True)
+    source: Mapped[str] = mapped_column(String(16))
+    revision: Mapped[str] = mapped_column(String(128))
+    mode: Mapped[str] = mapped_column(String(16))
+    outcome: Mapped[str] = mapped_column(String(32), index=True)
+    started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
