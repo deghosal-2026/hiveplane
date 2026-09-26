@@ -15,6 +15,7 @@ from sqlalchemy import (
     DateTime,
     Float,
     ForeignKey,
+    ForeignKeyConstraint,
     Index,
     Integer,
     String,
@@ -287,3 +288,54 @@ class BudgetTeamSpendRow(Base):
     team: Mapped[str] = mapped_column(String(253), primary_key=True)
     day: Mapped[str] = mapped_column(String(32), primary_key=True)
     amount_usd: Mapped[float] = mapped_column(Float)
+
+
+class TenantRow(Base):
+    """Isolation-boundary tenant records (#149)."""
+
+    __tablename__ = "tenants"
+    __table_args__ = (UniqueConstraint("tenant_id", "name", name="uq_tenants_tenant_name"),)
+
+    tenant_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    name: Mapped[str] = mapped_column(String(253))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class TeamRow(Base):
+    """Attribution/policy teams inside a tenant (#149)."""
+
+    __tablename__ = "teams"
+    __table_args__ = (
+        UniqueConstraint("team_id", "tenant_id", name="uq_teams_team_tenant"),
+        UniqueConstraint("tenant_id", "name", name="uq_teams_tenant_name"),
+        UniqueConstraint("tenant_id", "attribution_key", name="uq_teams_tenant_attribution"),
+        ForeignKeyConstraint(["tenant_id"], ["tenants.tenant_id"], ondelete="CASCADE"),
+    )
+
+    team_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    tenant_id: Mapped[str] = mapped_column(String(64), index=True)
+    name: Mapped[str] = mapped_column(String(253))
+    attribution_key: Mapped[str] = mapped_column(String(253))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class MembershipRow(Base):
+    """Operator-to-role bindings inside a tenant (#149)."""
+
+    __tablename__ = "memberships"
+    __table_args__ = (
+        UniqueConstraint(
+            "tenant_id", "operator_id", "team_id", name="uq_memberships_tenant_operator_team"
+        ),
+        ForeignKeyConstraint(["tenant_id"], ["tenants.tenant_id"], ondelete="CASCADE"),
+    )
+
+    membership_id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    tenant_id: Mapped[str] = mapped_column(String(64), index=True)
+    team_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    operator_id: Mapped[str] = mapped_column(String(253))
+    role: Mapped[str] = mapped_column(String(32))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
