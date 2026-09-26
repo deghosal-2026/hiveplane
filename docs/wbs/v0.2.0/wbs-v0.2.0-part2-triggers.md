@@ -41,8 +41,9 @@ Make the fleet run itself. Trigger rules ingest events from the outside world (w
 > **Status:** M27 complete. `hiveplane.triggers` (strict DSL, HMAC ingest with
 > replay protection, cron/scheduler, dedup/cooldown/rate/backpressure, templating,
 > engine, memory + Postgres store), migration `0006` (`trigger_nonces`), and the
-> trigger CRUD + webhook API landed. All tests pass with a database; ruff and
-> mypy strict clean. Issues #170–#178 to be closed at the exit gate.
+> trigger CRUD + webhook API landed. All tests pass with a database; coverage 96%
+> total, ruff and mypy strict clean. Issues #170–#178 closed; changes committed
+> and pushed.
 
 **Dependencies:** M25 (trigger model); v0.1.0 run submission API.
 
