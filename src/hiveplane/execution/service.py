@@ -150,6 +150,7 @@ class RunService:
         task: dict[str, JsonValue] | None = None,
         model_identity: str | None = None,
         trigger_origin: TriggerOrigin | None = None,
+        require_approval: bool = False,
         ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> Run:
         """Submit a run, admitting or refusing it before it is persisted.
@@ -175,7 +176,7 @@ class RunService:
             team_id=ctx.team_id,
             attribution_key=ctx.attribution_key,
         )
-        result = self._admission.check(run, record.manifest)
+        result = self._admission.check(run, record.manifest, require_approval=require_approval)
         if result.outcome is AdmissionOutcome.REFUSED:
             raise RunAdmissionRefusedError(result)
 

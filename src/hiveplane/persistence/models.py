@@ -528,6 +528,22 @@ class TriggerNonceRow(_TenantScoped, Base):
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
+class TriggerFreezeRow(_TenantScoped, Base):
+    """Declared maintenance/freeze windows (M28-05)."""
+
+    __tablename__ = "trigger_freezes"
+    __table_args__ = (Index("ix_trigger_freezes_scope", "scope", "scope_ref"),)
+
+    freeze_id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    scope: Mapped[str] = mapped_column(String(16))
+    scope_ref: Mapped[str | None] = mapped_column(String(253), nullable=True)
+    starts_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    ends_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    drain: Mapped[str] = mapped_column(String(16))
+    declared_by: Mapped[str] = mapped_column(String(253))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
 class PipelineRow(_TenantScoped, Base):
     """Versioned pipeline DAGs (M25-03)."""
 

@@ -44,6 +44,23 @@ class TriggerDisabledError(Exception):
         self.trigger_id = trigger_id
 
 
+class DlqEntryNotFoundError(Exception):
+    """Raised when a DLQ entry to replay does not exist."""
+
+    def __init__(self, entry_id: str) -> None:
+        super().__init__(f"trigger DLQ entry {entry_id!r} not found")
+        self.entry_id = entry_id
+
+
+#: Human-readable reasons recorded for limiter suppressions/rejections.
+_LIMIT_REASONS: dict[LimiterDecision, str] = {
+    LimiterDecision.DEDUPLICATED: "duplicate dedup key within window",
+    LimiterDecision.SUPPRESSED_COOLDOWN: "within cooldown window",
+    LimiterDecision.REJECTED_RATE: "per-trigger rate limit exceeded",
+    LimiterDecision.REJECTED_BACKPRESSURE: "global ingest backpressure",
+}
+
+
 class RunSubmitter(Protocol):
     """The execution-API surface the engine submits through."""
 
@@ -55,6 +72,7 @@ class RunSubmitter(Protocol):
         context: AdmissionContext,
         task: dict[str, JsonValue],
         trigger_origin: TriggerOrigin | None,
+        require_approval: bool,
         ctx: TenantContext,
     ) -> Run: ...
 
@@ -85,6 +103,7 @@ class TriggerEngine:
         clock: Callable[[], datetime] | None = None,
         id_factory: Callable[[], str] | None = None,
         audit: AuditLog | None = None,
+        freeze_check: Callable[[TriggerSpec, TenantContext], str | None] | None = None,
     ) -> None:
         self._store = store
         self._limiter = limiter
@@ -92,6 +111,7 @@ class TriggerEngine:
         self._clock = clock or (lambda: datetime.now(UTC))
         self._id_factory = id_factory or (lambda: f"ev-{uuid.uuid4().hex[:12]}")
         self._audit = audit
+        self._freeze_check = freeze_check
 
     def ingest(
         self,
@@ -121,6 +141,27 @@ class TriggerEngine:
                 reason="duplicate event id",
             )
 
+        if self._freeze_check is not None:
+            freeze_reason = self._freeze_check(spec, ctx)
+            if freeze_reason is not None:
+                self._record_event(
+                    spec,
+                    eid,
+                    src,
+                    payload,
+                    None,
+                    TriggerOutcome.SUPPRESSED_FREEZE,
+                    now,
+                    ctx,
+                    reason=freeze_reason,
+                )
+                return TriggerDecision(
+                    trigger_id=spec.id,
+                    event_id=eid,
+                    outcome=TriggerOutcome.SUPPRESSED_FREEZE,
+                    reason=freeze_reason,
+                )
+
         key = dedup_key
         if key is None and spec.dedup is not None and spec.dedup.key is not None:
             try:
@@ -131,9 +172,16 @@ class TriggerEngine:
         decision = self._limiter.check(spec, dedup_key=key, ctx=ctx)
         if decision is not LimiterDecision.ACCEPT:
             outcome = decision.outcome or TriggerOutcome.FAILED
-            self._record_event(spec, eid, src, payload, key, outcome, now, ctx)
+            reason = _LIMIT_REASONS.get(decision)
+            self._record_event(
+                spec, eid, src, payload, key, outcome, now, ctx, reason=reason
+            )
             return TriggerDecision(
-                trigger_id=spec.id, event_id=eid, outcome=outcome, dedup_key=key
+                trigger_id=spec.id,
+                event_id=eid,
+                outcome=outcome,
+                reason=reason,
+                dedup_key=key,
             )
 
         try:
@@ -147,7 +195,17 @@ class TriggerEngine:
             return self._fail(spec, eid, src, payload, f"template: {exc}", ctx)
 
         if spec.admission_rule is AdmissionRule.DENY:
-            self._record_event(spec, eid, src, payload, key, TriggerOutcome.ACCEPTED, now, ctx)
+            self._record_event(
+                spec,
+                eid,
+                src,
+                payload,
+                key,
+                TriggerOutcome.ACCEPTED,
+                now,
+                ctx,
+                reason="admission rule denies",
+            )
             self._record_run(
                 spec,
                 eid,
@@ -179,6 +237,7 @@ class TriggerEngine:
                 trigger_origin=TriggerOrigin(
                     source=src.value, event_id=eid, timestamp=now
                 ),
+                require_approval=spec.admission_rule is AdmissionRule.GATED,
                 ctx=ctx,
             )
         except RunAdmissionRefusedError as exc:
@@ -188,7 +247,17 @@ class TriggerEngine:
                 else TriggerRunStatus.BLOCKED_ADMISSION
             )
             reason = exc.result.refused_reason or "admission refused"
-            self._record_event(spec, eid, src, payload, key, TriggerOutcome.ACCEPTED, now, ctx)
+            self._record_event(
+                spec,
+                eid,
+                src,
+                payload,
+                key,
+                TriggerOutcome.ACCEPTED,
+                now,
+                ctx,
+                reason=reason,
+            )
             self._record_run(spec, eid, None, status, reason, now, ctx)
             return TriggerDecision(
                 trigger_id=spec.id,
@@ -213,6 +282,46 @@ class TriggerEngine:
             dedup_key=key,
         )
 
+    def preview(
+        self, spec: TriggerSpec, payload: dict[str, JsonValue]
+    ) -> dict[str, JsonValue]:
+        """Dry-run a delivery: render the dedup key and task without submitting.
+
+        Used by ``hiveplane triggers test``; raises :class:`TemplateError` on an
+        unsafe or overflowing substitution.
+        """
+        key: str | None = None
+        if spec.dedup is not None and spec.dedup.key is not None:
+            key = str(render_template(spec.dedup.key, payload))
+        task = render_task(
+            spec.task_template,
+            payload,
+            max_field_bytes=spec.max_field_bytes,
+            max_total_bytes=spec.max_total_bytes,
+        )
+        return {"trigger_id": spec.id, "dedup_key": key, "task": task}
+
+    def replay_dlq(
+        self, entry_id: str, *, ctx: TenantContext = DEFAULT_CONTEXT
+    ) -> TriggerDecision:
+        """Re-drive a dead-lettered delivery through the pipeline (M28-07).
+
+        The original payload is re-submitted with a fresh event id, so dedup and
+        cooldown are re-evaluated; the entry is marked replayed and audited.
+        """
+        entry = self._store.get_dlq(entry_id, ctx=ctx)
+        if entry is None:
+            raise DlqEntryNotFoundError(entry_id)
+        spec = self._store.get_trigger(entry.trigger_id, ctx=ctx)
+        if spec is None:
+            raise DlqEntryNotFoundError(entry_id)
+        self._audit_append(
+            "trigger-engine", "trigger.dlq.replay", entry.trigger_id, entry_id, ctx
+        )
+        decision = self.ingest(spec, entry.payload, ctx=ctx)
+        self._store.mark_dlq_replayed(entry_id, replayed_at=self._clock(), ctx=ctx)
+        return decision
+
     def _existing_run(
         self, trigger_id: str, event_id: str, ctx: TenantContext
     ) -> TriggerRun | None:
@@ -231,6 +340,7 @@ class TriggerEngine:
         outcome: TriggerOutcome,
         now: datetime,
         ctx: TenantContext,
+        reason: str | None = None,
     ) -> None:
         self._store.add_event(
             TriggerEvent(
@@ -242,9 +352,18 @@ class TriggerEngine:
                 received_at=now,
                 dedup_key=dedup_key,
                 outcome=outcome,
+                reason=reason,
             ),
             ctx=ctx,
         )
+        if outcome is not TriggerOutcome.ACCEPTED:
+            self._audit_append(
+                "trigger-engine",
+                f"trigger.event.{outcome.value}",
+                spec.id,
+                reason or outcome.value,
+                ctx,
+            )
 
     def _record_run(
         self,
@@ -279,7 +398,17 @@ class TriggerEngine:
         ctx: TenantContext,
     ) -> TriggerDecision:
         now = self._clock()
-        self._record_event(spec, event_id, source, payload, None, TriggerOutcome.FAILED, now, ctx)
+        self._record_event(
+            spec,
+            event_id,
+            source,
+            payload,
+            None,
+            TriggerOutcome.FAILED,
+            now,
+            ctx,
+            reason=reason,
+        )
         self._store.add_dlq(
             TriggerDlqEntry(
                 entry_id=f"dlq-{event_id}",

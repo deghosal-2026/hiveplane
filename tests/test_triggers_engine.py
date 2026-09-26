@@ -34,6 +34,7 @@ class FakeSubmitter:
         context: AdmissionContext,
         task: dict[str, Any],
         trigger_origin: TriggerOrigin | None,
+        require_approval: bool,
         ctx: TenantContext,
     ) -> Run:
         self.calls.append(
@@ -43,6 +44,7 @@ class FakeSubmitter:
                 "context": context,
                 "task": task,
                 "trigger_origin": trigger_origin,
+                "require_approval": require_approval,
             }
         )
         if self._error is not None:
@@ -202,3 +204,36 @@ def test_disabled_trigger_is_refused() -> None:
     engine, _, _ = _engine()
     with pytest.raises(TriggerDisabledError):
         engine.ingest(_spec(enabled=False), {"number": 1})
+
+
+def test_gated_requests_approval_and_staging_auto_does_not() -> None:
+    engine, _, fake = _engine()
+    engine.ingest(_spec(admission_rule="gated"), {"number": 1})
+    engine.ingest(_spec(admission_rule="staging-auto"), {"number": 2})
+    assert fake.calls[0]["require_approval"] is True
+    assert fake.calls[1]["require_approval"] is False
+
+
+def test_suppression_reason_and_audit_are_recorded() -> None:
+    from hiveplane.persistence.audit import InMemoryAuditLog
+
+    store = InMemoryTriggerStore()
+    audit = InMemoryAuditLog(clock=lambda: _NOW)
+    limiter = TriggerLimiter(store, clock=lambda: _NOW)
+    counter = __import__("itertools").count(1)
+    engine = TriggerEngine(
+        store,
+        limiter,
+        FakeSubmitter(),
+        clock=lambda: _NOW,
+        id_factory=lambda: f"ev-{next(counter)}",
+        audit=audit,
+    )
+    spec = _spec(cooldown_seconds=60)
+    engine.ingest(spec, {"number": 1})
+    engine.ingest(spec, {"number": 2})
+    events = store.list_events("t1")
+    assert events[-1].outcome is TriggerOutcome.SUPPRESSED_COOLDOWN
+    assert events[-1].reason == "within cooldown window"
+    actions = [record.action for record in audit.records()]
+    assert "trigger.event.suppressed_cooldown" in actions

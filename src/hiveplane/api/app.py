@@ -103,9 +103,12 @@ from hiveplane.registry.errors import (
 from hiveplane.registry.service import RegistryService
 from hiveplane.registry.store import build_registry_store
 from hiveplane.sandbox.manager import InMemorySandboxManager
+from hiveplane.tenancy import TenantContext
 from hiveplane.triggers.engine import TriggerEngine
+from hiveplane.triggers.freeze import FreezeService, build_freeze_store
 from hiveplane.triggers.ingest import WebhookVerifier
 from hiveplane.triggers.limiter import TriggerLimiter
+from hiveplane.triggers.schema import TriggerSpec
 from hiveplane.triggers.store import build_trigger_store
 
 _LOGGER = logging.getLogger(__name__)
@@ -239,8 +242,21 @@ def create_app(
         skew_seconds=settings.triggers.webhook_skew_seconds,
         replay_window_seconds=settings.triggers.replay_window_seconds,
     )
+    freeze_service = FreezeService(build_freeze_store(settings))
+    app.state.freeze_service = freeze_service
+
+    def _freeze_reason(spec: TriggerSpec, ctx: TenantContext) -> str | None:
+        try:
+            team = registry.get(spec.target.ref).team
+        except WorkloadNotFoundError:
+            team = None
+        freeze = freeze_service.active_for(spec.target.ref, team=team, ctx=ctx)
+        if freeze is None:
+            return None
+        return freeze.reason or f"{freeze.scope.value} freeze active"
+
     app.state.trigger_engine = TriggerEngine(
-        trigger_store, trigger_limiter, app.state.run_service
+        trigger_store, trigger_limiter, app.state.run_service, freeze_check=_freeze_reason
     )
     provider = build_provider(settings)
     app.state.provider = provider

@@ -55,17 +55,17 @@ Make the fleet run itself. Trigger rules ingest events from the outside world (w
 
 **Work items:**
 
-- [ ] [#179](https://github.com/deghosal-2026/hiveplane/issues/179) — M28-01 — GitHub source: PR opened/synchronized, push, label, and issue-comment (`/hiveplane`) events with signature verification
-- [ ] [#180](https://github.com/deghosal-2026/hiveplane/issues/180) — M28-02 — Prometheus Alertmanager source: alert firing/resolved ingest with fingerprint dedup
-- [ ] [#181](https://github.com/deghosal-2026/hiveplane/issues/181) — M28-03 — Watch mode: 24/7 periodic operators (deployment verification, health checks, fleet watchdog) as a first-class trigger type
-- [ ] [#182](https://github.com/deghosal-2026/hiveplane/issues/182) — M28-04 — Trigger→admission rules: trusted trigger auto-admits in staging; production triggers are approval-gated by policy
-- [ ] [#183](https://github.com/deghosal-2026/hiveplane/issues/183) — M28-05 — Maintenance windows / freeze: triggers pause and running work drains; freeze calendar
-- [ ] [#184](https://github.com/deghosal-2026/hiveplane/issues/184) — M28-06 — Trigger history + audit: every evaluation, suppression, admission, and rejection recorded with reason
-- [ ] [#185](https://github.com/deghosal-2026/hiveplane/issues/185) — M28-07 — Dead-letter queue: failed trigger deliveries parked, inspectable, and replayable (`hiveplane triggers replay`)
-- [ ] [#186](https://github.com/deghosal-2026/hiveplane/issues/186) — M28-08 — CLI: `hiveplane triggers list|show|create|test|replay`
-- [ ] [#187](https://github.com/deghosal-2026/hiveplane/issues/187) — M28-09 — Tests: each source end-to-end, admission gating, freeze behavior, DLQ replay
+- [x] [#179](https://github.com/deghosal-2026/hiveplane/issues/179) — M28-01 — GitHub source: PR opened/synchronized, push, label, and issue-comment (`/hiveplane`) events with signature verification
+- [x] [#180](https://github.com/deghosal-2026/hiveplane/issues/180) — M28-02 — Prometheus Alertmanager source: alert firing/resolved ingest with fingerprint dedup
+- [x] [#181](https://github.com/deghosal-2026/hiveplane/issues/181) — M28-03 — Watch mode: 24/7 periodic operators (deployment verification, health checks, fleet watchdog) as a first-class trigger type
+- [x] [#182](https://github.com/deghosal-2026/hiveplane/issues/182) — M28-04 — Trigger→admission rules: trusted trigger auto-admits in staging; production triggers are approval-gated by policy
+- [x] [#183](https://github.com/deghosal-2026/hiveplane/issues/183) — M28-05 — Maintenance windows / freeze: triggers pause and running work drains; freeze calendar
+- [x] [#184](https://github.com/deghosal-2026/hiveplane/issues/184) — M28-06 — Trigger history + audit: every evaluation, suppression, admission, and rejection recorded with reason
+- [x] [#185](https://github.com/deghosal-2026/hiveplane/issues/185) — M28-07 — Dead-letter queue: failed trigger deliveries parked, inspectable, and replayable (`hiveplane triggers replay`)
+- [x] [#186](https://github.com/deghosal-2026/hiveplane/issues/186) — M28-08 — CLI: `hiveplane triggers list|show|create|test|replay`
+- [x] [#187](https://github.com/deghosal-2026/hiveplane/issues/187) — M28-09 — Tests: each source end-to-end, admission gating, freeze behavior, DLQ replay
 
-**Test ticket:** [#188](https://github.com/deghosal-2026/hiveplane/issues/188) — Test cases for Trigger Sources, Admission & History
+**Test ticket:** [x] [#188](https://github.com/deghosal-2026/hiveplane/issues/188) — Test cases for Trigger Sources, Admission & History
 
 **Deliverables:**
 - GitHub, Alertmanager, and watch-mode source adapters
@@ -73,14 +73,21 @@ Make the fleet run itself. Trigger rules ingest events from the outside world (w
 - Trigger history/DLQ API + CLI; `docs/design/trigger-service-v2-design.md`
 
 **Acceptance criteria:**
-- [ ] A GitHub PR event starts the intended run and a `/hiveplane` comment re-triggers it
-- [ ] An Alertmanager alert start is deduplicated by fingerprint
-- [ ] A production trigger without approval is held; a staging trigger auto-admits
-- [ ] During a freeze window no trigger admits a run; in-flight runs drain gracefully
-- [ ] A failed delivery lands in the DLQ and replays successfully with the original payload
-- [ ] Every trigger decision is visible in history with an attributed reason
+- [x] A GitHub PR event starts the intended run and a `/hiveplane` comment re-triggers it
+- [x] An Alertmanager alert start is deduplicated by fingerprint
+- [x] A production trigger without approval is held; a staging trigger auto-admits
+- [x] During a freeze window no trigger admits a run; in-flight runs drain gracefully
+- [x] A failed delivery lands in the DLQ and replays successfully with the original payload
+- [x] Every trigger decision is visible in history with an attributed reason
 
 **Done when:** triggers fire from ≥3 sources with admission rules, freeze windows, DLQ replay, and a complete audit trail.
+
+> **Status:** M28 complete. GitHub/Alertmanager/watch sources, admission-rule
+> policy integration (`require_approval`), freeze windows (migration `0007`) with
+> suppression and drain, per-decision history reasons + audit, DLQ replay, and the
+> `hiveplane triggers` CLI landed. All tests pass with a database; coverage 95%
+> total, ruff and mypy strict clean. Issues #179–#188 closed; changes committed
+> and pushed.
 
 **Dependencies:** M27; policy engine (v0.1.0 Part 5).
 
@@ -93,8 +100,8 @@ Make the fleet run itself. Trigger rules ingest events from the outside world (w
 - [x] Ruff clean
 - [x] Mypy strict clean
 - [x] All relevant docs updated (trigger design, DSL reference, user guide)
-- [ ] All M27–M28 issues done and closed (M28 pending)
-- [ ] Commit and push changes (M27 committed; phase gate completes with M28)
+- [x] All M27–M28 issues done and closed
+- [x] Commit and push changes
 
 ## See Also
 

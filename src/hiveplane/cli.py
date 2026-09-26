@@ -439,16 +439,124 @@ def approvals_deny(
 # --------------------------------------------------------------------------- #
 @triggers_app.command("list")
 def triggers_list(
-    workload: Annotated[str, typer.Option("--workload", help="Workload name.")],
+    workload: Annotated[
+        str | None, typer.Option("--workload", help="List a workload's legacy trigger rules.")
+    ] = None,
     api_url: ApiUrl = "http://localhost:8100",
 ) -> None:
-    """List trigger rules stored for a workload."""
-    url = f"{api_url.rstrip('/')}/workloads/{workload}/triggers"
-    status_code, body = _request("GET", url)
+    """List triggers: the trigger service, or a workload's legacy rules."""
+    if workload is not None:
+        url = f"{api_url.rstrip('/')}/workloads/{workload}/triggers"
+        status_code, body = _request("GET", url)
+        if status_code >= 400 or status_code == 0:
+            _fail("list triggers", status_code, body)
+        for record in json.loads(body):
+            typer.echo(f"{record['trigger_id']}  {record['rule']['type']}")
+        return
+    status_code, body = _request("GET", f"{api_url.rstrip('/')}/triggers")
     if status_code >= 400 or status_code == 0:
         _fail("list triggers", status_code, body)
-    for record in json.loads(body):
-        typer.echo(f"{record['trigger_id']}  {record['rule']['type']}")
+    for trigger in json.loads(body):
+        state = "enabled" if trigger["enabled"] else "disabled"
+        typer.echo(f"{trigger['id']}  {trigger['source']}  {trigger['target']['ref']}  {state}")
+
+
+@triggers_app.command("show")
+def triggers_show(
+    trigger_id: Annotated[str, typer.Argument(help="Trigger id.")],
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Show a trigger declaration in full, as JSON."""
+    status_code, body = _request("GET", f"{api_url.rstrip('/')}/triggers/{trigger_id}")
+    if status_code >= 400 or status_code == 0:
+        _fail("show trigger", status_code, body)
+    typer.echo(json.dumps(json.loads(body), indent=2))
+
+
+@triggers_app.command("create")
+def triggers_create(
+    file: Annotated[
+        Path,
+        typer.Option(
+            "--file", exists=True, dir_okay=False, readable=True, help="Trigger YAML/JSON."
+        ),
+    ],
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Create (or replace) a trigger-service declaration."""
+    payload = _load_document(file)
+    status_code, body = _request("POST", f"{api_url.rstrip('/')}/triggers", payload)
+    if status_code >= 400 or status_code == 0:
+        _fail("create trigger", status_code, body)
+    data = json.loads(body)
+    typer.secho(f"OK: created trigger {data['id']}", fg=typer.colors.GREEN)
+
+
+@triggers_app.command("test")
+def triggers_test(
+    trigger_id: Annotated[str, typer.Argument(help="Trigger id.")],
+    payload_file: Annotated[
+        Path,
+        typer.Option(
+            "--payload", exists=True, dir_okay=False, readable=True, help="Event payload YAML/JSON."
+        ),
+    ],
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Dry-run a payload: match and render the task, submit no run."""
+    payload = _load_document(payload_file)
+    status_code, body = _request(
+        "POST", f"{api_url.rstrip('/')}/triggers/{trigger_id}/test", {"payload": payload}
+    )
+    if status_code >= 400 or status_code == 0:
+        _fail("test trigger", status_code, body)
+    typer.echo(json.dumps(json.loads(body), indent=2))
+
+
+@triggers_app.command("replay")
+def triggers_replay(
+    entry_id: Annotated[str, typer.Argument(help="DLQ entry id.")],
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Replay a dead-lettered trigger delivery."""
+    status_code, body = _request(
+        "POST", f"{api_url.rstrip('/')}/triggers/dlq/{entry_id}/replay"
+    )
+    if status_code >= 400 or status_code == 0:
+        _fail("replay trigger", status_code, body)
+    data = json.loads(body)
+    typer.secho(
+        f"OK: {entry_id} -> {data['outcome']} (run {data.get('run_id')})",
+        fg=typer.colors.GREEN,
+    )
+
+
+def _set_trigger_enabled(trigger_id: str, action: str, api_url: str) -> None:
+    status_code, body = _request(
+        "POST", f"{api_url.rstrip('/')}/triggers/{trigger_id}/{action}"
+    )
+    if status_code >= 400 or status_code == 0:
+        _fail(f"{action} trigger", status_code, body)
+    data = json.loads(body)
+    typer.secho(f"OK: {trigger_id} enabled={data['enabled']}", fg=typer.colors.GREEN)
+
+
+@triggers_app.command("enable")
+def triggers_enable(
+    trigger_id: Annotated[str, typer.Argument(help="Trigger id.")],
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Enable a trigger."""
+    _set_trigger_enabled(trigger_id, "enable", api_url)
+
+
+@triggers_app.command("disable")
+def triggers_disable(
+    trigger_id: Annotated[str, typer.Argument(help="Trigger id.")],
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Disable a trigger without deleting it."""
+    _set_trigger_enabled(trigger_id, "disable", api_url)
 
 
 @triggers_app.command("add")

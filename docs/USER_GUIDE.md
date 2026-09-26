@@ -117,6 +117,28 @@ history with `GET /triggers/{id}/events` and `GET /triggers/{id}/runs`; failed d
 park in `GET /triggers/dlq`. Webhook secrets come from
 `HIVEPLANE_TRIGGERS__SECRETS` until the secrets store (M45) lands.
 
+### Sources, admission, freeze, and replay
+
+Provider-specific endpoints verify provider signatures and normalize payloads:
+`POST /triggers/github/{id}` (`X-Hub-Signature-256`; PR/push/label, and a `/hiveplane`
+PR comment re-triggers) and `POST /triggers/alertmanager/{id}` (one event per alert,
+deduped by `fingerprint`). `admission_rule` selects the run context: `staging-auto`
+auto-admits staging, `gated` holds production for approval (certification still applies),
+`deny` refuses. A freeze window suppresses matching triggers and drains in-flight runs:
+
+```bash
+# Declare a workload-scoped freeze for 30 minutes (drain gracefully).
+curl -X POST localhost:8100/triggers/freezes -H 'content-type: application/json' -d '{
+  "freeze_id": "deploy-1", "scope": "workload", "scope_ref": "repo-agent",
+  "starts_at": "2026-01-01T00:00:00Z", "ends_at": "2026-01-01T00:30:00Z",
+  "declared_by": "operator", "drain": "graceful"
+}'
+```
+
+`hiveplane triggers list|show|create|test|replay|enable|disable` drives the trigger
+service; `test` renders a payload without submitting, and `replay <dlq-id>` re-drives a
+parked delivery. Every decision is recorded with a reason and audited.
+
 ## Operator UI
 
 The operator UI is a server-rendered web app that reads the same HTTP API as the

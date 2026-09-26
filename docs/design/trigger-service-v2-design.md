@@ -1,6 +1,6 @@
 # D23: Trigger Service v2 Design
 
-> Status: implemented (M27 core; M28 sources/admission/history in progress)
+> Status: implemented (M27–M28)
 
 **Milestones:** M27–M28 · **Extends:** D12
 
@@ -176,6 +176,33 @@ secrets are resolved from `HIVEPLANE_TRIGGERS__SECRETS` until the secrets store
 (M45) lands; they never live in the trigger document. M28 adds the concrete
 GitHub/Alertmanager/watch sources, freeze windows, admission-rule policy
 integration, and the DLQ replay CLI.
+
+## Implementation (M28)
+
+| Module | Responsibility |
+|--------|----------------|
+| `hiveplane.triggers.sources` | GitHub (`X-Hub-Signature-256`, PR/push/label/`/hiveplane` comment) and Alertmanager (per-alert fingerprint) adapters |
+| `hiveplane.triggers.watch` | Scheduled watch ticks with a `max_concurrent_runs` guard (`WatchRunner`) |
+| `hiveplane.triggers.freeze` | Scoped freeze windows, suppression, and graceful/abort drain (`FreezeService`) |
+
+**Admission rules.** `staging-auto` submits to staging (auto-admitted);
+`gated` submits to production with `require_approval=True`, so the run is held
+(paused) and an approval is requested even when policy would otherwise allow —
+certification, model, budget, and policy gates still apply first. `deny` refuses.
+
+**Sources.** GitHub verifies `X-Hub-Signature-256` over the raw body, matches the
+declared `filter` (event/action/repo), normalizes the PR/issue number, and treats
+a `/hiveplane` PR comment as a re-trigger. Alertmanager emits one event per alert
+with the alert `fingerprint` as the dedup key; an optional body HMAC is verified.
+Watch mode fires on schedule but skips a tick while a prior watch run is active,
+recording `skipped_concurrent`.
+
+**Freeze & DLQ.** `trigger_freezes` (migration `0007`) holds scoped windows;
+matching events are recorded `suppressed_freeze`, and `drain` pauses (graceful) or
+stops (abort) in-flight runs. `POST /triggers/dlq/{id}/replay` re-drives a parked
+delivery with a fresh event id so dedup/cooldown are re-evaluated, marking it
+replayed and auditing the action. Every decision carries a recorded reason and is
+audited.
 
 ## See Also
 

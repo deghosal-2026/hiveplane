@@ -31,14 +31,23 @@ class AdmissionPipeline:
         self._sandbox = sandbox
         self._clock = clock or (lambda: datetime.now(UTC))
 
-    def check(self, run: Run, workload: AgentWorkload) -> AdmissionResult:
-        """Return the admission decision for a run against its workload."""
+    def check(
+        self, run: Run, workload: AgentWorkload, *, require_approval: bool = False
+    ) -> AdmissionResult:
+        """Return the admission decision for a run against its workload.
+
+        ``require_approval`` forces escalation (a held, paused run) even when
+        policy would otherwise allow — used by gated triggers. It never bypasses
+        the certification, model, budget, or policy gates.
+        """
         with telemetry.span("admission", run=run, workload=workload) as active:
-            result = self._check(run, workload)
+            result = self._check(run, workload, require_approval=require_approval)
             active.set_attribute("outcome", result.outcome.value)
             return result
 
-    def _check(self, run: Run, workload: AgentWorkload) -> AdmissionResult:
+    def _check(
+        self, run: Run, workload: AgentWorkload, *, require_approval: bool = False
+    ) -> AdmissionResult:
         """Evaluate every admission gate for a run."""
         context = run.context
         if context is None:
@@ -122,7 +131,8 @@ class AdmissionPipeline:
             outcome=outcome,
             checks=checks,
             sandbox=sandbox_required,
-            escalation_required=policy.outcome is DecisionOutcome.ESCALATE,
+            escalation_required=policy.outcome is DecisionOutcome.ESCALATE
+            or require_approval,
         )
 
     @staticmethod

@@ -155,3 +155,133 @@ def test_webhook_unknown_trigger_is_not_found() -> None:
         "/triggers/webhook/missing", content=b"{}", headers=_webhook_headers(b"{}")
     )
     assert response.status_code == 404
+
+
+def _github_headers(body: bytes, event: str, secret: str = _SECRET) -> dict[str, str]:
+    import hashlib
+    import hmac
+
+    signature = hmac.new(secret.encode(), body, hashlib.sha256).hexdigest()
+    return {
+        "X-GitHub-Event": event,
+        "X-Hub-Signature-256": f"sha256={signature}",
+        "Content-Type": "application/json",
+    }
+
+
+def test_github_pr_event_starts_a_run_and_comment_retriggers() -> None:
+    client = _client()
+    _register_staging_workload(client)
+    client.post(
+        "/triggers",
+        json={
+            "id": "t1",
+            "source": "github",
+            "target": {"kind": "workload", "ref": "agent-1"},
+            "filter": {"event": ["pull_request"], "actions": ["opened", "synchronize"]},
+            "task_template": {"pr": "{{ event.number }}"},
+            "admission_rule": "staging-auto",
+        },
+    )
+    pr_body = b'{"action": "opened", "number": 5, "repository": {"full_name": "acme/fleet"}}'
+    first = client.post(
+        "/triggers/github/t1", content=pr_body, headers=_github_headers(pr_body, "pull_request")
+    )
+    assert first.status_code == 200
+    assert first.json()[0]["accepted"] is True
+
+    comment = (
+        b'{"action": "created", "repository": {"full_name": "acme/fleet"}, '
+        b'"issue": {"number": 5, "pull_request": {"url": "x"}}, '
+        b'"comment": {"body": "/hiveplane again"}}'
+    )
+    second = client.post(
+        "/triggers/github/t1", content=comment, headers=_github_headers(comment, "issue_comment")
+    )
+    assert second.status_code == 200
+    assert second.json()[0]["accepted"] is True
+
+
+def test_github_bad_signature_is_unauthorized() -> None:
+    client = _client()
+    client.post(
+        "/triggers",
+        json={
+            "id": "t1",
+            "source": "github",
+            "target": {"kind": "workload", "ref": "agent-1"},
+        },
+    )
+    headers = _github_headers(b"{}", "pull_request")
+    headers["X-Hub-Signature-256"] = "sha256=bad"
+    assert client.post("/triggers/github/t1", content=b"{}", headers=headers).status_code == 401
+
+
+def test_alertmanager_fingerprint_dedup() -> None:
+    client = _client()
+    _register_staging_workload(client)
+    client.post(
+        "/triggers",
+        json={
+            "id": "t1",
+            "source": "alertmanager",
+            "target": {"kind": "workload", "ref": "agent-1"},
+            "dedup": {"key": "{{ event.fingerprint }}"},
+            "admission_rule": "staging-auto",
+        },
+    )
+    body = (
+        b'{"status": "firing", "alerts": [{"status": "firing", "fingerprint": "fp-1", '
+        b'"labels": {"alertname": "HighCPU"}}]}'
+    )
+    from hiveplane.triggers.sources import body_signature
+
+    headers = {"X-HivePlane-Signature": f"sha256={body_signature(_SECRET, body)}"}
+    first = client.post("/triggers/alertmanager/t1", content=body, headers=headers)
+    assert first.status_code == 200 and first.json()[0]["accepted"] is True
+    second = client.post("/triggers/alertmanager/t1", content=body, headers=headers)
+    assert second.json()[0]["outcome"] == "deduplicated"
+
+
+def test_freeze_suppresses_webhook_and_can_be_lifted() -> None:
+    client = _client()
+    _register_staging_workload(client)
+    client.post("/triggers", json=_TRIGGER)
+
+    freeze = {
+        "freeze_id": "fz-1",
+        "scope": "workload",
+        "scope_ref": "agent-1",
+        "starts_at": "2026-01-01T00:00:00Z",
+        "ends_at": "2999-01-01T00:00:00Z",
+        "declared_by": "operator",
+    }
+    assert client.post("/triggers/freezes", json=freeze).status_code == 201
+    assert client.get("/triggers/freezes").json()[0]["freeze_id"] == "fz-1"
+
+    body = b'{"number": 1}'
+    response = client.post(
+        "/triggers/webhook/t1", content=body, headers=_webhook_headers(body)
+    )
+    assert response.status_code == 202
+    assert response.json()["outcome"] == "suppressed_freeze"
+
+    assert client.delete("/triggers/freezes/fz-1").status_code == 204
+    assert client.get("/triggers/freezes").json() == []
+
+
+def test_dlq_replay_missing_entry_is_not_found() -> None:
+    client = _client()
+    assert client.post("/triggers/dlq/missing/replay").status_code == 404
+
+
+def test_webhook_to_missing_workload_is_dead_lettered() -> None:
+    client = _client()
+    client.post("/triggers", json={**_TRIGGER, "target": {"kind": "workload", "ref": "nope"}})
+    body = b'{"number": 1}'
+    response = client.post(
+        "/triggers/webhook/t1", content=body, headers=_webhook_headers(body)
+    )
+    assert response.status_code == 500
+    dlq = client.get("/triggers/dlq").json()
+    assert dlq and dlq[0]["trigger_id"] == "t1"

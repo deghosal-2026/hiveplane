@@ -232,3 +232,16 @@ def test_record_usage_updates_cost(make_manifest: Callable[..., AgentWorkload]) 
     )
     assert updated.cost_usd == 0.25
     assert len(service.usage(run.id)) == 1
+
+
+def test_submit_require_approval_pauses_run(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    service, _, _, workload = _service(make_manifest)
+    run = service.submit(
+        workload=workload,
+        caller="trigger",
+        context=AdmissionContext.PRODUCTION,
+        require_approval=True,
+    )
+    assert run.state is RunState.PAUSED

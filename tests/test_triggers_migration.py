@@ -36,3 +36,15 @@ def test_0006_is_idempotent(pg_engine: Engine) -> None:
     command.upgrade(config, "head")
     command.upgrade(config, "head")
     assert "trigger_nonces" in set(inspect(pg_engine).get_table_names())
+
+
+def test_0007_adds_and_drops_trigger_freezes(pg_engine: Engine) -> None:
+    config = _config()
+    command.upgrade(config, "head")
+    assert "trigger_freezes" in set(inspect(pg_engine).get_table_names())
+
+    command.downgrade(config, "0006")
+    assert "trigger_freezes" not in set(inspect(pg_engine).get_table_names())
+
+    command.upgrade(config, "head")
+    assert "trigger_freezes" in set(inspect(pg_engine).get_table_names())

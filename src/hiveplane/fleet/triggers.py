@@ -58,6 +58,7 @@ class TriggerOutcome(StrEnum):
     REJECTED_RATE = "rejected_rate"
     REJECTED_BACKPRESSURE = "rejected_backpressure"
     REJECTED_SIGNATURE = "rejected_signature"
+    SKIPPED_CONCURRENT = "skipped_concurrent"
     FAILED = "failed"
 
 
@@ -150,6 +151,7 @@ class TriggerEvent(BaseModel):
     received_at: AwareDatetime
     dedup_key: str | None = Field(default=None, max_length=512)
     outcome: TriggerOutcome
+    reason: str | None = Field(default=None, max_length=2000)
 
 
 class TriggerRun(BaseModel):

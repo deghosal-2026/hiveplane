@@ -17,6 +17,7 @@ from hiveplane.registry.service import RegistryService
 from hiveplane.tenancy import Role, TenantContext
 from hiveplane.tenancy.context import DEFAULT_CONTEXT
 from hiveplane.triggers.engine import TriggerEngine
+from hiveplane.triggers.freeze import FreezeService
 from hiveplane.triggers.ingest import WebhookVerifier
 from hiveplane.triggers.store import TriggerStore
 
@@ -124,3 +125,9 @@ def get_trigger_secrets(request: Request) -> dict[str, str]:
     """Return the configured trigger-id to webhook-secret map."""
     secrets: dict[str, str] = request.app.state.trigger_secrets
     return secrets
+
+
+def get_freeze_service(request: Request) -> FreezeService:
+    """Return the freeze service bound to the application state."""
+    service: FreezeService = request.app.state.freeze_service
+    return service

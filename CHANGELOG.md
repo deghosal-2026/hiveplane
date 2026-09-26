@@ -124,6 +124,34 @@ immune system (drift, quarantine, promotion gate), and fleet scale-out. In progr
   DST), templating safety, idempotent submission, and Postgres store/migration
   round-trips. Coverage ≥ 95% with a database.
 
+### Added (M28 — trigger sources, admission & history)
+
+- **GitHub source** — verifies `X-Hub-Signature-256`, matches the declared
+  event/action/repo filter, normalizes the PR/issue number, and treats a
+  `/hiveplane` PR comment as a re-trigger.
+- **Alertmanager source** — one event per alert with the alert `fingerprint` as
+  the dedup key; firing/resolved filtering and optional body HMAC.
+- **Watch mode** — scheduled 24/7 operators (`WatchRunner`) that skip a tick
+  while a prior watch run is active, recording `skipped_concurrent`.
+- **Admission rules** — `staging-auto` auto-admits staging; `gated` submits to
+  production with a forced approval (held, paused) while still enforcing
+  certification, model, budget, and policy gates; `deny` refuses. Runs carry
+  `trigger_origin` attribution.
+- **Freeze windows** — scoped (tenant/team/workload) `trigger_freezes` windows
+  (migration `0007`) suppress matching events (`suppressed_freeze`) and drain
+  in-flight runs gracefully (pause) or with `drain: abort` (stop), attributed to
+  the declaring operator.
+- **History & audit** — every evaluation, suppression, admission, and rejection
+  records an outcome and a reason on the event, and is audited.
+- **DLQ replay** — `POST /triggers/dlq/{id}/replay` re-drives a parked delivery
+  with a fresh event id (re-checking dedup/cooldown), marks it replayed, and
+  audits the action.
+- **API** — `POST /triggers/github/{id}`, `/alertmanager/{id}`, `/{id}/test`,
+  and freeze CRUD (`GET/POST /triggers/freezes`, `DELETE /triggers/freezes/{id}`).
+- **CLI** — `hiveplane triggers list|show|create|test|replay|enable|disable`.
+- **Tests** — each source end-to-end, admission gating, freeze suppression/drain,
+  and DLQ replay. Coverage ≥ 95% with a database.
+
 ## [0.1.0] - 2026-09-25
 
 The first release: the certified control loop. Register agents, certify them against a

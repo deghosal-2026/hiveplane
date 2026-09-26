@@ -176,3 +176,22 @@ def test_model_identity_is_skipped_when_run_has_none(
         _run(AdmissionContext.SANDBOX, model=None), make_manifest()
     )
     assert result.outcome is AdmissionOutcome.SANDBOX_ONLY
+
+
+def test_require_approval_forces_escalation(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    result = _pipeline(cert=_Cert(True, "m1")).check(
+        _run(AdmissionContext.PRODUCTION), make_manifest(), require_approval=True
+    )
+    assert result.outcome is AdmissionOutcome.ADMITTED
+    assert result.escalation_required is True
+
+
+def test_require_approval_defaults_off(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    result = _pipeline(cert=_Cert(True, "m1")).check(
+        _run(AdmissionContext.PRODUCTION), make_manifest()
+    )
+    assert result.escalation_required is False
