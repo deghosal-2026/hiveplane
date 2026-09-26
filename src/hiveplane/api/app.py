@@ -27,6 +27,7 @@ from hiveplane.api.adapters import router as adapters_router
 from hiveplane.api.agent_tools import router as agent_tools_router
 from hiveplane.api.approvals import router as approvals_router
 from hiveplane.api.certifications import router as certifications_router
+from hiveplane.api.drift import router as drift_router
 from hiveplane.api.pipelines import router as pipelines_router
 from hiveplane.api.policy import router as policy_router
 from hiveplane.api.promotions import router as promotions_router
@@ -62,15 +63,30 @@ from hiveplane.certification.signing import generate_keypair, load_or_generate_k
 from hiveplane.certification.store import build_certification_store
 from hiveplane.certification.workflow import CertificationCoordinator
 from hiveplane.config import Settings, get_settings
+from hiveplane.core.fanout import FanOutDestination, FanOutType
 from hiveplane.core.manifest import manifest_json_schema
 from hiveplane.core.run import AdmissionContext
 from hiveplane.core.spec import IOSpec
+from hiveplane.drift.detector import DriftDetector
+from hiveplane.drift.errors import (
+    DriftError,
+    DriftNotConfiguredError,
+    QuarantineNotFoundError,
+    ReinstatementRefusedError,
+)
+from hiveplane.drift.monitor import DriftMonitor
+from hiveplane.drift.notify import DriftNotifier
+from hiveplane.drift.quarantine import QuarantineService
+from hiveplane.drift.reinstatement import ReinstatementService
+from hiveplane.drift.scheduler import DriftScheduler
+from hiveplane.drift.store import build_drift_store
 from hiveplane.execution.errors import (
     IllegalTransitionError,
     RunAdmissionRefusedError,
     RunNotFoundError,
     RunNotIntervenableError,
 )
+from hiveplane.execution.fanout import DeliveryTransport, SlackTransport, WebhookTransport
 from hiveplane.execution.recovery import RunRecovery
 from hiveplane.execution.service import RunService
 from hiveplane.execution.subprocess_spawner import SubprocessSpawner
@@ -153,6 +169,10 @@ _ERROR_STATUS: tuple[tuple[type[Exception], int], ...] = (
     (CertificationNotFoundError, 404),
     (CorpusError, 422),
     (ExecutorNotConfiguredError, 503),
+    (QuarantineNotFoundError, 404),
+    (ReinstatementRefusedError, 409),
+    (DriftNotConfiguredError, 409),
+    (DriftError, 422),
 )
 
 
@@ -408,6 +428,8 @@ def create_app(
         store=app.state.promotion_store,
         audit=app.state.audit_log,
     )
+    if settings.drift.enabled and certification_coordinator is not None:
+        _wire_drift(app, registry, certification_coordinator, settings)
     app.state.run_recovery = RunRecovery(app.state.run_service)
     readiness_engine = (
         create_engine_from_settings(settings)
@@ -490,6 +512,7 @@ def create_app(
     app.include_router(approvals_router)
     app.include_router(certifications_router)
     app.include_router(promotions_router)
+    app.include_router(drift_router)
     app.include_router(sandbox_router)
     app.include_router(spend_router)
     app.include_router(reconcile_router)
@@ -501,6 +524,62 @@ def create_app(
     if settings.a2a.enabled:
         app.include_router(a2a_router)
     return app
+
+
+def _wire_drift(
+    app: FastAPI,
+    registry: RegistryService,
+    coordinator: CertificationCoordinator,
+    settings: Settings,
+) -> None:
+    """Install the drift detector, quarantine, notification, and reinstatement (M34)."""
+    drift = settings.drift
+    store = build_drift_store(settings)
+    scheduler = DriftScheduler(
+        registry,
+        default_interval=settings.certification.re_cert_interval_days * 86400,
+        renewal_window=drift.renewal_window_days * 86400,
+    )
+    detector = DriftDetector(
+        threshold_pass_rate=settings.certification.drift_threshold_pass_rate,
+        max_new_failures=settings.certification.max_new_failures,
+        required_consecutive_failures=drift.required_consecutive_failures,
+        strong_multiplier=drift.strong_multiplier,
+    )
+    quarantine_service = QuarantineService(
+        registry,
+        store,
+        audit=app.state.audit_log,
+        notifier=_build_drift_notifier(settings),
+        cancel_in_flight=drift.cancel_in_flight,
+    )
+    app.state.drift_store = store
+    app.state.drift_scheduler = scheduler
+    app.state.drift_monitor = DriftMonitor(
+        detector, store, coordinator, quarantine_service=quarantine_service
+    )
+    app.state.quarantine_service = quarantine_service
+    app.state.reinstatement_service = ReinstatementService(
+        registry, store, coordinator, audit=app.state.audit_log
+    )
+
+
+def _build_drift_notifier(settings: Settings) -> DriftNotifier:
+    """Build the owner notifier from drift/fan-out webhook settings (M34-04)."""
+    drift = settings.drift
+    slack_url = drift.slack_webhook_url or settings.fanout.slack_webhook_url
+    webhook_url = drift.generic_webhook_url or settings.fanout.generic_webhook_url
+    transports: dict[FanOutType, DeliveryTransport] = {}
+    destinations: list[FanOutDestination] = []
+    if slack_url:
+        transports[FanOutType.SLACK] = SlackTransport(webhook_url=slack_url)
+        destinations.append(
+            FanOutDestination(type=FanOutType.SLACK, channel=drift.slack_channel)
+        )
+    if webhook_url:
+        transports[FanOutType.WEBHOOK] = WebhookTransport(default_url=webhook_url)
+        destinations.append(FanOutDestination(type=FanOutType.WEBHOOK, url=webhook_url))
+    return DriftNotifier(transports, destinations, enabled=drift.notify)
 
 
 def _build_certification_coordinator(

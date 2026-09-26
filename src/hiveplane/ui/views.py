@@ -193,6 +193,10 @@ class QuarantineEntry(BaseModel):
     workload: str
     timestamp: str
     record_id: str
+    reason: str | None = None
+    severity: str | None = None
+    status: str = "active"
+    quarantine_id: str | None = None
 
 
 class CertDashboardView(BaseModel):
@@ -206,8 +210,15 @@ class CertDashboardView(BaseModel):
     quarantine_history: list[QuarantineEntry] = Field(default_factory=list)
 
 
-def build_cert_dashboard(records: list[dict[str, Any]]) -> CertDashboardView:
-    """Aggregate certification records into the dashboard view."""
+def build_cert_dashboard(
+    records: list[dict[str, Any]],
+    quarantines: list[dict[str, Any]] | None = None,
+) -> CertDashboardView:
+    """Aggregate certification records into the dashboard view.
+
+    ``quarantines`` are optional persisted drift-quarantine records (M34-05);
+    when supplied their reason/severity/status enrich the quarantine history.
+    """
     status_counts = dict.fromkeys(_CERT_STATUSES, 0)
     trends: list[CertTrendPoint] = []
     quarantine: list[QuarantineEntry] = []
@@ -241,6 +252,20 @@ def build_cert_dashboard(records: list[dict[str, Any]]) -> CertDashboardView:
                     record_id=str(record.get("record_id", "")),
                 )
             )
+
+    if quarantines:
+        quarantine = [
+            QuarantineEntry(
+                workload=str(item.get("workload", "")),
+                timestamp=str(item.get("timestamp", "")),
+                record_id=str(item.get("quarantine_id", "")),
+                reason=item.get("reason"),
+                severity=item.get("severity"),
+                status=str(item.get("status", "active")),
+                quarantine_id=str(item.get("quarantine_id", "")),
+            )
+            for item in quarantines
+        ]
 
     trends.sort(key=lambda point: (point.workload, point.timestamp))
     quarantine.sort(key=lambda entry: (entry.workload, entry.timestamp))

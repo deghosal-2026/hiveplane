@@ -55,30 +55,40 @@ Give the immune system its two most powerful behaviors: an explainable regressio
 
 **Work items:**
 
-- [ ] [#234](https://github.com/deghosal-2026/hiveplane/issues/234) — M34-01 — Drift scheduler: periodic re-certification cadence per workload (configurable)
-- [ ] [#235](https://github.com/deghosal-2026/hiveplane/issues/235) — M34-02 — Drift detection: compare current benchmark performance to the certified baseline; threshold + trend logic
-- [ ] [#236](https://github.com/deghosal-2026/hiveplane/issues/236) — M34-03 — Auto-quarantine action: suspend admission, cancel/pause in-flight work per policy, mark `quarantined`
-- [ ] [#237](https://github.com/deghosal-2026/hiveplane/issues/237) — M34-04 — Owner notification via fan-out channels (Slack/webhook) with the drift evidence and regression diff
-- [ ] [#238](https://github.com/deghosal-2026/hiveplane/issues/238) — M34-05 — Quarantine history + reason persisted; visible on the certification dashboard
-- [ ] [#239](https://github.com/deghosal-2026/hiveplane/issues/239) — M34-06 — Reinstatement flow: fix → re-certify → promote back → resume admission; all audited
-- [ ] [#240](https://github.com/deghosal-2026/hiveplane/issues/240) — M34-07 — Certification expiry/renewal windows: certifications expire per policy; expired → not admissible
-- [ ] [#241](https://github.com/deghosal-2026/hiveplane/issues/241) — M34-08 — False-positive controls: require N consecutive failures or a minimum delta before quarantining
-- [ ] [#242](https://github.com/deghosal-2026/hiveplane/issues/242) — M34-09 — Tests: seeded drifting agent is quarantined; stable agent is not; reinstatement restores admission; expiry blocks admission
+- [x] [#234](https://github.com/deghosal-2026/hiveplane/issues/234) — M34-01 — Drift scheduler: periodic re-certification cadence per workload (configurable)
+- [x] [#235](https://github.com/deghosal-2026/hiveplane/issues/235) — M34-02 — Drift detection: compare current benchmark performance to the certified baseline; threshold + trend logic
+- [x] [#236](https://github.com/deghosal-2026/hiveplane/issues/236) — M34-03 — Auto-quarantine action: suspend admission, cancel/pause in-flight work per policy, mark `quarantined`
+- [x] [#237](https://github.com/deghosal-2026/hiveplane/issues/237) — M34-04 — Owner notification via fan-out channels (Slack/webhook) with the drift evidence and regression diff
+- [x] [#238](https://github.com/deghosal-2026/hiveplane/issues/238) — M34-05 — Quarantine history + reason persisted; visible on the certification dashboard
+- [x] [#239](https://github.com/deghosal-2026/hiveplane/issues/239) — M34-06 — Reinstatement flow: fix → re-certify → promote back → resume admission; all audited
+- [x] [#240](https://github.com/deghosal-2026/hiveplane/issues/240) — M34-07 — Certification expiry/renewal windows: certifications expire per policy; expired → not admissible
+- [x] [#241](https://github.com/deghosal-2026/hiveplane/issues/241) — M34-08 — False-positive controls: require N consecutive failures or a minimum delta before quarantining
+- [x] [#242](https://github.com/deghosal-2026/hiveplane/issues/242) — M34-09 — Tests: seeded drifting agent is quarantined; stable agent is not; reinstatement restores admission; expiry blocks admission
 
-**Test ticket:** [#243](https://github.com/deghosal-2026/hiveplane/issues/243) — Test cases for Drift Detector, Auto-Quarantine & Reinstatement
+**Test ticket:** [x] [#243](https://github.com/deghosal-2026/hiveplane/issues/243) — Test cases for Drift Detector, Auto-Quarantine & Reinstatement
 
 **Deliverables:**
 - `hiveplane.drift` package (scheduler, detector, quarantine, reinstatement)
 - `docs/design/certification-v2-design.md`; dashboard additions
 
 **Acceptance criteria:**
-- [ ] A seeded drifting agent is auto-quarantined and its owner notified with evidence
-- [ ] A stable agent is never falsely quarantined in the field test
-- [ ] Quarantine revokes production admission immediately
-- [ ] Reinstatement requires a fresh passing certification
-- [ ] An expired certification blocks production admission
+- [x] A seeded drifting agent is auto-quarantined and its owner notified with evidence
+- [x] A stable agent is never falsely quarantined in the field test
+- [x] Quarantine revokes production admission immediately
+- [x] Reinstatement requires a fresh passing certification
+- [x] An expired certification blocks production admission
 
 **Done when:** drift is detected, quarantined, explained, and reversible — with no false positives in the field test.
+
+> **Status:** M34 complete. `hiveplane.drift` provides the re-cert scheduler
+> (cadence + expiry), threshold/trend detector with false-positive controls,
+> auto-quarantine (admission revoked, in-flight cancellation per policy, owner
+> fan-out, audit), persisted quarantine history/dashboard, certified-only
+> reinstatement, and certification expiry enforcement. Migration `0011` adds
+> `quarantines`/`drift_assessments`. API `/drift/*` + `/quarantines/*` and the
+> `hiveplane drift` CLI landed. 1553 tests pass with a database; coverage 95%
+> total, ruff and mypy strict clean. Issues #234–#243 closed; committed and
+> pushed.
 
 **Dependencies:** M33; M28 (notifications); v0.1.0 certification + registry.
 
@@ -90,9 +100,9 @@ Give the immune system its two most powerful behaviors: an explainable regressio
 - [x] Code coverage total ≥ 95%
 - [x] Ruff clean
 - [x] Mypy strict clean
-- [ ] All relevant docs updated (regression diff, drift detection, dashboard docs) (M34 pending)
-- [ ] All M33–M34 issues done and closed (M34 pending)
-- [ ] Commit and push changes (M33 committed; phase gate completes with M34)
+- [x] All relevant docs updated (regression diff, drift detection, dashboard docs)
+- [x] All M33–M34 issues done and closed
+- [x] Commit and push changes
 
 ## See Also
 

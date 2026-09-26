@@ -109,6 +109,26 @@ class CertificationSettings(BaseModel):
         return self
 
 
+class DriftSettings(BaseModel):
+    """Behavioral drift detection, auto-quarantine, and expiry (M34, DD-09..DD-12).
+
+    ``threshold_pass_rate``/``max_new_failures`` may be left unset to inherit the
+    ``certification.drift_threshold_pass_rate``/``certification.max_new_failures``
+    defaults (wiring resolves them); ``required_consecutive_failures`` is the
+    false-positive control that prevents quarantining on a single flaky run.
+    """
+
+    enabled: bool = True
+    required_consecutive_failures: int = Field(default=2, ge=1)
+    strong_multiplier: float = Field(default=2.0, ge=1.0)
+    renewal_window_days: int = Field(default=3, ge=0)
+    cancel_in_flight: bool = True
+    notify: bool = True
+    slack_webhook_url: str | None = None
+    generic_webhook_url: str | None = None
+    slack_channel: str = "#agent-certifications"
+
+
 class SandboxDefaults(BaseModel):
     """Per-run sandbox defaults applied when a manifest omits them (DD-14)."""
 
@@ -296,6 +316,7 @@ class Settings(BaseSettings):
     redis: RedisSettings = Field(default_factory=RedisSettings)
     otel: OtelSettings = Field(default_factory=OtelSettings)
     certification: CertificationSettings = Field(default_factory=CertificationSettings)
+    drift: DriftSettings = Field(default_factory=DriftSettings)
     sandbox: SandboxSettings = Field(default_factory=SandboxSettings)
     execution: ExecutionSettings = Field(default_factory=ExecutionSettings)
     fanout: FanoutSettings = Field(default_factory=FanoutSettings)

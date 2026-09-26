@@ -12,6 +12,10 @@ from hiveplane.agent_tools.store import AgentToolStore
 from hiveplane.budget.store import BudgetStore
 from hiveplane.certification.promotion import PromotionGate
 from hiveplane.certification.workflow import CertificationCoordinator
+from hiveplane.drift.monitor import DriftMonitor
+from hiveplane.drift.quarantine import QuarantineService
+from hiveplane.drift.reinstatement import ReinstatementService
+from hiveplane.drift.scheduler import DriftScheduler
 from hiveplane.execution.service import RunService
 from hiveplane.execution.tools import ToolGateway
 from hiveplane.pipelines.engine import PipelineEngine
@@ -211,3 +215,51 @@ def get_promotion_gate(request: Request) -> PromotionGate:
     """Return the promotion gate bound to the application state."""
     gate: PromotionGate = request.app.state.promotion_gate
     return gate
+
+
+def get_drift_scheduler(request: Request) -> DriftScheduler:
+    """Return the drift scheduler, or 503 when drift detection is disabled."""
+    scheduler: DriftScheduler | None = getattr(request.app.state, "drift_scheduler", None)
+    if scheduler is None:
+        raise HTTPException(
+            status.HTTP_503_SERVICE_UNAVAILABLE,
+            "drift detection is not enabled; set HIVEPLANE_DRIFT__ENABLED=true",
+        )
+    return scheduler
+
+
+def get_drift_monitor(request: Request) -> DriftMonitor:
+    """Return the drift monitor, or 503 when drift detection is disabled."""
+    monitor: DriftMonitor | None = getattr(request.app.state, "drift_monitor", None)
+    if monitor is None:
+        raise HTTPException(
+            status.HTTP_503_SERVICE_UNAVAILABLE,
+            "drift detection is not enabled; set HIVEPLANE_DRIFT__ENABLED=true",
+        )
+    return monitor
+
+
+def get_quarantine_service(request: Request) -> QuarantineService:
+    """Return the quarantine service, or 503 when drift detection is disabled."""
+    service: QuarantineService | None = getattr(
+        request.app.state, "quarantine_service", None
+    )
+    if service is None:
+        raise HTTPException(
+            status.HTTP_503_SERVICE_UNAVAILABLE,
+            "quarantine is not enabled; set HIVEPLANE_DRIFT__ENABLED=true",
+        )
+    return service
+
+
+def get_reinstatement_service(request: Request) -> ReinstatementService:
+    """Return the reinstatement service, or 503 when drift detection is disabled."""
+    service: ReinstatementService | None = getattr(
+        request.app.state, "reinstatement_service", None
+    )
+    if service is None:
+        raise HTTPException(
+            status.HTTP_503_SERVICE_UNAVAILABLE,
+            "reinstatement is not enabled; set HIVEPLANE_DRIFT__ENABLED=true",
+        )
+    return service

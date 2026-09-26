@@ -38,6 +38,9 @@ agents_app = typer.Typer(
     help="Route tasks and call certified agents as tools.", no_args_is_help=True
 )
 adapters_app = typer.Typer(help="Inspect runtime adapters.", no_args_is_help=True)
+drift_app = typer.Typer(
+    help="Detect drift, quarantine, and reinstate workloads.", no_args_is_help=True
+)
 app.add_typer(certs_app, name="certs")
 app.add_typer(runs_app, name="runs")
 app.add_typer(approvals_app, name="approvals")
@@ -47,6 +50,7 @@ app.add_typer(reconcile_app, name="reconcile")
 app.add_typer(pipelines_app, name="pipelines")
 app.add_typer(agents_app, name="agents")
 app.add_typer(adapters_app, name="adapters")
+app.add_typer(drift_app, name="drift")
 
 ManifestArg = Annotated[
     Path,
@@ -414,6 +418,176 @@ def _print_regression_diff(body: str, *, as_json: bool) -> None:
         typer.secho(f"  improved: {item['task_id']}", fg=typer.colors.GREEN)
     if diff.get("summary"):
         typer.echo(diff["summary"])
+
+
+# --------------------------------------------------------------------------- #
+# Drift, quarantine, and reinstatement (M34)
+# --------------------------------------------------------------------------- #
+@drift_app.command("due")
+def drift_due(api_url: ApiUrl = "http://localhost:8100") -> None:
+    """List workloads whose re-certification window is due or expired."""
+    status_code, body = _request("GET", f"{api_url.rstrip('/')}/drift/due")
+    if status_code >= 400 or status_code == 0:
+        _fail("list due workloads", status_code, body)
+    due = json.loads(body)
+    if not due:
+        typer.echo("No workloads are due for re-certification.")
+        return
+    for item in due:
+        typer.echo(
+            f"{item['workload']}  next={item['next_re_cert_run']}  "
+            f"expiry={item['expiry_state']}"
+        )
+
+
+@drift_app.command("schedules")
+def drift_schedules(api_url: ApiUrl = "http://localhost:8100") -> None:
+    """List the computed re-certification cadence per workload."""
+    status_code, body = _request("GET", f"{api_url.rstrip('/')}/drift/schedules")
+    if status_code >= 400 or status_code == 0:
+        _fail("list drift schedules", status_code, body)
+    for schedule in json.loads(body):
+        typer.echo(
+            f"{schedule['workload']}  every {schedule['interval_seconds']}s  "
+            f"next={schedule['next_re_cert_run']}"
+        )
+
+
+@drift_app.command("expiries")
+def drift_expiries(api_url: ApiUrl = "http://localhost:8100") -> None:
+    """Show certification expiry/renewal states."""
+    status_code, body = _request("GET", f"{api_url.rstrip('/')}/drift/expiries")
+    if status_code >= 400 or status_code == 0:
+        _fail("list expiries", status_code, body)
+    for item in json.loads(body):
+        typer.echo(
+            f"{item['workload']}  {item['state']}  expires={item['expires_at']}"
+        )
+
+
+def _eval_summary_payload(
+    *,
+    pass_rate: float,
+    tasks_passed: int,
+    tasks_failed: int,
+    critical_failures: int,
+    p95_latency_ms: int,
+) -> dict[str, Any]:
+    return {
+        "pass_rate": pass_rate,
+        "tasks_passed": tasks_passed,
+        "tasks_failed": tasks_failed,
+        "critical_failures": critical_failures,
+        "p95_latency_ms": p95_latency_ms,
+    }
+
+
+@drift_app.command("assess")
+def drift_assess(
+    workload: Annotated[str, typer.Argument(help="Workload name.")],
+    pass_rate: Annotated[float, typer.Option("--pass-rate")] = 1.0,
+    tasks_passed: Annotated[int, typer.Option("--tasks-passed")] = 0,
+    tasks_failed: Annotated[int, typer.Option("--tasks-failed")] = 0,
+    critical_failures: Annotated[int, typer.Option("--critical-failures")] = 0,
+    p95_latency_ms: Annotated[int, typer.Option("--p95-latency-ms")] = 1000,
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Assess current performance against the certified baseline."""
+    payload = {
+        "workload": workload,
+        "current": _eval_summary_payload(
+            pass_rate=pass_rate,
+            tasks_passed=tasks_passed,
+            tasks_failed=tasks_failed,
+            critical_failures=critical_failures,
+            p95_latency_ms=p95_latency_ms,
+        ),
+    }
+    status_code, body = _request("POST", f"{api_url.rstrip('/')}/drift/assess", payload)
+    if status_code >= 400 or status_code == 0:
+        _fail("assess drift", status_code, body)
+    typer.echo(json.dumps(json.loads(body), indent=2))
+
+
+@drift_app.command("probe")
+def drift_probe(
+    workload: Annotated[str, typer.Argument(help="Workload name.")],
+    target_context: Annotated[str, typer.Option("--context")] = "staging",
+    corpus: Annotated[str | None, typer.Option("--corpus")] = None,
+    model_identity: Annotated[str | None, typer.Option("--model-identity")] = None,
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Run a fresh benchmark and assess the workload for drift."""
+    payload: dict[str, Any] = {"workload": workload, "target_context": target_context}
+    if corpus:
+        payload["corpus"] = corpus
+    if model_identity:
+        payload["model_identity"] = model_identity
+    status_code, body = _request("POST", f"{api_url.rstrip('/')}/drift/probe", payload)
+    if status_code >= 400 or status_code == 0:
+        _fail("probe drift", status_code, body)
+    typer.echo(json.dumps(json.loads(body), indent=2))
+
+
+@drift_app.command("quarantine")
+def drift_quarantine(
+    workload: Annotated[str, typer.Argument(help="Workload name.")],
+    reason: Annotated[str, typer.Option("--reason")] = "operator quarantine",
+    operator: Annotated[str, typer.Option("--operator")] = "operator",
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Quarantine a workload, revoking production admission."""
+    payload = {"workload": workload, "reason": reason, "operator": operator}
+    status_code, body = _request("POST", f"{api_url.rstrip('/')}/quarantines", payload)
+    if status_code >= 400 or status_code == 0:
+        _fail("quarantine workload", status_code, body)
+    record = json.loads(body)
+    typer.secho(
+        f"quarantined {record['workload']} ({record['quarantine_id']})",
+        fg=typer.colors.GREEN,
+    )
+
+
+@drift_app.command("quarantines")
+def drift_quarantines(
+    workload: Annotated[str | None, typer.Option("--workload")] = None,
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """List quarantine history and reasons."""
+    query = urlencode({k: v for k, v in {"workload": workload}.items() if v})
+    url = f"{api_url.rstrip('/')}/quarantines"
+    if query:
+        url = f"{url}?{query}"
+    status_code, body = _request("GET", url)
+    if status_code >= 400 or status_code == 0:
+        _fail("list quarantines", status_code, body)
+    for record in json.loads(body):
+        typer.echo(
+            f"{record['quarantine_id']}  {record['workload']}  "
+            f"{record['status']}  {record['severity']}  {record['reason']}"
+        )
+
+
+@drift_app.command("reinstate")
+def drift_reinstate(
+    quarantine_id: Annotated[str, typer.Argument(help="Quarantine id.")],
+    operator: Annotated[str, typer.Option("--operator")] = "operator",
+    corpus: Annotated[str | None, typer.Option("--corpus")] = None,
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Re-certify a quarantined workload and resume admission."""
+    payload: dict[str, Any] = {"operator": operator}
+    if corpus:
+        payload["corpus"] = corpus
+    url = f"{api_url.rstrip('/')}/quarantines/{quarantine_id}/reinstate"
+    status_code, body = _request("POST", url, payload)
+    if status_code >= 400 or status_code == 0:
+        _fail("reinstate workload", status_code, body)
+    record = json.loads(body)
+    typer.secho(
+        f"reinstated {record['workload']} by {record['reinstated_by']}",
+        fg=typer.colors.GREEN,
+    )
 
 
 # --------------------------------------------------------------------------- #

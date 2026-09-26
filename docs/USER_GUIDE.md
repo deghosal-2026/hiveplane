@@ -318,6 +318,47 @@ A machine-readable `RegressionReport` (plus a human summary) is attached to the
 certification record, and `GET /certifications/compare-baseline/{after}` exposes
 baseline selection over the API. Identical results produce an empty diff.
 
+## Drift Detection, Quarantine & Reinstatement
+
+Certified workloads are re-certified on a per-workload cadence (their
+manifest's `re_cert_interval`, falling back to the fleet default). The drift
+detector compares a fresh evaluation against the certified baseline; a single
+exceeding run is only a **warning**, and quarantine requires either
+`drift.required_consecutive_failures` consecutive exceeding runs or a strong
+signal (a critical failure, or a drop at least `2×` the threshold). A stable
+agent is never quarantined.
+
+```bash
+# What is due, and what is expiring/expired.
+hiveplane drift due
+hiveplane drift schedules
+hiveplane drift expiries
+
+# Assess current performance (or run a fresh benchmark) against the baseline.
+hiveplane drift assess repo-agent --pass-rate 0.85 --tasks-failed 3
+hiveplane drift probe repo-agent --context production
+```
+
+Quarantine immediately revokes production admission, optionally cancels
+in-flight runs, records a reason and evidence, notifies the owner via the
+configured Slack/webhook fan-out, and is audited:
+
+```bash
+hiveplane drift quarantine repo-agent --reason "manual hold" --operator alice
+hiveplane drift quarantines [--workload repo-agent]
+```
+
+Reinstatement requires a **fresh passing certification** (staging recovery,
+then production certification and admission). A failing or unchanged workload
+stays quarantined:
+
+```bash
+hiveplane drift reinstate <quarantine-id> --operator alice
+```
+
+Quarantine history (with reason and severity) is on the certification dashboard,
+and an expired certification is not admissible for production.
+
 ## Operator UI
 
 The operator UI is a server-rendered web app that reads the same HTTP API as the

@@ -59,6 +59,10 @@ class ControlPlaneClient(Protocol):
         self, workload: str | None = None, status: str | None = None
     ) -> list[dict[str, Any]]: ...
 
+    def list_quarantines(
+        self, workload: str | None = None
+    ) -> list[dict[str, Any]]: ...
+
     def get_spend(self) -> dict[str, Any]: ...
 
 
@@ -173,6 +177,11 @@ class HttpControlPlaneClient:
         """Return certification records, optionally filtered."""
         params = self._filters(workload=workload, status=status)
         return self._request("GET", "/certifications", params=params)  # type: ignore[no-any-return]
+
+    def list_quarantines(self, workload: str | None = None) -> list[dict[str, Any]]:
+        """Return persisted quarantine history, optionally filtered (M34-05)."""
+        params = self._filters(workload=workload)
+        return self._request("GET", "/quarantines", params=params)  # type: ignore[no-any-return]
 
     def get_spend(self) -> dict[str, Any]:
         """Return attributed spend by workload and team."""

@@ -20,6 +20,7 @@ from hiveplane.certification.diff import build_regression_report, regression_dif
 from hiveplane.certification.errors import CertificationNotFoundError, CorpusError
 from hiveplane.certification.models import (
     BenchmarkCorpus,
+    BenchmarkResult,
     BenchmarkTask,
     CertificationRecord,
     CertificationStatus,
@@ -109,28 +110,8 @@ class CertificationCoordinator:
         model_identity: str | None = None,
     ) -> CertificationRecord:
         """Execute the benchmark and persist the resulting certification record."""
-        certification = record.manifest.spec.certification
-        reference = corpus_ref or (
-            certification.benchmark_corpus if certification is not None else None
-        )
-        if not reference:
-            raise CorpusError(f"workload {workload!r} has no benchmark_corpus configured")
-        corpus = load_corpus(self._resolve_corpus_path(reference))
-        pinned = _pinned_identity(record.manifest, model_identity)
-        executor = (
-            self._executor_factory(workload, pinned)
-            if self._executor_factory is not None
-            else self._executor
-        )
-        runner = BenchmarkRunner(
-            executor,
-            model_identity=pinned or "unspecified",
-            benchmark_version=self._benchmark_version,
-            environment=self._environment,
-            clock=self._clock,
-        )
-        result = runner.run(
-            corpus, workload_id=workload, manifest_version=record.current_version
+        result, corpus = self._execute(
+            record, workload, corpus_ref=corpus_ref, model_identity=model_identity
         )
         previous = self._registry.list_attestations(workload)
         previous_record = (
@@ -173,6 +154,55 @@ class CertificationCoordinator:
         ):
             metrics.get_metrics().record_regression(workload=workload)
         return certification_record
+
+    def benchmark(
+        self,
+        workload: str,
+        *,
+        target_context: TargetContext = TargetContext.STAGING,
+        corpus_ref: str | None = None,
+        model_identity: str | None = None,
+    ) -> BenchmarkResult:
+        """Run a workload's corpus without certifying (drift probing, M34)."""
+        record = self._registry.get(workload)
+        result, _ = self._execute(
+            record, workload, corpus_ref=corpus_ref, model_identity=model_identity
+        )
+        return result
+
+    def _execute(
+        self,
+        record: WorkloadRecord,
+        workload: str,
+        *,
+        corpus_ref: str | None,
+        model_identity: str | None = None,
+    ) -> tuple[BenchmarkResult, BenchmarkCorpus]:
+        """Run the workload's benchmark corpus and return the result and corpus."""
+        certification = record.manifest.spec.certification
+        reference = corpus_ref or (
+            certification.benchmark_corpus if certification is not None else None
+        )
+        if not reference:
+            raise CorpusError(f"workload {workload!r} has no benchmark_corpus configured")
+        corpus = load_corpus(self._resolve_corpus_path(reference))
+        pinned = _pinned_identity(record.manifest, model_identity)
+        executor = (
+            self._executor_factory(workload, pinned)
+            if self._executor_factory is not None
+            else self._executor
+        )
+        runner = BenchmarkRunner(
+            executor,
+            model_identity=pinned or "unspecified",
+            benchmark_version=self._benchmark_version,
+            environment=self._environment,
+            clock=self._clock,
+        )
+        result = runner.run(
+            corpus, workload_id=workload, manifest_version=record.current_version
+        )
+        return result, corpus
 
     def _resolve_corpus_path(self, reference: str) -> Path:
         """Resolve a corpus reference under the corpora root, rejecting escapes."""

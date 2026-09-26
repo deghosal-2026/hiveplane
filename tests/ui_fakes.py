@@ -16,6 +16,7 @@ class FakeControlPlaneClient:
         self.story: dict[str, Any] = {}
         self.approvals: list[dict[str, Any]] = []
         self.certifications: list[dict[str, Any]] = []
+        self.quarantines: list[dict[str, Any]] = []
         self.spend: dict[str, Any] = {"by_workload": [], "by_team": []}
         self.calls: list[tuple[str, tuple[Any, ...]]] = []
         self.errors: dict[str, ControlPlaneError] = {}
@@ -79,6 +80,10 @@ class FakeControlPlaneClient:
     ) -> list[dict[str, Any]]:
         self._record("list_certifications", workload, status)
         return self.certifications
+
+    def list_quarantines(self, workload: str | None = None) -> list[dict[str, Any]]:
+        self._record("list_quarantines", workload)
+        return self.quarantines
 
     def get_spend(self) -> dict[str, Any]:
         self._record("get_spend")

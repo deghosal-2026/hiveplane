@@ -280,6 +280,46 @@ class DriftScheduleRow(_TenantScoped, Base):
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
+class QuarantineRow(_TenantScoped, Base):
+    """Persisted drift/operator quarantines with reason and history (M34-05)."""
+
+    __tablename__ = "quarantines"
+    __table_args__ = (
+        Index("ix_quarantines_workload_status", "workload", "status"),
+        ForeignKeyConstraint(
+            ["workload", "tenant_id"],
+            ["workloads.name", "workloads.tenant_id"],
+        ),
+    )
+
+    quarantine_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    workload: Mapped[str] = mapped_column(String(253), index=True)
+    status: Mapped[str] = mapped_column(String(32), index=True)
+    actor: Mapped[str] = mapped_column(String(253))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class DriftAssessmentRow(_TenantScoped, Base):
+    """Recorded drift assessments used for trend/false-positive controls (M34-02)."""
+
+    __tablename__ = "drift_assessments"
+    __table_args__ = (
+        Index("ix_drift_assessments_workload_created", "workload", "created_at"),
+        ForeignKeyConstraint(
+            ["workload", "tenant_id"],
+            ["workloads.name", "workloads.tenant_id"],
+        ),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    workload: Mapped[str] = mapped_column(String(253), index=True)
+    verdict: Mapped[str] = mapped_column(String(32), index=True)
+    exceeded: Mapped[bool] = mapped_column(Boolean, default=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
 class FanOutDeliveryRow(_TenantScoped, Base):
     """Result fan-out delivery attempts."""
 

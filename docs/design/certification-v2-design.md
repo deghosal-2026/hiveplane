@@ -1,6 +1,6 @@
 # D26: Certification v2 Design
 
-> Status: implemented (M32 promotion gate, M33 regression diff; M34–M35 drift/log/provenance pending)
+> Status: implemented (M32 promotion gate, M33 regression diff, M34 drift/quarantine/reinstatement; M35 transparency/provenance pending)
 
 **Milestones:** M32–M35 · **Extends:** D10
 
@@ -205,6 +205,40 @@ API/CLI: `GET /certifications/compare/{before}/{after}`,
 `GET /certifications/compare-baseline/{after}?workload=...&baseline=...`; and
 `hiveplane certs compare <v1> <v2> [--json]`,
 `hiveplane certs compare-baseline <workload> <after> [--baseline <id>] [--json]`.
+
+### Drift detector, auto-quarantine & reinstatement (M34)
+
+`hiveplane.drift` watches certified workloads for behavioral decay and makes
+quarantine reversible:
+
+- **Scheduler** — per-workload re-certification cadence from the manifest's
+  `certification.re_cert_interval` (fleet default fallback); `due()` is
+  deterministic given the clock. Also exposes certification **expiry/renewal**
+  states (`valid`/`expiring`/`expired`); expired attestations are not admissible
+  (enforced by `RegistryService._has_valid_attestation`).
+- **Detector** — compares a fresh `EvalSummary` to the certified baseline:
+  pass-rate drop and new failures against `certification.drift_threshold_pass_rate`
+  / `max_new_failures`. Severity is `critical` for critical failures or a strong
+  (≥2× threshold) signal.
+- **False-positive controls** — a single exceeding run is a `warning`; quarantine
+  requires `drift.required_consecutive_failures` consecutive exceeding runs (or a
+  strong signal). A stable agent is never quarantined.
+- **Auto-quarantine** — `QuarantineService` forces status `quarantined` (which
+  immediately revokes production admission), optionally cancels in-flight runs
+  per `drift.cancel_in_flight`, persists a `QuarantineRecord` with reason and
+  evidence, notifies the owner via Slack/webhook fan-out (D15), and audits
+  `workload.quarantined`.
+- **History & dashboard** — quarantine records and drift assessments persist
+  (`quarantines`, `drift_assessments`) and appear on the certification dashboard
+  with reason and severity.
+- **Reinstatement** — `ReinstatementService` requires a *fresh* passing
+  certification (staging recovery → production certification) and re-granted
+  production admission before marking the quarantine `reinstated`; every step is
+  audited (`workload.reinstated`).
+
+API: `GET /drift/{due,schedules,expiries}`, `POST /drift/{assess,probe}`,
+`GET|POST /quarantines`, `POST /quarantines/{id}/reinstate`.
+CLI: `hiveplane drift {due,schedules,expiries,assess,probe,quarantine,quarantines,reinstate}`.
 
 ## See Also
 - [Certification Pipeline Design](certification-pipeline-design.md) (D10) — runner, engine, thresholds, promotion gate, drift

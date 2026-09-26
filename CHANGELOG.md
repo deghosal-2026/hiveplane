@@ -300,6 +300,36 @@ immune system (drift, quarantine, promotion gate), and fleet scale-out. In progr
   determinism, report attachment, and the API/CLI. Coverage ≥ 95% with a
   database.
 
+### Added (M34 — drift detector, auto-quarantine & reinstatement)
+
+- **Drift scheduler** (`hiveplane.drift.DriftScheduler`) — per-workload
+  re-certification cadence (manifest `re_cert_interval`, fleet default fallback)
+  with a deterministic `due()`, plus certification expiry/renewal states
+  (`valid`/`expiring`/`expired`). Expired certifications are not admissible.
+- **Drift detector** — compares a fresh evaluation to the certified baseline
+  (pass-rate drop and new failures vs. configured thresholds and critical-failure
+  rules); a strong (≥2×) signal or critical failures escalate severity.
+- **False-positive controls** — a single exceeding run is a warning; quarantine
+  requires N consecutive exceeding runs (`drift.required_consecutive_failures`)
+  or a strong signal, so a stable agent is never falsely quarantined.
+- **Auto-quarantine** (`hiveplane.drift.QuarantineService`) — forces status
+  `quarantined`, immediately revoking production admission, optionally cancels
+  in-flight runs per policy, persists a `QuarantineRecord` (reason + evidence),
+  notifies the owner via Slack/webhook fan-out (D15), and audits the action.
+- **History & dashboard** — quarantine records and drift assessments persist
+  (`quarantines`, `drift_assessments`; migration `0011`) and surface on the
+  certification dashboard with reason and severity.
+- **Reinstatement** — `hiveplane.drift.ReinstatementService` requires a fresh
+  passing certification (staging recovery → production certification) and
+  re-granted admission before reinstating; every step is audited.
+- **API + CLI** — `GET /drift/{due,schedules,expiries}`, `POST /drift/{assess,probe}`,
+  `GET|POST /quarantines`, `POST /quarantines/{id}/reinstate`; and
+  `hiveplane drift {due,schedules,expiries,assess,probe,quarantine,quarantines,reinstate}`.
+- **Tests** — detector thresholds/trends, false-positive controls, scheduler
+  cadence and expiry, quarantine admission revocation + notification + audit,
+  reinstatement success/refusal, Postgres round-trip and migration `0011`.
+  Coverage ≥ 95% with a database.
+
 ## [0.1.0] - 2026-09-25
 
 The first release: the certified control loop. Register agents, certify them against a

@@ -162,8 +162,12 @@ def create_ui_app(client: ControlPlaneClient | None = None) -> FastAPI:
     @app.get("/certifications", response_class=HTMLResponse)
     def certifications(request: Request) -> HTMLResponse:
         """Certification dashboard: status, trends, and quarantine history."""
+        try:
+            quarantines = request.app.state.control_plane.list_quarantines()
+        except ControlPlaneError:
+            quarantines = []
         view = build_cert_dashboard(
-            request.app.state.control_plane.list_certifications()
+            request.app.state.control_plane.list_certifications(), quarantines
         )
         return templates.TemplateResponse(request, "certifications.html", {"view": view})
 
