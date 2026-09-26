@@ -2,8 +2,9 @@
 
 > Status: implemented for M39 (deterministic versioned scanner, taint marks &
 > provenance, port-aware default-deny egress allow-lists, security events,
-> repeated-attempt quarantine); M40 (context-aware policy, what-if, packs,
-> time windows, kill switch) pending.
+> repeated-attempt quarantine) and M40 (context-aware policy with budget/taint/
+> time inputs, explainable decision records, what-if dry-run, inheritable policy
+> packs, manifest time-windows, and the instant tool kill switch).
 
 **Milestones:** M39–M40 · **Extends:** D4, D11
 

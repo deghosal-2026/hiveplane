@@ -22,7 +22,7 @@ from pydantic import (
 )
 
 from hiveplane.certification.models import CertificationStatus
-from hiveplane.core.decision import ActionClass
+from hiveplane.core.decision import ActionClass, TimeWindow
 from hiveplane.core.fanout import FanOutSpec
 from hiveplane.core.health import HealthSpec
 from hiveplane.core.sandbox import SandboxSpec
@@ -202,6 +202,7 @@ class WorkloadSpec(BaseModel):
     health: HealthSpec = Field(default_factory=HealthSpec)
     observability: ObservabilitySpec = Field(default_factory=ObservabilitySpec)
     io: IOSpec | None = None
+    time_windows: list[TimeWindow] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def _certification_requires_model_identity(self) -> WorkloadSpec:

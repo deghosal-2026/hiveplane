@@ -38,6 +38,7 @@ from hiveplane.persistence.audit import AuditLog, InMemoryAuditLog
 from hiveplane.persistence.base import create_engine_from_settings
 from hiveplane.persistence.postgres_audit import PostgresAuditLog
 from hiveplane.persistence.run_store import PostgresRunStore
+from hiveplane.policy.kill_switch import KillSwitch
 from hiveplane.registry.service import RegistryService
 from hiveplane.shaping.injection import InjectionScanner
 from hiveplane.shaping.pipeline import ShapingPipeline
@@ -108,6 +109,7 @@ def build_tool_gateway(
     run_service: RunService,
     approvals: ApprovalRequests | None,
     defense: DefenseGuard | None = None,
+    kill_switch: KillSwitch | None = None,
 ) -> ToolGateway:
     """Build the tool-call boundary over the live run service.
 
@@ -129,6 +131,7 @@ def build_tool_gateway(
         approvals=approvals,
         executor=executor,
         defense=defense,
+        kill_switch=kill_switch,
     )
 
 

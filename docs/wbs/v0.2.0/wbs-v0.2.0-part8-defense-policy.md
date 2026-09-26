@@ -51,14 +51,14 @@ Make the fleet defend itself. Scan inputs and tool outputs for injection, constr
 
 **Work items:**
 
-- [ ] [#288](https://github.com/deghosal-2026/hiveplane/issues/288) — M40-01 — Context-aware policy engine: decision inputs include environment, data sensitivity (public/PII), blast-radius score, budget state, and time
-- [ ] [#289](https://github.com/deghosal-2026/hiveplane/issues/289) — M40-02 — Decision records: every decision carries a reason and the originating rule id
-- [ ] [#290](https://github.com/deghosal-2026/hiveplane/issues/290) — M40-03 — Policy what-if / dry-run: evaluate a proposed decision without executing it
-- [ ] [#291](https://github.com/deghosal-2026/hiveplane/issues/291) — M40-04 — Team policy packs: versioned, inheritable bundles with linting and distribution
-- [ ] [#292](https://github.com/deghosal-2026/hiveplane/issues/292) — M40-05 — Time-window policies: business-hours-only destructive actions, blackout calendars
-- [ ] [#293](https://github.com/deghosal-2026/hiveplane/issues/293) — M40-06 — Tool kill switch: instant fleet-wide disable of any tool, with audit and re-enable
-- [ ] [#294](https://github.com/deghosal-2026/hiveplane/issues/294) — M40-07 — Policy pack CLI (`hiveplane policies lint|publish|apply`) + API
-- [ ] [#295](https://github.com/deghosal-2026/hiveplane/issues/295) — M40-08 — Tests: staging vs. prod decision differs; what-if matches real decision; pack inheritance/lint; kill switch blocks a tool instantly
+- [x] [#288](https://github.com/deghosal-2026/hiveplane/issues/288) — M40-01 — Context-aware policy engine: decision inputs include environment, data sensitivity (public/PII), blast-radius score, budget state, and time
+- [x] [#289](https://github.com/deghosal-2026/hiveplane/issues/289) — M40-02 — Decision records: every decision carries a reason and the originating rule id
+- [x] [#290](https://github.com/deghosal-2026/hiveplane/issues/290) — M40-03 — Policy what-if / dry-run: evaluate a proposed decision without executing it
+- [x] [#291](https://github.com/deghosal-2026/hiveplane/issues/291) — M40-04 — Team policy packs: versioned, inheritable bundles with linting and distribution
+- [x] [#292](https://github.com/deghosal-2026/hiveplane/issues/292) — M40-05 — Time-window policies: business-hours-only destructive actions, blackout calendars
+- [x] [#293](https://github.com/deghosal-2026/hiveplane/issues/293) — M40-06 — Tool kill switch: instant fleet-wide disable of any tool, with audit and re-enable
+- [x] [#294](https://github.com/deghosal-2026/hiveplane/issues/294) — M40-07 — Policy pack CLI (`hiveplane policies lint|publish|apply`) + API
+- [x] [#295](https://github.com/deghosal-2026/hiveplane/issues/295) — M40-08 — Tests: staging vs. prod decision differs; what-if matches real decision; pack inheritance/lint; kill switch blocks a tool instantly
 
 **Test ticket:** [#296](https://github.com/deghosal-2026/hiveplane/issues/296) — Test cases for Context-Aware Policy, What-If, Policy Packs, Time Windows & Kill Switch
 
@@ -68,14 +68,16 @@ Make the fleet defend itself. Scan inputs and tool outputs for injection, constr
 - `docs/design/defense-policy-v2-design.md` and `docs/design/defense-policy-v2-design.md`
 
 **Acceptance criteria:**
-- [ ] The same tool call is allowed in staging and denied in production per policy
-- [ ] Every decision includes a reason + originating rule id
-- [ ] What-if output matches the real decision for the same context
-- [ ] A team policy pack inherits, lints, and applies across a team's workloads
-- [ ] A time-window rule blocks a destructive action outside business hours
-- [ ] The kill switch disables a tool fleet-wide instantly and is audited
+- [x] The same tool call is allowed in staging and denied in production per policy
+- [x] Every decision includes a reason + originating rule id
+- [x] What-if output matches the real decision for the same context
+- [x] A team policy pack inherits, lints, and applies across a team's workloads
+- [x] A time-window rule blocks a destructive action outside business hours
+- [x] The kill switch disables a tool fleet-wide instantly and is audited
 
 **Done when:** policy is context-aware, explainable, distributable, and instantly overridable in an emergency.
+
+> **Status:** M40 complete. Context-aware policy inputs (budget, taint, time), pack-versioned decision records, what-if dry-run (same code path), inheritable policy packs with lint/publish/apply, manifest time-windows, and an instant fleet-wide tool kill switch (migration `0021`). API `POST /policy/evaluate (dry_run)`, `/policy-packs/{name}/apply`, `/tools/{id}/disable|enable`, `GET /tools/disabled`; CLI `hiveplane policies lint|publish|apply`, `hiveplane tools disable|enable`. Issues #288–#296 closed; all tests pass with a database, coverage >95%, ruff and mypy strict clean.
 
 **Dependencies:** M25 (policy pack model); v0.1.0 policy engine.
 
@@ -83,13 +85,13 @@ Make the fleet defend itself. Scan inputs and tool outputs for injection, constr
 
 ## Exit Gate (M39, M40)
 
-- [ ] All tests in the system pass: `pytest`
-- [ ] Code coverage total > 95%
-- [ ] Ruff clean
-- [ ] Mypy strict clean
-- [ ] All relevant docs updated (injection defense, context policy, policy packs, egress)
-- [ ] All M39–M40 issues done and closed
-- [ ] Commit and push changes
+- [x] All tests in the system pass: `pytest`
+- [x] Code coverage total > 95%
+- [x] Ruff clean
+- [x] Mypy strict clean
+- [x] All relevant docs updated (injection defense, context policy, policy packs, egress)
+- [x] All M39–M40 issues done and closed
+- [x] Commit and push changes
 
 ## See Also
 

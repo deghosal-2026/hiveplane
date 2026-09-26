@@ -16,6 +16,7 @@ from pydantic import ValidationError
 
 from hiveplane.core.manifest import ManifestError, load_manifest
 from hiveplane.core.triggers import TriggerRule
+from hiveplane.policy.models import PolicyPack
 from hiveplane.registry.models import ToolRegistration
 from hiveplane.registry.seeding import derive_tool_registrations
 from hiveplane.registry.service import RegistryService
@@ -54,6 +55,9 @@ canary_app = typer.Typer(
 experiment_app = typer.Typer(
     help="Start and resolve model experiment campaigns.", no_args_is_help=True
 )
+policies_app = typer.Typer(
+    help="Lint, publish, and apply team policy packs.", no_args_is_help=True
+)
 app.add_typer(certs_app, name="certs")
 app.add_typer(runs_app, name="runs")
 app.add_typer(approvals_app, name="approvals")
@@ -69,6 +73,7 @@ app.add_typer(eval_app, name="eval")
 app.add_typer(shadow_app, name="shadow")
 app.add_typer(canary_app, name="canary")
 app.add_typer(experiment_app, name="experiment")
+app.add_typer(policies_app, name="policies")
 
 ManifestArg = Annotated[
     Path,
@@ -1672,4 +1677,109 @@ def experiment_start(
     )
     if status_code >= 400 or status_code == 0:
         _fail("start experiment", status_code, body)
+    typer.echo(json.dumps(json.loads(body), indent=2))
+
+
+@tools_app.command("disable")
+def tools_disable(
+    tool_id: Annotated[str, typer.Argument(help="Tool id to disable.")],
+    actor: Annotated[str, typer.Option("--actor", help="Who is disabling it.")] = "cli",
+    reason: Annotated[str | None, typer.Option("--reason")] = None,
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Disable a tool fleet-wide (kill switch)."""
+    status_code, body = _request(
+        "POST",
+        f"{api_url.rstrip('/')}/tools/{tool_id}/disable",
+        {"actor": actor, "reason": reason},
+    )
+    if status_code >= 400 or status_code == 0:
+        _fail("disable tool", status_code, body)
+    typer.echo(json.dumps(json.loads(body), indent=2))
+
+
+@tools_app.command("enable")
+def tools_enable(
+    tool_id: Annotated[str, typer.Argument(help="Tool id to re-enable.")],
+    actor: Annotated[str, typer.Option("--actor", help="Who is re-enabling it.")] = "cli",
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Re-enable a disabled tool."""
+    status_code, body = _request(
+        "POST",
+        f"{api_url.rstrip('/')}/tools/{tool_id}/enable",
+        {"actor": actor},
+    )
+    if status_code >= 400 or status_code == 0:
+        _fail("enable tool", status_code, body)
+    typer.echo(json.dumps(json.loads(body), indent=2))
+
+
+def _load_policy_pack(path: Path) -> PolicyPack:
+    document = _load_document(path)
+    try:
+        return PolicyPack.model_validate(document)
+    except ValidationError as exc:
+        typer.secho(f"{path}: invalid policy pack: {exc}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=1) from exc
+
+
+@policies_app.command("lint")
+def policies_lint(
+    pack_path: Annotated[
+        Path,
+        typer.Argument(exists=True, dir_okay=False, readable=True, help="Policy pack YAML."),
+    ],
+) -> None:
+    """Lint a policy pack (schema, inheritance references, cycles)."""
+    from hiveplane.policy.pack_registry import PolicyPackRegistry
+    from hiveplane.policy.packs import InMemoryPolicyPackStore
+
+    pack = _load_policy_pack(pack_path)
+    registry = PolicyPackRegistry(InMemoryPolicyPackStore())
+    result = registry.lint(pack, available={pack.metadata.name: pack})
+    if not result.valid:
+        for issue in result.issues:
+            typer.secho(f"- {issue}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=1)
+    typer.secho(
+        f"OK: {pack.metadata.name} ({pack.metadata.version}) is valid",
+        fg=typer.colors.GREEN,
+    )
+
+
+@policies_app.command("publish")
+def policies_publish(
+    pack_path: Annotated[
+        Path,
+        typer.Argument(exists=True, dir_okay=False, readable=True, help="Policy pack YAML."),
+    ],
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Publish an immutable policy pack version."""
+    pack = _load_policy_pack(pack_path)
+    status_code, body = _request(
+        "POST",
+        f"{api_url.rstrip('/')}/policy-packs",
+        pack.model_dump(mode="json", by_alias=True),
+    )
+    if status_code >= 400 or status_code == 0:
+        _fail("publish policy pack", status_code, body)
+    typer.echo(json.dumps(json.loads(body), indent=2))
+
+
+@policies_app.command("apply")
+def policies_apply(
+    name: Annotated[str, typer.Argument(help="Published pack name.")],
+    team: Annotated[str, typer.Option("--team", help="Team to pin the pack to.")],
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Apply (pin) a published pack and its inherited chain to a team."""
+    status_code, body = _request(
+        "POST",
+        f"{api_url.rstrip('/')}/policy-packs/{name}/apply",
+        {"team": team},
+    )
+    if status_code >= 400 or status_code == 0:
+        _fail("apply policy pack", status_code, body)
     typer.echo(json.dumps(json.loads(body), indent=2))

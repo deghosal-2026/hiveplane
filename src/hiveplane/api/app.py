@@ -141,6 +141,8 @@ from hiveplane.policy.errors import (
     PolicyPackAlreadyExistsError,
     PolicyPackNotFoundError,
 )
+from hiveplane.policy.kill_switch import KillSwitch, build_kill_switch_store
+from hiveplane.policy.pack_registry import PolicyPackRegistry
 from hiveplane.policy.packs import InMemoryPolicyPackStore
 from hiveplane.policy.store import build_approval_store
 from hiveplane.progressive.canary import CanaryService
@@ -299,6 +301,7 @@ def create_app(
     budget_service = BudgetService(budget_store, cost_table)
     sandbox_manager = InMemorySandboxManager()
     app.state.policy_pack_store = policy_pack_store
+    app.state.policy_pack_registry = PolicyPackRegistry(policy_pack_store)
     app.state.policy_engine = policy_engine
     app.state.approval_service = approval_service
     app.state.security_event_store = build_security_event_store(settings)
@@ -331,8 +334,15 @@ def create_app(
     app.state.run_service = run_service or build_run_service(
         registry, policy_engine, approval_service, budget_service, sandbox_manager
     )
+    kill_switch = KillSwitch(build_kill_switch_store(settings))
+    app.state.kill_switch = kill_switch
     app.state.tool_gateway = build_tool_gateway(
-        registry, policy_engine, app.state.run_service, approval_service, defense
+        registry,
+        policy_engine,
+        app.state.run_service,
+        approval_service,
+        defense,
+        kill_switch,
     )
     app.state.candidate_service = CandidateService(build_candidate_store(settings))
     app.state.corpus_version_service = CorpusVersionService(
@@ -546,6 +556,7 @@ def create_app(
     app.state.audit_log = build_audit_log()
     if settings.defense.enabled:
         app.state.defense_guard.bind_audit(app.state.audit_log)
+    app.state.kill_switch.bind_audit(app.state.audit_log)
     app.state.promotion_store = build_promotion_store(settings)
     app.state.promotion_gate = PromotionGate(
         registry,

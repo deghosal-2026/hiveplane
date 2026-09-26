@@ -230,3 +230,40 @@ def test_read_only_run_allows_a_read_tool(
     result = gateway.invoke("run-1", ToolCallRequest(tool_id="mcp.t.read"))
 
     assert result.outcome is ToolCallOutcome.ALLOWED
+
+
+def test_manifest_time_window_blocks_destructive_outside_hours(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    workload = make_manifest(
+        name="agent-1",
+        status="provisional",
+        tools={
+            "allow": [
+                {
+                    "tool_id": "mcp.t.destructive",
+                    "trust_level": "destructive",
+                    "require_approval": True,
+                }
+            ]
+        },
+        time_windows=[
+            {
+                "action_class": "destructive",
+                "days": [0],
+                "start": "09:00",
+                "end": "17:00",
+                "tz": "UTC",
+            }
+        ],
+    )
+    # _run uses context STAGING and _FIXED_NOW (Thursday 2026-01-01), outside Monday 09-17.
+    gateway, _ = _gateway(workload, _Runs(_run()))
+
+    result = gateway.invoke(
+        "run-1",
+        ToolCallRequest(tool_id="mcp.t.destructive", action_class=ActionClass.DESTRUCTIVE),
+    )
+
+    assert result.outcome is ToolCallOutcome.DENIED
+    assert result.rule == "outside_time_window"

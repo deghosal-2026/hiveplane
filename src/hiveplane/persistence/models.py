@@ -440,6 +440,19 @@ class ExperimentArmRow(_TenantScoped, Base):
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
+class ToolKillSwitchRow(Base):
+    """Fleet-wide tool kill-switch state (M40-06). Global control-plane material."""
+
+    __tablename__ = "tool_kill_switch"
+
+    tool_id: Mapped[str] = mapped_column(String(253), primary_key=True)
+    disabled: Mapped[bool] = mapped_column(Boolean, index=True)
+    reason: Mapped[str | None] = mapped_column(String(2000), nullable=True)
+    actor: Mapped[str] = mapped_column(String(253))
+    changed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
 class ToolRow(_TenantScoped, Base):
     """MCP tool registry entries."""
 

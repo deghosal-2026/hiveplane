@@ -88,3 +88,61 @@ def test_approve_resumes_and_deny_fails(make_manifest: Callable[..., AgentWorklo
 def test_unknown_approval_returns_404(make_manifest: Callable[..., AgentWorkload]) -> None:
     client = _setup(make_manifest)
     assert client.get("/approvals/nope").status_code == 404
+
+
+def test_policy_dry_run_matches_the_real_decision(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    client = _setup(make_manifest)
+    body = {
+        "run_id": "run-1",
+        "workload": "agent-1",
+        "environment": "production",
+        "tool_id": "mcp.t.read",
+        "action_class": "read_only",
+    }
+
+    real = client.post("/policy/evaluate", json=body).json()
+    what_if = client.post("/policy/evaluate", json={**body, "dry_run": True}).json()
+
+    assert what_if["outcome"] == real["outcome"]
+    assert what_if["rule"] == real["rule"]
+    assert what_if["dry_run"] is True
+    assert real["dry_run"] is False
+
+
+def test_kill_switch_api_disables_and_enables() -> None:
+    client = TestClient(create_app())
+
+    disabled = client.post(
+        "/tools/mcp.t.read/disable", json={"actor": "alice", "reason": "incident"}
+    )
+    assert disabled.status_code == 200
+    assert disabled.json()["disabled"] is True
+    assert client.get("/tools/disabled").json()[0]["tool_id"] == "mcp.t.read"
+
+    enabled = client.post("/tools/mcp.t.read/enable", json={"actor": "alice"})
+    assert enabled.status_code == 200
+    assert enabled.json()["disabled"] is False
+
+
+def test_policy_pack_publish_and_apply() -> None:
+    client = TestClient(create_app())
+    pack = {
+        "apiVersion": "hiveplane/v1",
+        "kind": "PolicyPack",
+        "metadata": {"name": "strict", "team": "platform", "version": "1"},
+        "spec": {"overrides": []},
+    }
+    assert client.post("/policy-packs", json=pack).status_code == 201
+
+    applied = client.post("/policy-packs/strict/apply", json={"team": "payments"})
+
+    assert applied.status_code == 200
+    assert applied.json()[0]["metadata"]["team"] == "payments"
+
+
+def test_policy_pack_apply_unknown_is_404() -> None:
+    client = TestClient(create_app())
+
+    assert client.post("/policy-packs/ghost/apply", json={"team": "payments"}).status_code == 404

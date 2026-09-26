@@ -843,6 +843,65 @@
       "title": "Slo",
       "type": "object"
     },
+    "TimeWindow": {
+      "additionalProperties": false,
+      "description": "A business-hours allow window or a blackout calendar for actions (M40-05).\n\n``blackout`` windows deny every matched action; otherwise an action matching\n``action_class``/``tool_trust`` is denied outside ``[start, end)`` or on a day\nnot listed in ``days`` (0=Monday..6=Sunday; empty means any day).",
+      "properties": {
+        "action_class": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ActionClass"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "tool_trust": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ToolTrustLevel"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "days": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Days",
+          "type": "array"
+        },
+        "start": {
+          "default": "00:00",
+          "pattern": "^\\d{2}:\\d{2}$",
+          "title": "Start",
+          "type": "string"
+        },
+        "end": {
+          "default": "24:00",
+          "pattern": "^\\d{2}:\\d{2}$",
+          "title": "End",
+          "type": "string"
+        },
+        "tz": {
+          "default": "UTC",
+          "title": "Tz",
+          "type": "string"
+        },
+        "blackout": {
+          "default": false,
+          "title": "Blackout",
+          "type": "boolean"
+        }
+      },
+      "title": "TimeWindow",
+      "type": "object"
+    },
     "ToolRef": {
       "additionalProperties": false,
       "description": "A reference to a registered MCP tool with its trust level.",
@@ -1150,6 +1209,13 @@
             }
           ],
           "default": null
+        },
+        "time_windows": {
+          "items": {
+            "$ref": "#/$defs/TimeWindow"
+          },
+          "title": "Time Windows",
+          "type": "array"
         }
       },
       "required": [

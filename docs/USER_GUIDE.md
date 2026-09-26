@@ -462,6 +462,40 @@ hiveplane experiment start <workload> --arms gpt-4o,gpt-4o-mini
 Every automated transition is attributed to `progressive-delivery`; manual
 overrides name the operator.
 
+## Policy, What-If & Emergency Controls
+
+Policy decisions are context-aware — environment, data sensitivity, blast radius,
+budget state, taint, and time all feed one evaluator — and every decision records
+the originating rule and pack version.
+
+```bash
+# What-if: returns the decision the engine would make, without side effects.
+# -> POST /policy/evaluate { ..., "dry_run": true }
+```
+
+Team **policy packs** are inheritable and versioned. `lint` validates schema,
+unknown parents, and cycles; `publish` writes an immutable version; `apply` pins
+a pack and its inherited chain to a team (parents first, tighten-only).
+
+```bash
+hiveplane policies lint <pack.yaml>
+hiveplane policies publish <pack.yaml>
+hiveplane policies apply <name> --team <team>
+```
+
+**Time windows** on the manifest restrict destructive actions to business hours
+or blackout calendars (`spec.time_windows`); actions outside the window are
+denied with a reason.
+
+**Tool kill switch** disables any tool fleet-wide instantly; it is checked at the
+tool-call boundary before policy so a stale cache cannot re-enable it, and it is
+audited:
+
+```bash
+hiveplane tools disable <tool-id> --actor alice --reason "incident"
+hiveplane tools enable  <tool-id> --actor alice
+```
+
 ## Operator UI
 
 The operator UI is a server-rendered web app that reads the same HTTP API as the

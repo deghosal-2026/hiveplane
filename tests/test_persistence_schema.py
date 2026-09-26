@@ -75,6 +75,7 @@ def test_all_design_tables_exist() -> None:
         "canary_samples",
         "experiment_campaigns",
         "experiment_arms",
+        "tool_kill_switch",
     }
     assert expected <= set(Base.metadata.tables)
 
@@ -103,6 +104,7 @@ def test_every_table_is_tenant_scoped() -> None:
         "attestation_log",
         "signing_keys",
         "rubrics",
+        "tool_kill_switch",
     }
     missing = {
         name

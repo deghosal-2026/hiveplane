@@ -26,6 +26,8 @@ from hiveplane.pipelines.engine import PipelineEngine
 from hiveplane.pipelines.store import PipelineStore
 from hiveplane.policy.approvals import ApprovalService
 from hiveplane.policy.engine import PolicyEngine
+from hiveplane.policy.kill_switch import KillSwitch
+from hiveplane.policy.pack_registry import PolicyPackRegistry
 from hiveplane.policy.packs import PolicyPackStore
 from hiveplane.progressive.canary import CanaryService
 from hiveplane.progressive.experiments import ExperimentService
@@ -87,6 +89,18 @@ def get_policy_pack_store(request: Request) -> PolicyPackStore:
     """Return the policy pack store bound to the application state."""
     store: PolicyPackStore = request.app.state.policy_pack_store
     return store
+
+
+def get_policy_pack_registry(request: Request) -> PolicyPackRegistry:
+    """Return the policy pack registry bound to the application state."""
+    registry: PolicyPackRegistry = request.app.state.policy_pack_registry
+    return registry
+
+
+def get_kill_switch(request: Request) -> KillSwitch:
+    """Return the tool kill switch bound to the application state."""
+    switch: KillSwitch = request.app.state.kill_switch
+    return switch
 
 
 def get_approval_service(request: Request) -> ApprovalService:

@@ -34,6 +34,7 @@ from hiveplane.defense.scanner import DetectorAction
 from hiveplane.execution.gates import ApprovalRequests, PolicyGate
 from hiveplane.execution.models import InterventionAction
 from hiveplane.execution.tool_executor import ToolExecutor
+from hiveplane.policy.kill_switch import KillSwitch
 from hiveplane.registry.service import RegistryService
 from hiveplane.sandbox.egress import EgressGuard
 from hiveplane.sandbox.errors import EgressDeniedError
@@ -109,6 +110,7 @@ class ToolGateway:
         approvals: ApprovalRequests | None = None,
         executor: ToolExecutor | None = None,
         defense: DefenseGuard | None = None,
+        kill_switch: KillSwitch | None = None,
         clock: Callable[[], datetime] | None = None,
     ) -> None:
         self._registry = registry
@@ -118,6 +120,7 @@ class ToolGateway:
         self._approvals = approvals
         self._executor = executor
         self._defense = defense
+        self._kill_switch = kill_switch
         self._clock = clock or (lambda: datetime.now(UTC))
 
     def invoke(self, run_id: str, request: ToolCallRequest) -> ToolCallResult:
@@ -150,6 +153,14 @@ class ToolGateway:
         """Evaluate and shape a tool call, recording the decision."""
         spec = workload.spec
         tool_trust = request.tool_trust or _trust_for(spec.tools, request.tool_id)
+        if self._kill_switch is not None and self._kill_switch.is_disabled(request.tool_id):
+            return ToolCallResult(
+                run_id=run_id,
+                tool_id=request.tool_id,
+                outcome=ToolCallOutcome.DENIED,
+                rule="kill_switch",
+                reason=f"tool {request.tool_id!r} is disabled fleet-wide",
+            )
         if run.read_only and _is_destructive(request.action_class, tool_trust):
             return ToolCallResult(
                 run_id=run_id,
@@ -185,6 +196,8 @@ class ToolGateway:
             certification_status=workload.certification_status,
             tools=spec.tools,
             approval_required_for=spec.approvals.required_for,
+            time_windows=spec.time_windows,
+            at=self._clock(),
         )
         decision = self._policy.evaluate(context)
         self._runs.record_event(

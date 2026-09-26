@@ -58,6 +58,7 @@ class PolicyPackSpec(BaseModel):
     defaults: PolicyPackDefaults = Field(default_factory=PolicyPackDefaults)
     overrides: list[PolicyPackOverride] = Field(default_factory=list)
     approval_contacts: dict[str, str] = Field(default_factory=dict)
+    inherits: list[str] = Field(default_factory=list)
 
 
 class PolicyPackMetadata(BaseModel):
@@ -95,3 +96,6 @@ class PolicyEvaluationRequest(BaseModel):
     tool_trust: ToolTrustLevel | None = None
     action_class: ActionClass | None = None
     data_sensitivity: DataSensitivity = DataSensitivity.INTERNAL
+    budget_exhausted: bool = False
+    taint_untrusted: bool = False
+    dry_run: bool = False

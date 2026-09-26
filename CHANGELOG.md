@@ -451,6 +451,28 @@ immune system (drift, quarantine, promotion gate), and fleet scale-out. In progr
 - **API + CLI** — `/canary*`, `/experiments*`; `hiveplane canary
   start|status|promote|abort`, `hiveplane experiment start`.
 
+### Added (M40 — context-aware policy, what-if, packs, time windows & kill switch)
+
+- **Context-aware policy engine** — decision inputs now include budget state
+  (`budget_exhausted`), taint (`taint_untrusted`), and time; a decision carries
+  the originating rule, `pack_version`, `detector_set_version`, blast radius,
+  and certification.
+- **What-if / dry-run** — `PolicyEngine.evaluate(context, dry_run=True)` runs the
+  identical code path and marks the decision `dry_run`; `POST /policy/evaluate
+  {dry_run}` and the response are conformance-tested for parity.
+- **Team policy packs** (`hiveplane.policy.PolicyPackRegistry`) — inheritable,
+  versioned packs with `lint` (unknown parents, cycles), immutable `publish`, and
+  `apply` that pins the resolved chain to a team (parents first).
+- **Time-window policies** — `spec.time_windows` on the manifest (business-hours
+  allow windows and blackout calendars) enforced by the engine against the policy
+  clock, with `outside_time_window` / `blackout` reasons.
+- **Tool kill switch** (`hiveplane.policy.KillSwitch`) — instant fleet-wide
+  disable checked at the tool-call boundary before policy; audited disable/re-enable
+  (`tool_kill_switch`; migration `0021`). API `/tools/{id}/disable|enable`,
+  `GET /tools/disabled`; CLI `hiveplane tools disable|enable`.
+- **API + CLI** — `POST /policy/evaluate`, `/policy-packs/{name}/apply`; CLI
+  `hiveplane policies lint|publish|apply`.
+
 ## [0.1.0] - 2026-09-25
 
 The first release: the certified control loop. Register agents, certify them against a
