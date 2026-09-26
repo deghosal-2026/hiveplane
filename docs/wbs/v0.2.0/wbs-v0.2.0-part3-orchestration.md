@@ -43,8 +43,8 @@ A fleet OS must run fleets, not just single agents. Add workload pipelines (a DA
 > engine, executor adapters), migration `0008` (`pipeline_run_headers` +
 > `pipeline_node_runs`), `Run.pipeline_origin` / `WorkloadSpec.io`, the pipeline
 > API, and `hiveplane pipelines` CLI landed. All tests pass with a database;
-> coverage 95% total, ruff and mypy strict clean. Issues #189–#198 to be closed at
-> the exit gate.
+> coverage 95% total, ruff and mypy strict clean. Issues #189–#198 closed; changes
+> committed and pushed.
 
 **Dependencies:** M25 (pipeline model); v0.1.0 run lifecycle, policy/approvals, budget.
 
