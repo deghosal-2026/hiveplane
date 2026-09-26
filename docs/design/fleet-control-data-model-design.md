@@ -3,8 +3,8 @@
 > Status: draft
 >
 > **Implementation status (M25):** complete. The `hiveplane.tenancy` package, tenant-scoped
-> ORM schema with composite FKs, migrations `0003`/`0004` (plus `0005`, the M26
-> `reconcile_runs` history table), store-layer `TenantContext`
+> ORM schema with composite FKs, migrations `0003`/`0004` (plus `0005` `reconcile_runs`
+> and `0006` `trigger_nonces`), store-layer `TenantContext`
 > enforcement across every durable store, API tenant resolution (`X-Hiveplane-Tenant`), and
 > the full `hiveplane.fleet` model surface (triggers, pipelines, policy packs/decisions,
 > secrets, workers, artifacts, metering/cost, reconciliation) are all in place and verified
@@ -99,6 +99,7 @@ A trigger stores `source` (`webhook` / `github` / `alertmanager` / `cron` / `wat
 | `tenants` / `teams` / `memberships` | `id`, `tenant_id`, `name`, `attribution_key`, `operator_id`, `role` |
 | `triggers` | `id`, `tenant_id`, `source`, `filter`, `dedup_key_template`, `cooldown_seconds`, `rate_limit`, `task_template`, `admission_rule`, `target_ref`, `enabled` |
 | `trigger_events` / `trigger_runs` | `id`, `trigger_id`, `dedup_key`, `outcome`, `run_id`, `status`, `reason` |
+| `trigger_nonces` (M27) | `trigger_id`, `nonce`, `seen_at` |
 | `pipelines` / `pipeline_runs` | `id`, `tenant_id`, `version`, `nodes`, `edges`, `gates`, `budget`, `node_id`, `parent_run_id`, `child_run_id` |
 | `policy_packs` / `policy_decisions` | `id`, `tenant_id`, `version`, `parent_pack_id`, `lint_status`, `content_hash`, `run_id`, `outcome`, `reason`, `originating_rule_id` |
 | `secrets` / `secret_refs` | `id`, `tenant_id`, `name`, `scope`, `ciphertext`, `key_id`, `next_rotation_at`, `run_id`, `injection_target` |

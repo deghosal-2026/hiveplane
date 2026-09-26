@@ -1,6 +1,6 @@
 # D23: Trigger Service v2 Design
 
-> Status: draft
+> Status: implemented (M27 core; M28 sources/admission/history in progress)
 
 **Milestones:** M27–M28 · **Extends:** D12
 
@@ -145,6 +145,37 @@ Ingest is HMAC-SHA256 verified over raw bytes with timestamp+nonce replay protec
 - Should cooldowns be per-trigger only, or also per dedup-key namespace?
 - Can a `resolved` Alertmanager event cancel an in-flight run, or only annotate it?
 - Should freeze `drain: abort` be permitted at all, or always graceful?
+
+## Implementation (M27)
+
+| Module | Responsibility |
+|--------|----------------|
+| `hiveplane.triggers.schema` | The strict trigger DSL (`TriggerSpec` and sub-models) |
+| `hiveplane.triggers.cron` | Five-field cron parsing/matching and next-fire search |
+| `hiveplane.triggers.templating` | Typed, length-limited, injection-safe substitutions |
+| `hiveplane.triggers.ingest` | HMAC-SHA256 verification and replay protection (`WebhookVerifier`) |
+| `hiveplane.triggers.limiter` | Dedup, cooldown, token-bucket rate limit, backpressure (`TriggerLimiter`) |
+| `hiveplane.triggers.scheduler` | Timezone-aware due-tick computation and missed-schedule policy |
+| `hiveplane.triggers.engine` | Evaluate → admit → idempotent submit → record (`TriggerEngine`) |
+| `hiveplane.triggers.store` | Declarations, events, runs, DLQ, and replay nonces (memory + Postgres) |
+
+**DSL reference.** A trigger document has `id`, `source` (`webhook`/`github`/
+`alertmanager`/`cron`/`watch`), `target` (`kind`: `workload`/`pipeline`, `ref`),
+`filter` (`event`, `actions`, `repo`, `service`), `task_template` (field →
+`{{ event.path }}`), `dedup` (`key`, `window_minutes`), `cooldown_seconds`,
+`rate_limit` (`max_per_minute`, `burst`), `admission_rule`
+(`staging-auto`/`gated`/`deny`), `timezone`, `schedule` (cron/watch only),
+`missed_schedule_policy` (`skip`/`catch_up`/`catch_up_all`),
+`max_concurrent_runs`, `max_field_bytes`/`max_total_bytes`, and `enabled`.
+Unknown fields are errors. `admission_rule` selects the submission context:
+`staging-auto` submits to staging, `gated` to production (approval-gated by
+policy), `deny` refuses; every path still enforces the certification gate.
+
+Replay nonces live in the `trigger_nonces` table (migration `0006`). Webhook
+secrets are resolved from `HIVEPLANE_TRIGGERS__SECRETS` until the secrets store
+(M45) lands; they never live in the trigger document. M28 adds the concrete
+GitHub/Alertmanager/watch sources, freeze windows, admission-rule policy
+integration, and the DLQ replay CLI.
 
 ## See Also
 

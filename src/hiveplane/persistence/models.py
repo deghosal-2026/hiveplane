@@ -516,6 +516,18 @@ class TriggerDlqRow(_TenantScoped, Base):
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
+class TriggerNonceRow(_TenantScoped, Base):
+    """Seen webhook nonces for replay protection (M27-02)."""
+
+    __tablename__ = "trigger_nonces"
+    __table_args__ = (Index("ix_trigger_nonces_seen", "trigger_id", "seen_at"),)
+
+    trigger_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    nonce: Mapped[str] = mapped_column(String(256), primary_key=True)
+    seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
 class PipelineRow(_TenantScoped, Base):
     """Versioned pipeline DAGs (M25-03)."""
 

@@ -58,6 +58,7 @@ class TriggerOutcome(StrEnum):
     REJECTED_RATE = "rejected_rate"
     REJECTED_BACKPRESSURE = "rejected_backpressure"
     REJECTED_SIGNATURE = "rejected_signature"
+    FAILED = "failed"
 
 
 class TriggerRunStatus(StrEnum):

@@ -56,6 +56,7 @@ def test_all_design_tables_exist() -> None:
         "reconcile_state",
         "drift_records",
         "reconcile_runs",
+        "trigger_nonces",
     }
     assert expected <= set(Base.metadata.tables)
 

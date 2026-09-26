@@ -28,6 +28,7 @@ from hiveplane.api.runs import router as runs_router
 from hiveplane.api.sandbox_channel import SandboxChannel
 from hiveplane.api.sandbox_channel import router as sandbox_router
 from hiveplane.api.spend import router as spend_router
+from hiveplane.api.triggers import router as triggers_router
 from hiveplane.budget.errors import MissingModelIdentityError, UnknownModelPriceError
 from hiveplane.budget.pricing import CostTable
 from hiveplane.budget.service import BudgetService
@@ -102,6 +103,10 @@ from hiveplane.registry.errors import (
 from hiveplane.registry.service import RegistryService
 from hiveplane.registry.store import build_registry_store
 from hiveplane.sandbox.manager import InMemorySandboxManager
+from hiveplane.triggers.engine import TriggerEngine
+from hiveplane.triggers.ingest import WebhookVerifier
+from hiveplane.triggers.limiter import TriggerLimiter
+from hiveplane.triggers.store import build_trigger_store
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -220,6 +225,22 @@ def create_app(
             ),
         ),
         policy=ConflictPolicy(pinned_fields=frozenset(settings.reconcile.pinned_fields)),
+    )
+    trigger_store = build_trigger_store(settings)
+    trigger_limiter = TriggerLimiter(
+        trigger_store,
+        global_max_per_minute=settings.triggers.global_max_per_minute,
+        global_burst=settings.triggers.global_burst,
+    )
+    app.state.trigger_store = trigger_store
+    app.state.trigger_secrets = dict(settings.triggers.secrets)
+    app.state.webhook_verifier = WebhookVerifier(
+        store=trigger_store,
+        skew_seconds=settings.triggers.webhook_skew_seconds,
+        replay_window_seconds=settings.triggers.replay_window_seconds,
+    )
+    app.state.trigger_engine = TriggerEngine(
+        trigger_store, trigger_limiter, app.state.run_service
     )
     provider = build_provider(settings)
     app.state.provider = provider
@@ -368,6 +389,7 @@ def create_app(
     app.include_router(sandbox_router)
     app.include_router(spend_router)
     app.include_router(reconcile_router)
+    app.include_router(triggers_router)
     return app
 
 

@@ -12,7 +12,13 @@ from pydantic import JsonValue
 from hiveplane import metrics, telemetry
 from hiveplane.core.approval import ApprovalRecord
 from hiveplane.core.event import EventType, RunEvent
-from hiveplane.core.run import AdmissionContext, Run, RunState, can_transition
+from hiveplane.core.run import (
+    AdmissionContext,
+    Run,
+    RunState,
+    TriggerOrigin,
+    can_transition,
+)
 from hiveplane.core.usage import UsageReport
 from hiveplane.execution.admission import AdmissionPipeline
 from hiveplane.execution.errors import (
@@ -143,6 +149,7 @@ class RunService:
         context: AdmissionContext,
         task: dict[str, JsonValue] | None = None,
         model_identity: str | None = None,
+        trigger_origin: TriggerOrigin | None = None,
         ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> Run:
         """Submit a run, admitting or refusing it before it is persisted.
@@ -163,6 +170,7 @@ class RunService:
             context=context,
             task=task or {},
             trace_id=telemetry.current_trace_id(),
+            trigger_origin=trigger_origin,
             tenant_id=ctx.tenant_id,
             team_id=ctx.team_id,
             attribution_key=ctx.attribution_key,

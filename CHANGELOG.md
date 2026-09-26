@@ -91,6 +91,39 @@ immune system (drift, quarantine, promotion gate), and fleet scale-out. In progr
   safety, guardrails, conflict policy, and Postgres store/migration round-trips.
   Coverage ≥ 95% with a database.
 
+### Added (M27 — trigger service core)
+
+- **`hiveplane.triggers` package** — the autonomy core that lets external events
+  start runs safely:
+  - **Strict DSL** (`schema`) — typed trigger documents (source, target, event
+    filter, task template, dedup, cooldown, rate limit, admission rule, cron
+    schedule/timezone/missed-schedule policy); unknown fields are errors.
+  - **Webhook ingest** (`ingest`) — HMAC-SHA256 over the raw body with a
+    `timestamp + nonce` replay window; bad/missing signatures and replays are
+    rejected with a status code and audited.
+  - **Cron engine** (`cron`, `scheduler`) — five-field cron parsing/matching,
+    timezone-aware next-fire, and `skip`/`catch_up`/`catch_up_all` missed-schedule
+    policies; DST fall-back fires once, spring-forward does not crash.
+  - **Dedup/cooldown/rate/backpressure** (`limiter`) — dedup keys and cooldowns
+    read persisted event history; a per-trigger token bucket returns a retryable
+    rate rejection and a global bucket protects the plane under a storm.
+  - **Templating** (`templating`) — typed, value-only `{{ event.path }}`
+    substitutions with per-field and total byte limits; no expression language,
+    no code, injection-safe by construction.
+  - **Engine** (`engine`) — evaluate → limit → render → admit → idempotently
+    submit through `RunService`, recording the event, its run linkage, and
+    `blocked_cert`/`blocked_admission`/`failed` outcomes. Admission never bypasses
+    certification. Runs carry `trigger_origin` attribution.
+- **Trigger store** — memory + PostgreSQL implementations for declarations,
+  events, runs, and the DLQ; migration `0006` adds `trigger_nonces` for durable
+  replay protection.
+- **API** — `POST /triggers` and CRUD, `POST /triggers/{id}/enable|disable`,
+  `POST /triggers/webhook/{id}`, and `GET /triggers/{id}/events|runs` plus
+  `GET /triggers/dlq`.
+- **Tests** — signature/replay, dedup/cooldown/rate/backpressure, cron (incl.
+  DST), templating safety, idempotent submission, and Postgres store/migration
+  round-trips. Coverage ≥ 95% with a database.
+
 ## [0.1.0] - 2026-09-25
 
 The first release: the certified control loop. Register agents, certify them against a

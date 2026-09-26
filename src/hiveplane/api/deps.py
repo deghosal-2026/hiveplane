@@ -16,6 +16,9 @@ from hiveplane.reconcile.store import ReconcileStore
 from hiveplane.registry.service import RegistryService
 from hiveplane.tenancy import Role, TenantContext
 from hiveplane.tenancy.context import DEFAULT_CONTEXT
+from hiveplane.triggers.engine import TriggerEngine
+from hiveplane.triggers.ingest import WebhookVerifier
+from hiveplane.triggers.store import TriggerStore
 
 TENANT_HEADER = "X-Hiveplane-Tenant"
 TEAM_HEADER = "X-Hiveplane-Team"
@@ -97,3 +100,27 @@ def get_reconcile_store(request: Request) -> ReconcileStore:
     """Return the reconcile store bound to the application state."""
     store: ReconcileStore = request.app.state.reconcile_store
     return store
+
+
+def get_trigger_store(request: Request) -> TriggerStore:
+    """Return the trigger store bound to the application state."""
+    store: TriggerStore = request.app.state.trigger_store
+    return store
+
+
+def get_trigger_engine(request: Request) -> TriggerEngine:
+    """Return the trigger engine bound to the application state."""
+    engine: TriggerEngine = request.app.state.trigger_engine
+    return engine
+
+
+def get_webhook_verifier(request: Request) -> WebhookVerifier:
+    """Return the webhook verifier bound to the application state."""
+    verifier: WebhookVerifier = request.app.state.webhook_verifier
+    return verifier
+
+
+def get_trigger_secrets(request: Request) -> dict[str, str]:
+    """Return the configured trigger-id to webhook-secret map."""
+    secrets: dict[str, str] = request.app.state.trigger_secrets
+    return secrets

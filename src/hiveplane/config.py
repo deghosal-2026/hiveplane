@@ -212,7 +212,6 @@ class ModelSettings(BaseModel):
 
 class ReconcileSettings(BaseModel):
     """Desired-state reconciliation guardrails and cadence (M26)."""
-
     enabled: bool = False
     poll_interval_s: int = Field(default=60, gt=0)
     allow_destructive: bool = False
@@ -226,6 +225,30 @@ class ReconcileSettings(BaseModel):
     def _empty_pinned_fields_become_empty_list(cls, value: object) -> object:
         """Treat an unset env var as no pinned fields."""
         return [] if value == "" else value
+
+
+class TriggerSettings(BaseModel):
+    """Trigger ingest, replay-protection, and rate-limit settings (M27).
+
+    ``secrets`` maps a trigger id to its webhook shared secret. It is a stopgap
+    until the secrets store (M45) resolves ``secret_ref``s; secrets never live in
+    the trigger document itself.
+    """
+
+    enabled: bool = True
+    webhook_skew_seconds: int = Field(default=300, gt=0)
+    replay_window_seconds: int = Field(default=300, gt=0)
+    global_max_per_minute: int = Field(default=600, gt=0)
+    global_burst: int = Field(default=0, ge=0)
+    max_catch_up: int = Field(default=10, ge=1)
+    tick_seconds: int = Field(default=60, gt=0)
+    secrets: dict[str, str] = Field(default_factory=dict)
+
+    @field_validator("secrets", mode="before")
+    @classmethod
+    def _empty_secrets_become_empty_map(cls, value: object) -> object:
+        """Treat an unset env var as no configured secrets."""
+        return {} if value == "" else value
 
 
 class Settings(BaseSettings):
@@ -253,6 +276,7 @@ class Settings(BaseSettings):
     model: ModelSettings = Field(default_factory=ModelSettings)
     budget: BudgetSettings = Field(default_factory=BudgetSettings)
     reconcile: ReconcileSettings = Field(default_factory=ReconcileSettings)
+    triggers: TriggerSettings = Field(default_factory=TriggerSettings)
 
 
 @lru_cache(maxsize=1)

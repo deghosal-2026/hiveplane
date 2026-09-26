@@ -12,16 +12,16 @@ Make the fleet run itself. Trigger rules ingest events from the outside world (w
 
 **Work items:**
 
-- [ ] [#170](https://github.com/deghosal-2026/hiveplane/issues/170) — M27-01 — Trigger DSL schema (event matchers, filters, task template, target workload/pipeline, admission rule) with strict validation
-- [ ] [#171](https://github.com/deghosal-2026/hiveplane/issues/171) — M27-02 — Webhook ingest endpoint with HMAC-SHA256 verification, replay protection (timestamp + nonce), and signature rejection
-- [ ] [#172](https://github.com/deghosal-2026/hiveplane/issues/172) — M27-03 — Cron/scheduled trigger engine (timezone-aware, missed-schedule policy: catch-up vs. skip)
-- [ ] [#173](https://github.com/deghosal-2026/hiveplane/issues/173) — M27-04 — Dedup keys (event-id based) and cooldowns (per-trigger minimum interval)
-- [ ] [#174](https://github.com/deghosal-2026/hiveplane/issues/174) — M27-05 — Per-trigger rate limits and global ingest backpressure
-- [ ] [#175](https://github.com/deghosal-2026/hiveplane/issues/175) — M27-06 — Payload → task templating (typed substitution, length limits, injection-safe)
-- [ ] [#176](https://github.com/deghosal-2026/hiveplane/issues/176) — M27-07 — Trigger evaluation → run submission handoff (idempotent submission with idempotency key)
-- [ ] [#177](https://github.com/deghosal-2026/hiveplane/issues/177) — M27-08 — Tests: signature verification, replay rejection, dedup/cooldown/rate-limit behavior, cron firing, template rendering
+- [x] [#170](https://github.com/deghosal-2026/hiveplane/issues/170) — M27-01 — Trigger DSL schema (event matchers, filters, task template, target workload/pipeline, admission rule) with strict validation
+- [x] [#171](https://github.com/deghosal-2026/hiveplane/issues/171) — M27-02 — Webhook ingest endpoint with HMAC-SHA256 verification, replay protection (timestamp + nonce), and signature rejection
+- [x] [#172](https://github.com/deghosal-2026/hiveplane/issues/172) — M27-03 — Cron/scheduled trigger engine (timezone-aware, missed-schedule policy: catch-up vs. skip)
+- [x] [#173](https://github.com/deghosal-2026/hiveplane/issues/173) — M27-04 — Dedup keys (event-id based) and cooldowns (per-trigger minimum interval)
+- [x] [#174](https://github.com/deghosal-2026/hiveplane/issues/174) — M27-05 — Per-trigger rate limits and global ingest backpressure
+- [x] [#175](https://github.com/deghosal-2026/hiveplane/issues/175) — M27-06 — Payload → task templating (typed substitution, length limits, injection-safe)
+- [x] [#176](https://github.com/deghosal-2026/hiveplane/issues/176) — M27-07 — Trigger evaluation → run submission handoff (idempotent submission with idempotency key)
+- [x] [#177](https://github.com/deghosal-2026/hiveplane/issues/177) — M27-08 — Tests: signature verification, replay rejection, dedup/cooldown/rate-limit behavior, cron firing, template rendering
 
-**Test ticket:** [#178](https://github.com/deghosal-2026/hiveplane/issues/178) — Test cases for Trigger Service Core
+**Test ticket:** [x] [#178](https://github.com/deghosal-2026/hiveplane/issues/178) — Test cases for Trigger Service Core
 
 **Deliverables:**
 - `hiveplane.triggers` package (schema, engine, ingest, scheduler)
@@ -29,14 +29,20 @@ Make the fleet run itself. Trigger rules ingest events from the outside world (w
 - `docs/design/trigger-service-v2-design.md` (update) + DSL reference
 
 **Acceptance criteria:**
-- [ ] A webhook with an invalid/missing HMAC is rejected (401/403) and audited
-- [ ] A replayed webhook within the protection window is rejected
-- [ ] Duplicate events (same dedup key) start exactly one run
-- [ ] A cooldown suppresses a second trigger inside the window and records the suppression
-- [ ] A cron trigger fires on schedule and applies the missed-schedule policy
-- [ ] Templated task payloads render correctly and reject unsafe substitutions
+- [x] A webhook with an invalid/missing HMAC is rejected (401/403) and audited
+- [x] A replayed webhook within the protection window is rejected
+- [x] Duplicate events (same dedup key) start exactly one run
+- [x] A cooldown suppresses a second trigger inside the window and records the suppression
+- [x] A cron trigger fires on schedule and applies the missed-schedule policy
+- [x] Templated task payloads render correctly and reject unsafe substitutions
 
 **Done when:** external events reliably and safely start runs through the trigger service, with dedup, cooldown, and rate limits enforced.
+
+> **Status:** M27 complete. `hiveplane.triggers` (strict DSL, HMAC ingest with
+> replay protection, cron/scheduler, dedup/cooldown/rate/backpressure, templating,
+> engine, memory + Postgres store), migration `0006` (`trigger_nonces`), and the
+> trigger CRUD + webhook API landed. All tests pass with a database; ruff and
+> mypy strict clean. Issues #170–#178 to be closed at the exit gate.
 
 **Dependencies:** M25 (trigger model); v0.1.0 run submission API.
 
@@ -81,13 +87,13 @@ Make the fleet run itself. Trigger rules ingest events from the outside world (w
 
 ## Exit Gate (M27, M28)
 
-- [ ] All tests in the system pass: `pytest`
-- [ ] Code coverage total > 95%
-- [ ] Ruff clean
-- [ ] Mypy strict clean
-- [ ] All relevant docs updated (trigger design, DSL reference, user guide)
-- [ ] All M27–M28 issues done and closed
-- [ ] Commit and push changes
+- [x] All tests in the system pass: `pytest`
+- [x] Code coverage total ≥ 95%
+- [x] Ruff clean
+- [x] Mypy strict clean
+- [x] All relevant docs updated (trigger design, DSL reference, user guide)
+- [ ] All M27–M28 issues done and closed (M28 pending)
+- [ ] Commit and push changes (M27 committed; phase gate completes with M28)
 
 ## See Also
 

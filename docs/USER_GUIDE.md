@@ -87,6 +87,36 @@ observed-wins and are recorded as drift rather than overwritten. Reconcile is
 single-writer: a PostgreSQL advisory lock keyed by source id stops a second replica from
 double-acting.
 
+## Trigger Service (Autonomy)
+
+Declare a trigger, then let external events start runs. A trigger document names a
+`source` (webhook, github, alertmanager, cron, watch), a `target` workload or pipeline,
+an event `filter`, an injection-safe `task_template`, dedup/cooldown/rate-limit controls,
+and an `admission_rule` (`staging-auto` auto-admits staging, `gated` sends production
+through approvals, `deny` refuses). Production admission still requires a valid
+certification regardless of trigger trust.
+
+```bash
+# Register a webhook trigger (POST /triggers)
+curl -X POST localhost:8100/triggers -H 'content-type: application/json' -d '{
+  "id": "pr-analysis", "source": "webhook",
+  "target": {"kind": "workload", "ref": "repo-agent"},
+  "task_template": {"pr": "{{ event.number }}"},
+  "admission_rule": "staging-auto"
+}'
+
+# Deliver a signed event. The signature is HMAC-SHA256 over "timestamp.nonce.raw_body".
+curl -X POST localhost:8100/triggers/webhook/pr-analysis \
+  -H "X-HivePlane-Timestamp: $TS" -H "X-HivePlane-Nonce: $NONCE" \
+  -H "X-HivePlane-Signature: sha256=$SIG" -d '{"number": 42}'
+```
+
+A bad/missing signature returns 401, a replayed `(timestamp, nonce)` returns 409, a
+duplicate dedup key returns 409, and a burst past the rate bucket returns 429. Inspect
+history with `GET /triggers/{id}/events` and `GET /triggers/{id}/runs`; failed deliveries
+park in `GET /triggers/dlq`. Webhook secrets come from
+`HIVEPLANE_TRIGGERS__SECRETS` until the secrets store (M45) lands.
+
 ## Operator UI
 
 The operator UI is a server-rendered web app that reads the same HTTP API as the
