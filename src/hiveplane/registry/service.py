@@ -6,7 +6,10 @@ from collections.abc import Callable
 from datetime import UTC, datetime
 from typing import Any, Literal, overload
 
-from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+    Ed25519PrivateKey,
+    Ed25519PublicKey,
+)
 
 from hiveplane import metrics
 from hiveplane.certification.binding import compute_binding
@@ -47,6 +50,7 @@ from hiveplane.registry.models import (
     WorkloadVersion,
 )
 from hiveplane.registry.store import RegistryStore
+from hiveplane.transparency.provenance import WorkloadBundle, sign_bundle, verify_bundle
 
 CERT_RELEVANT_FIELDS: tuple[str, ...] = (
     "spec.runtime",
@@ -120,13 +124,35 @@ class RegistryService:
         *,
         clock: Callable[[], datetime] | None = None,
         attestation_public_key: Ed25519PublicKey | None = None,
+        bundle_signing_key: Ed25519PrivateKey | None = None,
+        bundle_key_id: str = "hp-signing-key-01",
+        key_resolver: Callable[[str], Ed25519PublicKey | None] | None = None,
     ) -> None:
         self._store = store
         self._clock = clock or (lambda: datetime.now(UTC))
         self._attestation_public_key = attestation_public_key
+        self._bundle_signing_key = bundle_signing_key
+        self._bundle_key_id = bundle_key_id
+        self._key_resolver = key_resolver
+
+    def _resolve_key(self, key_id: str) -> Ed25519PublicKey | None:
+        """Resolve a signing key id, falling back to the single configured key."""
+        if self._key_resolver is not None:
+            return self._key_resolver(key_id)
+        return self._attestation_public_key
 
     def _now(self) -> datetime:
         return self._clock()
+
+    @property
+    def attestation_public_key(self) -> Ed25519PublicKey | None:
+        """Return the public key used to verify attestation signatures."""
+        return self._attestation_public_key
+
+    @property
+    def clock(self) -> Callable[[], datetime]:
+        """Return the clock this registry reads time from."""
+        return self._clock
 
     # ------------------------------------------------------------------ #
     # Workload CRUD
@@ -151,6 +177,19 @@ class RegistryService:
             updated_at=created_at,
             needs_re_certification=needs_re_certification,
             artifact_hash=compute_binding(manifest).artifact_hash,
+            bundle=self._sign_bundle(manifest),
+        )
+
+    def _sign_bundle(self, manifest: AgentWorkload) -> WorkloadBundle | None:
+        """Sign the agent bundle at registration (M35-03), when a key is configured."""
+        if self._bundle_signing_key is None:
+            return None
+        return sign_bundle(
+            manifest,
+            self._bundle_signing_key,
+            key_id=self._bundle_key_id,
+            workload_id=manifest.name,
+            registered_at=self._now(),
         )
 
     @overload
@@ -536,6 +575,7 @@ class RegistryService:
                 status is CertificationStatus.CERTIFIED
                 and not record.needs_re_certification
                 and self._has_valid_attestation(record)
+                and self._has_valid_bundle(record)
             )
         reason = None
         if not admitted:
@@ -560,6 +600,21 @@ class RegistryService:
             raise AdmissionRefusedError(name, context.value, required, decision.actual_status)
         return decision
 
+    def _has_valid_bundle(self, record: WorkloadRecord) -> bool:
+        """Return True when the registered bundle proves the code identity.
+
+        Provenance is enforced whenever the control plane is configured with a
+        bundle signing key; without one, certification alone governs admission.
+        """
+        if self._bundle_signing_key is None:
+            return True
+        if record.bundle is None:
+            return False
+        public_key = self._resolve_key(record.bundle.key_id)
+        if public_key is None:
+            return False
+        return verify_bundle(record.bundle, record.manifest, public_key)
+
     def _has_valid_attestation(self, record: WorkloadRecord) -> bool:
         certification = record.manifest.spec.certification
         if certification is None or certification.expires_at is None:
@@ -569,7 +624,9 @@ class RegistryService:
                 workload=record.name, result="failed"
             )
             return False
-        if self._attestation_public_key is None or not certification.attestation_id:
+        if (self._attestation_public_key is None and self._key_resolver is None) or (
+            not certification.attestation_id
+        ):
             return False
         attestation = self._store.get_attestation(certification.attestation_id)
         if attestation is None or attestation.workload_id != record.name:
@@ -577,7 +634,8 @@ class RegistryService:
                 workload=record.name, result="failed"
             )
             return False
-        verified = verify_attestation(attestation, self._attestation_public_key)
+        public_key = self._resolve_key(attestation.signer.key_id)
+        verified = public_key is not None and verify_attestation(attestation, public_key)
         metrics.get_metrics().record_attestation_verification(
             workload=record.name, result="verified" if verified else "failed"
         )
@@ -598,9 +656,8 @@ class RegistryService:
         attestation = self._store.get_attestation(attestation_id)
         if attestation is None:
             raise AttestationNotFoundError(attestation_id)
-        if self._attestation_public_key is None or not verify_attestation(
-            attestation, self._attestation_public_key
-        ):
+        public_key = self._resolve_key(attestation.signer.key_id)
+        if public_key is None or not verify_attestation(attestation, public_key):
             metrics.get_metrics().record_attestation_verification(
                 workload=attestation.workload_id, result="failed"
             )
@@ -610,14 +667,21 @@ class RegistryService:
         )
         return attestation
 
+    def find_attestation(self, attestation_id: str) -> Attestation | None:
+        """Return a raw attestation (no signature check), or ``None``.
+
+        Used by public verification, which must not raise and must not treat a
+        forged signature as an error the caller can probe.
+        """
+        return self._store.get_attestation(attestation_id)
+
     def list_attestations(self, name: str) -> list[Attestation]:
         """Return verified attestations for a workload."""
         self.get(name)
         attestations = self._store.list_attestations(name)
         for attestation in attestations:
-            if self._attestation_public_key is None or not verify_attestation(
-                attestation, self._attestation_public_key
-            ):
+            public_key = self._resolve_key(attestation.signer.key_id)
+            if public_key is None or not verify_attestation(attestation, public_key):
                 raise AttestationVerificationError(attestation.attestation_id)
         return attestations
 

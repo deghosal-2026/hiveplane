@@ -12,14 +12,14 @@ Complete the trust story (certify code identity, not just behavior) and close th
 
 **Work items:**
 
-- [ ] [#244](https://github.com/deghosal-2026/hiveplane/issues/244) — M35-01 — Attestation transparency log: append-only, hash-chained history of every certification
-- [ ] [#245](https://github.com/deghosal-2026/hiveplane/issues/245) — M35-02 — Public verification endpoint (`GET /attestations/{id}/verify`) — no auth; returns validity + chain proof
-- [ ] [#246](https://github.com/deghosal-2026/hiveplane/issues/246) — M35-03 — Workload signing: sign an agent bundle (manifest + adapter/entrypoint digest) at registration
-- [ ] [#247](https://github.com/deghosal-2026/hiveplane/issues/247) — M35-04 — Provenance verification at admission: verify bundle signature against the attested identity
-- [ ] [#248](https://github.com/deghosal-2026/hiveplane/issues/248) — M35-05 — Provenance on export/import: bundles carry signatures; tampered imports are rejected
-- [ ] [#249](https://github.com/deghosal-2026/hiveplane/issues/249) — M35-06 — Key management: persistent signing keys, rotation, and verification key distribution
-- [ ] [#250](https://github.com/deghosal-2026/hiveplane/issues/250) — M35-07 — Fan-out results link to the public verification URL
-- [ ] [#251](https://github.com/deghosal-2026/hiveplane/issues/251) — M35-08 — Tests: forged attestation rejected; tampered bundle fails admission; chain tamper detected; public verify works unauthenticated
+- [x] [#244](https://github.com/deghosal-2026/hiveplane/issues/244) — M35-01 — Attestation transparency log: append-only, hash-chained history of every certification
+- [x] [#245](https://github.com/deghosal-2026/hiveplane/issues/245) — M35-02 — Public verification endpoint (`GET /attestations/{id}/verify`) — no auth; returns validity + chain proof
+- [x] [#246](https://github.com/deghosal-2026/hiveplane/issues/246) — M35-03 — Workload signing: sign an agent bundle (manifest + adapter/entrypoint digest) at registration
+- [x] [#247](https://github.com/deghosal-2026/hiveplane/issues/247) — M35-04 — Provenance verification at admission: verify bundle signature against the attested identity
+- [x] [#248](https://github.com/deghosal-2026/hiveplane/issues/248) — M35-05 — Provenance on export/import: bundles carry signatures; tampered imports are rejected
+- [x] [#249](https://github.com/deghosal-2026/hiveplane/issues/249) — M35-06 — Key management: persistent signing keys, rotation, and verification key distribution
+- [x] [#250](https://github.com/deghosal-2026/hiveplane/issues/250) — M35-07 — Fan-out results link to the public verification URL
+- [x] [#251](https://github.com/deghosal-2026/hiveplane/issues/251) — M35-08 — Tests: forged attestation rejected; tampered bundle fails admission; chain tamper detected; public verify works unauthenticated
 
 **Test ticket:** [#252](https://github.com/deghosal-2026/hiveplane/issues/252) — Test cases for Attestation Transparency Log, Public Verification & Workload Provenance
 
@@ -29,13 +29,15 @@ Complete the trust story (certify code identity, not just behavior) and close th
 - `docs/design/certification-v2-design.md` and `docs/design/certification-v2-design.md`
 
 **Acceptance criteria:**
-- [ ] Any attestation verifies publicly by ID without authentication
-- [ ] A modified agent bundle fails production admission on signature mismatch
-- [ ] Tampering with the transparency log is detectable
-- [ ] Exported/imported bundles verify their signatures; tampered imports are refused
-- [ ] Signing keys persist across restarts and rotate without breaking old attestations
+- [x] Any attestation verifies publicly by ID without authentication
+- [x] A modified agent bundle fails production admission on signature mismatch
+- [x] Tampering with the transparency log is detectable
+- [x] Exported/imported bundles verify their signatures; tampered imports are refused
+- [x] Signing keys persist across restarts and rotate without breaking old attestations
 
 **Done when:** behavior certification and code identity are both enforced, and attestations are independently verifiable.
+
+> **Status:** M35 complete. `hiveplane.transparency` (hash-chained log, public verification, bundle provenance, key registry) landed with migrations `0012`/`0013`; every certification appends to the log; production admission now requires both a valid attestation and a verified bundle. API `GET /attestations/{id}/verify`, CLI `hiveplane verify`, and fan-out `verification_url` are live. Issues #244–#252 closed; all tests pass with a database, coverage >95%, ruff and mypy strict clean.
 
 **Dependencies:** M32; v0.1.0 signed attestation + key persistence.
 

@@ -359,6 +359,33 @@ hiveplane drift reinstate <quarantine-id> --operator alice
 Quarantine history (with reason and severity) is on the certification dashboard,
 and an expired certification is not admissible for production.
 
+## Attestation Transparency & Provenance
+
+Every certification is appended to an append-only, hash-chained **transparency
+log**. Anyone can verify an attestation by id without authenticating; the public
+response returns only public evidence (validity, signer key id, issue time,
+status, and chain position) — never prompts, corpus contents, or secrets.
+
+```bash
+# Verify publicly (no credentials); exits non-zero when invalid.
+hiveplane verify <attestation-id>
+# -> GET /attestations/<id>/verify
+```
+
+The control plane also signs an **agent bundle** (manifest identity + entrypoint
+digest) at registration. Production admission requires **both** a valid,
+unexpired certification for the current artifact **and** a verified bundle: if
+the bundle digest, its signature, or the manifest is tampered with, admission is
+refused. Export/import envelopes carry the signature and a tampered import is
+rejected.
+
+Signing keys persist by `key_id` and rotate without invalidating history: a
+rotated key is retired but retained, so attestations and bundles signed under the
+old key still verify. Set `HIVEPLANE_CERTIFICATION__SIGNING_KEY_FILE` to persist
+the private key across restarts, and `HIVEPLANE_CERTIFICATION__SIGNING_KEY_ID` to
+name it. Set `HIVEPLANE_CERTIFICATION__PUBLIC_VERIFICATION_BASE_URL` to include a
+`verification_url` link in result fan-out notifications.
+
 ## Operator UI
 
 The operator UI is a server-rendered web app that reads the same HTTP API as the

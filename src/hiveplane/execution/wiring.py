@@ -81,6 +81,7 @@ def build_run_service(
         },
         enabled=settings.fanout.enabled,
         max_retries=settings.fanout.max_retries,
+        verification_base_url=settings.certification.public_verification_base_url,
     )
     return RunService(
         store,

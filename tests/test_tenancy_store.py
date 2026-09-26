@@ -211,3 +211,27 @@ def test_postgres_store_enforces_scoping(pg_engine: Engine) -> None:
                 created_at=_NOW,
             ),
         )
+
+
+def test_lookups_out_of_scope_return_empty() -> None:
+    store = InMemoryTenantStore()
+    store.save_tenant(SYSTEM_CONTEXT, _tenant("acme"))
+    other = TenantContext(tenant_id="other")
+
+    assert store.get_tenant(other, "acme") is None
+    assert store.list_tenants(other) == []
+    assert store.get_team(other, "acme", "platform") is None
+    assert store.list_teams(other, "acme") == []
+    assert store.get_membership(other, "m-1") is None
+    assert store.list_memberships(other, "acme") == []
+
+
+def test_tenant_store_lists_visible_tenants_sorted() -> None:
+    store = InMemoryTenantStore()
+    store.save_tenant(SYSTEM_CONTEXT, _tenant("beta"))
+    store.save_tenant(SYSTEM_CONTEXT, _tenant("acme"))
+
+    assert [tenant.tenant_id for tenant in store.list_tenants(SYSTEM_CONTEXT)] == [
+        "acme",
+        "beta",
+    ]

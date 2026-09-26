@@ -316,6 +316,47 @@ def test_certs_compare_reports_regressions(monkeypatch: Any) -> None:
     assert "blocked" in result.output.lower()
 
 
+def test_verify_reports_a_valid_attestation(monkeypatch: Any) -> None:
+    captured: dict[str, Any] = {}
+
+    def _fake(method: str, url: str, payload: dict[str, Any] | None = None) -> tuple[int, str]:
+        captured["url"] = url
+        return 200, json.dumps({"attestation_id": "att-1", "valid": True, "log_seq": 0})
+
+    monkeypatch.setattr("hiveplane.cli._request", _fake)
+
+    result = runner.invoke(app, ["verify", "att-1"])
+
+    assert result.exit_code == 0
+    assert "att-1" in result.output
+    assert captured["url"].endswith("/attestations/att-1/verify")
+
+
+def test_verify_invalid_attestation_exits_nonzero(monkeypatch: Any) -> None:
+    monkeypatch.setattr(
+        "hiveplane.cli._request",
+        lambda method, url, payload=None: (
+            200,
+            json.dumps({"attestation_id": "att-1", "valid": False, "reason": "bad"}),
+        ),
+    )
+
+    result = runner.invoke(app, ["verify", "att-1"])
+
+    assert result.exit_code == 1
+
+
+def test_verify_reports_unknown_attestation(monkeypatch: Any) -> None:
+    monkeypatch.setattr(
+        "hiveplane.cli._request",
+        lambda method, url, payload=None: (404, json.dumps({"detail": "not found"})),
+    )
+
+    result = runner.invoke(app, ["verify", "missing"])
+
+    assert result.exit_code == 1
+
+
 # --------------------------------------------------------------------------- #
 # Submission CLI (#52)
 # --------------------------------------------------------------------------- #
@@ -931,3 +972,81 @@ def test_tools_seed_requires_a_workloads_dir(tmp_path: Path) -> None:
     )
 
     assert result.exit_code == 1
+
+
+def test_route_reports_choice(monkeypatch: Any) -> None:
+    monkeypatch.setattr(
+        "hiveplane.cli._request",
+        lambda method, url, payload=None: (
+            200,
+            json.dumps(
+                {
+                    "outcome": "routed",
+                    "chosen": "repo-agent",
+                    "classifier_model": "gpt-4o",
+                    "candidates": [{"score": 0.91, "workload": "repo-agent"}],
+                }
+            ),
+        ),
+    )
+
+    result = runner.invoke(app, ["route", "triage this ticket"])
+
+    assert result.exit_code == 0
+    assert "repo-agent" in result.output
+
+
+def test_route_reports_refusal(monkeypatch: Any) -> None:
+    monkeypatch.setattr(
+        "hiveplane.cli._request",
+        lambda method, url, payload=None: (
+            200,
+            json.dumps(
+                {
+                    "outcome": "refused",
+                    "reason": "no certified candidate",
+                    "candidates": [{"score": 0.2, "workload": "weak-agent"}],
+                }
+            ),
+        ),
+    )
+
+    result = runner.invoke(app, ["route", "triage this ticket"])
+
+    assert result.exit_code == 0
+    assert "refused" in result.output
+    assert "weak-agent" in result.output
+
+
+def test_agents_list_prints_tools(monkeypatch: Any) -> None:
+    monkeypatch.setattr(
+        "hiveplane.cli._request",
+        lambda method, url, payload=None: (
+            200,
+            json.dumps([{"tool_id": "agent.triage", "description": "Triage tickets"}]),
+        ),
+    )
+
+    result = runner.invoke(app, ["agents", "list"])
+
+    assert result.exit_code == 0
+    assert "agent.triage" in result.output
+
+
+def test_agents_invoke_prints_nested_run(monkeypatch: Any) -> None:
+    monkeypatch.setattr(
+        "hiveplane.cli._request",
+        lambda method, url, payload=None: (
+            200,
+            json.dumps(
+                {"tool_id": "agent.triage", "nested_run_id": "run-9", "depth": 1}
+            ),
+        ),
+    )
+
+    result = runner.invoke(
+        app, ["agents", "invoke", "agent.triage", "--caller-run", "run-1"]
+    )
+
+    assert result.exit_code == 0
+    assert "run-9" in result.output

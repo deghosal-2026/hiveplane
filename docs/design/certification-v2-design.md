@@ -1,6 +1,6 @@
 # D26: Certification v2 Design
 
-> Status: implemented (M32 promotion gate, M33 regression diff, M34 drift/quarantine/reinstatement; M35 transparency/provenance pending)
+> Status: implemented (M32 promotion gate, M33 regression diff, M34 drift/quarantine/reinstatement, M35 transparency/public verification/workload provenance)
 
 **Milestones:** M32–M35 · **Extends:** D10
 
@@ -239,6 +239,39 @@ quarantine reversible:
 API: `GET /drift/{due,schedules,expiries}`, `POST /drift/{assess,probe}`,
 `GET|POST /quarantines`, `POST /quarantines/{id}/reinstate`.
 CLI: `hiveplane drift {due,schedules,expiries,assess,probe,quarantine,quarantines,reinstate}`.
+
+### Attestation transparency, public verification & provenance (M35)
+
+`hiveplane.transparency` completes the trust story — code identity as well as
+behavior, and independent verifiability:
+
+- **Transparency log** — every certification appends one entry to an append-only,
+  hash-chained log (`entry_hash = sha256(prev_hash ‖ seq ‖ attestation_id ‖
+  canonical_json(attestation))`). `verify_chain()` recomputes the chain and
+  reports the first inconsistency (broken link, reorder, deletion, or content
+  mismatch); `prove(id)` returns inclusion evidence. Persisted in `attestation_log`
+  (migration `0012`); in-memory by default.
+- **Public verification** — `GET /attestations/{id}/verify` is unauthenticated and
+  returns only public evidence (validity, `signer_key_id`, `issued_at`, status,
+  chain position/validity). Unknown ids return `404` with no information leak; a
+  forged or non-included attestation returns `valid: false`. CLI:
+  `hiveplane verify <attestation_id>`.
+- **Workload provenance** — at registration the control plane signs an agent
+  bundle (manifest identity + entrypoint digest) via `sign_bundle`. Production
+  admission now requires a valid unexpired certification **and** a verified
+  bundle (`RegistryService._has_valid_bundle`); a tampered digest/signature or a
+  swapped manifest is refused. Export/import envelopes carry the signature and
+  `import_bundle` refuses tampered imports.
+- **Key management** — `SigningKeyRegistry` distributes public keys by `key_id`
+  and rotates them: the previous key is retired but retained, so attestations and
+  bundles signed under old keys still verify. Persisted in `signing_keys`
+  (migration `0013`).
+- **Fan-out** — result notifications include a `verification_url` (from
+  `certification.public_verification_base_url`).
+
+API: `GET /attestations/{id}/verify`. CLI: `hiveplane verify`. When a control
+plane is configured without a bundle signing key, provenance is not enforced and
+certification alone governs admission (backward compatible).
 
 ## See Also
 - [Certification Pipeline Design](certification-pipeline-design.md) (D10) — runner, engine, thresholds, promotion gate, drift

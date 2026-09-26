@@ -82,7 +82,9 @@ def test_engine_is_created_from_settings() -> None:
 
 
 def test_every_table_is_tenant_scoped() -> None:
-    exempt = {"tenants", "teams", "memberships"}
+    # ``attestation_log`` and ``signing_keys`` are global control-plane
+    # material (M35) and are deliberately not tenant-partitioned.
+    exempt = {"tenants", "teams", "memberships", "attestation_log", "signing_keys"}
     missing = {
         name
         for name in Base.metadata.tables

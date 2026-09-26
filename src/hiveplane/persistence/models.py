@@ -229,6 +229,40 @@ class AttestationRow(_TenantScoped, Base):
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
+class AttestationLogRow(Base):
+    """Append-only, hash-chained certification transparency log (M35-01).
+
+    Global (not tenant-scoped): the log is the canonical public record and a
+    single chain across all tenants.
+    """
+
+    __tablename__ = "attestation_log"
+
+    seq: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=False)
+    attestation_id: Mapped[str] = mapped_column(String(64), unique=True, index=True)
+    prev_hash: Mapped[str] = mapped_column(String(64))
+    entry_hash: Mapped[str] = mapped_column(String(64), unique=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class SigningKeyRow(Base):
+    """Distributed public verification keys with rotation state (M35-06).
+
+    Global (not tenant-scoped): the key registry is control-plane material.
+    """
+
+    __tablename__ = "signing_keys"
+
+    key_id: Mapped[str] = mapped_column(String(253), primary_key=True)
+    status: Mapped[str] = mapped_column(String(32), index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    retired_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
 class ToolRow(_TenantScoped, Base):
     """MCP tool registry entries."""
 

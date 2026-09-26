@@ -79,15 +79,26 @@ def _destinations(run: Run, workload: AgentWorkload) -> list[FanOutDestination]:
     return []
 
 
-def _message(run: Run, workload: AgentWorkload) -> dict[str, JsonValue]:
+def _message(
+    run: Run,
+    workload: AgentWorkload,
+    *,
+    verification_base_url: str | None = None,
+) -> dict[str, JsonValue]:
     certification = workload.spec.certification
+    attestation_id = certification.attestation_id if certification else None
+    verification_url: str | None = None
+    if attestation_id and verification_base_url:
+        base = verification_base_url.rstrip("/")
+        verification_url = f"{base}/attestations/{attestation_id}/verify"
     return {
         "run_id": run.id,
         "workload": run.workload_id,
         "state": run.state.value,
         "failure_reason": run.failure_reason,
         "cost_usd": run.cost_usd,
-        "attestation_id": certification.attestation_id if certification else None,
+        "attestation_id": attestation_id,
+        "verification_url": verification_url,
     }
 
 
@@ -102,18 +113,22 @@ class FanOutService:
         enabled: bool = True,
         max_retries: int = 3,
         clock: Callable[[], datetime] | None = None,
+        verification_base_url: str | None = None,
     ) -> None:
         self._store = store
         self._transports = dict(transports)
         self._enabled = enabled
         self._max_retries = max_retries
         self._clock = clock or (lambda: datetime.now(UTC))
+        self._verification_base_url = verification_base_url
 
     def notify(self, run: Run, workload: AgentWorkload) -> list[DeliveryRecord]:
         """Deliver a run's outcome to every configured destination."""
         if not self._enabled:
             return []
-        message = _message(run, workload)
+        message = _message(
+            run, workload, verification_base_url=self._verification_base_url
+        )
         records: list[DeliveryRecord] = []
         for destination in _destinations(run, workload):
             records.append(self._deliver(run, workload, destination, message))
@@ -123,7 +138,9 @@ class FanOutService:
         """Deliver an escalation notice to on_escalation destinations."""
         if not self._enabled:
             return []
-        message = _message(run, workload)
+        message = _message(
+            run, workload, verification_base_url=self._verification_base_url
+        )
         records: list[DeliveryRecord] = []
         for destination in workload.spec.fan_out.on_escalation:
             records.append(self._deliver(run, workload, destination, message))

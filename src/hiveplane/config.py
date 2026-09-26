@@ -97,6 +97,8 @@ class CertificationSettings(BaseModel):
     corpora_dir: str = "examples"
     executor: Literal["none", "reference", "adapter"] = "none"
     signing_key_file: str | None = None
+    signing_key_id: str = "hp-signing-key-01"
+    public_verification_base_url: str | None = None
 
     @model_validator(mode="after")
     def _production_not_weaker_than_staging(self) -> CertificationSettings:

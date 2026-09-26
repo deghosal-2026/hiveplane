@@ -330,6 +330,35 @@ immune system (drift, quarantine, promotion gate), and fleet scale-out. In progr
   reinstatement success/refusal, Postgres round-trip and migration `0011`.
   Coverage ≥ 95% with a database.
 
+### Added (M35 — attestation transparency, public verification & workload provenance)
+
+- **Transparency log** (`hiveplane.transparency.TransparencyLog`) — append-only,
+  hash-chained history of every certification
+  (`entry_hash = sha256(prev_hash ‖ seq ‖ attestation_id ‖ canonical_json)`);
+  `verify_chain()` detects edits, reorders, and deletions; `prove()` returns
+  inclusion evidence. Store protocol + in-memory + PostgreSQL (`attestation_log`;
+  migration `0012`). Every certification now appends to the log.
+- **Public verification** — unauthenticated `GET /attestations/{id}/verify`
+  returns only public evidence (validity, `signer_key_id`, `issued_at`, status,
+  log position, chain validity) and never workload internals, corpus contents, or
+  secrets. `hiveplane verify <attestation_id>` wraps it (non-zero exit when invalid).
+- **Workload provenance & signing** (`hiveplane.transparency.provenance`) — an
+  agent bundle binds the manifest identity and entrypoint digest; signed at
+  registration and verified at production admission. A tampered digest, signature,
+  or swapped manifest **fails production admission**. Export/import envelopes carry
+  the signature; `import_bundle` refuses tampered imports.
+- **Key management** (`hiveplane.transparency.SigningKeyRegistry`) — persistent
+  public keys by `key_id`, rotation that retires the previous key while retaining
+  it, and verification-key distribution (`signing_keys`; migration `0013`). Old
+  attestations and bundles still verify after rotation.
+- **Fan-out verification links** — result notifications include a
+  `verification_url` pointing at the public verify endpoint when
+  `certification.public_verification_base_url` is configured.
+- **Tests** — chain integrity/tamper detection, forged/tampered attestation and
+  bundle rejection, public verify unauthenticated + field minimisation, bundle
+  export/import refusal, key rotation retaining old keys, Postgres round-trips,
+  and migrations `0012`/`0013`.
+
 ## [0.1.0] - 2026-09-25
 
 The first release: the certified control loop. Register agents, certify them against a

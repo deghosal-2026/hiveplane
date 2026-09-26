@@ -39,6 +39,7 @@ from hiveplane.api.runs import router as runs_router
 from hiveplane.api.sandbox_channel import SandboxChannel
 from hiveplane.api.sandbox_channel import router as sandbox_router
 from hiveplane.api.spend import router as spend_router
+from hiveplane.api.transparency import router as transparency_router
 from hiveplane.api.triggers import router as triggers_router
 from hiveplane.budget.errors import MissingModelIdentityError, UnknownModelPriceError
 from hiveplane.budget.pricing import CostTable
@@ -144,6 +145,13 @@ from hiveplane.router.engine import RouterEngine
 from hiveplane.router.store import build_router_store
 from hiveplane.sandbox.manager import InMemorySandboxManager
 from hiveplane.tenancy import TenantContext
+from hiveplane.transparency import (
+    PublicVerifier,
+    SigningKeyRegistry,
+    TransparencyLog,
+    build_signing_key_store,
+    build_transparency_store,
+)
 from hiveplane.triggers.engine import TriggerEngine
 from hiveplane.triggers.freeze import FreezeService, build_freeze_store
 from hiveplane.triggers.ingest import WebhookVerifier
@@ -220,10 +228,25 @@ def create_app(
     else:
         private_key, public_key = generate_keypair()
     app.state.attestation_public_key = public_key
+    transparency_log = TransparencyLog(build_transparency_store(settings))
+    app.state.transparency_log = transparency_log
+    key_registry = SigningKeyRegistry(build_signing_key_store(settings))
     registry = registry_service or RegistryService(
-        build_registry_store(settings), attestation_public_key=public_key
+        build_registry_store(settings),
+        attestation_public_key=public_key,
+        bundle_signing_key=private_key,
+        bundle_key_id=settings.certification.signing_key_id,
+        key_resolver=key_registry.resolve,
     )
+    verifier_key = registry.attestation_public_key or public_key
+    key_registry.add_key(settings.certification.signing_key_id, verifier_key)
+    app.state.signing_key_registry = key_registry
     app.state.registry_service = registry
+    app.state.public_verifier = PublicVerifier(
+        get_attestation=registry.find_attestation,
+        log=transparency_log,
+        key_resolver=lambda key_id: key_registry.resolve(key_id) or verifier_key,
+    )
     policy_pack_store = InMemoryPolicyPackStore()
     policy_engine = PolicyEngine(policy_pack_store)
     approval_service = ApprovalService(build_approval_store(settings))
@@ -416,7 +439,12 @@ def create_app(
     app.state.adapter_catalog = _adapter_catalog(app.state.adapter, settings)
     if certification_coordinator is None and registry_service is None:
         certification_coordinator = _build_certification_coordinator(
-            registry, private_key, app.state.run_service, settings, approval_service
+            registry,
+            private_key,
+            app.state.run_service,
+            settings,
+            approval_service,
+            transparency_log,
         )
     app.state.certification_coordinator = certification_coordinator
     app.state.certification_store = getattr(certification_coordinator, "store", None)
@@ -515,6 +543,7 @@ def create_app(
     app.include_router(drift_router)
     app.include_router(sandbox_router)
     app.include_router(spend_router)
+    app.include_router(transparency_router)
     app.include_router(reconcile_router)
     app.include_router(triggers_router)
     app.include_router(pipelines_router)
@@ -539,6 +568,7 @@ def _wire_drift(
         registry,
         default_interval=settings.certification.re_cert_interval_days * 86400,
         renewal_window=drift.renewal_window_days * 86400,
+        clock=registry.clock,
     )
     detector = DriftDetector(
         threshold_pass_rate=settings.certification.drift_threshold_pass_rate,
@@ -588,6 +618,7 @@ def _build_certification_coordinator(
     run_service: RunService,
     settings: Settings,
     approvals: ApprovalService | None = None,
+    transparency_log: TransparencyLog | None = None,
 ) -> CertificationCoordinator:
     """Build the default certification coordinator from settings."""
     cert = settings.certification
@@ -606,6 +637,8 @@ def _build_certification_coordinator(
         registry,
         private_key=private_key,
         environment=environment,
+        key_id=cert.signing_key_id,
+        transparency_log=transparency_log,
     )
     executor, executor_factory = _select_task_executor(
         settings, run_service, registry, approvals

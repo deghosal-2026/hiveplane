@@ -73,6 +73,58 @@ def test_notify_disabled_records_nothing(make_manifest: Callable[..., AgentWorkl
     assert store.list_deliveries("run-1") == []
 
 
+def test_notify_includes_the_public_verification_url(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    store = InMemoryRunStore()
+    store.save_run(_run())
+    recorder = _Recorder()
+    service = FanOutService(
+        store,
+        {FanOutType.WEBHOOK: recorder},
+        verification_base_url="https://hp.example",
+        clock=_clock,
+    )
+    workload = make_manifest(
+        fan_out={"on_completed": [{"type": "webhook", "url": "https://example.test/hook"}]},
+        certification={
+            "status": "certified",
+            "benchmark_corpus": "corpus",
+            "attestation_id": "att-1",
+            "expires_at": "2026-12-31T00:00:00Z",
+        },
+    )
+
+    service.notify(_run(), workload)
+
+    assert (
+        recorder.sent[0][1]["verification_url"]
+        == "https://hp.example/attestations/att-1/verify"
+    )
+
+
+def test_notify_without_base_url_omits_verification_url(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    store = InMemoryRunStore()
+    store.save_run(_run())
+    recorder = _Recorder()
+    service = FanOutService(store, {FanOutType.WEBHOOK: recorder}, clock=_clock)
+    workload = make_manifest(
+        fan_out={"on_completed": [{"type": "webhook", "url": "https://example.test/hook"}]},
+        certification={
+            "status": "certified",
+            "benchmark_corpus": "corpus",
+            "attestation_id": "att-1",
+            "expires_at": "2026-12-31T00:00:00Z",
+        },
+    )
+
+    service.notify(_run(), workload)
+
+    assert recorder.sent[0][1]["verification_url"] is None
+
+
 def test_notify_retries_then_records_failure(make_manifest: Callable[..., AgentWorkload]) -> None:
     store = InMemoryRunStore()
     store.save_run(_run())

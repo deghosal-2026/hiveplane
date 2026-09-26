@@ -161,6 +161,26 @@ ApiUrl = Annotated[str, typer.Option("--api-url", help="Base URL of the control-
 
 
 @app.command()
+def verify(
+    attestation_id: Annotated[str, typer.Argument(help="Attestation id to verify.")],
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Verify an attestation publicly (validity + transparency-log inclusion)."""
+    url = f"{api_url.rstrip('/')}/attestations/{attestation_id}/verify"
+    status_code, body = _request("GET", url)
+    if status_code >= 400 or status_code == 0:
+        _fail("verify", status_code, body)
+    result = json.loads(body)
+    typer.echo(json.dumps(result, indent=2))
+    if not result.get("valid", False):
+        typer.secho(
+            f"attestation {attestation_id!r} is NOT valid", fg=typer.colors.RED, err=True
+        )
+        raise typer.Exit(code=1)
+    typer.secho(f"OK: attestation {attestation_id!r} is valid", fg=typer.colors.GREEN)
+
+
+@app.command()
 def submit(
     agent: Annotated[str, typer.Option("--agent", help="Workload name to run.")],
     task: Annotated[

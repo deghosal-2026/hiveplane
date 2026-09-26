@@ -30,6 +30,7 @@ from hiveplane.router.engine import RouterEngine
 from hiveplane.router.store import RouterStore
 from hiveplane.tenancy import Role, TenantContext
 from hiveplane.tenancy.context import DEFAULT_CONTEXT
+from hiveplane.transparency.verify import PublicVerifier
 from hiveplane.triggers.engine import TriggerEngine
 from hiveplane.triggers.freeze import FreezeService
 from hiveplane.triggers.ingest import WebhookVerifier
@@ -209,6 +210,18 @@ def get_adapter_catalog(request: Request) -> dict[str, Adapter]:
     """Return the configured runtime adapters keyed by name."""
     catalog: dict[str, Adapter] = getattr(request.app.state, "adapter_catalog", {})
     return catalog
+
+
+def get_public_verifier(request: Request) -> PublicVerifier:
+    """Return the public attestation verifier bound to application state."""
+    verifier: PublicVerifier | None = getattr(
+        request.app.state, "public_verifier", None
+    )
+    if verifier is None:
+        raise HTTPException(
+            status.HTTP_503_SERVICE_UNAVAILABLE, "public verifier is not available"
+        )
+    return verifier
 
 
 def get_promotion_gate(request: Request) -> PromotionGate:

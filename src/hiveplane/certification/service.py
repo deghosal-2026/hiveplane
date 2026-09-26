@@ -28,6 +28,7 @@ from hiveplane.certification.models import (
 from hiveplane.certification.runner import BENCHMARK_VERSION
 from hiveplane.certification.signing import sign_attestation
 from hiveplane.registry.service import RegistryService
+from hiveplane.transparency.log import TransparencyLog
 
 #: Placeholder written before signing; ``canonical_payload`` excludes it.
 UNSIGNED = "unsigned"
@@ -49,6 +50,7 @@ class CertificationService:
         clock: Callable[[], datetime] | None = None,
         id_factory: Callable[[], str] | None = None,
         policy_version_lookup: Callable[[str], str | None] | None = None,
+        transparency_log: TransparencyLog | None = None,
     ) -> None:
         self._engine = engine
         self._registry = registry
@@ -60,6 +62,7 @@ class CertificationService:
         self._clock = clock or (lambda: datetime.now(UTC))
         self._id_factory = id_factory or (lambda: f"att-{uuid.uuid4().hex[:12]}")
         self._policy_version_lookup = policy_version_lookup
+        self._transparency_log = transparency_log
 
     def certify(
         self,
@@ -123,6 +126,8 @@ class CertificationService:
             previous_attestation_id=previous_attestation_id,
         )
         stored = self._registry.store_attestation(sign_attestation(attestation, self._private_key))
+        if self._transparency_log is not None:
+            self._transparency_log.append(stored)
         if certification.status is not record.certification_status:
             event = _event_for(record.certification_status, certification.status)
             if event is not None:
