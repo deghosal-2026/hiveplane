@@ -78,12 +78,12 @@ Extend the v0.1.0 data model to represent the fleet primitives every later part 
 
 **Done when:** the fleet can be declared in git and the controller converges actual state to it, safely and idempotently.
 
-> **Status:** M26 implementation complete. `hiveplane.reconcile` (loader, observer,
+> **Status:** M26 complete. `hiveplane.reconcile` (loader, observer,
 > differ, conflict policy, planner, executor, controller, advisory lock, git
 > poll/webhook), migration `0005` (`reconcile_runs`), API endpoints, and
 > `hiveplane reconcile status|plan|apply` landed. All tests pass with a database;
-> coverage 96% total, ruff and mypy strict clean. Issues #161–#169 to be closed and
-> changes committed at the exit gate.
+> coverage 96% total, ruff and mypy strict clean. Issues #161–#169 closed; changes
+> committed and pushed.
 
 **Dependencies:** M25; registry/certification services from v0.1.0.
 
@@ -96,8 +96,8 @@ Extend the v0.1.0 data model to represent the fleet primitives every later part 
 - [x] Ruff clean
 - [x] Mypy strict clean
 - [x] All relevant docs updated (data model, reconciliation design, PRD/WBS references)
-- [ ] All M25–M26 issues done and closed
-- [ ] Commit and push changes
+- [x] All M25–M26 issues done and closed
+- [x] Commit and push changes
 
 ## See Also
 
