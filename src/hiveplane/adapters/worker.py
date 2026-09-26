@@ -144,11 +144,23 @@ class WorkerContext:
         self._clock = clock
         self._provider = provider
         self._cost_table = cost_table or _DEFAULT_COST_TABLE
+        self._reported_model_identity: str | None = None
+        self._last_usage: UsageReport | None = None
 
     @property
     def run_id(self) -> str:
         """The id of the run being executed."""
         return self._run.id
+
+    @property
+    def reported_model_identity(self) -> str | None:
+        """The model identity captured from actual inference (contract v2)."""
+        return self._reported_model_identity
+
+    @property
+    def last_usage(self) -> UsageReport | None:
+        """The most recent usage report recorded for the run, if any."""
+        return self._last_usage
 
     @property
     def workload(self) -> str:
@@ -240,6 +252,7 @@ class WorkerContext:
                 self._record_identity_mismatch(bound, canonical)
                 raise ModelIdentityMismatchError(bound, canonical)
             active.set_attribute("model_identity", canonical)
+            self._reported_model_identity = canonical
             active.set_attribute("input_tokens", response.usage.input_tokens)
             active.set_attribute("output_tokens", response.usage.output_tokens)
             cost = self._cost_table.price(
@@ -259,6 +272,7 @@ class WorkerContext:
             response=_truncate(response.content),
             latency_ms=latency_ms,
         )
+        self._last_usage = report
         updated = self._reporter.record_usage(self._run.id, report)
         if updated.state in _TERMINAL:
             raise RunTerminatedError(updated.state)
@@ -315,6 +329,7 @@ class WorkerContext:
             timestamp=self._clock(),
             model_identity=self._run.model_identity,
         )
+        self._last_usage = report
         updated = self._reporter.record_usage(self._run.id, report)
         if updated.state in _TERMINAL:
             raise RunTerminatedError(updated.state)

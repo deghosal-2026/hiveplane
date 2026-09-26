@@ -23,6 +23,7 @@ from hiveplane.agent_tools.engine import AgentToolInvoker
 from hiveplane.agent_tools.registry import AgentToolRegistry
 from hiveplane.agent_tools.store import build_agent_tool_store
 from hiveplane.api.a2a import router as a2a_router
+from hiveplane.api.adapters import router as adapters_router
 from hiveplane.api.agent_tools import router as agent_tools_router
 from hiveplane.api.approvals import router as approvals_router
 from hiveplane.api.certifications import router as certifications_router
@@ -73,6 +74,8 @@ from hiveplane.execution.subprocess_spawner import SubprocessSpawner
 from hiveplane.execution.wiring import (
     attach_auto_adapters,
     attach_langgraph,
+    attach_openai_agents,
+    attach_pydanticai,
     attach_raw_worker,
     build_run_service,
     build_tool_gateway,
@@ -358,6 +361,20 @@ def create_app(
             provider=provider,
             cost_table=cost_table,
         )
+    elif settings.execution.adapter == "pydanticai":
+        app.state.adapter = attach_pydanticai(
+            app.state.run_service,
+            app.state.tool_gateway,
+            provider=provider,
+            cost_table=cost_table,
+        )
+    elif settings.execution.adapter == "openai-agents":
+        app.state.adapter = attach_openai_agents(
+            app.state.run_service,
+            app.state.tool_gateway,
+            provider=provider,
+            cost_table=cost_table,
+        )
     elif settings.execution.adapter == "auto":
         app.state.adapter = attach_auto_adapters(
             app.state.run_service,
@@ -372,6 +389,7 @@ def create_app(
         app.state.adapters = app.state.adapter.adapters
     else:
         app.state.adapter = None
+    app.state.adapter_catalog = _adapter_catalog(app.state.adapter, settings)
     if certification_coordinator is None and registry_service is None:
         certification_coordinator = _build_certification_coordinator(
             registry, private_key, app.state.run_service, settings, approval_service
@@ -466,6 +484,7 @@ def create_app(
     app.include_router(pipelines_router)
     app.include_router(route_router)
     app.include_router(agent_tools_router)
+    app.include_router(adapters_router)
     if settings.a2a.enabled:
         app.include_router(a2a_router)
     return app
@@ -550,6 +569,16 @@ def _select_task_executor(
             "falling back to the unconfigured executor"
         )
     return UnconfiguredTaskExecutor(), None
+
+
+def _adapter_catalog(adapter: Any | None, settings: Settings) -> dict[str, Any]:
+    """Return the configured adapters keyed by adapter name for introspection."""
+    if adapter is None:
+        return {}
+    adapters = getattr(adapter, "adapters", None)
+    if adapters is not None:
+        return {runtime.value: bound for runtime, bound in adapters.items()}
+    return {settings.execution.adapter: adapter}
 
 
 def _workload_io(registry: RegistryService, workload: str) -> IOSpec | None:

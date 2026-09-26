@@ -132,7 +132,9 @@ class ExecutionSettings(BaseModel):
     store: Literal["memory", "json", "postgres"] = "json"
     data_dir: str = ".hiveplane/runs"
     entrypoints_root: str = "."
-    adapter: Literal["none", "raw-worker", "langgraph", "auto"] = "none"
+    adapter: Literal[
+        "none", "raw-worker", "langgraph", "pydanticai", "openai-agents", "auto"
+    ] = "none"
     tool_fixtures: str = DEFAULT_TOOL_FIXTURES
     sandbox_mode: Literal["in-process", "subprocess"] = "in-process"
     base_url: str = "http://127.0.0.1:8100"

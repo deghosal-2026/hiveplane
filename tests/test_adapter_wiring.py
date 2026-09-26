@@ -91,6 +91,8 @@ def test_auto_adapter_builds_a_dispatcher(
     assert set(app.state.adapters) == {
         RuntimeAdapter.RAW_WORKER,
         RuntimeAdapter.LANGGRAPH,
+        RuntimeAdapter.PYDANTIC_AI,
+        RuntimeAdapter.OPENAI_AGENTS,
     }
 
 

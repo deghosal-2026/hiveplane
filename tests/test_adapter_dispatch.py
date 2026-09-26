@@ -2,11 +2,16 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from datetime import UTC, datetime
 
 import pytest
 
+from hiveplane.adapters.base import (
+    AdapterCapabilities,
+    AdapterEvent,
+    buffered_stream,
+)
 from hiveplane.adapters.dispatch import DispatchingAdapter
 from hiveplane.adapters.errors import UnsupportedAdapterError
 from hiveplane.core.run import Run, RunState
@@ -39,7 +44,7 @@ class _SpyAdapter:
         self.actions.append(("resume", run_id))
         return True
 
-    def cancel(self, run_id: str) -> None:
+    def cancel(self, run_id: str, *, deadline_s: float | None = None) -> None:
         self.actions.append(("cancel", run_id))
 
     def status(self, run_id: str) -> RunState:
@@ -53,6 +58,18 @@ class _SpyAdapter:
     def tool_calls(self, run_id: str) -> list[ToolCallResult]:
         self.actions.append(("tool_calls", run_id))
         return []
+
+    def capabilities(self) -> AdapterCapabilities:
+        return AdapterCapabilities()
+
+    def stream(self, run_id: str) -> Iterator[AdapterEvent]:
+        return buffered_stream(run_id, self.status(run_id))
+
+    def model_identity(self, run_id: str) -> str | None:
+        return None
+
+    def conformance_version(self) -> str:
+        return "2"
 
 
 def _dispatcher() -> tuple[DispatchingAdapter, _SpyAdapter, _SpyAdapter]:

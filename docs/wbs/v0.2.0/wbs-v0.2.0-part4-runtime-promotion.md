@@ -12,16 +12,16 @@ Broaden the runtime surface (more frameworks, a converter for existing apps) and
 
 **Work items:**
 
-- [ ] [#208](https://github.com/deghosal-2026/hiveplane/issues/208) — M31-01 — Adapter contract v2 (lifecycle, streaming, tool calls, cancellation, usage reporting, model identity) — documented and versioned
-- [ ] [#209](https://github.com/deghosal-2026/hiveplane/issues/209) — M31-02 — PydanticAI adapter (certifiable via the benchmark, real entrypoint execution)
-- [ ] [#210](https://github.com/deghosal-2026/hiveplane/issues/210) — M31-03 — OpenAI Agents SDK adapter and/or CrewAI adapter (fourth runtime; at least one ships)
-- [ ] [#211](https://github.com/deghosal-2026/hiveplane/issues/211) — M31-04 — Conformance suite v2: every adapter must pass the same behavioral contract tests
-- [ ] [#212](https://github.com/deghosal-2026/hiveplane/issues/212) — M31-05 — `hiveplane wrap` — inspect a LangGraph/CrewAI/OpenAI-SDK app and generate a workload manifest + adapter scaffold
-- [ ] [#213](https://github.com/deghosal-2026/hiveplane/issues/213) — M31-06 — Wrap safety: never modifies the source app; generated scaffold is inert until registered and certified
-- [ ] [#214](https://github.com/deghosal-2026/hiveplane/issues/214) — M31-07 — Docs: "bring your own agent" guide for each supported framework
-- [ ] [#215](https://github.com/deghosal-2026/hiveplane/issues/215) — M31-08 — Tests: conformance for each adapter; wrap round-trip on sample apps
+- [x] [#208](https://github.com/deghosal-2026/hiveplane/issues/208) — M31-01 — Adapter contract v2 (lifecycle, streaming, tool calls, cancellation, usage reporting, model identity) — documented and versioned
+- [x] [#209](https://github.com/deghosal-2026/hiveplane/issues/209) — M31-02 — PydanticAI adapter (certifiable via the benchmark, real entrypoint execution)
+- [x] [#210](https://github.com/deghosal-2026/hiveplane/issues/210) — M31-03 — OpenAI Agents SDK adapter and/or CrewAI adapter (fourth runtime; at least one ships)
+- [x] [#211](https://github.com/deghosal-2026/hiveplane/issues/211) — M31-04 — Conformance suite v2: every adapter must pass the same behavioral contract tests
+- [x] [#212](https://github.com/deghosal-2026/hiveplane/issues/212) — M31-05 — `hiveplane wrap` — inspect a LangGraph/CrewAI/OpenAI-SDK app and generate a workload manifest + adapter scaffold
+- [x] [#213](https://github.com/deghosal-2026/hiveplane/issues/213) — M31-06 — Wrap safety: never modifies the source app; generated scaffold is inert until registered and certified
+- [x] [#214](https://github.com/deghosal-2026/hiveplane/issues/214) — M31-07 — Docs: "bring your own agent" guide for each supported framework
+- [x] [#215](https://github.com/deghosal-2026/hiveplane/issues/215) — M31-08 — Tests: conformance for each adapter; wrap round-trip on sample apps
 
-**Test ticket:** [#216](https://github.com/deghosal-2026/hiveplane/issues/216) — Test cases for Runtime Adapters v2 & `hiveplane wrap`
+**Test ticket:** [x] [#216](https://github.com/deghosal-2026/hiveplane/issues/216) — Test cases for Runtime Adapters v2 & `hiveplane wrap`
 
 **Deliverables:**
 - Adapters for PydanticAI + (OpenAI Agents SDK or CrewAI) under `src/hiveplane/adapters/`
@@ -29,13 +29,21 @@ Broaden the runtime surface (more frameworks, a converter for existing apps) and
 - `hiveplane wrap` CLI + `docs/design/runtime-adapter-v2-design.md`
 
 **Acceptance criteria:**
-- [ ] Every shipped adapter passes conformance suite v2 in CI
-- [ ] A PydanticAI agent can be registered, certified, and run end-to-end
-- [ ] `hiveplane wrap` generates a manifest + scaffold for a sample app without modifying it
-- [ ] A wrapped app that is uncertified is refused production admission
-- [ ] Model identity is reported by the adapter and bound to the attestation (no self-report)
+- [x] Every shipped adapter passes conformance suite v2 in CI
+- [x] A PydanticAI agent can be registered, certified, and run end-to-end
+- [x] `hiveplane wrap` generates a manifest + scaffold for a sample app without modifying it
+- [x] A wrapped app that is uncertified is refused production admission
+- [x] Model identity is reported by the adapter and bound to the attestation (no self-report)
 
 **Done when:** ≥3 runtimes (raw-worker, LangGraph, PydanticAI, + one more) certify through the same benchmark and contract, and `hiveplane wrap` onboards an existing app.
+
+> **Status:** M31 complete. Contract v2 (`AdapterCapabilities`, `AdapterEvent`,
+> `capabilities()`/`stream()`/`model_identity()`/`conformance_version()`),
+> PydanticAI and OpenAI Agents adapters with governed inference, conformance
+> suite v2, the import-boundary test, `hiveplane wrap`, `GET /adapters`, and the
+> optional extras (`pydantic-ai`, `openai-agents`) landed. All four adapters
+> (raw-worker, LangGraph, PydanticAI, OpenAI Agents) pass conformance v2. Issues
+> #208–#216 closed; committed and pushed.
 
 **Dependencies:** v0.1.0 adapter contract; M25.
 
@@ -77,13 +85,13 @@ Broaden the runtime surface (more frameworks, a converter for existing apps) and
 
 ## Exit Gate (M31, M32)
 
-- [ ] All tests in the system pass: `pytest`
-- [ ] Code coverage total > 95%
-- [ ] Ruff clean
-- [ ] Mypy strict clean
-- [ ] All relevant docs updated (adapter v2, promotion gate, bring-your-own-agent guide)
-- [ ] All M31–M32 issues done and closed
-- [ ] Commit and push changes
+- [x] All tests in the system pass: `pytest`
+- [x] Code coverage total ≥ 95%
+- [x] Ruff clean
+- [x] Mypy strict clean
+- [ ] All relevant docs updated (adapter v2, promotion gate, bring-your-own-agent guide) (M32 pending)
+- [ ] All M31–M32 issues done and closed (M32 pending)
+- [ ] Commit and push changes (M31 committed; phase gate completes with M32)
 
 ## See Also
 

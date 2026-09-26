@@ -674,10 +674,13 @@
       "type": "object"
     },
     "RuntimeAdapter": {
-      "description": "Supported runtime adapter types in v0.1.0.",
+      "description": "Supported runtime adapter types.",
       "enum": [
         "raw-worker",
-        "langgraph"
+        "langgraph",
+        "pydanticai",
+        "openai-agents",
+        "crewai"
       ],
       "title": "RuntimeAdapter",
       "type": "string"
@@ -700,6 +703,12 @@
           },
           "title": "Env",
           "type": "object"
+        },
+        "adapter_contract": {
+          "default": "2",
+          "pattern": "^[0-9]+$",
+          "title": "Adapter Contract",
+          "type": "string"
         }
       },
       "required": [

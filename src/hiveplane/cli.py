@@ -20,6 +20,7 @@ from hiveplane.registry.models import ToolRegistration
 from hiveplane.registry.seeding import derive_tool_registrations
 from hiveplane.registry.service import RegistryService
 from hiveplane.registry.store import InMemoryRegistryStore
+from hiveplane.wrap import WrapError, plan_wrap, write_wrap
 
 app = typer.Typer(
     name="hiveplane",
@@ -36,6 +37,7 @@ pipelines_app = typer.Typer(help="Submit and inspect pipeline runs.", no_args_is
 agents_app = typer.Typer(
     help="Route tasks and call certified agents as tools.", no_args_is_help=True
 )
+adapters_app = typer.Typer(help="Inspect runtime adapters.", no_args_is_help=True)
 app.add_typer(certs_app, name="certs")
 app.add_typer(runs_app, name="runs")
 app.add_typer(approvals_app, name="approvals")
@@ -44,6 +46,7 @@ app.add_typer(tools_app, name="tools")
 app.add_typer(reconcile_app, name="reconcile")
 app.add_typer(pipelines_app, name="pipelines")
 app.add_typer(agents_app, name="agents")
+app.add_typer(adapters_app, name="adapters")
 
 ManifestArg = Annotated[
     Path,
@@ -1058,6 +1061,65 @@ def init(
         path.write_text(content)
         typer.secho(f"created {path}", fg=typer.colors.GREEN)
     typer.echo(f"Next: register {directory / 'workloads' / 'hello-agent.yaml'} and certify it.")
+
+
+@app.command("wrap")
+def wrap(
+    path: Annotated[Path, typer.Argument(help="Path to the app to inspect.")],
+    framework: Annotated[
+        str,
+        typer.Option(
+            "--framework",
+            help="auto|langgraph|pydanticai|openai-agents|crewai (default auto).",
+        ),
+    ] = "auto",
+    out: Annotated[
+        Path | None, typer.Option("--out", help="Output directory for generated files.")
+    ] = None,
+    dry_run: Annotated[
+        bool, typer.Option("--dry-run", help="Print the plan without writing.")
+    ] = False,
+    force: Annotated[
+        bool, typer.Option("--force", help="Overwrite a non-empty output directory.")
+    ] = False,
+) -> None:
+    """Inspect an existing app and generate a workload manifest + adapter scaffold."""
+    requested = None if framework == "auto" else framework
+    try:
+        plan = plan_wrap(path, framework=requested)
+    except WrapError as exc:
+        typer.secho(f"wrap: {exc}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=1) from exc
+    if dry_run:
+        typer.echo(f"framework: {plan.framework}")
+        typer.echo(f"entrypoint: {plan.entrypoint}")
+        for name in plan.files:
+            typer.echo(f"  would write {name}")
+        return
+    out_dir = out or (Path.cwd() / f"{path.name}-hiveplane")
+    try:
+        written = write_wrap(plan, out_dir, force=force)
+    except WrapError as exc:
+        typer.secho(f"wrap: {exc}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=1) from exc
+    for target in written:
+        typer.secho(f"created {target}", fg=typer.colors.GREEN)
+    typer.echo("Generated drafts are inert; register and certify them to go live.")
+
+
+@adapters_app.command("list")
+def adapters_list(api_url: ApiUrl = "http://localhost:8100") -> None:
+    """List runtime adapters and their contract/capabilities."""
+    status_code, body = _request("GET", f"{api_url.rstrip('/')}/adapters")
+    if status_code >= 400 or status_code == 0:
+        _fail("list adapters", status_code, body)
+    for adapter in json.loads(body):
+        caps = adapter["capabilities"]
+        typer.echo(
+            f"{adapter['name']:<14} contract v{adapter['contract_version']} "
+            f"conformance v{adapter['conformance_version']} "
+            f"streaming={caps['streaming']} pause_resume={caps['pause_resume']}"
+        )
 
 
 def main() -> None:

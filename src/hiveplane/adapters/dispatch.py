@@ -10,9 +10,17 @@ adapter owns each run so per-run operations reach the right runtime.
 from __future__ import annotations
 
 import threading
-from collections.abc import Mapping
+from collections.abc import Iterator, Mapping
 
-from hiveplane.adapters.base import Adapter
+from hiveplane.adapters.base import (
+    Adapter,
+    AdapterCapabilities,
+    AdapterEvent,
+    capabilities_of,
+    conformance_version_of,
+    model_identity_of,
+    stream_of,
+)
 from hiveplane.adapters.errors import UnsupportedAdapterError
 from hiveplane.core.run import RunState
 from hiveplane.core.spec import RuntimeAdapter
@@ -64,9 +72,9 @@ class DispatchingAdapter:
         """Resume the run on the adapter that owns it."""
         return self._owner(run_id).resume(run_id)
 
-    def cancel(self, run_id: str) -> None:
+    def cancel(self, run_id: str, *, deadline_s: float | None = None) -> None:
         """Cancel the run on the adapter that owns it."""
-        self._owner(run_id).cancel(run_id)
+        self._owner(run_id).cancel(run_id, deadline_s=deadline_s)
 
     def status(self, run_id: str) -> RunState:
         """Return the owning adapter's view of a run's state."""
@@ -79,6 +87,36 @@ class DispatchingAdapter:
     def tool_calls(self, run_id: str) -> list[ToolCallResult]:
         """Return tool calls from the adapter that owns the run."""
         return self._owner(run_id).tool_calls(run_id)
+
+    def capabilities(self) -> AdapterCapabilities:
+        """Return the union of the configured adapters' capabilities."""
+        capabilities = [capabilities_of(adapter) for adapter in self._adapters.values()]
+        if not capabilities:
+            return AdapterCapabilities()
+        return AdapterCapabilities(
+            streaming=any(item.streaming for item in capabilities),
+            pause_resume=all(item.pause_resume for item in capabilities),
+            state_edit=any(item.state_edit for item in capabilities),
+            tool_execution=all(item.tool_execution for item in capabilities),
+            sandbox=all(item.sandbox for item in capabilities),
+            deterministic_replay=all(item.deterministic_replay for item in capabilities),
+            max_agent_depth=max(item.max_agent_depth for item in capabilities),
+        )
+
+    def stream(self, run_id: str) -> Iterator[AdapterEvent]:
+        """Return the owning adapter's event stream."""
+        return stream_of(self._owner(run_id), run_id)
+
+    def model_identity(self, run_id: str) -> str | None:
+        """Return the owning adapter's inferred model identity."""
+        return model_identity_of(self._owner(run_id), run_id)
+
+    def conformance_version(self) -> str:
+        """Return the configured adapters' conformance version."""
+        versions = {conformance_version_of(adapter) for adapter in self._adapters.values()}
+        if len(versions) == 1:
+            return versions.pop()
+        return "2"
 
     def _adapter_for(self, workload: AgentWorkload) -> Adapter:
         selected = workload.spec.runtime.adapter

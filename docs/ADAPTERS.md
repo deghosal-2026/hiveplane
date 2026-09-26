@@ -151,7 +151,84 @@ HIVEPLANE_EXECUTION__ADAPTER=langgraph
 
 ### Later
 
-- Additional runtimes as the adapter contract proves stable (v0.3.0 targets ≥ 3 adapter types).
+- Additional runtimes as the adapter contract proves stable.
+
+## Bring Your Own Agent
+
+HivePlane ships four adapters behind contract v2: `raw-worker`, `langgraph`,
+`pydanticai`, and `openai-agents`. Every adapter reports its capabilities,
+`conformance_version() == "2"`, and the model identity captured from actual
+inference (never a self-report). Inference is governed: framework models are
+replaced with a HivePlane model that calls `WorkerContext.complete`, so identity,
+pricing, and budget enforcement always run in the control plane.
+
+### PydanticAI
+
+Install the extra and point the manifest at a factory that accepts the governed
+model (or a pre-built `Agent`; the adapter overrides its model):
+
+```bash
+pip install "hiveplane[pydantic-ai]"
+```
+
+```python
+# myapp.py
+from pydantic_ai import Agent
+
+
+def build(model):
+    return Agent(model, system_prompt="You are a helpful agent.")
+
+
+# workload.yaml
+# spec:
+#   runtime: { adapter: pydanticai, entrypoint: myapp:build }
+```
+
+```bash
+hiveplane register workloads/myapp.yaml
+hiveplane certify myapp --corpus corpora/myapp/v1
+hiveplane submit myapp --context production --task '{"prompt": "hello"}'
+```
+
+### OpenAI Agents SDK
+
+```bash
+pip install "hiveplane[openai-agents]"
+```
+
+```python
+# myapp.py
+from agents import Agent
+
+
+def build(model):
+    return Agent(name="assistant", model=model, instructions="Be helpful.")
+
+
+# workload.yaml
+# spec:
+#   runtime: { adapter: openai-agents, entrypoint: myapp:build }
+```
+
+Both adapters execute synchronously and declare `pause_resume=False`; the run
+lifecycle still supports cancel. Use `raw-worker` or `langgraph` when cooperative
+pause/resume is required.
+
+### `hiveplane wrap`
+
+Convert an existing app without editing it:
+
+```bash
+hiveplane wrap ./my-langgraph-app --framework auto --out ./wrapped
+```
+
+`wrap` scans the source with an AST (it never imports or executes it) and writes
+`workload.yaml` (an **uncertified** draft), `adapter_scaffold.py`,
+`corpus.template.yaml`, and `README.md` into `--out`. It never writes to the
+source tree, and generated files are inert until you register and certify them.
+`--dry-run` prints the plan; `--force` overwrites a non-empty output directory.
+A wrapped app that is uncertified is refused production admission like any other.
 
 ## Adapter Conformance Suite
 
@@ -163,8 +240,10 @@ Each adapter must pass a conformance suite that exercises the full lifecycle plu
 |------|----------|
 | Register → submit → state transitions | Core run lifecycle works |
 | Budget report | Usage is reported and priced correctly |
-| Pause → resume → cancel | Intervention controls work |
+| Pause → resume → cancel | Intervention controls work (when `pause_resume` is advertised) |
 | Durable state after restart | Paused run survives control-plane restart |
+| Contract v2 surface | `capabilities()`, `conformance_version() == "2"`, ordered `stream()`, inference-captured `model_identity()` |
+| Import boundary | Core packages import no framework/provider SDKs |
 
 ### Sandbox Conformance Tests
 

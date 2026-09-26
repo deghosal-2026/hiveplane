@@ -8,12 +8,17 @@ can checkpoint cooperatively (operator pause/resume/cancel), and a LangGraph
 from __future__ import annotations
 
 import threading
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from contextlib import suppress
 from datetime import UTC, datetime
 from typing import Any, cast
 
 from hiveplane import telemetry
+from hiveplane.adapters.base import (
+    AdapterCapabilities,
+    AdapterEvent,
+    buffered_stream,
+)
 from hiveplane.adapters.errors import (
     EntrypointLoadError,
     MissingAdapterDependencyError,
@@ -210,7 +215,7 @@ class LangGraphAdapter:
             control.resume()
         return True
 
-    def cancel(self, run_id: str) -> None:
+    def cancel(self, run_id: str, *, deadline_s: float | None = None) -> None:
         """Request cancellation; the run state is owned by the control plane."""
         session = self._sessions.get(run_id)
         if session is not None:
@@ -228,6 +233,34 @@ class LangGraphAdapter:
         """Return the tool calls the graph routed through the boundary."""
         session = self._sessions.get(run_id)
         return list(session[1].tool_calls) if session is not None else []
+
+    def capabilities(self) -> AdapterCapabilities:
+        """Declare the LangGraph adapter's capabilities."""
+        return AdapterCapabilities(
+            streaming=False,
+            pause_resume=True,
+            state_edit=False,
+            tool_execution=True,
+            sandbox=True,
+            deterministic_replay=True,
+        )
+
+    def stream(self, run_id: str) -> Iterator[AdapterEvent]:
+        """Yield a buffered state stream for the run."""
+        return buffered_stream(
+            run_id, self.status(run_id), model_identity=self.model_identity(run_id)
+        )
+
+    def model_identity(self, run_id: str) -> str | None:
+        """Return the model identity captured from inference, if any."""
+        session = self._sessions.get(run_id)
+        if session is None:
+            return None
+        return session[1].reported_model_identity
+
+    def conformance_version(self) -> str:
+        """Conform to contract v2."""
+        return "2"
 
     def _graph(self, workload: AgentWorkload) -> CompiledGraph:
         graph = self._graphs.get(workload.name)

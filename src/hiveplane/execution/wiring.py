@@ -8,6 +8,8 @@ from hiveplane.adapters.base import Adapter, AdapterRunExecutor
 from hiveplane.adapters.dispatch import DispatchingAdapter
 from hiveplane.adapters.langgraph import LangGraphAdapter
 from hiveplane.adapters.loader import EntrypointLoader
+from hiveplane.adapters.openai_agents import OpenAIAgentsAdapter
+from hiveplane.adapters.pydanticai import PydanticAIAdapter
 from hiveplane.adapters.raw_worker import RawWorkerAdapter, Spawner
 from hiveplane.api.sandbox_channel import SandboxChannel
 from hiveplane.budget.pricing import CostTable
@@ -229,8 +231,93 @@ def attach_langgraph(
     return adapter
 
 
-def attach_auto_adapters(
+def build_pydanticai(
     run_service: RunService,
+    tool_gateway: ToolGateway,
+    *,
+    root: str | Path | None = None,
+    spawner: Spawner | None = None,
+    provider: LLMProvider | None = None,
+    cost_table: CostTable | None = None,
+) -> PydanticAIAdapter:
+    """Build a PydanticAI adapter without binding it to the run service (M31)."""
+    settings = get_settings()
+    return PydanticAIAdapter(
+        run_service,
+        tool_gateway,
+        EntrypointLoader(root=root or settings.execution.entrypoints_root),
+        spawner=spawner,
+        provider=provider,
+        cost_table=cost_table,
+    )
+
+
+def attach_pydanticai(
+    run_service: RunService,
+    tool_gateway: ToolGateway,
+    *,
+    root: str | Path | None = None,
+    spawner: Spawner | None = None,
+    provider: LLMProvider | None = None,
+    cost_table: CostTable | None = None,
+) -> PydanticAIAdapter:
+    """Build the PydanticAI adapter and bind it as the run service's executor."""
+    adapter = build_pydanticai(
+        run_service,
+        tool_gateway,
+        root=root,
+        spawner=spawner,
+        provider=provider,
+        cost_table=cost_table,
+    )
+    run_service.attach_executor(AdapterRunExecutor(adapter))
+    return adapter
+
+
+def build_openai_agents(
+    run_service: RunService,
+    tool_gateway: ToolGateway,
+    *,
+    root: str | Path | None = None,
+    spawner: Spawner | None = None,
+    provider: LLMProvider | None = None,
+    cost_table: CostTable | None = None,
+) -> OpenAIAgentsAdapter:
+    """Build an OpenAI Agents adapter without binding it to the run service (M31)."""
+    settings = get_settings()
+    return OpenAIAgentsAdapter(
+        run_service,
+        tool_gateway,
+        EntrypointLoader(root=root or settings.execution.entrypoints_root),
+        spawner=spawner,
+        provider=provider,
+        cost_table=cost_table,
+    )
+
+
+def attach_openai_agents(
+    run_service: RunService,
+    tool_gateway: ToolGateway,
+    *,
+    root: str | Path | None = None,
+    spawner: Spawner | None = None,
+    provider: LLMProvider | None = None,
+    cost_table: CostTable | None = None,
+) -> OpenAIAgentsAdapter:
+    """Build the OpenAI Agents adapter and bind it as the run service's executor."""
+    adapter = build_openai_agents(
+        run_service,
+        tool_gateway,
+        root=root,
+        spawner=spawner,
+        provider=provider,
+        cost_table=cost_table,
+    )
+    run_service.attach_executor(AdapterRunExecutor(adapter))
+    return adapter
+
+
+def attach_auto_adapters(    run_service: RunService,
     tool_gateway: ToolGateway,
     *,
     root: str | Path | None = None,
@@ -257,6 +344,22 @@ def attach_auto_adapters(
             sandbox_mode=sandbox_mode,
         ),
         RuntimeAdapter.LANGGRAPH: build_langgraph(
+            run_service,
+            tool_gateway,
+            root=root,
+            spawner=spawner,
+            provider=provider,
+            cost_table=cost_table,
+        ),
+        RuntimeAdapter.PYDANTIC_AI: build_pydanticai(
+            run_service,
+            tool_gateway,
+            root=root,
+            spawner=spawner,
+            provider=provider,
+            cost_table=cost_table,
+        ),
+        RuntimeAdapter.OPENAI_AGENTS: build_openai_agents(
             run_service,
             tool_gateway,
             root=root,

@@ -214,6 +214,37 @@ immune system (drift, quarantine, promotion gate), and fleet scale-out. In progr
   uncertified-never-a-candidate, nested-call propagation, depth/cycle rejection,
   A2A trust/refusal, and Postgres round-trips. Coverage ≥ 95% with a database.
 
+### Added (M31 — runtime adapters v2 & `hiveplane wrap`)
+
+- **Adapter contract v2** — the boundary is explicit and versioned:
+  `AdapterCapabilities`, `AdapterEvent`, `CONTRACT_VERSION`, and extended
+  `Adapter` methods (`capabilities()`, `stream()`, `model_identity()`,
+  `conformance_version()`). `spec.runtime.adapter_contract` records the expected
+  version (default `2`); `*_of` helpers tolerate pre-v2 adapters.
+- **Reference adapters bumped to v2** — raw-worker and LangGraph report
+  capabilities, an ordered (buffered) event stream, and the model identity
+  captured from actual inference via `WorkerContext`.
+- **PydanticAI adapter** (`hiveplane.adapters.pydanticai`) — wraps
+  `pydantic_ai.Agent`; a governed custom `Model` routes inference through
+  `WorkerContext.complete`. Extra: `hiveplane[pydantic-ai]`.
+- **OpenAI Agents SDK adapter** (`hiveplane.adapters.openai_agents`) — wraps
+  `agents.Agent`; the same governed seam. Extra: `hiveplane[openai-agents]`.
+- **Conformance suite v2** (`tests/conformance.py`) — every adapter passes
+  lifecycle, streaming, capabilities, and inference-captured identity; pause/resume
+  is negotiated (`pause_resume=False` adapters skip the hold scenarios).
+- **Import-boundary test** — an AST scan fails if a framework/provider SDK leaks
+  into core (DD-02); only `hiveplane.adapters` and `hiveplane.llm` may import them.
+- **`hiveplane wrap`** — AST-only framework detection and scaffold generation:
+  emits `workload.yaml` (uncertified draft), `adapter_scaffold.py`,
+  `corpus.template.yaml`, and `README.md` into a new `--out` directory. It never
+  imports/executes the app and never writes to the source tree; generated files
+  are inert until registered and certified. CLI: `hiveplane wrap <path>`.
+- **Adapter introspection** — `GET /adapters`, `GET /adapters/{name}` and
+  `hiveplane adapters list` report each adapter's contract version and capabilities.
+- **Tests** — conformance for all four adapters, wrap round-trip (source tree
+  unchanged, generated manifest valid, uncertified stays uncertified), import
+  boundary, and the adapters API. Coverage ≥ 95% with a database.
+
 ## [0.1.0] - 2026-09-25
 
 The first release: the certified control loop. Register agents, certify them against a

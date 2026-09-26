@@ -5,6 +5,7 @@ from __future__ import annotations
 from fastapi import HTTPException, Request, status
 
 from hiveplane.a2a import A2AAdapter
+from hiveplane.adapters.base import Adapter
 from hiveplane.agent_tools.engine import AgentToolInvoker
 from hiveplane.agent_tools.registry import AgentToolRegistry
 from hiveplane.agent_tools.store import AgentToolStore
@@ -197,3 +198,9 @@ def get_a2a_adapter(request: Request) -> A2AAdapter:
             "A2A is not enabled; set HIVEPLANE_A2A__ENABLED=true",
         )
     return adapter
+
+
+def get_adapter_catalog(request: Request) -> dict[str, Adapter]:
+    """Return the configured runtime adapters keyed by name."""
+    catalog: dict[str, Adapter] = getattr(request.app.state, "adapter_catalog", {})
+    return catalog

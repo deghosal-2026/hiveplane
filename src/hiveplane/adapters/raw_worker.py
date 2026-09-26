@@ -3,13 +3,18 @@
 from __future__ import annotations
 
 import threading
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from contextlib import suppress
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 from hiveplane import telemetry
+from hiveplane.adapters.base import (
+    AdapterCapabilities,
+    AdapterEvent,
+    buffered_stream,
+)
 from hiveplane.adapters.errors import (
     RunCancelledError,
     ToolCallEscalatedError,
@@ -85,6 +90,7 @@ class RawWorkerAdapter:
         self._escalated: dict[str, bool] = {}
         self._tool_calls: dict[str, list[ToolCallResult]] = {}
         self._usage: dict[str, UsageReport | None] = {}
+        self._identities: dict[str, str] = {}
         self._recovered: set[str] = set()
 
     def _subprocess_enabled(self, context: RunContext) -> bool:
@@ -225,7 +231,7 @@ class RawWorkerAdapter:
         control.resume()
         return True
 
-    def cancel(self, run_id: str) -> None:
+    def cancel(self, run_id: str, *, deadline_s: float | None = None) -> None:
         """Request cancellation; the run state is owned by the control plane."""
         control = self._controls.get(run_id)
         if control is not None:
@@ -242,6 +248,31 @@ class RawWorkerAdapter:
     def tool_calls(self, run_id: str) -> list[ToolCallResult]:
         """Return the tool calls routed through the boundary for the run."""
         return list(self._tool_calls.get(run_id, []))
+
+    def capabilities(self) -> AdapterCapabilities:
+        """Declare the raw worker's capabilities."""
+        return AdapterCapabilities(
+            streaming=False,
+            pause_resume=True,
+            state_edit=False,
+            tool_execution=True,
+            sandbox=True,
+            deterministic_replay=True,
+        )
+
+    def stream(self, run_id: str) -> Iterator[AdapterEvent]:
+        """Yield a buffered state stream for the run."""
+        return buffered_stream(
+            run_id, self.status(run_id), model_identity=self.model_identity(run_id)
+        )
+
+    def model_identity(self, run_id: str) -> str | None:
+        """Return the model identity captured from inference, if any."""
+        return self._identities.get(run_id)
+
+    def conformance_version(self) -> str:
+        """Conform to contract v2."""
+        return "2"
 
     def _entry(self, workload: AgentWorkload) -> Entrypoint:
         entry = self._entries.get(workload.name)
@@ -288,6 +319,9 @@ class RawWorkerAdapter:
                 self._fail(run.id, f"{type(exc).__name__}: {exc}")
                 return
             active.set_attribute("outcome", "completed")
+            if ctx.reported_model_identity is not None:
+                with self._lock:
+                    self._identities[run.id] = ctx.reported_model_identity
             self._reporter.transition(run.id, RunState.COMPLETED, actor="adapter", result=result)
             with self._lock:
                 self._states[run.id] = RunState.COMPLETED

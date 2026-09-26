@@ -1,6 +1,6 @@
 # D25: Runtime Adapter v2 Design
 
-> Status: draft
+> Status: implemented (M31)
 
 **Milestones:** M31 · **Extends:** D6
 
@@ -160,6 +160,40 @@ Conformance Suite v2 for every shipped adapter in CI; a PydanticAI agent registe
 - CrewAI vs. OpenAI Agents SDK for the fourth runtime (one must ship; which is the better long-term bet).
 - Whether `wrap` should infer a starter corpus from the app's tests.
 - Handling frameworks that own their event loop and cannot be paused cooperatively.
+
+## Implementation (M31)
+
+| Module | Responsibility |
+|--------|----------------|
+| `hiveplane.adapters.base` | Contract v2: `AdapterCapabilities`, `AdapterEvent`, `CONTRACT_VERSION`, and the extended `Adapter` protocol; `*_of` helpers tolerate pre-v2 adapters |
+| `hiveplane.adapters.raw_worker` / `langgraph` | v2 methods on the reference adapters; inference-captured model identity via `WorkerContext` |
+| `hiveplane.adapters.pydanticai` | Wraps `pydantic_ai.Agent`; a governed `Model` routes inference through `WorkerContext.complete` |
+| `hiveplane.adapters.openai_agents` | Wraps the OpenAI Agents SDK `Agent`; a governed `Model` routes inference through the same seam |
+| `hiveplane.wrap` | AST-only detection + manifest/scaffold generation (`detect`, `scaffold`, `job`) |
+| `hiveplane.api.adapters` | `GET /adapters`, `GET /adapters/{name}` — contract version and capabilities |
+
+**Contract v2.** Every shipped adapter reports `capabilities()` (with
+`contract_version: "2"`), an ordered `stream()`, the `model_identity()` captured
+from actual inference, and `conformance_version() == "2"`. `spec.runtime.adapter_contract`
+records the expected contract; `adapter_contract: 2` is the default.
+
+**Conformance Suite v2.** `tests/conformance.py` gains
+`assert_adapter_conforms_v2`, and every adapter (raw-worker, LangGraph,
+PydanticAI, OpenAI Agents) passes it. Pause/resume is a negotiated capability:
+adapters that cannot pause mid-flight declare `pause_resume=False` and are not
+required to honour the hold scenarios.
+
+**Governed inference.** The PydanticAI and OpenAI Agents adapters install a
+custom framework model whose `request`/`get_response` calls
+`WorkerContext.complete`, so identity checks, usage pricing, and budget
+enforcement all run in the control plane. No framework type crosses into core
+(enforced by `tests/test_adapter_boundary.py`).
+
+**`hiveplane wrap`.** `hiveplane wrap <path> [--framework auto|langgraph|pydanticai|openai-agents|crewai] [--out <dir>] [--dry-run] [--force]`
+inspects the app with an AST scan (never imports or executes it) and writes
+`workload.yaml` (uncertified draft), `adapter_scaffold.py`, `corpus.template.yaml`,
+and `README.md` into a new output directory. It never writes to the source tree
+and never registers, certifies, or runs anything.
 
 ## See Also
 

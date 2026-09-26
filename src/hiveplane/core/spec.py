@@ -33,10 +33,13 @@ from hiveplane.core.types import Duration
 
 
 class RuntimeAdapter(StrEnum):
-    """Supported runtime adapter types in v0.1.0."""
+    """Supported runtime adapter types."""
 
     RAW_WORKER = "raw-worker"
     LANGGRAPH = "langgraph"
+    PYDANTIC_AI = "pydanticai"
+    OPENAI_AGENTS = "openai-agents"
+    CREWAI = "crewai"
 
 
 class RuntimeSpec(BaseModel):
@@ -47,6 +50,7 @@ class RuntimeSpec(BaseModel):
     adapter: RuntimeAdapter
     entrypoint: str = Field(min_length=1)
     env: dict[str, str] = Field(default_factory=dict)
+    adapter_contract: str = Field(default="2", pattern=r"^[0-9]+$")
 
 
 class ModelStrategy(StrEnum):

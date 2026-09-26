@@ -223,6 +223,49 @@ Cross-plane A2A interop is available behind `HIVEPLANE_A2A__ENABLED=true`
 `POST /a2a/tasks` maps an inbound task onto the router and run lifecycle. Only
 planes listed in `HIVEPLANE_A2A__ALLOWED_PLANES` are trusted.
 
+## Runtime Adapters & Bring Your Own Agent
+
+HivePlane runs workloads through one of four adapters: `raw-worker`, `langgraph`,
+`pydanticai`, and `openai-agents`. Select one globally with
+`HIVEPLANE_EXECUTION__ADAPTER` or use `auto` to route each workload by its
+manifest. All adapters conform to contract v2 and report the model identity
+captured from actual inference.
+
+```bash
+hiveplane adapters list          # contract version + capabilities per adapter
+```
+
+Install a framework extra and point the manifest at an entrypoint:
+
+```bash
+pip install "hiveplane[pydantic-ai]"      # or "hiveplane[openai-agents]"
+```
+
+```yaml
+# workload.yaml
+spec:
+  runtime:
+    adapter: pydanticai
+    entrypoint: myapp:build        # build(model) -> Agent
+```
+
+Inference is governed: the adapter replaces the framework's model with one that
+routes through the control plane, so certification, identity checks, pricing, and
+budget enforcement all apply.
+
+To onboard an existing app without editing it:
+
+```bash
+hiveplane wrap ./my-app --framework auto --out ./wrapped
+hiveplane wrap ./my-app --dry-run          # print the plan, write nothing
+```
+
+`wrap` scans the app statically (never imports or runs it) and writes an
+uncertified `workload.yaml`, an `adapter_scaffold.py`, a `corpus.template.yaml`,
+and a `README.md` into `--out`. It never writes to the source tree; generated
+files are inert until you register and certify them, and an uncertified wrapped
+app is refused production admission.
+
 ## Operator UI
 
 The operator UI is a server-rendered web app that reads the same HTTP API as the
