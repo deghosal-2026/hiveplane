@@ -75,6 +75,12 @@ class FakeControlPlaneClient:
         self._record("stop", run_id)
         return {"id": run_id, "state": "cancelled"}
 
+    def record_feedback(
+        self, run_id: str, verdict: str, notes: str, operator: str
+    ) -> dict[str, Any]:
+        self._record("record_feedback", run_id, verdict, notes, operator)
+        return {"feedback_id": "fb-1", "run_id": run_id, "verdict": verdict}
+
     def list_certifications(
         self, workload: str | None = None, status: str | None = None
     ) -> list[dict[str, Any]]:

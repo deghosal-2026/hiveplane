@@ -28,6 +28,7 @@ from hiveplane.api.agent_tools import router as agent_tools_router
 from hiveplane.api.approvals import router as approvals_router
 from hiveplane.api.certifications import router as certifications_router
 from hiveplane.api.drift import router as drift_router
+from hiveplane.api.learning import router as learning_router
 from hiveplane.api.pipelines import router as pipelines_router
 from hiveplane.api.policy import router as policy_router
 from hiveplane.api.promotions import router as promotions_router
@@ -67,7 +68,7 @@ from hiveplane.certification.workflow import CertificationCoordinator
 from hiveplane.config import Settings, get_settings
 from hiveplane.core.fanout import FanOutDestination, FanOutType
 from hiveplane.core.manifest import manifest_json_schema
-from hiveplane.core.run import AdmissionContext
+from hiveplane.core.run import AdmissionContext, Run
 from hiveplane.core.spec import IOSpec
 from hiveplane.defense.escalation import AttemptEscalator
 from hiveplane.defense.events import build_security_event_store
@@ -107,6 +108,24 @@ from hiveplane.execution.wiring import (
     build_run_service,
     build_tool_gateway,
 )
+from hiveplane.learning.candidate_store import build_candidate_store
+from hiveplane.learning.candidates import CandidateService
+from hiveplane.learning.corpus_store import build_corpus_version_store
+from hiveplane.learning.corpus_versions import CorpusVersionService
+from hiveplane.learning.errors import (
+    CandidateAlreadyExistsError,
+    CandidateAlreadyReviewedError,
+    CandidateNotAllowedError,
+    CandidateNotFoundError,
+    FeedbackNotAllowedError,
+    FeedbackNotFoundError,
+)
+from hiveplane.learning.eval import EvalService
+from hiveplane.learning.eval_store import build_eval_store
+from hiveplane.learning.feedback import FeedbackService
+from hiveplane.learning.judge import RubricJudge
+from hiveplane.learning.rubrics import RubricRegistry, default_rubric
+from hiveplane.learning.store import build_feedback_store
 from hiveplane.llm.factory import build_provider
 from hiveplane.persistence.base import create_engine_from_settings
 from hiveplane.persistence.migrate import run_migrations
@@ -302,6 +321,16 @@ def create_app(
     app.state.tool_gateway = build_tool_gateway(
         registry, policy_engine, app.state.run_service, approval_service, defense
     )
+    app.state.candidate_service = CandidateService(build_candidate_store(settings))
+    app.state.corpus_version_service = CorpusVersionService(
+        build_corpus_version_store(settings),
+        candidates=app.state.candidate_service,
+    )
+    app.state.feedback_service = FeedbackService(
+        build_feedback_store(settings),
+        run_reader=app.state.run_service,
+        candidates=app.state.candidate_service,
+    )
     reconcile_store = build_reconcile_store(settings)
     reconcile_lock = (
         PostgresReconcileLock(create_engine_from_settings(settings))
@@ -365,6 +394,30 @@ def create_app(
     app.state.pipeline_engine = pipeline_engine
     provider = build_provider(settings)
     app.state.provider = provider
+    eval_store = build_eval_store(settings)
+    app.state.eval_store = eval_store
+    app.state.rubric_registry = RubricRegistry(eval_store)
+    app.state.eval_service = EvalService(
+        eval_store,
+        judge=RubricJudge(provider, model=settings.eval.judge_model),
+        rubrics=app.state.rubric_registry,
+        quality_target=settings.eval.quality_target,
+    )
+
+    def _eval_hook(run: Run) -> None:
+        rubric = default_rubric()
+        sample = app.state.eval_service.maybe_sample(
+            run,
+            sample_rate=settings.eval.sample_rate,
+            rubric=rubric,
+            pii_patterns=tuple(settings.eval.pii_patterns),
+            cost_cap_usd=settings.eval.cost_cap_usd,
+        )
+        if sample is not None:
+            app.state.eval_service.score(sample, run, rubric=rubric)
+
+    if settings.eval.enabled:
+        app.state.run_service.attach_eval_hook(_eval_hook)
     router_store = build_router_store(settings)
     app.state.router_store = router_store
     app.state.router_engine = None
@@ -473,6 +526,7 @@ def create_app(
             settings,
             approval_service,
             transparency_log,
+            app.state.corpus_version_service,
         )
     app.state.certification_coordinator = certification_coordinator
     app.state.certification_store = getattr(certification_coordinator, "store", None)
@@ -554,6 +608,16 @@ def create_app(
     ):
         app.add_exception_handler(_run_error, _make_handler(_run_error, _run_status))
 
+    for _learning_error, _learning_status in (
+        (FeedbackNotFoundError, 404),
+        (FeedbackNotAllowedError, 409),
+        (CandidateNotFoundError, 404),
+        (CandidateAlreadyReviewedError, 409),
+        (CandidateAlreadyExistsError, 409),
+        (CandidateNotAllowedError, 409),
+    ):
+        app.add_exception_handler(_learning_error, _make_handler(_learning_error, _learning_status))
+
     for _policy_error, _policy_status in (
         (ApprovalNotFoundError, 404),
         (PolicyPackNotFoundError, 404),
@@ -578,6 +642,7 @@ def create_app(
     app.include_router(reconcile_router)
     app.include_router(triggers_router)
     app.include_router(pipelines_router)
+    app.include_router(learning_router)
     app.include_router(route_router)
     app.include_router(agent_tools_router)
     app.include_router(adapters_router)
@@ -650,6 +715,7 @@ def _build_certification_coordinator(
     settings: Settings,
     approvals: ApprovalService | None = None,
     transparency_log: TransparencyLog | None = None,
+    corpus_version_service: CorpusVersionService | None = None,
 ) -> CertificationCoordinator:
     """Build the default certification coordinator from settings."""
     cert = settings.certification
@@ -682,6 +748,11 @@ def _build_certification_coordinator(
         executor_factory=executor_factory,
         corpora_dir=cert.corpora_dir,
         environment=environment,
+        corpus_integrator=(
+            corpus_version_service.integrate
+            if corpus_version_service is not None
+            else None
+        ),
     )
 
 

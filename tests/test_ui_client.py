@@ -180,3 +180,21 @@ def test_transport_error_maps_to_control_plane_error() -> None:
 
     assert excinfo.value.status_code is None
     assert "connection refused" in excinfo.value.detail
+
+
+def test_record_feedback_sends_verdict_notes_and_operator() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.method == "POST"
+        assert request.url.path == "/runs/r1/feedback"
+        assert json.loads(request.content) == {
+            "verdict": "failed-with-lesson",
+            "notes": "escalate",
+            "operator": "alice",
+        }
+        return httpx.Response(201, json={"feedback_id": "fb-1"})
+
+    result = _client(handler).record_feedback(
+        "r1", "failed-with-lesson", "escalate", "alice"
+    )
+
+    assert result["feedback_id"] == "fb-1"

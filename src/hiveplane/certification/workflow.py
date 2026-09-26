@@ -52,6 +52,7 @@ class CertificationCoordinator:
         executor_factory: Callable[[str, str | None], TaskExecutor] | None = None,
         benchmark_version: str = BENCHMARK_VERSION,
         clock: Callable[[], datetime] | None = None,
+        corpus_integrator: Callable[[str, BenchmarkCorpus], BenchmarkCorpus] | None = None,
     ) -> None:
         self._registry = registry
         self._service = service
@@ -62,6 +63,7 @@ class CertificationCoordinator:
         self._environment = environment
         self._benchmark_version = benchmark_version
         self._clock = clock or (lambda: datetime.now(UTC))
+        self._corpus_integrator = corpus_integrator
 
     @property
     def store(self) -> CertificationStore:
@@ -186,6 +188,8 @@ class CertificationCoordinator:
         if not reference:
             raise CorpusError(f"workload {workload!r} has no benchmark_corpus configured")
         corpus = load_corpus(self._resolve_corpus_path(reference))
+        if self._corpus_integrator is not None:
+            corpus = self._corpus_integrator(workload, corpus)
         pinned = _pinned_identity(record.manifest, model_identity)
         executor = (
             self._executor_factory(workload, pinned)

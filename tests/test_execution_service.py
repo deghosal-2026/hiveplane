@@ -245,3 +245,39 @@ def test_submit_require_approval_pauses_run(
         require_approval=True,
     )
     assert run.state is RunState.PAUSED
+
+
+def test_terminal_production_run_triggers_eval_hook(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    service, _, _, workload = _service(make_manifest)
+    seen: list[str] = []
+    service.attach_eval_hook(lambda run: seen.append(run.id))
+    run = service.submit(
+        workload=workload,
+        caller="cli",
+        context=AdmissionContext.PRODUCTION,
+        model_identity="m1",
+    )
+    service.transition(run.id, RunState.RUNNING, actor="scheduler")
+    service.transition(run.id, RunState.COMPLETED, actor="runtime")
+
+    assert seen == ["run-1"]
+
+
+def test_staging_run_does_not_trigger_eval_hook(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    service, _, _, workload = _service(make_manifest)
+    seen: list[str] = []
+    service.attach_eval_hook(lambda run: seen.append(run.id))
+    run = service.submit(
+        workload=workload,
+        caller="cli",
+        context=AdmissionContext.STAGING,
+        model_identity="m1",
+    )
+    service.transition(run.id, RunState.RUNNING, actor="scheduler")
+    service.transition(run.id, RunState.COMPLETED, actor="runtime")
+
+    assert seen == []

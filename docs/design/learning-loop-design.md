@@ -1,6 +1,9 @@
 # D27: Learning Loop Design
 
-> Status: draft
+> Status: implemented (M36: feedback → corpus candidates + review gate, corpus
+> versioning, deterministic online-eval sampling, LLM judge, production quality
+> signal; candidate review UI pending, quality→drift early-recert wiring lands
+> with the health service in M42)
 
 **Milestones:** M36 · **Extends:** D10
 
@@ -134,6 +137,47 @@ hiveplane eval samples [--workload <id>]
 - Should `bad` feedback with a strong judge signal be convertible to a candidate without an explicit `failed-with-lesson` verdict?
 - How is a corpus candidate's expected outcome validated when the task is a rubric check rather than deterministic?
 - What sample rate balances judge cost against early drift detection per workload class?
+
+## Implementation (M36)
+
+| Module | Responsibility |
+|--------|----------------|
+| `hiveplane.learning.models` | `RunFeedback`, `CorpusCandidate`/`CandidateReview`, `CorpusVersion`, `Rubric`, `EvalSample`, `JudgeScore`, `QualityScore` |
+| `hiveplane.learning.feedback` | `FeedbackService` — record/list attributable feedback on terminal runs; auto-proposes a candidate for `failed-with-lesson` |
+| `hiveplane.learning.candidates` | `CandidateService` — propose from feedback, enforce the mandatory review gate (approve/reject) |
+| `hiveplane.learning.corpus_versions` | `CorpusVersionService` — append approved candidates' tasks and bump the corpus version (idempotent), cutting an immutable `CorpusVersion` |
+| `hiveplane.learning.sampling` | deterministic `should_sample` (`sha256(run_id) mod 100`), PII detection |
+| `hiveplane.learning.judge` | `RubricJudge` — provider-backed, bounded JSON scoring under a versioned rubric |
+| `hiveplane.learning.eval` | `EvalService` — sample with guardrails, score, and roll up the production quality signal (`dip`) |
+| `hiveplane.learning.rubrics` | `RubricRegistry` — immutable, versioned rubrics |
+| `hiveplane.api.learning` | feedback, candidates/approve/reject, eval samples, and workload quality endpoints |
+| `hiveplane.cli` | `hiveplane feedback`, `hiveplane corpus ...`, `hiveplane eval ...` |
+
+**Feedback → corpus candidate.** Recording `failed-with-lesson` feedback on a
+terminal run auto-proposes an inert `CorpusCandidate` (`input` = run task,
+`expected`/`check` from the lesson or a judge hint). `good`/`bad` never produce a
+candidate.
+
+**Mandatory review.** `CandidateService.approve`/`reject` are the only paths from
+a candidate to a benchmark task; rejection archives with a reason, and a
+non-approved candidate's `to_task()` raises. There is no auto-approval.
+
+**Corpus versioning.** `CorpusVersionService.integrate(workload, base)` appends
+every approved candidate's task and bumps the version, recording an immutable
+`CorpusVersion`. It is idempotent (same inputs → same version/tasks) and is wired
+into `CertificationCoordinator` as a `corpus_integrator`, so the next
+certification runs the integrated corpus and binds the new `corpus_version`.
+
+**Online eval.** A configurable percentage of production runs is sampled by a
+stable hash (`sha256(run_id) mod 100 < sample_rate`); PII-marked/pattern-matching
+runs and runs past the judge cost cap are skipped. `RubricJudge` scores against a
+versioned rubric (the version is recorded on every score, so a rubric edit never
+changes old semantics). `RunService` invokes the sample+score hook when a
+production run reaches a terminal state.
+
+**Quality signal.** `EvalService.quality(workload)` returns a rolling-window mean
+and a `dip` flag against the configured target — the first-class production
+quality input for health (D16/D31) and early re-certification (D26).
 
 ## See Also
 

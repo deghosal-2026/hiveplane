@@ -1050,3 +1050,137 @@ def test_agents_invoke_prints_nested_run(monkeypatch: Any) -> None:
 
     assert result.exit_code == 0
     assert "run-9" in result.output
+
+
+def test_feedback_posts_a_verdict(monkeypatch: Any) -> None:
+    captured: dict[str, Any] = {}
+
+    def _fake(method: str, url: str, payload: dict[str, Any] | None = None) -> tuple[int, str]:
+        captured["method"] = method
+        captured["url"] = url
+        captured["payload"] = payload
+        return 201, json.dumps({"feedback_id": "fb-1", "verdict": "failed-with-lesson"})
+
+    monkeypatch.setattr("hiveplane.cli._request", _fake)
+
+    result = runner.invoke(
+        app,
+        ["feedback", "run-1", "--verdict", "failed-with-lesson", "--notes", "escalate"],
+    )
+
+    assert result.exit_code == 0
+    assert captured["method"] == "POST"
+    assert captured["url"].endswith("/runs/run-1/feedback")
+    assert captured["payload"]["verdict"] == "failed-with-lesson"
+    assert captured["payload"]["notes"] == "escalate"
+
+
+def test_feedback_reports_api_failure(monkeypatch: Any) -> None:
+    monkeypatch.setattr(
+        "hiveplane.cli._request",
+        lambda method, url, payload=None: (409, json.dumps({"detail": "not terminal"})),
+    )
+
+    result = runner.invoke(app, ["feedback", "run-1", "--verdict", "good"])
+
+    assert result.exit_code == 1
+
+
+def test_corpus_candidates_lists(monkeypatch: Any) -> None:
+    captured: dict[str, Any] = {}
+
+    def _fake(method: str, url: str, payload: dict[str, Any] | None = None) -> tuple[int, str]:
+        captured["url"] = url
+        return 200, json.dumps(
+            [
+                {
+                    "candidate_id": "cand-1",
+                    "workload_id": "repo-agent",
+                    "status": "pending",
+                    "source_run_id": "run-1",
+                }
+            ]
+        )
+
+    monkeypatch.setattr("hiveplane.cli._request", _fake)
+
+    result = runner.invoke(app, ["corpus", "candidates", "--workload", "repo-agent"])
+
+    assert result.exit_code == 0
+    assert "cand-1" in result.output
+    assert "workload=repo-agent" in captured["url"]
+
+
+def test_corpus_approve_posts_reviewer(monkeypatch: Any) -> None:
+    captured: dict[str, Any] = {}
+
+    def _fake(method: str, url: str, payload: dict[str, Any] | None = None) -> tuple[int, str]:
+        captured["url"] = url
+        captured["payload"] = payload
+        return 200, json.dumps({"candidate_id": "cand-1", "status": "approved"})
+
+    monkeypatch.setattr("hiveplane.cli._request", _fake)
+
+    result = runner.invoke(app, ["corpus", "approve", "cand-1", "--reviewer", "bob"])
+
+    assert result.exit_code == 0
+    assert captured["url"].endswith("/corpus/candidates/cand-1/approve")
+    assert captured["payload"] == {"reviewer": "bob"}
+
+
+def test_corpus_reject_sends_reason(monkeypatch: Any) -> None:
+    captured: dict[str, Any] = {}
+
+    def _fake(method: str, url: str, payload: dict[str, Any] | None = None) -> tuple[int, str]:
+        captured["payload"] = payload
+        return 200, json.dumps({"candidate_id": "cand-1", "status": "rejected"})
+
+    monkeypatch.setattr("hiveplane.cli._request", _fake)
+
+    result = runner.invoke(
+        app, ["corpus", "reject", "cand-1", "--reason", "wrong"]
+    )
+
+    assert result.exit_code == 0
+    assert captured["payload"]["reason"] == "wrong"
+
+
+def test_eval_samples_lists(monkeypatch: Any) -> None:
+    captured: dict[str, Any] = {}
+
+    def _fake(method: str, url: str, payload: dict[str, Any] | None = None) -> tuple[int, str]:
+        captured["url"] = url
+        return 200, json.dumps(
+            [{"sample_id": "sample-1", "run_id": "run-1", "rubric_version": 1}]
+        )
+
+    monkeypatch.setattr("hiveplane.cli._request", _fake)
+
+    result = runner.invoke(app, ["eval", "samples", "--workload", "repo-agent"])
+
+    assert result.exit_code == 0
+    assert "sample-1" in result.output
+    assert "workload=repo-agent" in captured["url"]
+
+
+def test_eval_quality_prints_score(monkeypatch: Any) -> None:
+    monkeypatch.setattr(
+        "hiveplane.cli._request",
+        lambda method, url, payload=None: (
+            200,
+            json.dumps(
+                {
+                    "workload_id": "repo-agent",
+                    "sample_count": 3,
+                    "mean_score": 0.72,
+                    "dip": True,
+                }
+            ),
+        ),
+    )
+
+    result = runner.invoke(app, ["eval", "quality", "repo-agent"])
+
+    assert result.exit_code == 0
+    assert "0.72" in result.output
+    assert "dip" in result.output.lower()

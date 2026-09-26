@@ -354,3 +354,32 @@ def test_spend_empty_state() -> None:
 
     assert response.status_code == 200
     assert "No spend" in response.text
+
+
+def test_feedback_posts_to_client_and_redirects() -> None:
+    fake = _story_fake()
+
+    response = _app(fake).post(
+        "/runs/r1/feedback",
+        data={"verdict": "failed-with-lesson", "notes": "escalate", "operator": "alice"},
+    )
+
+    assert response.status_code == 303
+    assert response.headers["location"].startswith("/runs/r1")
+    assert (
+        "record_feedback",
+        ("r1", "failed-with-lesson", "escalate", "alice"),
+    ) in fake.calls
+
+
+def test_failed_feedback_redirects_with_error_banner() -> None:
+    fake = _story_fake()
+    fake.errors["record_feedback"] = ControlPlaneError(409, "run is not terminal")
+
+    client = TestClient(create_ui_app(client=fake), follow_redirects=True)
+    response = client.post(
+        "/runs/r1/feedback", data={"verdict": "good", "notes": "", "operator": "alice"}
+    )
+
+    assert response.status_code == 200
+    assert "run is not terminal" in response.text

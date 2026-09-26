@@ -71,6 +71,7 @@ class RunService:
         audit: AuditLog | None = None,
         clock: Callable[[], datetime] | None = None,
         id_factory: Callable[[], str] | None = None,
+        eval_hook: Callable[[Run], None] | None = None,
     ) -> None:
         self._store = store
         self._registry = registry
@@ -83,6 +84,11 @@ class RunService:
         self._audit = audit
         self._clock = clock or (lambda: datetime.now(UTC))
         self._id_factory = id_factory or (lambda: f"run-{uuid4().hex[:12]}")
+        self._eval_hook = eval_hook
+
+    def attach_eval_hook(self, hook: Callable[[Run], None] | None) -> None:
+        """Bind the online-eval hook invoked when a production run finishes."""
+        self._eval_hook = hook
 
     def attach_executor(self, executor: RunExecutor) -> None:
         """Bind the runtime adapter that executes runs after service construction."""
@@ -414,6 +420,11 @@ class RunService:
             if target is RunState.COMPLETED and run.context is AdmissionContext.PRODUCTION:
                 self._registry.increment_production_runs(run.workload_id)
             self._fanout.notify(updated, manifest)
+            if (
+                self._eval_hook is not None
+                and run.context is AdmissionContext.PRODUCTION
+            ):
+                self._eval_hook(updated)
             self._record_audit(actor, "transition", run_id, detail=target.value, ctx=run_ctx)
             if updated.started_at is not None and updated.finished_at is not None:
                 metrics.get_metrics().record_run_duration(

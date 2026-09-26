@@ -272,6 +272,24 @@ class RouterSettings(BaseModel):
     max_candidates: int = Field(default=50, ge=1)
 
 
+class EvalSettings(BaseModel):
+    """Online eval sampling, judge, and quality guardrails (M36)."""
+
+    enabled: bool = True
+    sample_rate: int = Field(default=10, ge=0, le=100)
+    judge_model: str = "judge-model"
+    quality_target: float = Field(default=0.8, ge=0.0, le=1.0)
+    cost_cap_usd: float | None = Field(default=None, ge=0.0)
+    window: int = Field(default=50, ge=1)
+    pii_patterns: list[str] = Field(default_factory=list)
+
+    @field_validator("pii_patterns", mode="before")
+    @classmethod
+    def _empty_patterns_become_empty_list(cls, value: object) -> object:
+        """Treat an unset env var as no sensitive patterns."""
+        return [] if value == "" else value
+
+
 class A2ASettings(BaseModel):
     """Agent2Agent interop feature flag and allow-list (M30-07)."""
 
@@ -340,6 +358,7 @@ class Settings(BaseSettings):
     triggers: TriggerSettings = Field(default_factory=TriggerSettings)
     router: RouterSettings = Field(default_factory=RouterSettings)
     a2a: A2ASettings = Field(default_factory=A2ASettings)
+    eval: EvalSettings = Field(default_factory=EvalSettings)
 
 
 @lru_cache(maxsize=1)

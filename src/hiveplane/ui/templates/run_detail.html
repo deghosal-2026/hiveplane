@@ -57,6 +57,20 @@
 </form>
 {% endif %}
 
+{% if view.state in ("completed", "failed") %}
+<h2>Feedback</h2>
+<form class="inline" method="post" action="/runs/{{ view.run_id }}/feedback">
+  <select name="verdict" aria-label="Verdict">
+    <option value="good">good</option>
+    <option value="bad">bad</option>
+    <option value="failed-with-lesson">failed-with-lesson</option>
+  </select>
+  <input type="text" name="notes" placeholder="notes (required for failed-with-lesson)" />
+  <input type="text" name="operator" placeholder="operator" value="operator" />
+  <button type="submit">Record feedback</button>
+</form>
+{% endif %}
+
 <h2>Execution story</h2>
 {% if view.entries %}
 <ul class="timeline">

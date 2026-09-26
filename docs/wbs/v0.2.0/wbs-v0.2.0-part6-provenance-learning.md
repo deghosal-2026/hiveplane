@@ -49,14 +49,14 @@ Complete the trust story (certify code identity, not just behavior) and close th
 
 **Work items:**
 
-- [ ] [#253](https://github.com/deghosal-2026/hiveplane/issues/253) — M36-01 — Run feedback capture: operator marks a run good/bad/failed-with-lesson (UI/CLI/API), with notes
-- [ ] [#254](https://github.com/deghosal-2026/hiveplane/issues/254) — M36-02 — Feedback → corpus pipeline: flagged failures are converted into candidate corpus cases (input + expected outcome) for review
-- [ ] [#255](https://github.com/deghosal-2026/hiveplane/issues/255) — M36-03 — Corpus review/approval before inclusion; rejected candidates are archived with a reason
-- [ ] [#256](https://github.com/deghosal-2026/hiveplane/issues/256) — M36-04 — Corpus versioning integration: accepted cases land in the next corpus version and are included in the next certification
-- [ ] [#257](https://github.com/deghosal-2026/hiveplane/issues/257) — M36-05 — Online eval sampling: sample a configurable % of production runs for LLM-judge scoring against a rubric
-- [ ] [#258](https://github.com/deghosal-2026/hiveplane/issues/258) — M36-06 — Judge results → health/drift signals (production quality scores as a first-class signal)
-- [ ] [#259](https://github.com/deghosal-2026/hiveplane/issues/259) — M36-07 — Sampling guardrails: cost caps, PII-safe sampling, deterministic sample selection
-- [ ] [#260](https://github.com/deghosal-2026/hiveplane/issues/260) — M36-08 — Tests: flagged failure becomes a corpus case; sampling scores runs; quality dip surfaces in health before re-cert
+- [x] [#253](https://github.com/deghosal-2026/hiveplane/issues/253) — M36-01 — Run feedback capture: operator marks a run good/bad/failed-with-lesson (UI/CLI/API), with notes
+- [x] [#254](https://github.com/deghosal-2026/hiveplane/issues/254) — M36-02 — Feedback → corpus pipeline: flagged failures are converted into candidate corpus cases (input + expected outcome) for review
+- [x] [#255](https://github.com/deghosal-2026/hiveplane/issues/255) — M36-03 — Corpus review/approval before inclusion; rejected candidates are archived with a reason
+- [x] [#256](https://github.com/deghosal-2026/hiveplane/issues/256) — M36-04 — Corpus versioning integration: accepted cases land in the next corpus version and are included in the next certification
+- [x] [#257](https://github.com/deghosal-2026/hiveplane/issues/257) — M36-05 — Online eval sampling: sample a configurable % of production runs for LLM-judge scoring against a rubric
+- [x] [#258](https://github.com/deghosal-2026/hiveplane/issues/258) — M36-06 — Judge results → health/drift signals (production quality scores as a first-class signal)
+- [x] [#259](https://github.com/deghosal-2026/hiveplane/issues/259) — M36-07 — Sampling guardrails: cost caps, PII-safe sampling, deterministic sample selection
+- [x] [#260](https://github.com/deghosal-2026/hiveplane/issues/260) — M36-08 — Tests: flagged failure becomes a corpus case; sampling scores runs; quality dip surfaces in health before re-cert
 
 **Test ticket:** [#261](https://github.com/deghosal-2026/hiveplane/issues/261) — Test cases for Production Feedback → Corpus & Online Eval Sampling
 
@@ -66,13 +66,15 @@ Complete the trust story (certify code identity, not just behavior) and close th
 - `docs/design/learning-loop-design.md`
 
 **Acceptance criteria:**
-- [ ] An operator-flagged failed run becomes a corpus case included in the next certification (after review)
-- [ ] Sampled production runs receive judge scores visible in the health model
-- [ ] A seeded quality dip alerts before the scheduled re-certification catches it
-- [ ] Sampling respects cost caps and never samples PII-marked runs
-- [ ] Rejected candidates never enter the corpus
+- [x] An operator-flagged failed run becomes a corpus case included in the next certification (after review)
+- [x] Sampled production runs receive judge scores visible in the health model
+- [x] A seeded quality dip alerts before the scheduled re-certification catches it
+- [x] Sampling respects cost caps and never samples PII-marked runs
+- [x] Rejected candidates never enter the corpus
 
 **Done when:** the certification benchmark demonstrably learns from production, and online eval gives real-world quality signal between re-certs.
+
+> **Status:** M36 complete. `hiveplane.learning` (run feedback, corpus candidates + mandatory review gate, corpus versioning, deterministic online-eval sampling, LLM judge, quality signal) landed with migrations `0014`–`0017`. API `POST /runs/{id}/feedback`, `GET /corpus/candidates`, approve/reject, `GET /eval/samples`, `GET /workloads/{id}/quality`; CLI `hiveplane feedback`, `hiveplane corpus ...`, `hiveplane eval ...`; UI feedback form. Issues #253–#261 closed; all tests pass with a database, coverage >95%, ruff and mypy strict clean.
 
 **Dependencies:** M34 (drift/health), M33 (diff); corpus tooling (M55) for versioning.
 
@@ -80,13 +82,13 @@ Complete the trust story (certify code identity, not just behavior) and close th
 
 ## Exit Gate (M35, M36)
 
-- [ ] All tests in the system pass: `pytest`
-- [ ] Code coverage total > 95%
-- [ ] Ruff clean
-- [ ] Mypy strict clean
-- [ ] All relevant docs updated (provenance, transparency log, learning loop, corpus guide)
-- [ ] All M35–M36 issues done and closed
-- [ ] Commit and push changes
+- [x] All tests in the system pass: `pytest`
+- [x] Code coverage total > 95%
+- [x] Ruff clean
+- [x] Mypy strict clean
+- [x] All relevant docs updated (provenance, transparency log, learning loop, corpus guide)
+- [x] All M35–M36 issues done and closed
+- [x] Commit and push changes
 
 ## See Also
 

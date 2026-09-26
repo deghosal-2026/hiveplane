@@ -263,6 +263,114 @@ class SigningKeyRow(Base):
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
+class RunFeedbackRow(_TenantScoped, Base):
+    """Operator feedback on terminal production runs (M36-01)."""
+
+    __tablename__ = "run_feedback"
+    __table_args__ = (
+        Index("ix_run_feedback_workload_created", "workload_id", "created_at"),
+    )
+
+    feedback_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    run_id: Mapped[str] = mapped_column(String(64), index=True)
+    workload_id: Mapped[str] = mapped_column(String(253), index=True)
+    verdict: Mapped[str] = mapped_column(String(32), index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class CandidateRow(_TenantScoped, Base):
+    """Proposed corpus cases from production feedback (M36-02)."""
+
+    __tablename__ = "corpus_candidates"
+    __table_args__ = (
+        Index("ix_corpus_candidates_workload_status", "workload_id", "status"),
+    )
+
+    candidate_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    source_run_id: Mapped[str] = mapped_column(String(64), index=True)
+    workload_id: Mapped[str] = mapped_column(String(253), index=True)
+    status: Mapped[str] = mapped_column(String(32), index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class CandidateReviewRow(_TenantScoped, Base):
+    """Human review decisions on corpus candidates (M36-03)."""
+
+    __tablename__ = "candidate_reviews"
+    __table_args__ = (
+        Index("ix_candidate_reviews_candidate", "candidate_id", "reviewed_at"),
+    )
+
+    review_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    candidate_id: Mapped[str] = mapped_column(String(64), index=True)
+    decision: Mapped[str] = mapped_column(String(32), index=True)
+    reviewer: Mapped[str] = mapped_column(String(253))
+    reviewed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class CorpusVersionRow(_TenantScoped, Base):
+    """Immutable cuts of a corpus version (M36-04)."""
+
+    __tablename__ = "corpus_versions"
+    __table_args__ = (
+        Index("ix_corpus_versions_corpus_version", "corpus_id", "version"),
+    )
+
+    corpus_version_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    corpus_id: Mapped[str] = mapped_column(String(253), index=True)
+    version: Mapped[int] = mapped_column(Integer)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class EvalSampleRow(_TenantScoped, Base):
+    """Production runs selected for online evaluation (M36-05)."""
+
+    __tablename__ = "eval_samples"
+    __table_args__ = (
+        Index("ix_eval_samples_workload_sampled", "workload_id", "sampled_at"),
+    )
+
+    sample_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    run_id: Mapped[str] = mapped_column(String(64), index=True)
+    workload_id: Mapped[str] = mapped_column(String(253), index=True)
+    rubric_version: Mapped[int] = mapped_column(Integer)
+    sampled_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class JudgeScoreRow(_TenantScoped, Base):
+    """Recorded judge scores for eval samples (M36-06)."""
+
+    __tablename__ = "judge_scores"
+    __table_args__ = (
+        Index("ix_judge_scores_sample", "sample_id", "created_at"),
+    )
+
+    score_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    sample_id: Mapped[str] = mapped_column(String(64), index=True)
+    rubric_version: Mapped[int] = mapped_column(Integer)
+    score: Mapped[float] = mapped_column(Float)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class RubricRow(Base):
+    """Versioned, immutable judge rubrics (global control-plane material)."""
+
+    __tablename__ = "rubrics"
+    __table_args__ = (UniqueConstraint("name", "version", name="uq_rubrics_name_version"),)
+
+    rubric_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    name: Mapped[str] = mapped_column(String(253), index=True)
+    version: Mapped[int] = mapped_column(Integer)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
 class ToolRow(_TenantScoped, Base):
     """MCP tool registry entries."""
 

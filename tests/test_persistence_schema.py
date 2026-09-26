@@ -63,6 +63,13 @@ def test_all_design_tables_exist() -> None:
         "router_decisions",
         "agent_tool_invocations",
         "promotions",
+        "run_feedback",
+        "corpus_candidates",
+        "candidate_reviews",
+        "corpus_versions",
+        "eval_samples",
+        "judge_scores",
+        "rubrics",
     }
     assert expected <= set(Base.metadata.tables)
 
@@ -82,9 +89,16 @@ def test_engine_is_created_from_settings() -> None:
 
 
 def test_every_table_is_tenant_scoped() -> None:
-    # ``attestation_log`` and ``signing_keys`` are global control-plane
-    # material (M35) and are deliberately not tenant-partitioned.
-    exempt = {"tenants", "teams", "memberships", "attestation_log", "signing_keys"}
+    # ``attestation_log``, ``signing_keys``, and ``rubrics`` are global
+    # control-plane material (M35/M36) and are deliberately not tenant-partitioned.
+    exempt = {
+        "tenants",
+        "teams",
+        "memberships",
+        "attestation_log",
+        "signing_keys",
+        "rubrics",
+    }
     missing = {
         name
         for name in Base.metadata.tables

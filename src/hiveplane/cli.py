@@ -41,6 +41,12 @@ adapters_app = typer.Typer(help="Inspect runtime adapters.", no_args_is_help=Tru
 drift_app = typer.Typer(
     help="Detect drift, quarantine, and reinstate workloads.", no_args_is_help=True
 )
+corpus_app = typer.Typer(
+    help="Review production-feedback corpus candidates.", no_args_is_help=True
+)
+eval_app = typer.Typer(
+    help="Inspect online-eval samples and production quality.", no_args_is_help=True
+)
 app.add_typer(certs_app, name="certs")
 app.add_typer(runs_app, name="runs")
 app.add_typer(approvals_app, name="approvals")
@@ -51,6 +57,8 @@ app.add_typer(pipelines_app, name="pipelines")
 app.add_typer(agents_app, name="agents")
 app.add_typer(adapters_app, name="adapters")
 app.add_typer(drift_app, name="drift")
+app.add_typer(corpus_app, name="corpus")
+app.add_typer(eval_app, name="eval")
 
 ManifestArg = Annotated[
     Path,
@@ -158,6 +166,27 @@ def register(
 
 
 ApiUrl = Annotated[str, typer.Option("--api-url", help="Base URL of the control-plane API.")]
+
+
+@app.command()
+def feedback(
+    run_id: Annotated[str, typer.Argument(help="Run id to give feedback on.")],
+    verdict: Annotated[
+        str,
+        typer.Option("--verdict", help="good | bad | failed-with-lesson."),
+    ],
+    notes: Annotated[str, typer.Option("--notes", help="Free-text notes.")] = "",
+    operator: Annotated[str, typer.Option("--operator", help="Who is giving feedback.")] = "cli",
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Record operator feedback on a terminal run."""
+    payload = {"verdict": verdict, "notes": notes, "operator": operator}
+    status_code, body = _request(
+        "POST", f"{api_url.rstrip('/')}/runs/{run_id}/feedback", payload
+    )
+    if status_code >= 400 or status_code == 0:
+        _fail("record feedback", status_code, body)
+    typer.echo(json.dumps(json.loads(body), indent=2))
 
 
 @app.command()
@@ -1433,3 +1462,99 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+@corpus_app.command("candidates")
+def corpus_candidates(
+    workload: Annotated[str | None, typer.Option("--workload")] = None,
+    status: Annotated[str | None, typer.Option("--status")] = None,
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """List production-feedback corpus candidates."""
+    query = urlencode(
+        {key: value for key, value in {"workload": workload, "status": status}.items() if value}
+    )
+    url = f"{api_url.rstrip('/')}/corpus/candidates"
+    if query:
+        url = f"{url}?{query}"
+    status_code, body = _request("GET", url)
+    if status_code >= 400 or status_code == 0:
+        _fail("list corpus candidates", status_code, body)
+    for candidate in json.loads(body):
+        typer.echo(
+            f"{candidate['candidate_id']}  {candidate['workload_id']}  "
+            f"{candidate['status']}  run={candidate['source_run_id']}"
+        )
+
+
+@corpus_app.command("approve")
+def corpus_approve(
+    candidate_id: Annotated[str, typer.Argument(help="Candidate id.")],
+    reviewer: Annotated[str, typer.Option("--reviewer", help="Reviewer id.")] = "cli",
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Approve a candidate, staging it for the next corpus version."""
+    status_code, body = _request(
+        "POST",
+        f"{api_url.rstrip('/')}/corpus/candidates/{candidate_id}/approve",
+        {"reviewer": reviewer},
+    )
+    if status_code >= 400 or status_code == 0:
+        _fail("approve candidate", status_code, body)
+    typer.echo(json.dumps(json.loads(body), indent=2))
+
+
+@corpus_app.command("reject")
+def corpus_reject(
+    candidate_id: Annotated[str, typer.Argument(help="Candidate id.")],
+    reason: Annotated[str, typer.Option("--reason", help="Why it is rejected.")],
+    reviewer: Annotated[str, typer.Option("--reviewer", help="Reviewer id.")] = "cli",
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Reject a candidate, archiving it with a reason."""
+    status_code, body = _request(
+        "POST",
+        f"{api_url.rstrip('/')}/corpus/candidates/{candidate_id}/reject",
+        {"reviewer": reviewer, "reason": reason},
+    )
+    if status_code >= 400 or status_code == 0:
+        _fail("reject candidate", status_code, body)
+    typer.echo(json.dumps(json.loads(body), indent=2))
+
+
+@eval_app.command("samples")
+def eval_samples(
+    workload: Annotated[str | None, typer.Option("--workload")] = None,
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """List production runs selected for online evaluation."""
+    query = urlencode({"workload": workload}) if workload else ""
+    url = f"{api_url.rstrip('/')}/eval/samples"
+    if query:
+        url = f"{url}?{query}"
+    status_code, body = _request("GET", url)
+    if status_code >= 400 or status_code == 0:
+        _fail("list eval samples", status_code, body)
+    for sample in json.loads(body):
+        typer.echo(
+            f"{sample['sample_id']}  run={sample['run_id']}  "
+            f"rubric v{sample['rubric_version']}"
+        )
+
+
+@eval_app.command("quality")
+def eval_quality(
+    workload: Annotated[str, typer.Argument(help="Workload name.")],
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Show a workload's rolling-window production quality score."""
+    status_code, body = _request(
+        "GET", f"{api_url.rstrip('/')}/workloads/{workload}/quality"
+    )
+    if status_code >= 400 or status_code == 0:
+        _fail("show quality", status_code, body)
+    quality = json.loads(body)
+    typer.echo(
+        f"{quality['workload_id']}  mean={quality['mean_score']:.2f}  "
+        f"samples={quality['sample_count']}  dip={quality['dip']}"
+    )

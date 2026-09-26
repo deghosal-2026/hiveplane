@@ -386,6 +386,45 @@ the private key across restarts, and `HIVEPLANE_CERTIFICATION__SIGNING_KEY_ID` t
 name it. Set `HIVEPLANE_CERTIFICATION__PUBLIC_VERIFICATION_BASE_URL` to include a
 `verification_url` link in result fan-out notifications.
 
+## The Learning Loop
+
+Production is where agents actually fail. HivePlane turns operator feedback into
+reviewed benchmark cases and samples live runs for continuous quality scoring.
+
+**Flag a run.** Mark a terminal run `good`, `bad`, or `failed-with-lesson` (the
+last requires notes). Feedback on a `failed-with-lesson` run automatically
+proposes a **corpus candidate** (the run's input plus a proposed expected
+outcome). Candidates are inert until reviewed — a wrong expectation can never
+enter the benchmark unreviewed.
+
+```bash
+hiveplane feedback <run-id> --verdict failed-with-lesson --notes "should escalate"
+hiveplane corpus candidates [--workload <id>]
+hiveplane corpus approve <candidate-id> --reviewer alice
+hiveplane corpus reject  <candidate-id> --reason "expectation is wrong"
+```
+
+Approved candidates are staged for the **next** corpus version; the next
+certification runs the integrated corpus (attestations bind the new
+`corpus_version`, so a corpus bump forces a re-cert). Rejected candidates are
+archived with a reason.
+
+**Online eval.** A configurable percentage of production runs is sampled by a
+stable hash and scored by an LLM judge against a versioned rubric. PII-marked
+runs and runs past the judge cost cap are skipped, and every score records the
+rubric version so a rubric edit never silently changes score semantics. Scores
+roll up into a production quality signal with a dip flag.
+
+```bash
+hiveplane eval samples [--workload <id>]
+hiveplane eval quality <workload>       # mean score + dip
+# -> GET /eval/samples, GET /workloads/<id>/quality
+```
+
+Configure with `HIVEPLANE_EVAL__SAMPLE_RATE`, `HIVEPLANE_EVAL__JUDGE_MODEL`,
+`HIVEPLANE_EVAL__QUALITY_TARGET`, `HIVEPLANE_EVAL__COST_CAP_USD`, and
+`HIVEPLANE_EVAL__PII_PATTERNS`.
+
 ## Operator UI
 
 The operator UI is a server-rendered web app that reads the same HTTP API as the

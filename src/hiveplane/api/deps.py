@@ -19,6 +19,9 @@ from hiveplane.drift.reinstatement import ReinstatementService
 from hiveplane.drift.scheduler import DriftScheduler
 from hiveplane.execution.service import RunService
 from hiveplane.execution.tools import ToolGateway
+from hiveplane.learning.candidates import CandidateService
+from hiveplane.learning.eval import EvalService
+from hiveplane.learning.feedback import FeedbackService
 from hiveplane.pipelines.engine import PipelineEngine
 from hiveplane.pipelines.store import PipelineStore
 from hiveplane.policy.approvals import ApprovalService
@@ -229,6 +232,24 @@ def get_public_verifier(request: Request) -> PublicVerifier:
             status.HTTP_503_SERVICE_UNAVAILABLE, "public verifier is not available"
         )
     return verifier
+
+
+def get_feedback_service(request: Request) -> FeedbackService:
+    """Return the run-feedback service bound to the application state."""
+    service: FeedbackService = request.app.state.feedback_service
+    return service
+
+
+def get_candidate_service(request: Request) -> CandidateService:
+    """Return the corpus-candidate service bound to the application state."""
+    service: CandidateService = request.app.state.candidate_service
+    return service
+
+
+def get_eval_service(request: Request) -> EvalService:
+    """Return the online-eval service bound to the application state."""
+    service: EvalService = request.app.state.eval_service
+    return service
 
 
 def get_promotion_gate(request: Request) -> PromotionGate:

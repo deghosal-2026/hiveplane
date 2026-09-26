@@ -122,6 +122,22 @@ def create_ui_app(client: ControlPlaneClient | None = None) -> FastAPI:
         """Stop a run."""
         return _intervene(request, "stop", run_id)
 
+    @app.post("/runs/{run_id}/feedback")
+    def record_run_feedback(
+        request: Request,
+        run_id: str,
+        verdict: Annotated[str, Form(min_length=1)],
+        notes: Annotated[str, Form()] = "",
+        operator: Annotated[str, Form(min_length=1)] = "operator",
+    ) -> RedirectResponse:
+        """Record operator feedback on a terminal run."""
+        client = request.app.state.control_plane
+        try:
+            client.record_feedback(run_id, verdict, notes, operator)
+        except ControlPlaneError as exc:
+            return _redirect(run_id, error=exc.detail)
+        return _redirect(run_id, ok="feedback recorded")
+
     @app.get("/approvals", response_class=HTMLResponse)
     def approvals(request: Request) -> HTMLResponse:
         """Approval queue: resolve escalations raised by policy."""

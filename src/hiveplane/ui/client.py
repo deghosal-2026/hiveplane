@@ -55,6 +55,10 @@ class ControlPlaneClient(Protocol):
 
     def stop(self, run_id: str) -> dict[str, Any]: ...
 
+    def record_feedback(
+        self, run_id: str, verdict: str, notes: str, operator: str
+    ) -> dict[str, Any]: ...
+
     def list_certifications(
         self, workload: str | None = None, status: str | None = None
     ) -> list[dict[str, Any]]: ...
@@ -170,6 +174,15 @@ class HttpControlPlaneClient:
     def stop(self, run_id: str) -> dict[str, Any]:
         """Stop a run."""
         return self._request("POST", f"/runs/{quote(run_id)}/stop")  # type: ignore[no-any-return]
+
+    def record_feedback(
+        self, run_id: str, verdict: str, notes: str, operator: str
+    ) -> dict[str, Any]:
+        """Record operator feedback on a terminal run."""
+        payload = {"verdict": verdict, "notes": notes, "operator": operator}
+        return self._request(  # type: ignore[no-any-return]
+            "POST", f"/runs/{quote(run_id)}/feedback", payload=payload
+        )
 
     def list_certifications(
         self, workload: str | None = None, status: str | None = None

@@ -391,6 +391,37 @@ immune system (drift, quarantine, promotion gate), and fleet scale-out. In progr
   export/import refusal, key rotation retaining old keys, Postgres round-trips,
   and migrations `0012`/`0013`.
 
+### Added (M36 — production feedback, corpus learning & online eval)
+
+- **Run feedback** — `hiveplane.learning.FeedbackService` records attributable
+  operator feedback (`good` / `bad` / `failed-with-lesson` + notes) on terminal
+  runs via UI, CLI (`hiveplane feedback`), and API (`POST /runs/{id}/feedback`).
+  `run_feedback` persists (migration `0014`).
+- **Feedback → corpus candidates** — a `failed-with-lesson` run auto-proposes an
+  inert `CorpusCandidate` (input = run task; expected outcome from the lesson or a
+  judge hint). Candidates are reviewable at `GET /corpus/candidates`
+  (`corpus_candidates`, `candidate_reviews`; migration `0015`).
+- **Mandatory review gate** — `CandidateService.approve`/`reject` are the only
+  path to a benchmark task; rejection archives with a reason; rejected/pending
+  candidates never enter the corpus. CLI `hiveplane corpus {candidates,approve,reject}`.
+- **Corpus versioning** — approved candidates are staged into the next corpus
+  version (`CorpusVersionService.integrate`, immutable `corpus_versions`;
+  migration `0016`) and the coordinator runs the integrated corpus on the next
+  certification, binding the new `corpus_version`.
+- **Online eval sampling** — a configurable percentage of production runs is
+  sampled deterministically (`sha256(run_id) mod 100 < sample_rate`) for scoring;
+  runs marked PII or matching sensitive patterns, and runs past the judge cost cap,
+  are skipped. `RunService` samples+judges on terminal production runs.
+- **LLM judge & quality signal** — `RubricJudge` scores runs against a versioned,
+  immutable rubric (recording the rubric version on every score); `EvalService`
+  rolls scores into a rolling-window production quality score with a `dip` flag.
+  API `GET /eval/samples`, `GET /workloads/{id}/quality`; CLI `hiveplane eval
+  {samples,quality}` (`eval_samples`, `judge_scores`, `rubrics`; migration `0017`).
+- **Tests** — feedback capture + auto-candidate, review-gate refusal, corpus
+  integration into the next certification, deterministic sampling + PII/cost
+  guardrails, judge parsing/clamping, quality dip detection, UI/CLI/API surfaces,
+  Postgres round-trips, and migrations `0014`–`0017`.
+
 ## [0.1.0] - 2026-09-25
 
 The first release: the certified control loop. Register agents, certify them against a
