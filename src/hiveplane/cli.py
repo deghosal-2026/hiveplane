@@ -33,6 +33,9 @@ triggers_app = typer.Typer(help="Inspect and add workload triggers.", no_args_is
 tools_app = typer.Typer(help="Inspect and register MCP tools.", no_args_is_help=True)
 reconcile_app = typer.Typer(help="Reconcile desired state (GitOps).", no_args_is_help=True)
 pipelines_app = typer.Typer(help="Submit and inspect pipeline runs.", no_args_is_help=True)
+agents_app = typer.Typer(
+    help="Route tasks and call certified agents as tools.", no_args_is_help=True
+)
 app.add_typer(certs_app, name="certs")
 app.add_typer(runs_app, name="runs")
 app.add_typer(approvals_app, name="approvals")
@@ -40,6 +43,7 @@ app.add_typer(triggers_app, name="triggers")
 app.add_typer(tools_app, name="tools")
 app.add_typer(reconcile_app, name="reconcile")
 app.add_typer(pipelines_app, name="pipelines")
+app.add_typer(agents_app, name="agents")
 
 ManifestArg = Annotated[
     Path,
@@ -884,6 +888,82 @@ def pipelines_retry(
     if status_code >= 400 or status_code == 0:
         _fail("retry pipeline node", status_code, body)
     _print_timeline(json.loads(body))
+
+
+@app.command("route")
+def route_task(
+    task: Annotated[str, typer.Argument(help="Plain-language task to route.")],
+    context: Annotated[
+        str, typer.Option("--context", help="Target context: sandbox|staging|production.")
+    ] = "staging",
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Route a task to the best certified workload, or show the refusal."""
+    status_code, body = _request(
+        "POST", f"{api_url.rstrip('/')}/route", {"task": task, "context": context}
+    )
+    if status_code >= 400 or status_code == 0:
+        _fail("route task", status_code, body)
+    data = json.loads(body)
+    if data["outcome"] == "routed":
+        top = data["candidates"][0]
+        typer.echo(f"routed to {data['chosen']}  (score {top['score']:.2f})")
+        typer.echo(f"classifier: {data['classifier_model']}")
+        return
+    typer.echo(f"refused: {data['reason']}")
+    for candidate in data["candidates"]:
+        typer.echo(f"  {candidate['score']:.2f}  {candidate['workload']}")
+
+
+@agents_app.command("list")
+def agents_list(
+    context: Annotated[
+        str, typer.Option("--context", help="Target context: sandbox|staging|production.")
+    ] = "staging",
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """List certified workloads exposed as callable tools."""
+    status_code, body = _request(
+        "GET", f"{api_url.rstrip('/')}/agent-tools?{urlencode({'context': context})}"
+    )
+    if status_code >= 400 or status_code == 0:
+        _fail("list agent tools", status_code, body)
+    for tool in json.loads(body):
+        typer.echo(f"{tool['tool_id']}  {tool['description']}")
+
+
+@agents_app.command("invoke")
+def agents_invoke(
+    tool_id: Annotated[str, typer.Argument(help="Tool id, e.g. agent.triage.")],
+    caller_run_id: Annotated[
+        str, typer.Option("--caller-run", help="Calling run id.")
+    ],
+    context: Annotated[
+        str, typer.Option("--context", help="Target context: sandbox|staging|production.")
+    ] = "staging",
+    task: Annotated[
+        Path | None,
+        typer.Option(
+            "--task", exists=True, dir_okay=False, readable=True, help="Task JSON."
+        ),
+    ] = None,
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Invoke a certified workload as a nested agent tool."""
+    payload = {
+        "caller_run_id": caller_run_id,
+        "context": context,
+        "task": _load_document(task) if task is not None else {},
+    }
+    status_code, body = _request(
+        "POST", f"{api_url.rstrip('/')}/agent-tools/{tool_id}/invoke", payload
+    )
+    if status_code >= 400 or status_code == 0:
+        _fail("invoke agent tool", status_code, body)
+    data = json.loads(body)
+    typer.echo(
+        f"{data['tool_id']} -> {data['nested_run_id']}  (depth {data['depth']})"
+    )
 
 
 # --------------------------------------------------------------------------- #

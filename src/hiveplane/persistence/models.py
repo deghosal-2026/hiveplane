@@ -621,6 +621,34 @@ class PipelineNodeRunRow(_TenantScoped, Base):
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
+class RouterDecisionRow(_TenantScoped, Base):
+    """A recorded smart-router decision (M30-03)."""
+
+    __tablename__ = "router_decisions"
+
+    decision_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    task_hash: Mapped[str] = mapped_column(String(64), index=True)
+    outcome: Mapped[str] = mapped_column(String(32), index=True)
+    chosen: Mapped[str | None] = mapped_column(String(253), nullable=True, index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class AgentToolInvocationRow(_TenantScoped, Base):
+    """A nested agent-as-tool invocation (M30-04..M30-06)."""
+
+    __tablename__ = "agent_tool_invocations"
+
+    invocation_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    caller_run_id: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+    nested_run_id: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+    workload: Mapped[str] = mapped_column(String(253), index=True)
+    depth: Mapped[int] = mapped_column(Integer)
+    decision: Mapped[str] = mapped_column(String(32), index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
 class PolicyPackVersionRow(_TenantScoped, Base):
     """Versioned, inheritable policy packs (M25-04)."""
 

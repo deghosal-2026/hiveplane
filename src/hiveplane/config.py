@@ -227,6 +227,31 @@ class ReconcileSettings(BaseModel):
         return [] if value == "" else value
 
 
+class RouterSettings(BaseModel):
+    """Smart task router guardrails (M30)."""
+
+    enabled: bool = False
+    model: str = "router-classifier"
+    confidence_threshold: float = Field(default=0.6, ge=0.0, le=1.0)
+    margin: float = Field(default=0.15, ge=0.0, le=1.0)
+    context: Literal["sandbox", "staging", "production"] = "staging"
+    max_candidates: int = Field(default=50, ge=1)
+
+
+class A2ASettings(BaseModel):
+    """Agent2Agent interop feature flag and allow-list (M30-07)."""
+
+    enabled: bool = False
+    plane_id: str = "hiveplane"
+    allowed_planes: list[str] = Field(default_factory=list)
+
+    @field_validator("allowed_planes", mode="before")
+    @classmethod
+    def _empty_planes_become_empty_list(cls, value: object) -> object:
+        """Treat an unset env var as no registered remote planes."""
+        return [] if value == "" else value
+
+
 class TriggerSettings(BaseModel):
     """Trigger ingest, replay-protection, and rate-limit settings (M27).
 
@@ -277,6 +302,8 @@ class Settings(BaseSettings):
     budget: BudgetSettings = Field(default_factory=BudgetSettings)
     reconcile: ReconcileSettings = Field(default_factory=ReconcileSettings)
     triggers: TriggerSettings = Field(default_factory=TriggerSettings)
+    router: RouterSettings = Field(default_factory=RouterSettings)
+    a2a: A2ASettings = Field(default_factory=A2ASettings)
 
 
 @lru_cache(maxsize=1)

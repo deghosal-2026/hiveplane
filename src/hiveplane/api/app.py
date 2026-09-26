@@ -18,6 +18,12 @@ from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 
 from hiveplane import __version__, telemetry
+from hiveplane.a2a import A2AAdapter
+from hiveplane.agent_tools.engine import AgentToolInvoker
+from hiveplane.agent_tools.registry import AgentToolRegistry
+from hiveplane.agent_tools.store import build_agent_tool_store
+from hiveplane.api.a2a import router as a2a_router
+from hiveplane.api.agent_tools import router as agent_tools_router
 from hiveplane.api.approvals import router as approvals_router
 from hiveplane.api.certifications import router as certifications_router
 from hiveplane.api.pipelines import router as pipelines_router
@@ -25,6 +31,7 @@ from hiveplane.api.policy import router as policy_router
 from hiveplane.api.readiness import build_readiness_probe
 from hiveplane.api.reconcile import router as reconcile_router
 from hiveplane.api.registry import router as registry_router
+from hiveplane.api.router import router as route_router
 from hiveplane.api.runs import router as runs_router
 from hiveplane.api.sandbox_channel import SandboxChannel
 from hiveplane.api.sandbox_channel import router as sandbox_router
@@ -52,6 +59,7 @@ from hiveplane.certification.store import build_certification_store
 from hiveplane.certification.workflow import CertificationCoordinator
 from hiveplane.config import Settings, get_settings
 from hiveplane.core.manifest import manifest_json_schema
+from hiveplane.core.run import AdmissionContext
 from hiveplane.core.spec import IOSpec
 from hiveplane.execution.errors import (
     IllegalTransitionError,
@@ -107,6 +115,10 @@ from hiveplane.registry.errors import (
 )
 from hiveplane.registry.service import RegistryService
 from hiveplane.registry.store import build_registry_store
+from hiveplane.router.catalog import RegistryCatalog
+from hiveplane.router.classifier import LLMTaskClassifier
+from hiveplane.router.engine import RouterEngine
+from hiveplane.router.store import build_router_store
 from hiveplane.sandbox.manager import InMemorySandboxManager
 from hiveplane.tenancy import TenantContext
 from hiveplane.triggers.engine import TriggerEngine
@@ -275,6 +287,36 @@ def create_app(
     app.state.pipeline_engine = pipeline_engine
     provider = build_provider(settings)
     app.state.provider = provider
+    router_store = build_router_store(settings)
+    app.state.router_store = router_store
+    app.state.router_engine = None
+    if settings.router.enabled:
+        app.state.router_engine = RouterEngine(
+            RegistryCatalog(registry),
+            LLMTaskClassifier(provider, model=settings.router.model),
+            store=router_store,
+            confidence_threshold=settings.router.confidence_threshold,
+            margin=settings.router.margin,
+            context=AdmissionContext(settings.router.context),
+        )
+    agent_tool_store = build_agent_tool_store(settings)
+    agent_tool_registry = AgentToolRegistry(registry)
+    app.state.agent_tool_store = agent_tool_store
+    app.state.agent_tool_registry = agent_tool_registry
+    app.state.agent_tool_invoker = AgentToolInvoker(
+        agent_tool_registry,
+        app.state.run_service,
+        store=agent_tool_store,
+    )
+    app.state.a2a_adapter = None
+    if settings.a2a.enabled:
+        app.state.a2a_adapter = A2AAdapter(
+            agent_tool_registry,
+            app.state.run_service,
+            router=app.state.router_engine,
+            plane_id=settings.a2a.plane_id,
+            allowed_planes=list(settings.a2a.allowed_planes),
+        )
     if settings.model.provider == "fake" and settings.environment != "local":
         _LOGGER.warning(
             "model.provider is 'fake' in the %s environment: model calls return "
@@ -422,6 +464,10 @@ def create_app(
     app.include_router(reconcile_router)
     app.include_router(triggers_router)
     app.include_router(pipelines_router)
+    app.include_router(route_router)
+    app.include_router(agent_tools_router)
+    if settings.a2a.enabled:
+        app.include_router(a2a_router)
     return app
 
 

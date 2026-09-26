@@ -177,6 +177,52 @@ or `continue` (independent nodes finish); `retry.max_attempts` re-runs a failed 
 Child runs carry `pipeline_origin` attribution and go through the same admission,
 policy, and budget path as any run.
 
+## Smart Task Router
+
+Set `HIVEPLANE_ROUTER__ENABLED=true` to expose `POST /route`. The router scores
+only workloads certified for the target context and picks one only when it clears
+the confidence threshold and beats the runner-up by the margin; otherwise it
+refuses with ranked candidates rather than guessing.
+
+```bash
+hiveplane route "the checkout database is down" --context production
+# routed to incident-triage-agent  (score 0.91)
+# classifier: router-classifier
+```
+
+```bash
+curl -X POST localhost:8100/route -H 'content-type: application/json' \
+  -d '{"task": "summarize the weekly incident report", "context": "staging"}'
+```
+
+The response carries the ranked `candidates`, the chosen workload, the
+`classifier_model`, and the thresholds. Decisions are recorded (`GET /routes`) so
+a route can be explained after the fact; the raw task text is never stored, only
+its digest. Tune guardrails with `HIVEPLANE_ROUTER__CONFIDENCE_THRESHOLD` and
+`HIVEPLANE_ROUTER__MARGIN` — a wrong route that bypasses the specialist is worse
+than a refusal, so keep them conservative.
+
+## Agent-as-Tool
+
+A certified workload is callable as `agent.<workload>`. Each call submits a nested
+run that inherits the caller's context and passes the same certification, policy,
+and budget admission as any run.
+
+```bash
+hiveplane agents list --context staging
+hiveplane agents invoke agent.incident-triage-agent --caller-run run-abc --task task.json
+```
+
+Recursion is bounded: `max_agent_depth` (default 5) rejects calls that nest too
+deep, the workload chain is checked for cycles, and a call is refused when the
+nested workload is uncertified or the caller's budget is exhausted. Every
+invocation — allowed or refused — is attributed and recorded.
+
+Cross-plane A2A interop is available behind `HIVEPLANE_A2A__ENABLED=true`
+(stretch): `GET /a2a/agents` exposes certified workloads as A2A agent cards and
+`POST /a2a/tasks` maps an inbound task onto the router and run lifecycle. Only
+planes listed in `HIVEPLANE_A2A__ALLOWED_PLANES` are trusted.
+
 ## Operator UI
 
 The operator UI is a server-rendered web app that reads the same HTTP API as the

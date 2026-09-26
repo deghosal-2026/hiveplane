@@ -2,8 +2,12 @@
 
 from __future__ import annotations
 
-from fastapi import Request
+from fastapi import HTTPException, Request, status
 
+from hiveplane.a2a import A2AAdapter
+from hiveplane.agent_tools.engine import AgentToolInvoker
+from hiveplane.agent_tools.registry import AgentToolRegistry
+from hiveplane.agent_tools.store import AgentToolStore
 from hiveplane.budget.store import BudgetStore
 from hiveplane.certification.workflow import CertificationCoordinator
 from hiveplane.execution.service import RunService
@@ -16,6 +20,8 @@ from hiveplane.policy.packs import PolicyPackStore
 from hiveplane.reconcile.controller import ReconcileController
 from hiveplane.reconcile.store import ReconcileStore
 from hiveplane.registry.service import RegistryService
+from hiveplane.router.engine import RouterEngine
+from hiveplane.router.store import RouterStore
 from hiveplane.tenancy import Role, TenantContext
 from hiveplane.tenancy.context import DEFAULT_CONTEXT
 from hiveplane.triggers.engine import TriggerEngine
@@ -145,3 +151,49 @@ def get_pipeline_engine(request: Request) -> PipelineEngine:
     """Return the pipeline engine bound to the application state."""
     engine: PipelineEngine = request.app.state.pipeline_engine
     return engine
+
+
+def get_router_engine(request: Request) -> RouterEngine:
+    """Return the smart task router bound to the application state."""
+    engine: RouterEngine | None = getattr(request.app.state, "router_engine", None)
+    if engine is None:
+        raise HTTPException(
+            status.HTTP_503_SERVICE_UNAVAILABLE,
+            "router is not enabled; set HIVEPLANE_ROUTER__ENABLED=true",
+        )
+    return engine
+
+
+def get_router_store(request: Request) -> RouterStore:
+    """Return the router-decision store bound to the application state."""
+    store: RouterStore = request.app.state.router_store
+    return store
+
+
+def get_agent_tool_registry(request: Request) -> AgentToolRegistry:
+    """Return the agent-tool registry bound to the application state."""
+    registry: AgentToolRegistry = request.app.state.agent_tool_registry
+    return registry
+
+
+def get_agent_tool_invoker(request: Request) -> AgentToolInvoker:
+    """Return the agent-tool invoker bound to the application state."""
+    invoker: AgentToolInvoker = request.app.state.agent_tool_invoker
+    return invoker
+
+
+def get_agent_tool_store(request: Request) -> AgentToolStore:
+    """Return the agent-tool store bound to the application state."""
+    store: AgentToolStore = request.app.state.agent_tool_store
+    return store
+
+
+def get_a2a_adapter(request: Request) -> A2AAdapter:
+    """Return the A2A adapter, or 503 when A2A is disabled."""
+    adapter: A2AAdapter | None = getattr(request.app.state, "a2a_adapter", None)
+    if adapter is None:
+        raise HTTPException(
+            status.HTTP_503_SERVICE_UNAVAILABLE,
+            "A2A is not enabled; set HIVEPLANE_A2A__ENABLED=true",
+        )
+    return adapter

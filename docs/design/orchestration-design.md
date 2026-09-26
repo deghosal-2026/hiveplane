@@ -1,6 +1,6 @@
 # D24: Multi-Agent Orchestration Design
 
-> Status: implemented (M29; M30 router/agent-as-tool pending)
+> Status: implemented (M29 pipelines; M30 router, agent-as-tool, A2A stretch)
 
 **Milestones:** M29–M30 · **Extends:** D2
 
@@ -229,6 +229,39 @@ independent nodes finish; `retry` re-executes a node up to `max_attempts`. The
 timeline reports per-node status, cost, artifacts, and attempts.
 
 M30 adds the smart task router and agent-as-tool composition.
+
+## Implementation (M30)
+
+| Module | Responsibility |
+|--------|----------------|
+| `hiveplane.router.catalog` | The certified-catalog provider (`RegistryCatalog`); only admitted workloads become candidates |
+| `hiveplane.router.classifier` | The cheap-model classifier (`LLMTaskClassifier`) over the provider seam |
+| `hiveplane.router.engine` | `RouterEngine` — confidence + margin guardrails, refusal, decision recording |
+| `hiveplane.router.store` | Router decisions (memory + Postgres, migration `0009`) |
+| `hiveplane.agent_tools.registry` | Exposes certified workloads as `agent.<workload>` tools |
+| `hiveplane.agent_tools.engine` | `AgentToolInvoker` — nested child runs with depth/cycle/budget/cert guards |
+| `hiveplane.agent_tools.store` | Invocation records (memory + Postgres, migration `0009`) |
+| `hiveplane.a2a` | A2A agent cards and inbound-task mapping behind a feature flag (stretch) |
+
+**Routing.** `POST /route` scores only workloads admitted for the target context.
+The top candidate is chosen only if `score ≥ confidence_threshold` **and**
+`score − runner_up ≥ margin`; otherwise the router refuses (`low_confidence` or
+`ambiguous`) with ranked candidates. The raw task is never stored — only its
+digest, the classifier identity, and the ranked scores (`router_decisions`), so
+every route is explainable. `hiveplane route "<task>"` drives it from the CLI.
+
+**Agent-as-tool.** A certified workload is callable as `agent.<workload>`. Each
+call submits a nested child run carrying an `AgentToolOrigin` (caller, depth,
+chain); the nested run passes the same admission (certification, policy, budget)
+as any run, and the invoker additionally rejects calls that exceed
+`max_agent_depth` (default 5), revisit a workload in the chain, or draw past the
+caller's remaining budget. Every invocation — allowed or refused — is recorded
+in `agent_tool_invocations`.
+
+**A2A (stretch).** Behind `HIVEPLANE_A2A__ENABLED`, `hiveplane.a2a` exposes
+certified workloads as A2A agent cards and maps inbound tasks onto the router
+and run lifecycle; only registered planes are trusted. The endpoints are not
+mounted when the flag is off.
 
 ## See Also
 

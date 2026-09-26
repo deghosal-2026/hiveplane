@@ -70,6 +70,18 @@ class PipelineOrigin(BaseModel):
     attempt: int = Field(default=1, ge=1)
 
 
+class AgentToolOrigin(BaseModel):
+    """Attribution metadata for a nested agent-as-tool run (M30-04..M30-06)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    caller_run_id: str = Field(min_length=1)
+    tool_id: str = Field(min_length=1)
+    workload: str = Field(min_length=1)
+    depth: int = Field(ge=1)
+    chain: list[str] = Field(default_factory=list)
+
+
 class Run(BaseModel):
     """A single execution of a workload through the control plane."""
 
@@ -86,6 +98,7 @@ class Run(BaseModel):
     finished_at: AwareDatetime | None = None
     trigger_origin: TriggerOrigin | None = None
     pipeline_origin: PipelineOrigin | None = None
+    agent_tool_origin: AgentToolOrigin | None = None
     manifest_version: int | None = None
     context: AdmissionContext | None = None
     sandbox: bool = False

@@ -181,6 +181,39 @@ immune system (drift, quarantine, promotion gate), and fleet scale-out. In progr
   fan-out/in, budget, `fail_fast`/`continue`, retry, and Postgres round-trips.
   Coverage ≥ 95% with a database.
 
+### Added (M30 — smart task router & agent-as-tool)
+
+- **`hiveplane.router` package** — routes a plain-language task to the best
+  certified workload:
+  - **Certified catalog** (`catalog`) — only workloads admitted for the target
+    context are candidates; uncertified workloads are never offered.
+  - **Cheap classifier** (`classifier`) — `LLMTaskClassifier` scores candidates
+    through the provider seam and parses/normalizes the JSON response.
+  - **Engine** (`engine`) — chooses the top candidate only when it clears the
+    confidence threshold **and** beats the runner-up by the margin; otherwise it
+    refuses (`low_confidence`/`ambiguous`) with ranked candidates rather than
+    guessing. The raw task is never stored — only its digest.
+  - **Store** (`store`) — router decisions (memory + Postgres, migration `0009`);
+    every route is explainable from recorded candidate scores.
+- **`hiveplane.agent_tools` package** — exposes certified workloads as
+  `agent.<workload>` tools:
+  - **Registry** (`registry`) — resolves tool ids and lists only certified tools.
+  - **Invoker** (`engine`) — submits nested child runs carrying an
+    `AgentToolOrigin`; enforces `max_agent_depth`, rejects chain cycles and
+    budget exhaustion, and lets nested admission enforce certification/policy.
+  - **Store** (`store`) — invocation records (memory + Postgres, migration `0009`).
+- **Run lifecycle** — `Run.agent_tool_origin` and
+  `RunService.submit(agent_tool_origin=...)` attribute nested calls.
+- **A2A interop (stretch)** — `hiveplane.a2a` exposes certified workloads as A2A
+  agent cards and maps inbound tasks onto the router and run lifecycle, behind
+  `HIVEPLANE_A2A__ENABLED`; endpoints are unmounted when the flag is off.
+- **API + CLI** — `POST /route`, `GET /routes[/{id}]`, `GET /agent-tools`,
+  `POST /agent-tools/{id}/invoke`, and (flagged) `/a2a/agents`, `/a2a/tasks`;
+  `hiveplane route "<task>"` and `hiveplane agents list|invoke`.
+- **Tests** — routing accuracy on a labeled set, low-confidence refusal,
+  uncertified-never-a-candidate, nested-call propagation, depth/cycle rejection,
+  A2A trust/refusal, and Postgres round-trips. Coverage ≥ 95% with a database.
+
 ## [0.1.0] - 2026-09-25
 
 The first release: the certified control loop. Register agents, certify them against a
