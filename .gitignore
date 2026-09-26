@@ -102,6 +102,9 @@ data/
 .hiveplane/
 *.pid
 
+# Subagent-driven-development scratch (ledgers, briefs, reports)
+.superpowers/
+
 # Editor / OS
 .idea/
 .vscode/
