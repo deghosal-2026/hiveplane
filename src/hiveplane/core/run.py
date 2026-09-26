@@ -109,6 +109,7 @@ class Run(BaseModel):
     sandbox_id: str | None = None
     trace_id: str | None = None
     shadow_of: str | None = None
+    probe: bool = False
     read_only: bool = False
     tenant_id: str = Field(default=DEFAULT_TENANT_ID, min_length=1, max_length=64)
     team_id: str | None = None

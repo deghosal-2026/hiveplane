@@ -19,6 +19,7 @@ from hiveplane.drift.reinstatement import ReinstatementService
 from hiveplane.drift.scheduler import DriftScheduler
 from hiveplane.execution.service import RunService
 from hiveplane.execution.tools import ToolGateway
+from hiveplane.health.plane_metrics import PlaneMetrics
 from hiveplane.health.service import HealthService
 from hiveplane.learning.candidates import CandidateService
 from hiveplane.learning.eval import EvalService
@@ -30,6 +31,7 @@ from hiveplane.policy.engine import PolicyEngine
 from hiveplane.policy.kill_switch import KillSwitch
 from hiveplane.policy.pack_registry import PolicyPackRegistry
 from hiveplane.policy.packs import PolicyPackStore
+from hiveplane.probes.service import ProbeService
 from hiveplane.progressive.canary import CanaryService
 from hiveplane.progressive.experiments import ExperimentService
 from hiveplane.progressive.shadow import ShadowService
@@ -102,6 +104,18 @@ def get_health_service(request: Request) -> HealthService:
     """Return the agent health service bound to the application state."""
     service: HealthService = request.app.state.health_service
     return service
+
+
+def get_probe_service(request: Request) -> ProbeService:
+    """Return the synthetic probe service bound to the application state."""
+    service: ProbeService = request.app.state.probe_service
+    return service
+
+
+def get_plane_metrics(request: Request) -> PlaneMetrics:
+    """Return the plane self-metrics registry bound to the application state."""
+    metrics: PlaneMetrics = request.app.state.plane_metrics
+    return metrics
 
 
 def get_kill_switch(request: Request) -> KillSwitch:

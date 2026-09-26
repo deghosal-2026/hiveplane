@@ -12,14 +12,14 @@ Monitor quality proactively with synthetic probes, give operators approval analy
 
 **Work items:**
 
-- [ ] [#315](https://github.com/deghosal-2026/hiveplane/issues/315) — M43-01 — Synthetic probes: scheduled ping-tasks per workload with known-good expected behavior
-- [ ] [#316](https://github.com/deghosal-2026/hiveplane/issues/316) — M43-02 — Probe scoring: pass/fail + latency/cost, feeding health and early drift warning
-- [ ] [#317](https://github.com/deghosal-2026/hiveplane/issues/317) — M43-03 — Probe scheduling/isolation: probes use a separate budget and never affect production outcomes
-- [ ] [#318](https://github.com/deghosal-2026/hiveplane/issues/318) — M43-04 — Production quality scores surfaced (from M36 online eval) as a first-class health signal
-- [ ] [#319](https://github.com/deghosal-2026/hiveplane/issues/319) — M43-05 — Approval analytics: latency by approver, bottleneck detection, trends
-- [ ] [#320](https://github.com/deghosal-2026/hiveplane/issues/320) — M43-06 — Plane self-monitoring: the control plane exports its own Prometheus metrics
-- [ ] [#321](https://github.com/deghosal-2026/hiveplane/issues/321) — M43-07 — Official Grafana dashboard JSONs shipped for fleet, health, cost, and plane health
-- [ ] [#322](https://github.com/deghosal-2026/hiveplane/issues/322) — M43-08 — Tests: probe detects seeded decay before drift threshold; analytics compute correctly; self-metrics endpoint exposes expected series
+- [x] [#315](https://github.com/deghosal-2026/hiveplane/issues/315) — M43-01 — Synthetic probes: scheduled ping-tasks per workload with known-good expected behavior
+- [x] [#316](https://github.com/deghosal-2026/hiveplane/issues/316) — M43-02 — Probe scoring: pass/fail + latency/cost, feeding health and early drift warning
+- [x] [#317](https://github.com/deghosal-2026/hiveplane/issues/317) — M43-03 — Probe scheduling/isolation: probes use a separate budget and never affect production outcomes
+- [x] [#318](https://github.com/deghosal-2026/hiveplane/issues/318) — M43-04 — Production quality scores surfaced (from M36 online eval) as a first-class health signal
+- [x] [#319](https://github.com/deghosal-2026/hiveplane/issues/319) — M43-05 — Approval analytics: latency by approver, bottleneck detection, trends
+- [x] [#320](https://github.com/deghosal-2026/hiveplane/issues/320) — M43-06 — Plane self-monitoring: the control plane exports its own Prometheus metrics
+- [x] [#321](https://github.com/deghosal-2026/hiveplane/issues/321) — M43-07 — Official Grafana dashboard JSONs shipped for fleet, health, cost, and plane health
+- [x] [#322](https://github.com/deghosal-2026/hiveplane/issues/322) — M43-08 — Tests: probe detects seeded decay before drift threshold; analytics compute correctly; self-metrics endpoint exposes expected series
 
 **Test ticket:** [#323](https://github.com/deghosal-2026/hiveplane/issues/323) — Test cases for Synthetic Probes, Quality Scores, Approval Analytics & Plane Self-Monitoring
 
@@ -29,13 +29,15 @@ Monitor quality proactively with synthetic probes, give operators approval analy
 - `docs/design/agent-health-slo-design.md`, `docs/observability.md` update
 
 **Acceptance criteria:**
-- [ ] A synthetic probe flags quality decay before the drift threshold trips
-- [ ] Probes run on their own budget and cannot deliver results to fan-out
-- [ ] Approval analytics show per-approver latency and a bottleneck
-- [ ] The plane's own metrics are scrapeable and the shipped dashboards render
-- [ ] Production quality scores appear in the health model
+- [x] A synthetic probe flags quality decay before the drift threshold trips
+- [x] Probes run on their own budget and cannot deliver results to fan-out
+- [x] Approval analytics show per-approver latency and a bottleneck
+- [x] The plane's own metrics are scrapeable and the shipped dashboards render
+- [x] Production quality scores appear in the health model
 
 **Done when:** quality is monitored proactively, approvals are measurable, and the plane observes itself.
+
+> **Status:** M43 complete. `hiveplane.probes` schedules cheap ping-tasks on a separate capped budget that never deliver to fan-out; a failing probe raises an early drift warning. `hiveplane.health.analytics` computes per-approver latency, the bottleneck, and approve/deny trends; `PlaneMetrics` exports the plane's own Prometheus `/metrics` (decoupled); Grafana dashboards for fleet/health/cost/plane are shipped under `deploy/grafana/dashboards/`. Production quality scores feed the health model (M42). Issues #315–#323 closed; all tests pass with a database, coverage >95%, ruff and mypy strict clean.
 
 **Dependencies:** M42 (health), M36 (quality scores).
 

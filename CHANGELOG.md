@@ -506,6 +506,25 @@ immune system (drift, quarantine, promotion gate), and fleet scale-out. In progr
 - **API + CLI** — `GET /health`, `/health/workloads/{id}`, `/slo`, `/burn`,
   `POST /health/workloads/{id}/enforce`; CLI `hiveplane health list|show`.
 
+### Added (M43 — synthetic probes, quality signal, analytics & self-monitoring)
+
+- **Synthetic probes** (`hiveplane.probes`) — scheduled ping-tasks with a known-good
+  expected behavior, scored pass/fail with latency/cost. Probes run on a **separate
+  capped budget**, never deliver to fan-out, and are tagged `probe` so they never
+  count toward production SLOs or cost-per-task. A failing probe raises an **early
+  drift warning** before the scheduled drift detector trips.
+- **Production quality signal** — online-eval judge scores surface as a first-class
+  health input (groundwork in M42).
+- **Approval analytics** (`hiveplane.health.analytics`) — per-approver latency,
+  bottleneck detection, and approve/deny trends.
+- **Plane self-monitoring** (`hiveplane.health.PlaneMetrics`) — the control plane
+  exports its own Prometheus metrics at `GET /metrics`, decoupled from the health
+  service and its database.
+- **Grafana dashboards** — `deploy/grafana/dashboards/{fleet,health,cost,plane}.json`
+  shipped for provisioning.
+- **API + CLI** — `GET /health/probes`, `GET /analytics/approvals`, `GET /metrics`;
+  CLI `hiveplane probes list`.
+
 ## [0.1.0] - 2026-09-25
 
 The first release: the certified control loop. Register agents, certify them against a

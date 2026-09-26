@@ -297,6 +297,14 @@ class HealthSettings(BaseModel):
     min_runs_for_score: int = Field(default=5, ge=1)
 
 
+class ProbesSettings(BaseModel):
+    """Synthetic probe budget and cadence (M43)."""
+
+    enabled: bool = True
+    budget_cap_usd: float | None = Field(default=None, gt=0.0)
+    interval_seconds: int = Field(default=300, gt=0)
+
+
 class GuardsSettings(BaseModel):
     """Runtime guards: context, spend-velocity, and circuit breakers (M41)."""
 
@@ -381,6 +389,7 @@ class Settings(BaseSettings):
     a2a: A2ASettings = Field(default_factory=A2ASettings)
     guards: GuardsSettings = Field(default_factory=GuardsSettings)
     health: HealthSettings = Field(default_factory=HealthSettings)
+    probes: ProbesSettings = Field(default_factory=ProbesSettings)
     eval: EvalSettings = Field(default_factory=EvalSettings)
 
 

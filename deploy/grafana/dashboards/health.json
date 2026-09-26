@@ -1,0 +1,17 @@
+{
+  "title": "HivePlane Health",
+  "uid": "hiveplane-health",
+  "schemaVersion": 39,
+  "editable": true,
+  "timezone": "browser",
+  "panels": [
+    {
+      "id": 1,
+      "type": "timeseries",
+      "title": "hiveplane_guard_trips_total",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{"refId": "A", "expr": "hiveplane_guard_trips_total"}],
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 0}
+    }
+  ]
+}

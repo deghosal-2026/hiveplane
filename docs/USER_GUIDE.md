@@ -817,3 +817,26 @@ workload through the same immune machinery drift uses, and audits the action:
 
 SLO targets come from the manifest (`spec.health.slo`); tune the window and
 minimum-sample thresholds with `HIVEPLANE_HEALTH__*`.
+
+## Probes, Analytics & Self-Monitoring
+
+**Synthetic probes** exercise a known-good path per workload and raise an **early
+drift warning** before the scheduled drift detector trips. Probes run on a
+separate capped budget, never deliver to fan-out, and never count toward
+production SLOs or cost-per-completed-task.
+
+```bash
+hiveplane probes list [--workload <id>]   # -> GET /health/probes
+```
+
+**Approval analytics** show per-approver latency, the bottleneck approver, and
+approve/deny trends:
+
+```bash
+# -> GET /analytics/approvals
+```
+
+**Plane self-monitoring** exposes the control plane's own Prometheus metrics at
+`GET /metrics`. It is deliberately decoupled from the health service and its
+database, so a failing dependency cannot blind the plane. Grafana dashboards for
+fleet, health, cost, and plane health ship in `deploy/grafana/dashboards/`.

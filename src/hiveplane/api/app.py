@@ -115,6 +115,7 @@ from hiveplane.guards.context import ContextBudgetGuard
 from hiveplane.guards.manager import GuardLimits, GuardManager
 from hiveplane.guards.velocity import SpendVelocityGuard
 from hiveplane.health.models import SloTarget
+from hiveplane.health.plane_metrics import PlaneMetrics
 from hiveplane.health.service import HealthService
 from hiveplane.learning.candidate_store import build_candidate_store
 from hiveplane.learning.candidates import CandidateService
@@ -152,6 +153,7 @@ from hiveplane.policy.kill_switch import KillSwitch, build_kill_switch_store
 from hiveplane.policy.pack_registry import PolicyPackRegistry
 from hiveplane.policy.packs import InMemoryPolicyPackStore
 from hiveplane.policy.store import build_approval_store
+from hiveplane.probes.service import ProbeService
 from hiveplane.progressive.canary import CanaryService
 from hiveplane.progressive.errors import (
     CanaryNotAllowedError,
@@ -603,6 +605,11 @@ def create_app(
     )
     app.state.experiment_service = ExperimentService(progressive_store)
     _wire_health(app, registry, settings)
+    app.state.plane_metrics = PlaneMetrics()
+    app.state.plane_metrics.set_gauge("hiveplane_up", 1)
+    app.state.probe_service = ProbeService(
+        budget_cap_usd=settings.probes.budget_cap_usd
+    )
     if settings.drift.enabled and certification_coordinator is not None:
         _wire_drift(app, registry, certification_coordinator, settings)
     app.state.run_recovery = RunRecovery(app.state.run_service)

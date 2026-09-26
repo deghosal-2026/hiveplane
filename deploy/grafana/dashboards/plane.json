@@ -1,0 +1,17 @@
+{
+  "title": "HivePlane Plane Health",
+  "uid": "hiveplane-plane",
+  "schemaVersion": 39,
+  "editable": true,
+  "timezone": "browser",
+  "panels": [
+    {
+      "id": 1,
+      "type": "timeseries",
+      "title": "hiveplane_api_errors_total",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{"refId": "A", "expr": "hiveplane_api_errors_total"}],
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 0}
+    }
+  ]
+}

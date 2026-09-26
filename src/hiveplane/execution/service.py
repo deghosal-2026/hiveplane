@@ -170,6 +170,7 @@ class RunService:
         agent_tool_origin: AgentToolOrigin | None = None,
         require_approval: bool = False,
         shadow_of: str | None = None,
+        probe: bool = False,
         read_only: bool = False,
         ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> Run:
@@ -196,6 +197,7 @@ class RunService:
             pipeline_origin=pipeline_origin,
             agent_tool_origin=agent_tool_origin,
             shadow_of=shadow_of,
+            probe=probe,
             read_only=read_only,
             tenant_id=ctx.tenant_id,
             team_id=ctx.team_id,
@@ -432,12 +434,13 @@ class RunService:
         if target in _TERMINAL:
             if target is RunState.COMPLETED and run.context is AdmissionContext.PRODUCTION:
                 self._registry.increment_production_runs(run.workload_id)
-            if updated.shadow_of is None:
+            if updated.shadow_of is None and not updated.probe:
                 self._fanout.notify(updated, manifest)
             if (
                 self._eval_hook is not None
                 and run.context is AdmissionContext.PRODUCTION
                 and updated.shadow_of is None
+                and not updated.probe
             ):
                 self._eval_hook(updated)
             self._record_audit(actor, "transition", run_id, detail=target.value, ctx=run_ctx)

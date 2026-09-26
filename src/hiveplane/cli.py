@@ -59,6 +59,7 @@ policies_app = typer.Typer(
     help="Lint, publish, and apply team policy packs.", no_args_is_help=True
 )
 health_app = typer.Typer(help="Inspect agent health and SLOs.", no_args_is_help=True)
+probes_app = typer.Typer(help="Inspect synthetic probe results.", no_args_is_help=True)
 app.add_typer(certs_app, name="certs")
 app.add_typer(runs_app, name="runs")
 app.add_typer(approvals_app, name="approvals")
@@ -76,6 +77,7 @@ app.add_typer(canary_app, name="canary")
 app.add_typer(experiment_app, name="experiment")
 app.add_typer(policies_app, name="policies")
 app.add_typer(health_app, name="health")
+app.add_typer(probes_app, name="probes")
 
 ManifestArg = Annotated[
     Path,
@@ -1812,3 +1814,23 @@ def health_show(
     if status_code >= 400 or status_code == 0:
         _fail("show health", status_code, body)
     typer.echo(json.dumps(json.loads(body), indent=2))
+
+
+@probes_app.command("list")
+def probes_list(
+    workload: Annotated[str | None, typer.Option("--workload")] = None,
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """List synthetic probe results."""
+    query = urlencode({"workload_id": workload}) if workload else ""
+    url = f"{api_url.rstrip('/')}/health/probes"
+    if query:
+        url = f"{url}?{query}"
+    status_code, body = _request("GET", url)
+    if status_code >= 400 or status_code == 0:
+        _fail("list probes", status_code, body)
+    for probe in json.loads(body):
+        typer.echo(
+            f"{probe['probe_id']}  {probe['workload_id']}  "
+            f"{probe['status']}  {probe['latency_ms']}ms"
+        )
