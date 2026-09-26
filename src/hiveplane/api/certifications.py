@@ -4,10 +4,11 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, ConfigDict
 
 from hiveplane.api.deps import get_certification_coordinator
+from hiveplane.certification.errors import CertificationNotFoundError
 from hiveplane.certification.models import (
     CertificationRecord,
     CertificationStatus,
@@ -67,6 +68,22 @@ def compare_certifications(
 ) -> RegressionDiff:
     """Return the task-level regression diff between two certifications."""
     return coordinator.compare(before_id, after_id)
+
+
+@router.get(
+    "/certifications/compare-baseline/{after_id}", response_model=RegressionDiff
+)
+def compare_to_baseline(
+    after_id: str,
+    coordinator: CoordinatorDep,
+    workload: str,
+    baseline: str | None = None,
+) -> RegressionDiff:
+    """Compare a certification to its baseline (last certified unless specified)."""
+    try:
+        return coordinator.compare_to_baseline(workload, after_id, baseline_id=baseline)
+    except CertificationNotFoundError as exc:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, str(exc)) from exc
 
 
 @router.get("/certifications/{record_id}", response_model=CertificationRecord)

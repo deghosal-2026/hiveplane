@@ -21,6 +21,7 @@ from hiveplane.certification.models import (
     Attestation,
     CertificationRecord,
     CertificationStatus,
+    Severity,
     TargetContext,
 )
 from hiveplane.core.run import AdmissionContext
@@ -55,6 +56,15 @@ class PromotionStore(Protocol):
     def list_records(self, *, ctx: TenantContext = ...) -> list[PromotionRecord]: ...
 
     def clear(self) -> None: ...
+
+
+def _critical_note(certification: CertificationRecord) -> str | None:
+    """Return a promotion refusal note when re-certification shows critical regressions."""
+    report = certification.regression_report
+    if report is None or report.severity is not Severity.CRITICAL:
+        return None
+    ids = report.machine_report.get("critical_regressions", [])
+    return f"critical regression on {ids}"
 
 
 class PromotionRecord(BaseModel):
@@ -111,6 +121,7 @@ class PromotionGate:
         *,
         to_context: TargetContext = TargetContext.PRODUCTION,
         operator: str,
+        reason_note: str | None = None,
         ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> PromotionRecord:
         """Request promotion of a manifest version, admitting or refusing."""
@@ -123,6 +134,8 @@ class PromotionGate:
             workload, version, binding.artifact_hash, to_context, record.certification_status
         )
         if match is None:
+            if reason_note:
+                reason = f"{reason}; {reason_note}"
             refusal_bindings = changed_bindings(self._latest_binding(attestations), binding)
             refusal = self._refuse(
                 workload,
@@ -185,6 +198,7 @@ class PromotionGate:
             current.current_version,
             to_context=to_context,
             operator=operator,
+            reason_note=_critical_note(certification),
             ctx=ctx,
         )
         return certification, promotion

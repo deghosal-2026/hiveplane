@@ -1,6 +1,6 @@
 # D26: Certification v2 Design
 
-> Status: implemented (M32 promotion gate; M33–M35 diff/drift/log/provenance pending)
+> Status: implemented (M32 promotion gate, M33 regression diff; M34–M35 drift/log/provenance pending)
 
 **Milestones:** M32–M35 · **Extends:** D10
 
@@ -182,6 +182,29 @@ certification coordinator, then attempts promotion.
 
 M33–M35 add the regression diff, drift detector/auto-quarantine, transparency
 log, public verification, and workload provenance/signing.
+
+### Regression diff (M33)
+
+`hiveplane.certification.diff` compares two benchmark results task by task:
+
+- **Deltas** — `pass→fail` (regression) and `fail→pass` (improvement), with
+  latency, token, and cost deltas per task.
+- **Severity** — a `pass→fail` on a `critical` task is a **critical regression**
+  (overall severity `critical`); other regressions are `warning`. Critical
+  regressions feed the promotion gate's refusal reason.
+- **Replayable traces** — every changed task carries a `ReplayFrameSet`
+  (task contract: input, expected, check; plus the run's trace id and a stable
+  `replay_ref`), so the exact task can be replayed deterministically.
+- **Baseline selection** — `compare_to_baseline(workload, after_id)` uses the
+  last `certified` record unless an explicit `baseline_id` is given; comparison
+  is deterministic (identical results diff empty).
+- **Artifact** — a `RegressionReport` (machine-readable JSON + human summary) is
+  attached to the certification record when re-certification runs.
+
+API/CLI: `GET /certifications/compare/{before}/{after}`,
+`GET /certifications/compare-baseline/{after}?workload=...&baseline=...`; and
+`hiveplane certs compare <v1> <v2> [--json]`,
+`hiveplane certs compare-baseline <workload> <after> [--baseline <id>] [--json]`.
 
 ## See Also
 - [Certification Pipeline Design](certification-pipeline-design.md) (D10) — runner, engine, thresholds, promotion gate, drift

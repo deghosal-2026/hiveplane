@@ -16,9 +16,11 @@ from opentelemetry.util.types import AttributeValue
 
 from hiveplane import metrics, telemetry
 from hiveplane.certification.corpus import load_corpus
-from hiveplane.certification.diff import regression_diff
+from hiveplane.certification.diff import build_regression_report, regression_diff
 from hiveplane.certification.errors import CertificationNotFoundError, CorpusError
 from hiveplane.certification.models import (
+    BenchmarkCorpus,
+    BenchmarkTask,
     CertificationRecord,
     CertificationStatus,
     Environment,
@@ -131,6 +133,9 @@ class CertificationCoordinator:
             corpus, workload_id=workload, manifest_version=record.current_version
         )
         previous = self._registry.list_attestations(workload)
+        previous_record = (
+            self._store.get(previous[-1].attestation_id) if previous else None
+        )
         certification_record = self._service.certify_with_result(
             result,
             target_context=target_context,
@@ -138,6 +143,22 @@ class CertificationCoordinator:
                 previous[-1].attestation_id if previous else None
             ),
         )
+        if previous_record is not None:
+            diff = regression_diff(
+                previous_record.benchmark_result,
+                result,
+                before_attestation_id=previous_record.attestation.attestation_id,
+                after_attestation_id=certification_record.attestation.attestation_id,
+                task_catalog=_catalog(corpus),
+                baseline_attestation_id=previous_record.attestation.attestation_id,
+            )
+            certification_record = certification_record.model_copy(
+                update={
+                    "regression_report": build_regression_report(
+                        diff, generated_at=self._clock()
+                    )
+                }
+            )
         self._store.add(certification_record)
         status = certification_record.certification.status
         metrics.get_metrics().record_certification(
@@ -192,7 +213,62 @@ class CertificationCoordinator:
             after.benchmark_result,
             before_attestation_id=before.attestation.attestation_id,
             after_attestation_id=after.attestation.attestation_id,
+            task_catalog=self._corpus_catalog(after),
+            baseline_attestation_id=before.attestation.attestation_id,
         )
+
+    def compare_to_baseline(
+        self, workload: str, after_id: str, *, baseline_id: str | None = None
+    ) -> RegressionDiff:
+        """Compare a certification to its baseline (M33-02).
+
+        The baseline is an explicit attestation id when given, otherwise the
+        most recent other ``certified`` record for the workload, falling back to
+        the most recent other record. Comparison is deterministic.
+        """
+        after = self.get(after_id)
+        if baseline_id is not None:
+            baseline = self.get(baseline_id)
+        else:
+            records = [r for r in self.list(workload=workload) if r.record_id != after_id]
+            certified = [
+                r for r in records if r.certification.status is CertificationStatus.CERTIFIED
+            ]
+            pool = certified or records
+            pool.sort(key=lambda r: (r.attestation.timestamp, r.record_id))
+            if not pool:
+                raise CertificationNotFoundError(f"no baseline for {workload!r}")
+            baseline = pool[-1]
+        return regression_diff(
+            baseline.benchmark_result,
+            after.benchmark_result,
+            before_attestation_id=baseline.attestation.attestation_id,
+            after_attestation_id=after.attestation.attestation_id,
+            task_catalog=self._corpus_catalog(after),
+            baseline_attestation_id=baseline.attestation.attestation_id,
+        )
+
+    def _corpus_catalog(self, record: CertificationRecord) -> dict[str, BenchmarkTask] | None:
+        """Best-effort load of the corpus tasks behind a certification record."""
+        workload = record.benchmark_result.workload_id
+        try:
+            manifest = self._registry.get(workload).manifest
+        except Exception:
+            return None
+        certification = manifest.spec.certification
+        reference = certification.benchmark_corpus if certification is not None else None
+        if not reference:
+            return None
+        try:
+            corpus = load_corpus(self._resolve_corpus_path(reference))
+        except (CorpusError, OSError):
+            return None
+        return _catalog(corpus)
+
+
+def _catalog(corpus: BenchmarkCorpus) -> dict[str, BenchmarkTask]:
+    """Index a corpus by task id for replay-frame construction."""
+    return {task.id: task for task in corpus.tasks}
 
 
 def _pinned_identity(manifest: AgentWorkload, override: str | None) -> str | None:

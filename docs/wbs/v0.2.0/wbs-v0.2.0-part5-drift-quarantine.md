@@ -12,28 +12,38 @@ Give the immune system its two most powerful behaviors: an explainable regressio
 
 **Work items:**
 
-- [ ] [#226](https://github.com/deghosal-2026/hiveplane/issues/226) — M33-01 — Task-level diff engine: pass→fail, fail→pass, metric deltas, latency deltas, cost deltas
-- [ ] [#227](https://github.com/deghosal-2026/hiveplane/issues/227) — M33-02 — Baseline selection (last certified vs. specified attestation id) and deterministic comparison
-- [ ] [#228](https://github.com/deghosal-2026/hiveplane/issues/228) — M33-03 — Replayable traces: each regressed task links to a replayable execution frame set
-- [ ] [#229](https://github.com/deghosal-2026/hiveplane/issues/229) — M33-04 — Severity classification (critical vs. non-critical regressions) aligned with threshold rules
-- [ ] [#230](https://github.com/deghosal-2026/hiveplane/issues/230) — M33-05 — Diff artifact generation (machine-readable + human report) attached to the certification record
-- [ ] [#231](https://github.com/deghosal-2026/hiveplane/issues/231) — M33-06 — API + CLI: `hiveplane certs compare <v1> <v2>` with `--json` output
-- [ ] [#232](https://github.com/deghosal-2026/hiveplane/issues/232) — M33-07 — Tests: seeded regressions are identified exactly; no false positives on unchanged corpora
+- [x] [#226](https://github.com/deghosal-2026/hiveplane/issues/226) — M33-01 — Task-level diff engine: pass→fail, fail→pass, metric deltas, latency deltas, cost deltas
+- [x] [#227](https://github.com/deghosal-2026/hiveplane/issues/227) — M33-02 — Baseline selection (last certified vs. specified attestation id) and deterministic comparison
+- [x] [#228](https://github.com/deghosal-2026/hiveplane/issues/228) — M33-03 — Replayable traces: each regressed task links to a replayable execution frame set
+- [x] [#229](https://github.com/deghosal-2026/hiveplane/issues/229) — M33-04 — Severity classification (critical vs. non-critical regressions) aligned with threshold rules
+- [x] [#230](https://github.com/deghosal-2026/hiveplane/issues/230) — M33-05 — Diff artifact generation (machine-readable + human report) attached to the certification record
+- [x] [#231](https://github.com/deghosal-2026/hiveplane/issues/231) — M33-06 — API + CLI: `hiveplane certs compare <v1> <v2>` with `--json` output
+- [x] [#232](https://github.com/deghosal-2026/hiveplane/issues/232) — M33-07 — Tests: seeded regressions are identified exactly; no false positives on unchanged corpora
 
-**Test ticket:** [#233](https://github.com/deghosal-2026/hiveplane/issues/233) — Test cases for Regression Diff & Certification Compare
+**Test ticket:** [x] [#233](https://github.com/deghosal-2026/hiveplane/issues/233) — Test cases for Regression Diff & Certification Compare
 
 **Deliverables:**
 - `hiveplane.certification.diff` extension
 - Regression report format + `docs/design/certification-v2-design.md`
 
 **Acceptance criteria:**
-- [ ] A seeded regression is pinpointed to the exact task(s) with metric deltas
-- [ ] Comparing identical certifications yields an empty diff
-- [ ] Every regressed task exposes a replayable trace
-- [ ] Critical regressions are flagged and feed the promotion gate's refusal reason
-- [ ] `--json` output is stable and schema-validated
+- [x] A seeded regression is pinpointed to the exact task(s) with metric deltas
+- [x] Comparing identical certifications yields an empty diff
+- [x] Every regressed task exposes a replayable trace
+- [x] Critical regressions are flagged and feed the promotion gate's refusal reason
+- [x] `--json` output is stable and schema-validated
 
 **Done when:** a failed re-certification produces a precise, replayable, human- and machine-readable regression diff.
+
+> **Status:** M33 complete. The diff engine (`hiveplane.certification.diff`)
+> reports task-level regressions/improvements with latency/token/cost deltas,
+> severity, and replayable frame sets; `compare_to_baseline` selects the last
+> certified record (or an explicit baseline) deterministically; a
+> `RegressionReport` is attached to the certification record; critical
+> regressions feed the promotion refusal. API `compare-baseline` and the CLI
+> `certs compare --json` / `certs compare-baseline` landed. All tests pass with a
+> database; coverage 95% total, ruff and mypy strict clean. Issues #226–#233
+> closed; committed and pushed.
 
 **Dependencies:** M32; v0.1.0 certification store + corpus.
 
@@ -76,13 +86,13 @@ Give the immune system its two most powerful behaviors: an explainable regressio
 
 ## Exit Gate (M33, M34)
 
-- [ ] All tests in the system pass: `pytest`
-- [ ] Code coverage total > 95%
-- [ ] Ruff clean
-- [ ] Mypy strict clean
-- [ ] All relevant docs updated (regression diff, drift detection, dashboard docs)
-- [ ] All M33–M34 issues done and closed
-- [ ] Commit and push changes
+- [x] All tests in the system pass: `pytest`
+- [x] Code coverage total ≥ 95%
+- [x] Ruff clean
+- [x] Mypy strict clean
+- [ ] All relevant docs updated (regression diff, drift detection, dashboard docs) (M34 pending)
+- [ ] All M33–M34 issues done and closed (M34 pending)
+- [ ] Commit and push changes (M33 committed; phase gate completes with M34)
 
 ## See Also
 

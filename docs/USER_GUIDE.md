@@ -296,6 +296,28 @@ admitted or refused — is recorded (`GET /promotions`) and audited.
 When a certified workload's artifact changes, it is marked `uncertified` and
 must be re-certified before it can be promoted again.
 
+## Regression Diff
+
+When re-certification runs, the result is compared to the previous baseline
+task-by-task. Each `pass → fail` is a regression with latency, token, and cost
+deltas; a regression on a `critical` task is a **critical regression** and feeds
+the promotion refusal. Every changed task carries a replayable frame set (its
+task contract plus the run trace id) for deterministic replay.
+
+```bash
+# Compare two certifications (raw, schema-stable JSON with --json).
+hiveplane certs compare att-1 att-2
+hiveplane certs compare att-1 att-2 --json
+
+# Compare to the baseline automatically (last certified), or an explicit one.
+hiveplane certs compare-baseline incident-agent att-2
+hiveplane certs compare-baseline incident-agent att-2 --baseline att-1
+```
+
+A machine-readable `RegressionReport` (plus a human summary) is attached to the
+certification record, and `GET /certifications/compare-baseline/{after}` exposes
+baseline selection over the API. Identical results produce an empty diff.
+
 ## Operator UI
 
 The operator UI is a server-rendered web app that reads the same HTTP API as the

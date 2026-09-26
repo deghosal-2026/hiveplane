@@ -351,6 +351,9 @@ def certs_show(
 def certs_compare(
     before_id: Annotated[str, typer.Argument(help="Earlier certification id.")],
     after_id: Annotated[str, typer.Argument(help="Later certification id.")],
+    as_json: Annotated[
+        bool, typer.Option("--json", help="Print the raw, schema-stable diff JSON.")
+    ] = False,
     api_url: ApiUrl = "http://localhost:8100",
 ) -> None:
     """Compare two certifications and show the per-task regression diff."""
@@ -363,14 +366,54 @@ def certs_compare(
             err=True,
         )
         raise typer.Exit(code=1)
+    _print_regression_diff(body, as_json=as_json)
+
+
+@certs_app.command("compare-baseline")
+def certs_compare_baseline(
+    workload: Annotated[str, typer.Argument(help="Workload name.")],
+    after_id: Annotated[str, typer.Argument(help="Certification id to compare.")],
+    baseline: Annotated[
+        str | None,
+        typer.Option("--baseline", help="Baseline attestation id (default: last certified)."),
+    ] = None,
+    as_json: Annotated[
+        bool, typer.Option("--json", help="Print the raw, schema-stable diff JSON.")
+    ] = False,
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Compare a certification to its baseline (last certified unless specified)."""
+    query = urlencode({k: v for k, v in {"workload": workload, "baseline": baseline}.items() if v})
+    url = f"{api_url.rstrip('/')}/certifications/compare-baseline/{after_id}?{query}"
+    status_code, body = _request("GET", url)
+    if status_code >= 400 or status_code == 0:
+        typer.secho(
+            f"failed to compare certifications ({status_code}): {body}",
+            fg=typer.colors.RED,
+            err=True,
+        )
+        raise typer.Exit(code=1)
+    _print_regression_diff(body, as_json=as_json)
+
+
+def _print_regression_diff(body: str, *, as_json: bool) -> None:
+    """Render a regression diff, either raw JSON or a human summary."""
+    if as_json:
+        typer.echo(json.dumps(json.loads(body), indent=2, sort_keys=True))
+        return
     diff = json.loads(body)
     verdict = "BLOCKED" if diff["blocked"] else "ALLOWED"
-    typer.echo(f"Verdict: {verdict}")
+    typer.echo(f"Verdict: {verdict} ({diff.get('severity', 'none')})")
     typer.echo(f"Passed before: {diff['passed_before']} | Passed now: {diff['passed_after']}")
     for item in diff["regressed"]:
-        typer.secho(f"  regressed: {item['task_id']}", fg=typer.colors.RED)
+        typer.secho(
+            f"  regressed [{item.get('severity', 'none')}]: {item['task_id']}",
+            fg=typer.colors.RED,
+        )
     for item in diff["improved"]:
         typer.secho(f"  improved: {item['task_id']}", fg=typer.colors.GREEN)
+    if diff.get("summary"):
+        typer.echo(diff["summary"])
 
 
 # --------------------------------------------------------------------------- #

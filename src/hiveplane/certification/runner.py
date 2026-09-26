@@ -48,6 +48,7 @@ class TaskExecution(BaseModel):
     actions: list[str] = Field(default_factory=list)
     latency_ms: int = Field(ge=0)
     tokens: int = Field(default=0, ge=0)
+    cost_usd: float = Field(default=0.0, ge=0.0)
     trace_id: str | None = None
     network_used: bool = False
     model_identity: str | None = None
@@ -170,6 +171,7 @@ class BenchmarkRunner:
                     status=CheckStatus.PASS if passed else CheckStatus.FAIL,
                     latency_ms=execution.latency_ms,
                     tokens=execution.tokens,
+                    cost_usd=execution.cost_usd,
                     trace_id=execution.trace_id,
                     critical=task.critical,
                     failure_reason=reason,

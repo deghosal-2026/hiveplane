@@ -278,6 +278,28 @@ immune system (drift, quarantine, promotion gate), and fleet scale-out. In progr
   invalidation; re-certification orchestration; audit; Postgres round-trip and
   migration `0010`. Coverage ≥ 95% with a database.
 
+### Added (M33 — regression diff & certification compare)
+
+- **Diff engine** (`hiveplane.certification.diff`) — task-level `pass→fail` /
+  `fail→pass` with latency, token, and cost deltas; `Severity` (critical/warning)
+  driven by critical tasks and threshold rules; removed passing tasks block.
+- **Replayable traces** — every changed task carries a `ReplayFrameSet` (task
+  contract + trace id + stable replay ref) built from the corpus, so a regressed
+  task can be replayed deterministically (D18).
+- **Baseline selection** — `CertificationCoordinator.compare_to_baseline` uses
+  the last `certified` record unless an explicit `baseline_id` is given;
+  comparison is deterministic.
+- **Regression report** — a `RegressionReport` (machine JSON + human summary) is
+  attached to the certification record when re-certification runs; critical
+  regressions feed the promotion gate's refusal reason.
+- **API + CLI** — `GET /certifications/compare-baseline/{after}`;
+  `hiveplane certs compare <v1> <v2> [--json]` and
+  `hiveplane certs compare-baseline <workload> <after> [--baseline <id>] [--json]`.
+- **Tests** — seeded regressions pinpointed with metric deltas and replay frames,
+  identical results diff empty, non-critical vs critical severity, baseline
+  determinism, report attachment, and the API/CLI. Coverage ≥ 95% with a
+  database.
+
 ## [0.1.0] - 2026-09-25
 
 The first release: the certified control loop. Register agents, certify them against a
