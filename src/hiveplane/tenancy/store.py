@@ -46,6 +46,7 @@ class InMemoryTenantStore:
 
     def save_tenant(self, ctx: TenantContext, tenant: Tenant) -> None:
         """Store a tenant keyed by its id."""
+        ctx.require(tenant.tenant_id)
         self._tenants[tenant.tenant_id] = tenant.model_copy(deep=True)
 
     def get_tenant(self, ctx: TenantContext, tenant_id: str) -> Tenant | None:
@@ -118,6 +119,7 @@ class PostgresTenantStore:
 
     def save_tenant(self, ctx: TenantContext, tenant: Tenant) -> None:
         """Insert or update a tenant."""
+        ctx.require(tenant.tenant_id)
         with self._session.begin() as session:
             row = session.get(TenantRow, tenant.tenant_id)
             if row is None:
@@ -155,7 +157,7 @@ class PostgresTenantStore:
         with self._session.begin() as session:
             if session.get(TenantRow, team.tenant_id) is None:
                 raise TenantNotFoundError(team.tenant_id)
-            row = session.get(TeamRow, team.team_id)
+            row = session.get(TeamRow, (team.tenant_id, team.team_id))
             if row is None:
                 session.add(
                     TeamRow(
@@ -168,7 +170,6 @@ class PostgresTenantStore:
                     )
                 )
             else:
-                row.tenant_id = team.tenant_id
                 row.name = team.name
                 row.attribution_key = team.attribution_key
                 row.payload = team.model_dump(mode="json")
@@ -178,8 +179,8 @@ class PostgresTenantStore:
         if not ctx.scopes(tenant_id):
             return None
         with self._session() as session:
-            row = session.get(TeamRow, team_id)
-            if row is None or row.tenant_id != tenant_id:
+            row = session.get(TeamRow, (tenant_id, team_id))
+            if row is None:
                 return None
             return Team.model_validate(row.payload)
 

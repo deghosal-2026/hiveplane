@@ -20,6 +20,7 @@ from sqlalchemy import (
     Integer,
     String,
     UniqueConstraint,
+    text,
 )
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
@@ -307,14 +308,13 @@ class TeamRow(Base):
 
     __tablename__ = "teams"
     __table_args__ = (
-        UniqueConstraint("team_id", "tenant_id", name="uq_teams_team_tenant"),
         UniqueConstraint("tenant_id", "name", name="uq_teams_tenant_name"),
         UniqueConstraint("tenant_id", "attribution_key", name="uq_teams_tenant_attribution"),
         ForeignKeyConstraint(["tenant_id"], ["tenants.tenant_id"], ondelete="CASCADE"),
     )
 
+    tenant_id: Mapped[str] = mapped_column(String(64), primary_key=True)
     team_id: Mapped[str] = mapped_column(String(64), primary_key=True)
-    tenant_id: Mapped[str] = mapped_column(String(64), index=True)
     name: Mapped[str] = mapped_column(String(253))
     attribution_key: Mapped[str] = mapped_column(String(253))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
@@ -329,7 +329,19 @@ class MembershipRow(Base):
         UniqueConstraint(
             "tenant_id", "operator_id", "team_id", name="uq_memberships_tenant_operator_team"
         ),
+        Index(
+            "uq_memberships_tenant_operator_no_team",
+            "tenant_id",
+            "operator_id",
+            unique=True,
+            postgresql_where=text("team_id IS NULL"),
+        ),
         ForeignKeyConstraint(["tenant_id"], ["tenants.tenant_id"], ondelete="CASCADE"),
+        ForeignKeyConstraint(
+            ["tenant_id", "team_id"],
+            ["teams.tenant_id", "teams.team_id"],
+            ondelete="CASCADE",
+        ),
     )
 
     membership_id: Mapped[str] = mapped_column(String(128), primary_key=True)
