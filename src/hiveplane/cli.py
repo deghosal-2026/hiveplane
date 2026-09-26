@@ -47,6 +47,13 @@ corpus_app = typer.Typer(
 eval_app = typer.Typer(
     help="Inspect online-eval samples and production quality.", no_args_is_help=True
 )
+shadow_app = typer.Typer(help="Inspect shadow-run reports.", no_args_is_help=True)
+canary_app = typer.Typer(
+    help="Start, inspect, promote, or abort canary rollouts.", no_args_is_help=True
+)
+experiment_app = typer.Typer(
+    help="Start and resolve model experiment campaigns.", no_args_is_help=True
+)
 app.add_typer(certs_app, name="certs")
 app.add_typer(runs_app, name="runs")
 app.add_typer(approvals_app, name="approvals")
@@ -59,6 +66,9 @@ app.add_typer(adapters_app, name="adapters")
 app.add_typer(drift_app, name="drift")
 app.add_typer(corpus_app, name="corpus")
 app.add_typer(eval_app, name="eval")
+app.add_typer(shadow_app, name="shadow")
+app.add_typer(canary_app, name="canary")
+app.add_typer(experiment_app, name="experiment")
 
 ManifestArg = Annotated[
     Path,
@@ -1558,3 +1568,108 @@ def eval_quality(
         f"{quality['workload_id']}  mean={quality['mean_score']:.2f}  "
         f"samples={quality['sample_count']}  dip={quality['dip']}"
     )
+
+
+@shadow_app.command("report")
+def shadow_report(
+    shadow_run_id: Annotated[str, typer.Argument(help="Shadow run id.")],
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Show the production-vs-candidate outcome diff for a shadow run."""
+    status_code, body = _request(
+        "GET", f"{api_url.rstrip('/')}/shadow/{shadow_run_id}/report"
+    )
+    if status_code >= 400 or status_code == 0:
+        _fail("shadow report", status_code, body)
+    typer.echo(json.dumps(json.loads(body), indent=2))
+
+
+@canary_app.command("start")
+def canary_start(
+    workload: Annotated[str, typer.Argument(help="Workload name.")],
+    candidate: Annotated[int, typer.Option("--candidate", help="Candidate version.")],
+    pct: Annotated[int, typer.Option("--pct", help="Traffic percentage (0-100).")] = 10,
+    window: Annotated[int, typer.Option("--window", help="Evaluation window (s).")] = 3600,
+    min_sample: Annotated[int, typer.Option("--min-sample")] = 30,
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Start a canary rollout routing a percentage of triggers to a candidate."""
+    payload = {
+        "workload_id": workload,
+        "candidate_version": candidate,
+        "traffic_pct": pct,
+        "window_seconds": window,
+        "min_sample": min_sample,
+    }
+    status_code, body = _request(
+        "POST", f"{api_url.rstrip('/')}/canary", payload
+    )
+    if status_code >= 400 or status_code == 0:
+        _fail("start canary", status_code, body)
+    typer.echo(json.dumps(json.loads(body), indent=2))
+
+
+@canary_app.command("status")
+def canary_status(
+    rollout_id: Annotated[str, typer.Argument(help="Canary rollout id.")],
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Show a canary's state with window metrics and sample counts."""
+    status_code, body = _request(
+        "GET", f"{api_url.rstrip('/')}/canary/{rollout_id}"
+    )
+    if status_code >= 400 or status_code == 0:
+        _fail("canary status", status_code, body)
+    typer.echo(json.dumps(json.loads(body), indent=2))
+
+
+def _canary_decision(
+    rollout_id: str, action: str, operator: str, reason: str | None, api_url: str
+) -> None:
+    payload: dict[str, Any] = {"operator": operator}
+    if reason is not None:
+        payload["reason"] = reason
+    status_code, body = _request(
+        "POST", f"{api_url.rstrip('/')}/canary/{rollout_id}/{action}", payload
+    )
+    if status_code >= 400 or status_code == 0:
+        _fail(f"canary {action}", status_code, body)
+    typer.echo(json.dumps(json.loads(body), indent=2))
+
+
+@canary_app.command("promote")
+def canary_promote(
+    rollout_id: Annotated[str, typer.Argument(help="Canary rollout id.")],
+    operator: Annotated[str, typer.Option("--operator")] = "cli",
+    reason: Annotated[str | None, typer.Option("--reason")] = None,
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Manually promote a canary candidate."""
+    _canary_decision(rollout_id, "promote", operator, reason, api_url)
+
+
+@canary_app.command("abort")
+def canary_abort(
+    rollout_id: Annotated[str, typer.Argument(help="Canary rollout id.")],
+    operator: Annotated[str, typer.Option("--operator")] = "cli",
+    reason: Annotated[str | None, typer.Option("--reason")] = None,
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Manually abort a canary and roll traffic back."""
+    _canary_decision(rollout_id, "abort", operator, reason, api_url)
+
+
+@experiment_app.command("start")
+def experiment_start(
+    workload: Annotated[str, typer.Argument(help="Workload name.")],
+    arms: Annotated[str, typer.Option("--arms", help="Comma-separated model identities.")],
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Start a model experiment campaign across >= 2 model configurations."""
+    payload = {"workload_id": workload, "arms": [arm for arm in arms.split(",") if arm]}
+    status_code, body = _request(
+        "POST", f"{api_url.rstrip('/')}/experiments", payload
+    )
+    if status_code >= 400 or status_code == 0:
+        _fail("start experiment", status_code, body)
+    typer.echo(json.dumps(json.loads(body), indent=2))

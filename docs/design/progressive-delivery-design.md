@@ -1,6 +1,9 @@
 # D28: Progressive Delivery Design
 
-> Status: draft
+> Status: implemented (M37 shadow runs; M38 canary routing, auto-promote/abort,
+> and model experiments). Note: candidate "quarantine" on abort is recorded on
+> the rollout (`candidate_quarantined`) and traffic is rolled back to the
+> baseline; version-scoped quarantine lands with the D26 follow-on.
 
 **Milestones:** M37–M38 · **Extends:** D10
 
@@ -130,6 +133,37 @@ hiveplane experiment start <workload> --arms gpt-4o,gpt-4o-mini
 - How long may a canary run before it is stale, and how is blast radius measured — traffic fraction, tenants affected, or cost at risk?
 - Should canary judge sampling reuse the D27 production quality score, or maintain a separate rollout-scoped rubric?
 - Can shadow and canary run simultaneously for the same candidate, or must shadow gate the canary?
+
+## Implementation (M37–M38)
+
+| Module | Responsibility |
+|--------|----------------|
+| `hiveplane.progressive.models` | `ShadowRun`/`ShadowOutcome`/`OutcomeDiff`/`ShadowReport`, `CanaryRollout`/`CanarySample`/`CanaryEvaluation`, `ExperimentCampaign`/`ExperimentArm` |
+| `hiveplane.progressive.shadow` | `ShadowService` (start/get/list/report), `diff_shadow`, `ShadowRunner` protocol |
+| `hiveplane.progressive.runner` | `RunShadowRunner` — submits the candidate in sandbox, read-only, suppressed delivery |
+| `hiveplane.progressive.canary` | `CanaryService` — deterministic split, evaluation, auto-promote/abort, manual override |
+| `hiveplane.progressive.experiments` | `ExperimentService` — multi-arm campaigns and winner selection |
+| `hiveplane.progressive.store` | `ProgressiveStore` (memory + Postgres; migration `0019`/`0020`) |
+| `hiveplane.api.progressive` | `/shadow`, `/canary*`, `/experiments*` |
+| `hiveplane.cli` | `hiveplane shadow report`, `hiveplane canary ...`, `hiveplane experiment start` |
+
+**Shadow execution.** `Run` gains `shadow_of` and `read_only`. A shadow run is
+submitted in the `sandbox` context with the paired production run's task; the
+terminal handler suppresses fan-out when `shadow_of` is set, and the tool
+gateway hard-blocks destructive calls when `read_only` is set. `ShadowService`
+bills a separate `budget_id` and caps cumulative shadow spend.
+
+**Canary routing.** `select_arm` uses the same stable hash as online eval
+(`sha256(run_id) mod 100 < traffic_pct`), refuses candidate routing past the
+blast-radius cap, and honors an eligibility rule. `evaluate` compares candidate
+vs. baseline error rates and judge means; `auto_decide` promotes a clean window
+(sample reached, no regression) or aborts a regressing one, rolling traffic back
+to the baseline. Automated transitions are attributed to `progressive-delivery`;
+manual overrides name the operator. All transitions are audited.
+
+**Experiments.** `ExperimentService` creates one arm per model configuration,
+records each arm's benchmark run/score, and selects the highest-scoring completed
+arm with a recorded rationale.
 
 ## See Also
 

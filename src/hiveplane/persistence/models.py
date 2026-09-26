@@ -371,6 +371,75 @@ class RubricRow(Base):
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
+class ShadowRunRow(_TenantScoped, Base):
+    """Candidate executions shadowing a production run (M37)."""
+
+    __tablename__ = "shadow_runs"
+    __table_args__ = (
+        Index("ix_shadow_runs_workload_budget", "candidate_workload_id", "budget_id"),
+    )
+
+    shadow_run_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    candidate_workload_id: Mapped[str] = mapped_column(String(253), index=True)
+    production_run_id: Mapped[str] = mapped_column(String(64), index=True)
+    budget_id: Mapped[str] = mapped_column(String(128), index=True)
+    status: Mapped[str] = mapped_column(String(32), index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class CanaryRolloutRow(_TenantScoped, Base):
+    """Canary traffic-split rollouts (M38)."""
+
+    __tablename__ = "canary_rollouts"
+
+    rollout_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    workload_id: Mapped[str] = mapped_column(String(253), index=True)
+    state: Mapped[str] = mapped_column(String(32), index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class CanarySampleRow(_TenantScoped, Base):
+    """Per-run canary samples (M38-02)."""
+
+    __tablename__ = "canary_samples"
+    __table_args__ = (Index("ix_canary_samples_rollout_arm", "rollout_id", "arm"),)
+
+    sample_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    rollout_id: Mapped[str] = mapped_column(String(64), index=True)
+    run_id: Mapped[str] = mapped_column(String(64), index=True)
+    arm: Mapped[str] = mapped_column(String(32), index=True)
+    sampled_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class ExperimentCampaignRow(_TenantScoped, Base):
+    """Model experiment campaigns (M38-06)."""
+
+    __tablename__ = "experiment_campaigns"
+
+    campaign_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    workload_id: Mapped[str] = mapped_column(String(253), index=True)
+    state: Mapped[str] = mapped_column(String(32), index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class ExperimentArmRow(_TenantScoped, Base):
+    """Model configurations (arms) of an experiment campaign (M38-06)."""
+
+    __tablename__ = "experiment_arms"
+
+    arm_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    campaign_id: Mapped[str] = mapped_column(String(64), index=True)
+    model_identity: Mapped[str] = mapped_column(String(253))
+    benchmark_run_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    score: Mapped[float | None] = mapped_column(Float, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
 class ToolRow(_TenantScoped, Base):
     """MCP tool registry entries."""
 

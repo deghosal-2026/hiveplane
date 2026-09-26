@@ -150,6 +150,14 @@ class ToolGateway:
         """Evaluate and shape a tool call, recording the decision."""
         spec = workload.spec
         tool_trust = request.tool_trust or _trust_for(spec.tools, request.tool_id)
+        if run.read_only and _is_destructive(request.action_class, tool_trust):
+            return ToolCallResult(
+                run_id=run_id,
+                tool_id=request.tool_id,
+                outcome=ToolCallOutcome.DENIED,
+                rule="read_only.block",
+                reason="shadow/read-only runs cannot call side-effecting tools",
+            )
         if self._defense is not None and _is_destructive(request.action_class, tool_trust):
             taint = self._defense.gate_destructive(
                 run_id=run_id,

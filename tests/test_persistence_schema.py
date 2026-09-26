@@ -70,6 +70,11 @@ def test_all_design_tables_exist() -> None:
         "eval_samples",
         "judge_scores",
         "rubrics",
+        "shadow_runs",
+        "canary_rollouts",
+        "canary_samples",
+        "experiment_campaigns",
+        "experiment_arms",
     }
     assert expected <= set(Base.metadata.tables)
 

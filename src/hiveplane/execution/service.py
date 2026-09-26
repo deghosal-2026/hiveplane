@@ -161,11 +161,14 @@ class RunService:
         pipeline_origin: PipelineOrigin | None = None,
         agent_tool_origin: AgentToolOrigin | None = None,
         require_approval: bool = False,
+        shadow_of: str | None = None,
+        read_only: bool = False,
         ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> Run:
         """Submit a run, admitting or refusing it before it is persisted.
 
-        The run is attributed to the acting tenant context.
+        The run is attributed to the acting tenant context. ``shadow_of`` marks a
+        shadow run (no fan-out delivery); ``read_only`` hard-blocks side effects.
         """
         record = self._registry.get(workload)
         now = self._clock()
@@ -184,6 +187,8 @@ class RunService:
             trigger_origin=trigger_origin,
             pipeline_origin=pipeline_origin,
             agent_tool_origin=agent_tool_origin,
+            shadow_of=shadow_of,
+            read_only=read_only,
             tenant_id=ctx.tenant_id,
             team_id=ctx.team_id,
             attribution_key=ctx.attribution_key,
@@ -419,10 +424,12 @@ class RunService:
         if target in _TERMINAL:
             if target is RunState.COMPLETED and run.context is AdmissionContext.PRODUCTION:
                 self._registry.increment_production_runs(run.workload_id)
-            self._fanout.notify(updated, manifest)
+            if updated.shadow_of is None:
+                self._fanout.notify(updated, manifest)
             if (
                 self._eval_hook is not None
                 and run.context is AdmissionContext.PRODUCTION
+                and updated.shadow_of is None
             ):
                 self._eval_hook(updated)
             self._record_audit(actor, "transition", run_id, detail=target.value, ctx=run_ctx)

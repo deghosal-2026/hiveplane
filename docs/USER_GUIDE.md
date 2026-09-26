@@ -425,6 +425,43 @@ Configure with `HIVEPLANE_EVAL__SAMPLE_RATE`, `HIVEPLANE_EVAL__JUDGE_MODEL`,
 `HIVEPLANE_EVAL__QUALITY_TARGET`, `HIVEPLANE_EVAL__COST_CAP_USD`, and
 `HIVEPLANE_EVAL__PII_PATTERNS`.
 
+## Progressive Delivery
+
+Roll a candidate version out with real evidence before it replaces production.
+
+**Shadow runs** execute a candidate on the same task as a paired production run
+without delivering the result. The run is isolated (read-only tools hard-block
+side effects) and billed to a separate shadow budget:
+
+```bash
+# Start a shadow on a production run, then read the outcome diff.
+# -> POST /shadow { candidate_workload_id, production_run_id }
+hiveplane shadow report <shadow-run-id>
+```
+
+**Canary** routes a percentage of eligible triggers to a candidate while the
+baseline serves the rest. Selection is deterministic; a blast-radius cap bounds
+exposure. A clean window (minimum sample reached, no regression) auto-promotes
+and re-points traffic; a regression auto-aborts, rolls back to the baseline, and
+marks the candidate quarantined. Manual override always works:
+
+```bash
+hiveplane canary start <workload> --candidate <version> --pct 10
+hiveplane canary status <rollout-id>
+hiveplane canary promote <rollout-id> --operator alice --reason "looks good"
+hiveplane canary abort <rollout-id> --operator alice --reason "regression"
+```
+
+**Model experiments** route across ≥2 model configurations, benchmark-score each
+arm, and select the winner with recorded evidence:
+
+```bash
+hiveplane experiment start <workload> --arms gpt-4o,gpt-4o-mini
+```
+
+Every automated transition is attributed to `progressive-delivery`; manual
+overrides name the operator.
+
 ## Operator UI
 
 The operator UI is a server-rendered web app that reads the same HTTP API as the

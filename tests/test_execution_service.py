@@ -281,3 +281,21 @@ def test_staging_run_does_not_trigger_eval_hook(
     service.transition(run.id, RunState.COMPLETED, actor="runtime")
 
     assert seen == []
+
+
+def test_shadow_run_never_triggers_fanout(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    service, _, fanout, workload = _service(make_manifest)
+    run = service.submit(
+        workload=workload,
+        caller="cli",
+        context=AdmissionContext.PRODUCTION,
+        model_identity="m1",
+        shadow_of="prod-run-1",
+    )
+    assert run.shadow_of == "prod-run-1"
+    service.transition(run.id, RunState.RUNNING, actor="scheduler")
+    service.transition(run.id, RunState.COMPLETED, actor="runtime")
+
+    assert fanout.notified == []

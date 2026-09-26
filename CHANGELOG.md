@@ -422,6 +422,35 @@ immune system (drift, quarantine, promotion gate), and fleet scale-out. In progr
   guardrails, judge parsing/clamping, quality dip detection, UI/CLI/API surfaces,
   Postgres round-trips, and migrations `0014`–`0017`.
 
+### Added (M37 — shadow runs)
+
+- **Shadow runs** (`hiveplane.progressive`) — a candidate is executed on the
+  **same task** as a paired production run and never delivered: `Run` gains
+  `shadow_of` (suppresses fan-out on terminal) and `read_only` (the tool gateway
+  hard-blocks side-effecting calls). `RunShadowRunner` submits the candidate in
+  the `sandbox` context; `ShadowService` records the outcome and produces an
+  **outcome diff** (output, tool calls, cost, latency, policy decisions).
+  Separate, capped shadow budget (`shadow_runs`; migration `0019`).
+- **API + CLI** — `POST /shadow`, `GET /shadow/{id}/report`; `hiveplane shadow report`.
+
+### Added (M38 — canary routing, auto-promote & model experiments)
+
+- **Canary routing** — `CanaryService` splits eligible triggers deterministically
+  (`sha256(run_id) mod 100 < traffic_pct`) to a candidate version while the
+  certified baseline serves the rest, bounded by an eligibility rule and a
+  **blast-radius cap** (`canary_rollouts`, `canary_samples`; migration `0020`).
+- **Evaluation & auto-decision** — candidate vs. baseline error rates and sampled
+  judge means over a window with a **minimum-sample** guardrail; a clean window
+  **auto-promotes** (re-points traffic) and a regression **auto-aborts** (rolls
+  back to the baseline and marks the candidate quarantined). Manual override is
+  always available; every transition is audited (actor = `progressive-delivery`).
+- **Model experiments** — `ExperimentService` routes across ≥2 model
+  configurations, records each arm's benchmark score, and selects the
+  highest-scoring completed arm with recorded rationale
+  (`experiment_campaigns`, `experiment_arms`).
+- **API + CLI** — `/canary*`, `/experiments*`; `hiveplane canary
+  start|status|promote|abort`, `hiveplane experiment start`.
+
 ## [0.1.0] - 2026-09-25
 
 The first release: the certified control loop. Register agents, certify them against a

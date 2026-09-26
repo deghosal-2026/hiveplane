@@ -41,7 +41,7 @@ class _Runs:
         self.events.append((event_type, actor, detail))
 
 
-def _run(state: RunState = RunState.RUNNING) -> Run:
+def _run(state: RunState = RunState.RUNNING, *, read_only: bool = False) -> Run:
     return Run(
         id="run-1",
         workload_id="agent-1",
@@ -51,6 +51,7 @@ def _run(state: RunState = RunState.RUNNING) -> Run:
         created_at=_FIXED_NOW,
         updated_at=_FIXED_NOW,
         context=AdmissionContext.STAGING,
+        read_only=read_only,
     )
 
 
@@ -203,3 +204,29 @@ def test_restricted_read_escalates(make_manifest: Callable[..., AgentWorkload]) 
 
     assert result.outcome is ToolCallOutcome.ESCALATED
     assert result.rule == "sensitivity.restricted.read"
+
+
+def test_read_only_run_blocks_a_destructive_tool(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    workload = _workload(make_manifest)
+    runs = _Runs(_run(read_only=True))
+    gateway, _ = _gateway(workload, runs)
+
+    result = gateway.invoke("run-1", ToolCallRequest(tool_id="mcp.t.destructive"))
+
+    assert result.outcome is ToolCallOutcome.DENIED
+    assert result.rule == "read_only.block"
+    assert InterventionAction.PAUSE not in runs.interventions
+    assert result.approval_id is None
+
+
+def test_read_only_run_allows_a_read_tool(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    workload = _workload(make_manifest)
+    gateway, _ = _gateway(workload, _Runs(_run(read_only=True)))
+
+    result = gateway.invoke("run-1", ToolCallRequest(tool_id="mcp.t.read"))
+
+    assert result.outcome is ToolCallOutcome.ALLOWED

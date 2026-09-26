@@ -31,6 +31,7 @@ from hiveplane.api.drift import router as drift_router
 from hiveplane.api.learning import router as learning_router
 from hiveplane.api.pipelines import router as pipelines_router
 from hiveplane.api.policy import router as policy_router
+from hiveplane.api.progressive import router as progressive_router
 from hiveplane.api.promotions import router as promotions_router
 from hiveplane.api.readiness import build_readiness_probe
 from hiveplane.api.reconcile import router as reconcile_router
@@ -142,6 +143,18 @@ from hiveplane.policy.errors import (
 )
 from hiveplane.policy.packs import InMemoryPolicyPackStore
 from hiveplane.policy.store import build_approval_store
+from hiveplane.progressive.canary import CanaryService
+from hiveplane.progressive.errors import (
+    CanaryNotAllowedError,
+    CanaryNotFoundError,
+    ExperimentNotFoundError,
+    ShadowBudgetExceededError,
+    ShadowNotFoundError,
+)
+from hiveplane.progressive.experiments import ExperimentService
+from hiveplane.progressive.runner import RunShadowRunner
+from hiveplane.progressive.shadow import ShadowService
+from hiveplane.progressive.store import build_progressive_store
 from hiveplane.reconcile.conflict import ConflictPolicy
 from hiveplane.reconcile.controller import ReconcileController
 from hiveplane.reconcile.executor import ActionExecutor
@@ -540,6 +553,15 @@ def create_app(
         store=app.state.promotion_store,
         audit=app.state.audit_log,
     )
+    progressive_store = build_progressive_store(settings)
+    app.state.progressive_store = progressive_store
+    app.state.shadow_service = ShadowService(
+        progressive_store, runner=RunShadowRunner(app.state.run_service)
+    )
+    app.state.canary_service = CanaryService(
+        progressive_store, registry=registry, audit=app.state.audit_log
+    )
+    app.state.experiment_service = ExperimentService(progressive_store)
     if settings.drift.enabled and certification_coordinator is not None:
         _wire_drift(app, registry, certification_coordinator, settings)
     app.state.run_recovery = RunRecovery(app.state.run_service)
@@ -618,6 +640,17 @@ def create_app(
     ):
         app.add_exception_handler(_learning_error, _make_handler(_learning_error, _learning_status))
 
+    for _progressive_error, _progressive_status in (
+        (ShadowNotFoundError, 404),
+        (ShadowBudgetExceededError, 409),
+        (CanaryNotFoundError, 404),
+        (CanaryNotAllowedError, 409),
+        (ExperimentNotFoundError, 404),
+    ):
+        app.add_exception_handler(
+            _progressive_error, _make_handler(_progressive_error, _progressive_status)
+        )
+
     for _policy_error, _policy_status in (
         (ApprovalNotFoundError, 404),
         (PolicyPackNotFoundError, 404),
@@ -634,6 +667,7 @@ def create_app(
     app.include_router(approvals_router)
     app.include_router(certifications_router)
     app.include_router(promotions_router)
+    app.include_router(progressive_router)
     app.include_router(drift_router)
     app.include_router(sandbox_router)
     app.include_router(security_router)

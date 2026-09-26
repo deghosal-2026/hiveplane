@@ -27,6 +27,9 @@ from hiveplane.pipelines.store import PipelineStore
 from hiveplane.policy.approvals import ApprovalService
 from hiveplane.policy.engine import PolicyEngine
 from hiveplane.policy.packs import PolicyPackStore
+from hiveplane.progressive.canary import CanaryService
+from hiveplane.progressive.experiments import ExperimentService
+from hiveplane.progressive.shadow import ShadowService
 from hiveplane.reconcile.controller import ReconcileController
 from hiveplane.reconcile.store import ReconcileStore
 from hiveplane.registry.service import RegistryService
@@ -249,6 +252,24 @@ def get_candidate_service(request: Request) -> CandidateService:
 def get_eval_service(request: Request) -> EvalService:
     """Return the online-eval service bound to the application state."""
     service: EvalService = request.app.state.eval_service
+    return service
+
+
+def get_shadow_service(request: Request) -> ShadowService:
+    """Return the shadow-run service bound to the application state."""
+    service: ShadowService = request.app.state.shadow_service
+    return service
+
+
+def get_canary_service(request: Request) -> CanaryService:
+    """Return the canary service bound to the application state."""
+    service: CanaryService = request.app.state.canary_service
+    return service
+
+
+def get_experiment_service(request: Request) -> ExperimentService:
+    """Return the experiment service bound to the application state."""
+    service: ExperimentService = request.app.state.experiment_service
     return service
 
 
