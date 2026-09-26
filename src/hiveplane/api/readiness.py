@@ -15,6 +15,7 @@ from sqlalchemy import Engine, text
 from sqlalchemy.exc import SQLAlchemyError
 
 from hiveplane.certification.store import CertificationStore
+from hiveplane.tenancy import SYSTEM_CONTEXT
 
 #: A probe that reads one dependency's current state.
 Check = Callable[[], "ReadinessCheck"]
@@ -141,7 +142,7 @@ def _check_certification_store(
             reason="certification store is not configured",
         )
     try:
-        store.list(limit=1)
+        store.list(limit=1, ctx=SYSTEM_CONTEXT)
     except Exception as error:
         return ReadinessCheck(
             name="certification_store",

@@ -22,6 +22,7 @@ from hiveplane.core.event import EventType
 from hiveplane.core.run import RunState
 from hiveplane.execution.service import RunService
 from hiveplane.registry.errors import WorkloadNotFoundError
+from hiveplane.tenancy import SYSTEM_CONTEXT
 
 _INTERRUPTED_REASON = "interrupted by control-plane restart"
 
@@ -43,9 +44,9 @@ class RunRecovery:
         self._run_service = run_service
 
     def run(self) -> RecoveryReport:
-        """Scan the run store and reconcile paused and running runs."""
+        """Scan every tenant's runs and reconcile paused and running ones."""
         report = RecoveryReport()
-        for run in self._run_service.list_runs():
+        for run in self._run_service.list_runs(ctx=SYSTEM_CONTEXT):
             try:
                 if run.state is RunState.PAUSED:
                     self._reattach(run.id, report)
@@ -56,22 +57,26 @@ class RunRecovery:
         return report
 
     def _reattach(self, run_id: str, report: RecoveryReport) -> None:
-        if not self._run_service.reattach(run_id):
+        if not self._run_service.reattach(run_id, ctx=SYSTEM_CONTEXT):
             return
         self._run_service.record_event(
             run_id,
             EventType.RECOVERY,
             "recovery",
             detail="reattached after control-plane restart",
+            ctx=SYSTEM_CONTEXT,
         )
         report.reattached.append(run_id)
 
     def _fail(self, run_id: str, report: RecoveryReport) -> None:
-        self._run_service.fail(run_id, actor="recovery", reason=_INTERRUPTED_REASON)
+        self._run_service.fail(
+            run_id, actor="recovery", reason=_INTERRUPTED_REASON, ctx=SYSTEM_CONTEXT
+        )
         self._run_service.record_event(
             run_id,
             EventType.RECOVERY,
             "recovery",
             detail="interrupted run reconciled to failed",
+            ctx=SYSTEM_CONTEXT,
         )
         report.failed.append(run_id)

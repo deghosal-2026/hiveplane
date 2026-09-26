@@ -5,10 +5,12 @@ from __future__ import annotations
 from sqlalchemy import Engine, text
 
 from hiveplane.persistence.postgres_audit import PostgresAuditLog
+from postgres import ensure_schema
 
 
 def test_audit_persists_and_verifies(pg_engine: Engine) -> None:
     log = PostgresAuditLog(pg_engine)
+    ensure_schema(pg_engine)
     log.clear()
     log.append("operator", "pause", "run-1")
     log.append("operator", "stop", "run-1")
@@ -20,6 +22,7 @@ def test_audit_persists_and_verifies(pg_engine: Engine) -> None:
 
 def test_tampering_is_detected(pg_engine: Engine) -> None:
     log = PostgresAuditLog(pg_engine)
+    ensure_schema(pg_engine)
     log.clear()
     log.append("operator", "pause", "run-1")
     with pg_engine.begin() as connection:

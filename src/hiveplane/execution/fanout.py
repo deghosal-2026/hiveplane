@@ -16,6 +16,8 @@ from hiveplane.core.run import Run, RunState
 from hiveplane.core.workload import AgentWorkload
 from hiveplane.execution.models import DeliveryRecord, DeliveryStatus
 from hiveplane.execution.store import RunStore
+from hiveplane.tenancy import TenantContext
+from hiveplane.tenancy.context import context_for_run
 
 Poster = Callable[[str, dict[str, Any]], None]
 
@@ -148,6 +150,10 @@ class FanOutService:
             active.set_attribute("attempts", record.attempts)
             return record
 
+    @staticmethod
+    def _run_ctx(run: Run) -> TenantContext:
+        return context_for_run(run.tenant_id, run.team_id, run.attribution_key)
+
     def _attempt(
         self,
         run: Run,
@@ -165,7 +171,7 @@ class FanOutService:
             timestamp=self._clock(),
         )
         if transport is None:
-            return self._finish(record, DeliveryStatus.FAILED, "no transport configured")
+            return self._finish(run, record, DeliveryStatus.FAILED, "no transport configured")
         error: str | None = None
         attempts = 0
         for _ in range(self._max_retries + 1):
@@ -175,16 +181,19 @@ class FanOutService:
             except Exception as exc:
                 error = str(exc)
                 continue
-            return self._finish(
-                record.model_copy(update={"attempts": attempts}), DeliveryStatus.DELIVERED, None
-            )
+            delivered = record.model_copy(update={"attempts": attempts})
+            return self._finish(run, delivered, DeliveryStatus.DELIVERED, None)
         return self._finish(
-            record.model_copy(update={"attempts": attempts}), DeliveryStatus.FAILED, error
+            run, record.model_copy(update={"attempts": attempts}), DeliveryStatus.FAILED, error
         )
 
     def _finish(
-        self, record: DeliveryRecord, status: DeliveryStatus, error: str | None
+        self,
+        run: Run,
+        record: DeliveryRecord,
+        status: DeliveryStatus,
+        error: str | None,
     ) -> DeliveryRecord:
         finished = record.model_copy(update={"status": status, "error": error})
-        self._store.add_delivery(finished)
+        self._store.add_delivery(finished, ctx=self._run_ctx(run))
         return finished

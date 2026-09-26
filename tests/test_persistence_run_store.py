@@ -15,6 +15,7 @@ from hiveplane.execution.errors import RunNotFoundError
 from hiveplane.execution.models import AdmissionOutcome, AdmissionResult
 from hiveplane.persistence.base import create_engine_from_settings
 from hiveplane.persistence.run_store import PostgresRunStore
+from postgres import seed_workload
 
 _NOW = datetime(2026, 1, 1, tzinfo=UTC)
 
@@ -35,6 +36,7 @@ def _run(state: RunState = RunState.PAUSED) -> Run:
 def test_round_trip(pg_engine: Engine) -> None:
     store = PostgresRunStore(pg_engine)
     store.clear()
+    seed_workload(pg_engine)
     store.save_run(_run())
     store.add_event(
         RunEvent(
@@ -88,6 +90,7 @@ def test_event_sequences_are_assigned_atomically(pg_engine: Engine) -> None:
     inserted a duplicate sequence 0)."""
     store = PostgresRunStore(pg_engine)
     store.clear()
+    seed_workload(pg_engine)
     store.save_run(_run())
     for _ in range(3):
         store.add_event(
@@ -114,6 +117,7 @@ def test_concurrent_event_appends_do_not_collide(pg_engine: Engine) -> None:
     """
     store = PostgresRunStore(pg_engine)
     store.clear()
+    seed_workload(pg_engine)
     store.save_run(_run())
 
     threads_count = 8
@@ -150,6 +154,7 @@ def test_concurrent_event_appends_do_not_collide(pg_engine: Engine) -> None:
 def test_paused_run_survives_restart(pg_engine: Engine) -> None:
     store = PostgresRunStore(pg_engine)
     store.clear()
+    seed_workload(pg_engine)
     store.save_run(_run(state=RunState.PAUSED))
 
     fresh_engine = create_engine_from_settings()

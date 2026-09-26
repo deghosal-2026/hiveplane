@@ -34,6 +34,7 @@ from hiveplane.registry.store import (
     PostgresRegistryStore,
     build_registry_store,
 )
+from postgres import ensure_schema, reset_database
 
 _ROOT = Path(__file__).resolve().parents[1]
 _NOW = datetime(2026, 1, 1, tzinfo=UTC)
@@ -47,6 +48,7 @@ def test_postgres_store_selection(pg_engine: Engine) -> None:
     from hiveplane.persistence.run_store import PostgresRunStore
 
     store = build_run_store(store="postgres")
+    ensure_schema(pg_engine)
     assert isinstance(store, PostgresRunStore)
     store.clear()
 
@@ -132,7 +134,7 @@ def test_postgres_registry_round_trip(
     pg_engine: Engine, make_manifest: Callable[..., AgentWorkload]
 ) -> None:
     store = PostgresRegistryStore(pg_engine)
-    store.clear()
+    reset_database(pg_engine)
     RegistryService(store).create(make_manifest("agent-1"))
 
     fresh_engine = create_engine_from_settings()
@@ -146,7 +148,7 @@ def test_postgres_registry_round_trip(
 
 def test_postgres_approval_round_trip(pg_engine: Engine) -> None:
     store = PostgresApprovalStore(pg_engine)
-    store.clear()
+    reset_database(pg_engine)
     store.save(
         ApprovalRecord(
             approval_id="appr-1",

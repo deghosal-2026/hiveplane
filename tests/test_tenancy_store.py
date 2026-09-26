@@ -11,6 +11,7 @@ from hiveplane.tenancy import Membership, Role, Team, Tenant, TenantScopeError
 from hiveplane.tenancy.context import SYSTEM_CONTEXT, TenantContext
 from hiveplane.tenancy.errors import TenantNotFoundError
 from hiveplane.tenancy.store import InMemoryTenantStore, PostgresTenantStore
+from postgres import ensure_schema
 
 _NOW = datetime(2026, 9, 25, tzinfo=UTC)
 _ACME = TenantContext(tenant_id="acme", role=Role.ADMIN)
@@ -113,6 +114,7 @@ def test_get_membership_hides_foreign_tenant() -> None:
 
 
 def test_postgres_team_ids_are_scoped_per_tenant(pg_engine: Engine) -> None:
+    ensure_schema(pg_engine)
     if not inspect(pg_engine).has_table("tenants") or not inspect(pg_engine).has_table("teams"):
         pytest.skip("tenancy tables not migrated yet (Task 5)")
     store = PostgresTenantStore(pg_engine)

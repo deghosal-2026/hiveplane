@@ -169,7 +169,10 @@ def test_json_store_writes_one_file_per_run(tmp_path: Path) -> None:
     store = JsonFileRunStore(tmp_path)
     store.save_run(_run("run-1"))
     store.save_run(_run("run-2"))
-    assert sorted(p.name for p in tmp_path.glob("*.json")) == ["run-1.json", "run-2.json"]
+    assert sorted(p.name for p in tmp_path.glob("*.json")) == [
+        "default__run-1.json",
+        "default__run-2.json",
+    ]
 
 
 def test_json_store_write_is_atomic(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -177,7 +180,7 @@ def test_json_store_write_is_atomic(tmp_path: Path, monkeypatch: pytest.MonkeyPa
 
     store = JsonFileRunStore(tmp_path)
     store.save_run(_run("run-1"))
-    original = (tmp_path / "run-1.json").read_text(encoding="utf-8")
+    original = (tmp_path / "default__run-1.json").read_text(encoding="utf-8")
 
     def _boom(self: PathClass, target: PathClass) -> PathClass:
         raise OSError("simulated crash")
@@ -187,7 +190,7 @@ def test_json_store_write_is_atomic(tmp_path: Path, monkeypatch: pytest.MonkeyPa
     with pytest.raises(OSError):
         store.save_run(_run("run-1", state=RunState.RUNNING))
 
-    assert (tmp_path / "run-1.json").read_text(encoding="utf-8") == original
+    assert (tmp_path / "default__run-1.json").read_text(encoding="utf-8") == original
 
 
 def test_default_run_store_is_durable_json(

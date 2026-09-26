@@ -12,6 +12,29 @@ from hiveplane.policy.approvals import ApprovalService
 from hiveplane.policy.engine import PolicyEngine
 from hiveplane.policy.packs import PolicyPackStore
 from hiveplane.registry.service import RegistryService
+from hiveplane.tenancy import Role, TenantContext
+from hiveplane.tenancy.context import DEFAULT_CONTEXT
+
+TENANT_HEADER = "X-Hiveplane-Tenant"
+TEAM_HEADER = "X-Hiveplane-Team"
+
+
+def get_tenant_context(request: Request) -> TenantContext:
+    """Resolve the acting tenant from request headers.
+
+    ``X-Hiveplane-Tenant`` selects the tenant and ``X-Hiveplane-Team`` the team;
+    without headers the seeded default tenant acts. This is plumbing for
+    multi-tenant data, not an authentication boundary — signed identities and
+    API keys arrive in M45 (D33).
+    """
+    tenant_id = request.headers.get(TENANT_HEADER)
+    if tenant_id is None:
+        return DEFAULT_CONTEXT
+    return TenantContext(
+        tenant_id=tenant_id,
+        team_id=request.headers.get(TEAM_HEADER),
+        role=Role.ADMIN,
+    )
 
 
 def get_registry_service(request: Request) -> RegistryService:

@@ -20,9 +20,15 @@ from telemetry import SpanRecorder
 
 @pytest.fixture(autouse=True)
 def _isolated_settings(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Iterator[None]:
-    """Run each test in a clean cwd with no HIVEPLANE_* env vars or cached settings."""
+    """Run each test in a clean cwd with no HIVEPLANE_* env vars or cached settings.
+
+    ``HIVEPLANE_DATABASE__*`` variables are preserved: the Postgres-gated tests
+    need a database endpoint, exactly as CI provides one. All other
+    ``HIVEPLANE_*`` variables are stripped so operator-local config cannot leak
+    into tests.
+    """
     for key in list(os.environ):
-        if key.startswith("HIVEPLANE_"):
+        if key.startswith("HIVEPLANE_") and not key.startswith("HIVEPLANE_DATABASE__"):
             monkeypatch.delenv(key, raising=False)
     monkeypatch.chdir(tmp_path)
     get_settings.cache_clear()

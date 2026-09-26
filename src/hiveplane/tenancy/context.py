@@ -46,3 +46,17 @@ DEFAULT_CONTEXT = TenantContext(
     attribution_key=DEFAULT_ATTRIBUTION_KEY,
     role=Role.ADMIN,
 )
+
+
+def context_for_run(
+    tenant_id: str,
+    team_id: str | None = None,
+    attribution_key: str | None = None,
+) -> TenantContext:
+    """Return a trusted internal context scoped to a run's own tenant."""
+    return TenantContext(
+        tenant_id=tenant_id,
+        team_id=team_id,
+        attribution_key=attribution_key,
+        role=Role.ADMIN,
+    )

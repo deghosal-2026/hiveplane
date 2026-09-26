@@ -20,6 +20,7 @@ from hiveplane.core.triggers import TriggerMatch, TriggerRule, TriggerType
 from hiveplane.policy.store import PostgresApprovalStore
 from hiveplane.registry.models import ToolRecord, TriggerRecord
 from hiveplane.registry.store import PostgresRegistryStore
+from postgres import reset_database, seed_workload
 
 _NOW = datetime(2026, 1, 1, tzinfo=UTC)
 _ENV = Environment(
@@ -54,7 +55,8 @@ def _attestation(attestation_id: str, workload: str = "agent-1") -> Attestation:
 
 def test_registry_tools_and_triggers_round_trip(pg_engine: Engine) -> None:
     store = PostgresRegistryStore(pg_engine)
-    store.clear()
+    reset_database(pg_engine)
+    seed_workload(pg_engine)
     store.save_tool(
         ToolRecord(
             tool_id="github.read",
@@ -89,7 +91,8 @@ def test_registry_tools_and_triggers_round_trip(pg_engine: Engine) -> None:
 
 def test_registry_attestations_round_trip(pg_engine: Engine) -> None:
     store = PostgresRegistryStore(pg_engine)
-    store.clear()
+    reset_database(pg_engine)
+    seed_workload(pg_engine)
     store.add_attestation(_attestation("att-1"))
 
     fetched = store.get_attestation("att-1")
@@ -101,7 +104,8 @@ def test_registry_attestations_round_trip(pg_engine: Engine) -> None:
 
 def test_approval_list_filters(pg_engine: Engine) -> None:
     store = PostgresApprovalStore(pg_engine)
-    store.clear()
+    reset_database(pg_engine)
+    seed_workload(pg_engine)
     store.save(
         ApprovalRecord(
             approval_id="appr-1",

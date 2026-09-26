@@ -10,12 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The Complete Fleet OS release: tenancy, autonomy (triggers, pipelines, GitOps), the
 immune system (drift, quarantine, promotion gate), and fleet scale-out. In progress.
 
-### Added (M25-01 partial — tenancy foundation)
+### Added (M25-01 — tenancy foundation)
 
 - **Tenancy package (`hiveplane.tenancy`)** — `Tenant`/`Team`/`Membership` domain models
   (`Role`: admin/approver/viewer), `TenantScopeError`, and a frozen `TenantContext`
-  (`SYSTEM_CONTEXT`, `DEFAULT_CONTEXT`) that later milestones thread explicitly through
-  every store call. Reserved ids: `default` (legacy backfill) and `system`.
+  (`SYSTEM_CONTEXT`, `DEFAULT_CONTEXT`) threaded explicitly through every store call.
+  Reserved ids: `default` (legacy backfill) and `system`.
 - **Tenant store** — protocol + in-memory + PostgreSQL implementations for
   tenants/teams/memberships, tenant-qualified uniqueness, and composite team identity
   `(tenant_id, team_id)`.
@@ -26,6 +26,15 @@ immune system (drift, quarantine, promotion gate), and fleet scale-out. In progr
   rows to `default`, deletes orphan runs and dangling workload references, then enforces
   the new constraints. Auto-migration on startup preserved; verified against Postgres 16
   on fresh and real v0.1.0 databases.
+- **Store-layer isolation** — every durable store (runs, registry, certification, budget,
+  approvals, policy packs, audit) enforces tenant scoping: reads outside the acting tenant
+  look like the record does not exist, and writes that cross a tenant boundary raise
+  `TenantScopeError`. Runs are attributed to the submitting tenant.
+- **API tenant resolution** — `X-Hiveplane-Tenant` / `X-Hiveplane-Team` headers select the
+  acting tenant (default tenant when absent). This is plumbing, not an auth boundary;
+  signed identities arrive in M45.
+- **Test database override** — `HIVEPLANE_DATABASE__*` env vars are honored by the
+  Postgres-gated tests so they can run against a throwaway database (as CI does).
 
 ### Changed
 

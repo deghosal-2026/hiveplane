@@ -1,5 +1,15 @@
 # M25-01 — Tenancy & Tenant Scoping Implementation Plan
 
+> **Status: complete.** All tasks landed and verified: 990 tests pass against PostgreSQL 16
+> (965 + 27 skipped without a database), mypy strict and ruff clean.
+>
+> **Deviation from this plan (deliberate):** `ctx` is a keyword-only parameter defaulting to
+> `DEFAULT_CONTEXT` on the fleet stores and services, rather than a required positional
+> argument. Same isolation semantics (reads filter by tenant, cross-tenant writes raise
+> `TenantScopeError`), but it avoids churning every existing call site and test. The tenancy
+> store (`hiveplane.tenancy.store`) keeps `ctx` as a required positional argument, since
+> tenant administration is inherently tenant-explicit.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add first-class tenants, teams, and memberships, and make every persisted control-plane entity tenant-scoped, enforcing isolation at the store layer with DB-level composite foreign keys.

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import threading
 from typing import Protocol
 
 from sqlalchemy import Engine, delete, select
@@ -10,14 +11,29 @@ from hiveplane.certification.models import CertificationRecord, CertificationSta
 from hiveplane.config import Settings, get_settings
 from hiveplane.persistence.base import create_engine_from_settings, session_factory
 from hiveplane.persistence.models import AttestationRow, CertificationRow
+from hiveplane.tenancy import DEFAULT_CONTEXT, TenantContext
 
 
 class CertificationStore(Protocol):
-    """Append-only storage for certification records."""
+    """Append-only storage for certification records.
 
-    def add(self, record: CertificationRecord) -> None: ...
+    Records are tagged with the acting tenant context's tenant; reads outside
+    that tenant look like the record does not exist.
+    """
 
-    def get(self, record_id: str) -> CertificationRecord | None: ...
+    def add(
+        self,
+        record: CertificationRecord,
+        *,
+        ctx: TenantContext = DEFAULT_CONTEXT,
+    ) -> None: ...
+
+    def get(
+        self,
+        record_id: str,
+        *,
+        ctx: TenantContext = DEFAULT_CONTEXT,
+    ) -> CertificationRecord | None: ...
 
     def list(
         self,
@@ -26,6 +42,7 @@ class CertificationStore(Protocol):
         status: CertificationStatus | None = None,
         limit: int | None = None,
         offset: int = 0,
+        ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> list[CertificationRecord]: ...
 
 
@@ -33,16 +50,28 @@ class InMemoryCertificationStore:
     """In-memory, insertion-ordered certification store."""
 
     def __init__(self) -> None:
+        self._lock = threading.RLock()
         self._records: dict[str, CertificationRecord] = {}
+        self._tenants: dict[str, str] = {}
 
-    def add(self, record: CertificationRecord) -> None:
+    def add(
+        self, record: CertificationRecord, *, ctx: TenantContext = DEFAULT_CONTEXT
+    ) -> None:
         """Store a certification record, keyed by its unique record id."""
-        self._records[record.record_id] = record.model_copy(deep=True)
+        with self._lock:
+            self._records[record.record_id] = record.model_copy(deep=True)
+            self._tenants[record.record_id] = ctx.tenant_id
 
-    def get(self, record_id: str) -> CertificationRecord | None:
+    def get(
+        self, record_id: str, *, ctx: TenantContext = DEFAULT_CONTEXT
+    ) -> CertificationRecord | None:
         """Return a certification record by id, or ``None``."""
-        record = self._records.get(record_id)
-        return record.model_copy(deep=True) if record is not None else None
+        with self._lock:
+            record = self._records.get(record_id)
+            tenant = self._tenants.get(record_id)
+            if record is None or tenant is None or not ctx.scopes(tenant):
+                return None
+            return record.model_copy(deep=True)
 
     def list(
         self,
@@ -51,20 +80,23 @@ class InMemoryCertificationStore:
         status: CertificationStatus | None = None,
         limit: int | None = None,
         offset: int = 0,
+        ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> list[CertificationRecord]:
         """Return records filtered by workload and status, oldest first."""
-        records = [
-            record
-            for record in self._records.values()
-            if (workload is None or record.certification.workload_id == workload)
-            and (status is None or record.certification.status is status)
-        ]
-        records.sort(key=lambda record: record.certification.timestamp)
-        if offset:
-            records = records[offset:]
-        if limit is not None:
-            records = records[:limit]
-        return [record.model_copy(deep=True) for record in records]
+        with self._lock:
+            records = [
+                record
+                for record_id, record in self._records.items()
+                if ctx.scopes(self._tenants.get(record_id, ""))
+                and (workload is None or record.certification.workload_id == workload)
+                and (status is None or record.certification.status is status)
+            ]
+            records.sort(key=lambda record: record.certification.timestamp)
+            if offset:
+                records = records[offset:]
+            if limit is not None:
+                records = records[:limit]
+            return [record.model_copy(deep=True) for record in records]
 
 
 class PostgresCertificationStore:
@@ -72,14 +104,15 @@ class PostgresCertificationStore:
 
     The full :class:`CertificationRecord` lives in ``certifications.payload``;
     the immutable attestation is also written to ``attestations`` so attestation
-    history survives independently of the certification record.
+    history survives independently of the certification record. Rows carry the
+    acting context's ``tenant_id``.
     """
 
     def __init__(self, engine: Engine) -> None:
         self._engine = engine
         self._session = session_factory(engine)
 
-    def add(self, record: CertificationRecord) -> None:
+    def add(self, record: CertificationRecord, *, ctx: TenantContext = DEFAULT_CONTEXT) -> None:
         """Insert or replace a certification record."""
         certification = record.certification
         attestation = record.attestation
@@ -92,6 +125,7 @@ class PostgresCertificationStore:
                         workload=certification.workload_id,
                         status=certification.status.value,
                         created_at=certification.timestamp,
+                        tenant_id=ctx.tenant_id,
                         payload=record.model_dump(mode="json"),
                     )
                 )
@@ -107,15 +141,20 @@ class PostgresCertificationStore:
                         workload=attestation.workload_id,
                         model_identity=attestation.model_identity,
                         created_at=attestation.timestamp,
+                        tenant_id=ctx.tenant_id,
                         payload=attestation.model_dump(mode="json"),
                     )
                 )
 
-    def get(self, record_id: str) -> CertificationRecord | None:
+    def get(
+        self, record_id: str, *, ctx: TenantContext = DEFAULT_CONTEXT
+    ) -> CertificationRecord | None:
         """Return a certification record by id, or ``None``."""
         with self._session() as session:
             row = session.get(CertificationRow, record_id)
-            return CertificationRecord.model_validate(row.payload) if row is not None else None
+            if row is None or not ctx.scopes(row.tenant_id):
+                return None
+            return CertificationRecord.model_validate(row.payload)
 
     def list(
         self,
@@ -124,9 +163,12 @@ class PostgresCertificationStore:
         status: CertificationStatus | None = None,
         limit: int | None = None,
         offset: int = 0,
+        ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> list[CertificationRecord]:
         """Return records filtered by workload and status, oldest first."""
         statement = select(CertificationRow).order_by(CertificationRow.created_at)
+        if not ctx.is_system:
+            statement = statement.where(CertificationRow.tenant_id == ctx.tenant_id)
         if workload is not None:
             statement = statement.where(CertificationRow.workload == workload)
         if status is not None:

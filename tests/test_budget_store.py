@@ -14,6 +14,7 @@ from hiveplane.budget.store import (
 )
 from hiveplane.config import Settings
 from hiveplane.persistence.base import create_engine_from_settings
+from postgres import seed_workload
 
 
 def _clock() -> datetime:
@@ -81,6 +82,7 @@ def _attribution(cost: float = 0.02) -> CostAttribution:
 def test_postgres_spend_round_trip(pg_engine: Engine) -> None:
     store = PostgresBudgetStore(pg_engine)
     store.clear()
+    seed_workload(pg_engine)
     store.add_run_spend("run-1", 0.25)
     store.add_run_spend("run-1", 0.25)
     store.add_day_spend("agent-1", "2026-01-01", 0.5)
@@ -98,6 +100,7 @@ def test_postgres_spend_round_trip(pg_engine: Engine) -> None:
 def test_postgres_daily_aggregate_survives_new_store_instance(pg_engine: Engine) -> None:
     store = PostgresBudgetStore(pg_engine)
     store.clear()
+    seed_workload(pg_engine)
     store.add_day_spend("agent-1", "2026-01-01", 0.75)
     store.add_team_spend("platform", "2026-01-01", 0.75)
 
