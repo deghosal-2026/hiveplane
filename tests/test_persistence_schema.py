@@ -62,6 +62,7 @@ def test_all_design_tables_exist() -> None:
         "pipeline_node_runs",
         "router_decisions",
         "agent_tool_invocations",
+        "promotions",
     }
     assert expected <= set(Base.metadata.tables)
 

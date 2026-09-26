@@ -10,6 +10,7 @@ from hiveplane.agent_tools.engine import AgentToolInvoker
 from hiveplane.agent_tools.registry import AgentToolRegistry
 from hiveplane.agent_tools.store import AgentToolStore
 from hiveplane.budget.store import BudgetStore
+from hiveplane.certification.promotion import PromotionGate
 from hiveplane.certification.workflow import CertificationCoordinator
 from hiveplane.execution.service import RunService
 from hiveplane.execution.tools import ToolGateway
@@ -204,3 +205,9 @@ def get_adapter_catalog(request: Request) -> dict[str, Adapter]:
     """Return the configured runtime adapters keyed by name."""
     catalog: dict[str, Adapter] = getattr(request.app.state, "adapter_catalog", {})
     return catalog
+
+
+def get_promotion_gate(request: Request) -> PromotionGate:
+    """Return the promotion gate bound to the application state."""
+    gate: PromotionGate = request.app.state.promotion_gate
+    return gate

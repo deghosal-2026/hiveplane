@@ -1,6 +1,6 @@
 # D26: Certification v2 Design
 
-> Status: draft
+> Status: implemented (M32 promotion gate; M33–M35 diff/drift/log/provenance pending)
 
 **Milestones:** M32–M35 · **Extends:** D10
 
@@ -141,11 +141,47 @@ hiveplane bundle sign|verify <workload>
 - An expired certification blocks production admission.
 - A forged attestation is rejected; log tampering is detected; public verify works unauthenticated.
 - A tampered bundle fails admission; tampered imports are refused; key rotation preserves old attestation validity.
-
 ## Open Questions
+
 - Should `policy_version` be part of the artifact hash or an independent invalidation axis, and can partial re-certification satisfy the gate?
 - How are inclusion proofs exposed without turning the public endpoint into a workload-enumeration oracle?
 - Who owns workload signing keys — control plane, tenant, or an external KMS per tenancy?
+
+## Implementation (M32)
+
+| Module | Responsibility |
+|--------|----------------|
+| `hiveplane.certification.binding` | `ArtifactBinding` + `compute_binding` (manifest/toolset/model/policy sha256) and `changed_bindings` |
+| `hiveplane.certification.promotion` | `PromotionGate` (admit/refuse on a certified artifact hash) and `recertify_and_promote` |
+| `hiveplane.certification.promotion_store` | Promotion records (memory + Postgres, migration `0010`) |
+| `hiveplane.api.promotions` | `POST /promotions`, `POST /promotions/recertify`, `GET /promotions[/{id}]` |
+| `hiveplane.registry.service` | `artifact_hash`, `mark_uncertified_for_production`, automatic invalidation on change |
+
+**Artifact hash.** `sha256` over canonical JSON of the behavior-affecting spec
+fields, the sorted toolset, the exact canonical model identity, and the resolved
+policy version. The certification block and identity metadata are excluded, so
+applying an attestation never invalidates it and an owner change never forces a
+re-cert.
+
+**Promotion gate.** `hiveplane promote <workload> --to production` (or
+`POST /promotions`) computes the target manifest's binding, requires the current
+version to be `certified` with a valid unexpired production attestation for that
+exact hash, and otherwise refuses — naming the changed binding(s) (e.g.
+`model_binding: openai/gpt-4o/2024-08-06 -> openai/gpt-4o/2024-11-20`). An
+uncertified workload can never be promoted. Every attempt is recorded and
+audited (`promotion.admitted` / `promotion.refused`).
+
+**Automatic invalidation.** When a manifest version changes the artifact hash of a
+certified/provisional workload, the registry marks it `uncertified` and requires
+re-certification, so a changed artifact cannot silently keep production
+admission.
+
+**Re-certification.** `POST /promotions/recertify` (or `hiveplane promote
+--recertify`) runs the benchmark for the current artifact through the
+certification coordinator, then attempts promotion.
+
+M33–M35 add the regression diff, drift detector/auto-quarantine, transparency
+log, public verification, and workload provenance/signing.
 
 ## See Also
 - [Certification Pipeline Design](certification-pipeline-design.md) (D10) — runner, engine, thresholds, promotion gate, drift

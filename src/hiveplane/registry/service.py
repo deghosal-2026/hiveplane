@@ -9,6 +9,7 @@ from typing import Any, Literal, overload
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 
 from hiveplane import metrics
+from hiveplane.certification.binding import compute_binding
 from hiveplane.certification.models import (
     Attestation,
     CertificationEvent,
@@ -149,6 +150,7 @@ class RegistryService:
             created_at=created_at,
             updated_at=created_at,
             needs_re_certification=needs_re_certification,
+            artifact_hash=compute_binding(manifest).artifact_hash,
         )
 
     @overload
@@ -236,6 +238,8 @@ class RegistryService:
             created_at=existing.created_at,
             needs_re_certification=re_cert,
         ).model_copy(update={"updated_at": now})
+        if self._artifact_changed(existing, record):
+            record = self._invalidate_for_production(record)
         self._store.save_workload(record)
         self._sync_triggers(manifest)
         return record
@@ -298,6 +302,14 @@ class RegistryService:
         """Return the append-only manifest version history."""
         self.get(name)
         return self._store.list_versions(name)
+
+    def get_version(self, name: str, version: int) -> WorkloadVersion:
+        """Return one manifest version, or raise when it does not exist."""
+        self.get(name)
+        stored = self._store.get_version(name, version)
+        if stored is None:
+            raise VersionNotFoundError(name, version)
+        return stored
 
     def version_diff(self, name: str, from_version: int, to_version: int) -> VersionDiff:
         """Return the field-level diff between two manifest versions."""
@@ -399,6 +411,55 @@ class RegistryService:
         )
         self._store.save_workload(updated)
         return updated
+
+    def artifact_hash(self, name: str) -> str | None:
+        """Return the current artifact binding hash for a workload."""
+        record = self.get(name)
+        if record.artifact_hash is not None:
+            return record.artifact_hash
+        return compute_binding(record.manifest).artifact_hash
+
+    def mark_uncertified_for_production(self, name: str) -> WorkloadRecord:
+        """Invalidate a workload for production after its artifact changed (M32-04).
+
+        The status becomes ``uncertified`` and re-certification is required, so a
+        changed artifact can never silently keep production admission.
+        """
+        record = self.get(name)
+        if record.certification_status is CertificationStatus.UNCERTIFIED:
+            return record
+        updated = record.model_copy(
+            update={
+                "certification_status": CertificationStatus.UNCERTIFIED,
+                "manifest": self._with_status(record.manifest, CertificationStatus.UNCERTIFIED),
+                "needs_re_certification": True,
+                "updated_at": self._now(),
+            }
+        )
+        self._store.save_workload(updated)
+        return updated
+
+    def _artifact_changed(self, existing: WorkloadRecord, updated: WorkloadRecord) -> bool:
+        return (
+            existing.artifact_hash is not None
+            and updated.artifact_hash is not None
+            and existing.artifact_hash != updated.artifact_hash
+        )
+
+    def _invalidate_for_production(self, record: WorkloadRecord) -> WorkloadRecord:
+        """Flip a certified/provisional record to uncertified when its hash changed."""
+        if record.certification_status not in (
+            CertificationStatus.CERTIFIED,
+            CertificationStatus.PROVISIONAL,
+        ):
+            return record
+        return record.model_copy(
+            update={
+                "certification_status": CertificationStatus.UNCERTIFIED,
+                "manifest": self._with_status(record.manifest, CertificationStatus.UNCERTIFIED),
+                "needs_re_certification": True,
+            }
+        )
 
     @staticmethod
     def _with_status(manifest: AgentWorkload, status: CertificationStatus) -> AgentWorkload:

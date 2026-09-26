@@ -649,6 +649,21 @@ class AgentToolInvocationRow(_TenantScoped, Base):
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
+class PromotionRow(_TenantScoped, Base):
+    """A recorded promotion request and its outcome (M32-03)."""
+
+    __tablename__ = "promotions"
+
+    promotion_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    workload: Mapped[str] = mapped_column(String(253), index=True)
+    manifest_version: Mapped[int] = mapped_column(Integer)
+    status: Mapped[str] = mapped_column(String(32), index=True)
+    to_context: Mapped[str] = mapped_column(String(32))
+    certification_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
 class PolicyPackVersionRow(_TenantScoped, Base):
     """Versioned, inheritable policy packs (M25-04)."""
 

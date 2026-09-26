@@ -13,6 +13,7 @@ from datetime import UTC, datetime, timedelta
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
+from hiveplane.certification.binding import compute_binding
 from hiveplane.certification.engine import CertificationEngine, workload_policy
 from hiveplane.certification.models import (
     Attestation,
@@ -47,6 +48,7 @@ class CertificationService:
         benchmark_version: str = BENCHMARK_VERSION,
         clock: Callable[[], datetime] | None = None,
         id_factory: Callable[[], str] | None = None,
+        policy_version_lookup: Callable[[str], str | None] | None = None,
     ) -> None:
         self._engine = engine
         self._registry = registry
@@ -57,6 +59,7 @@ class CertificationService:
         self._benchmark_version = benchmark_version
         self._clock = clock or (lambda: datetime.now(UTC))
         self._id_factory = id_factory or (lambda: f"att-{uuid.uuid4().hex[:12]}")
+        self._policy_version_lookup = policy_version_lookup
 
     def certify(
         self,
@@ -94,6 +97,12 @@ class CertificationService:
             production_runs_survived=record.production_runs_survived,
             policy=policy,
         )
+        policy_version = (
+            self._policy_version_lookup(result.workload_id)
+            if self._policy_version_lookup is not None
+            else None
+        )
+        binding = compute_binding(record.manifest, policy_version=policy_version)
         attestation = Attestation(
             attestation_id=self._id_factory(),
             workload_id=result.workload_id,
@@ -109,6 +118,8 @@ class CertificationService:
             timestamp=certification.timestamp,
             environment=self._environment,
             signer=Signer(identity=self._identity, key_id=self._key_id, signature=UNSIGNED),
+            artifact_hash=binding.artifact_hash,
+            binding=binding,
             previous_attestation_id=previous_attestation_id,
         )
         stored = self._registry.store_attestation(sign_attestation(attestation, self._private_key))

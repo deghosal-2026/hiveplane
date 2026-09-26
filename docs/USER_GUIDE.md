@@ -266,6 +266,36 @@ and a `README.md` into `--out`. It never writes to the source tree; generated
 files are inert until you register and certify them, and an uncertified wrapped
 app is refused production admission.
 
+## Promotion & Re-certification
+
+Certification binds to an **artifact hash** over the behavior-affecting manifest
+fields, the toolset, the exact model identity, and the policy version. Changing
+any of them changes the hash and invalidates the workload for production
+automatically — nothing silently keeps admission.
+
+```bash
+# Promote the current, certified artifact to production.
+hiveplane promote incident-agent --to production --version 3
+
+# After a change, re-certify the current artifact and promote in one step.
+hiveplane promote incident-agent --recertify
+```
+
+```bash
+curl -X POST localhost:8100/promotions -H 'content-type: application/json' \
+  -d '{"workload": "incident-agent", "manifest_version": 3, "to": "production"}'
+```
+
+Promotion succeeds only when the current version has a valid, unexpired
+`certified` attestation for that exact artifact hash. Otherwise the request is
+refused (`409`) and the reason names the changed binding, e.g.
+`model_binding: openai/gpt-4o/2024-08-06 -> openai/gpt-4o/2024-11-20`. An
+uncertified or quarantined workload can never be promoted, and every attempt —
+admitted or refused — is recorded (`GET /promotions`) and audited.
+
+When a certified workload's artifact changes, it is marked `uncertified` and
+must be re-certified before it can be promoted again.
+
 ## Operator UI
 
 The operator UI is a server-rendered web app that reads the same HTTP API as the

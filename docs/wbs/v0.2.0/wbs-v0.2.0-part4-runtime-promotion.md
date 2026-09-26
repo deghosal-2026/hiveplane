@@ -55,29 +55,36 @@ Broaden the runtime surface (more frameworks, a converter for existing apps) and
 
 **Work items:**
 
-- [ ] [#217](https://github.com/deghosal-2026/hiveplane/issues/217) — M32-01 — Environment/context model (staging, production) with admission rules per context
-- [ ] [#218](https://github.com/deghosal-2026/hiveplane/issues/218) — M32-02 — Change detection: hash of manifest + toolset + model binding + policy version; certification is bound to that hash
-- [ ] [#219](https://github.com/deghosal-2026/hiveplane/issues/219) — M32-03 — Promotion workflow: request promotion → require valid unexpired certification for the target hash → admit or refuse with reason
-- [ ] [#220](https://github.com/deghosal-2026/hiveplane/issues/220) — M32-04 — Automatic invalidation: a changed artifact marks the workload `uncertified` for production (never silently passes)
-- [ ] [#221](https://github.com/deghosal-2026/hiveplane/issues/221) — M32-05 — Re-certification orchestration: run the benchmark for the new hash, produce a new attestation
-- [ ] [#222](https://github.com/deghosal-2026/hiveplane/issues/222) — M32-06 — Promotion gate API + CLI (`hiveplane promote`)
-- [ ] [#223](https://github.com/deghosal-2026/hiveplane/issues/223) — M32-07 — Audit: every promotion attempt, block, and certification linked in the run/attestation story
-- [ ] [#224](https://github.com/deghosal-2026/hiveplane/issues/224) — M32-08 — Tests: changed manifest blocks promotion; unchanged manifest promotes; toolset change blocks; model-binding change blocks
+- [x] [#217](https://github.com/deghosal-2026/hiveplane/issues/217) — M32-01 — Environment/context model (staging, production) with admission rules per context
+- [x] [#218](https://github.com/deghosal-2026/hiveplane/issues/218) — M32-02 — Change detection: hash of manifest + toolset + model binding + policy version; certification is bound to that hash
+- [x] [#219](https://github.com/deghosal-2026/hiveplane/issues/219) — M32-03 — Promotion workflow: request promotion → require valid unexpired certification for the target hash → admit or refuse with reason
+- [x] [#220](https://github.com/deghosal-2026/hiveplane/issues/220) — M32-04 — Automatic invalidation: a changed artifact marks the workload `uncertified` for production (never silently passes)
+- [x] [#221](https://github.com/deghosal-2026/hiveplane/issues/221) — M32-05 — Re-certification orchestration: run the benchmark for the new hash, produce a new attestation
+- [x] [#222](https://github.com/deghosal-2026/hiveplane/issues/222) — M32-06 — Promotion gate API + CLI (`hiveplane promote`)
+- [x] [#223](https://github.com/deghosal-2026/hiveplane/issues/223) — M32-07 — Audit: every promotion attempt, block, and certification linked in the run/attestation story
+- [x] [#224](https://github.com/deghosal-2026/hiveplane/issues/224) — M32-08 — Tests: changed manifest blocks promotion; unchanged manifest promotes; toolset change blocks; model-binding change blocks
 
-**Test ticket:** [#225](https://github.com/deghosal-2026/hiveplane/issues/225) — Test cases for Promotion Gate & Re-certification
+**Test ticket:** [x] [#225](https://github.com/deghosal-2026/hiveplane/issues/225) — Test cases for Promotion Gate & Re-certification
 
 **Deliverables:**
 - Promotion gate service integrated with registry + certification
 - `docs/design/certification-v2-design.md`
 
 **Acceptance criteria:**
-- [ ] Promoting an unchanged, certified workload to production succeeds
-- [ ] Promoting after any bound change is refused until re-certification passes
-- [ ] An uncertified workload cannot be promoted under any trigger trust level
-- [ ] The refusal reason names the exact changed binding
-- [ ] Promotion and block events are fully audited
+- [x] Promoting an unchanged, certified workload to production succeeds
+- [x] Promoting after any bound change is refused until re-certification passes
+- [x] An uncertified workload cannot be promoted under any trigger trust level
+- [x] The refusal reason names the exact changed binding
+- [x] Promotion and block events are fully audited
 
 **Done when:** production promotion is impossible without a valid certification for the exact current artifact, and every block is explainable.
+
+> **Status:** M32 complete. Artifact binding (`hiveplane.certification.binding`),
+> `Attestation.artifact_hash`/`binding`, the `PromotionGate` (with
+> `recertify_and_promote`), automatic invalidation on artifact change,
+> `PromotionStore` + migration `0010`, the promotions API, `hiveplane promote`,
+> and promotion auditing landed. All tests pass with a database; coverage 95%
+> total, ruff and mypy strict clean. Issues #217–#225 closed; committed and pushed.
 
 **Dependencies:** M25; v0.1.0 certification pipeline; M31 (hash includes adapter/toolset).
 
@@ -89,9 +96,9 @@ Broaden the runtime surface (more frameworks, a converter for existing apps) and
 - [x] Code coverage total ≥ 95%
 - [x] Ruff clean
 - [x] Mypy strict clean
-- [ ] All relevant docs updated (adapter v2, promotion gate, bring-your-own-agent guide) (M32 pending)
-- [ ] All M31–M32 issues done and closed (M32 pending)
-- [ ] Commit and push changes (M31 committed; phase gate completes with M32)
+- [x] All relevant docs updated (adapter v2, promotion gate, bring-your-own-agent guide)
+- [x] All M31–M32 issues done and closed
+- [x] Commit and push changes
 
 ## See Also
 

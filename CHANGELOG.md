@@ -245,6 +245,39 @@ immune system (drift, quarantine, promotion gate), and fleet scale-out. In progr
   unchanged, generated manifest valid, uncertified stays uncertified), import
   boundary, and the adapters API. Coverage ≥ 95% with a database.
 
+### Added (M32 — promotion gate & re-certification)
+
+- **Artifact binding** (`hiveplane.certification.binding`) — `ArtifactBinding`
+  and `compute_binding`: one `artifact_hash` over canonical JSON of the
+  behavior-affecting spec, the sorted toolset, the exact canonical model
+  identity, and the resolved policy version. It excludes the certification block
+  and identity metadata, so applying an attestation never invalidates it and an
+  owner change never forces a re-cert. `changed_bindings` names the exact
+  components that changed.
+- **Certification bound to the hash** — `Attestation.artifact_hash` and
+  `Attestation.binding`; `CertificationService` computes them (with an optional
+  policy-version lookup).
+- **Promotion gate** (`hiveplane.certification.promotion`) — `PromotionGate`
+  requires the current version to be `certified` with a valid, unexpired
+  production attestation for the target artifact hash; otherwise it refuses,
+  naming the changed binding(s). `recertify_and_promote` runs the benchmark for
+  the current artifact, then promotes.
+- **Automatic invalidation** — when a manifest version changes a certified
+  workload's artifact hash, the registry marks it `uncertified` and requires
+  re-certification (`WorkloadRecord.artifact_hash`,
+  `RegistryService.mark_uncertified_for_production`).
+- **Store + migration** — `PromotionStore` (memory + Postgres); migration `0010`
+  adds `promotions`.
+- **API + CLI** — `POST /promotions`, `POST /promotions/recertify`,
+  `GET /promotions[/{id}]`; `hiveplane promote <workload> --to production
+  [--version N] [--recertify]`.
+- **Audit** — every promotion attempt is recorded (`promotion.admitted` /
+  `promotion.refused`) with the workload, version, hash, and reason.
+- **Tests** — unchanged certified promotes; changed manifest/toolset/model
+  blocks and names the binding; uncertified never promotes; automatic
+  invalidation; re-certification orchestration; audit; Postgres round-trip and
+  migration `0010`. Coverage ≥ 95% with a database.
+
 ## [0.1.0] - 2026-09-25
 
 The first release: the certified control loop. Register agents, certify them against a

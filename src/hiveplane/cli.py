@@ -232,6 +232,73 @@ def certify(
     )
 
 
+@app.command("promote")
+def promote(
+    workload: Annotated[str, typer.Argument(help="Workload name to promote.")],
+    to: Annotated[
+        str, typer.Option("--to", help="Target context to promote into.")
+    ] = "production",
+    version: Annotated[
+        int | None,
+        typer.Option("--version", help="Manifest version to promote (default: current)."),
+    ] = None,
+    recertify: Annotated[
+        bool,
+        typer.Option(
+            "--recertify",
+            help="Run the benchmark for the current artifact before promoting.",
+        ),
+    ] = False,
+    operator: Annotated[
+        str, typer.Option("--operator", help="Acting operator for the audit trail.")
+    ] = "operator",
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Promote a workload to production, requiring a certification for its artifact."""
+    if recertify:
+        payload: dict[str, Any] = {"workload": workload, "operator": operator}
+        status_code, body = _request(
+            "POST", f"{api_url.rstrip('/')}/promotions/recertify", payload
+        )
+        if status_code >= 400 or status_code == 0:
+            typer.secho(
+                f"promotion failed ({status_code}): {body}", fg=typer.colors.RED, err=True
+            )
+            raise typer.Exit(code=1)
+        data = json.loads(body)
+        promotion = data["promotion"]
+        if promotion["status"] != "promoted":
+            typer.secho(
+                f"refused: {promotion['refusal_reason']} "
+                f"(changed: {', '.join(promotion['changed_bindings']) or 'none'})",
+                fg=typer.colors.RED,
+                err=True,
+            )
+            raise typer.Exit(code=1)
+        typer.secho(
+            f"OK: {workload} promoted to {promotion['to_context']} "
+            f"(certification {data['certification_id']})",
+            fg=typer.colors.GREEN,
+        )
+        return
+    body_payload: dict[str, Any] = {
+        "workload": workload,
+        "manifest_version": version if version is not None else 1,
+        "to_context": to,
+        "operator": operator,
+    }
+    status_code, body = _request("POST", f"{api_url.rstrip('/')}/promotions", body_payload)
+    if status_code >= 400 or status_code == 0:
+        typer.secho(f"promotion refused ({status_code}): {body}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=1)
+    data = json.loads(body)
+    typer.secho(
+        f"OK: {workload} v{data['manifest_version']} promoted to {data['to_context']} "
+        f"(certification {data['certification_id']})",
+        fg=typer.colors.GREEN,
+    )
+
+
 @certs_app.command("list")
 def certs_list(
     workload: Annotated[str | None, typer.Option("--workload")] = None,

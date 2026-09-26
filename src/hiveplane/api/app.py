@@ -29,6 +29,7 @@ from hiveplane.api.approvals import router as approvals_router
 from hiveplane.api.certifications import router as certifications_router
 from hiveplane.api.pipelines import router as pipelines_router
 from hiveplane.api.policy import router as policy_router
+from hiveplane.api.promotions import router as promotions_router
 from hiveplane.api.readiness import build_readiness_probe
 from hiveplane.api.reconcile import router as reconcile_router
 from hiveplane.api.registry import router as registry_router
@@ -49,6 +50,8 @@ from hiveplane.certification.errors import (
     ExecutorNotConfiguredError,
 )
 from hiveplane.certification.models import CertificationPolicy, Environment, Thresholds
+from hiveplane.certification.promotion import PromotionGate
+from hiveplane.certification.promotion_store import build_promotion_store
 from hiveplane.certification.runner import (
     ReferenceExecutor,
     TaskExecutor,
@@ -77,6 +80,7 @@ from hiveplane.execution.wiring import (
     attach_openai_agents,
     attach_pydanticai,
     attach_raw_worker,
+    build_audit_log,
     build_run_service,
     build_tool_gateway,
 )
@@ -396,6 +400,14 @@ def create_app(
         )
     app.state.certification_coordinator = certification_coordinator
     app.state.certification_store = getattr(certification_coordinator, "store", None)
+    app.state.audit_log = build_audit_log()
+    app.state.promotion_store = build_promotion_store(settings)
+    app.state.promotion_gate = PromotionGate(
+        registry,
+        coordinator=certification_coordinator,
+        store=app.state.promotion_store,
+        audit=app.state.audit_log,
+    )
     app.state.run_recovery = RunRecovery(app.state.run_service)
     readiness_engine = (
         create_engine_from_settings(settings)
@@ -477,6 +489,7 @@ def create_app(
     app.include_router(policy_router)
     app.include_router(approvals_router)
     app.include_router(certifications_router)
+    app.include_router(promotions_router)
     app.include_router(sandbox_router)
     app.include_router(spend_router)
     app.include_router(reconcile_router)

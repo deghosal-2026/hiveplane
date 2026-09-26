@@ -19,6 +19,7 @@ from pydantic import (
     model_validator,
 )
 
+from hiveplane.certification.binding import ArtifactBinding
 from hiveplane.core.types import Duration
 
 
@@ -120,6 +121,8 @@ class Attestation(BaseModel):
     timestamp: datetime
     environment: Environment
     signer: Signer
+    artifact_hash: str | None = None
+    binding: ArtifactBinding | None = None
     previous_attestation_id: str | None = None
 
     @field_validator("timestamp")
