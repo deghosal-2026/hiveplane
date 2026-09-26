@@ -40,6 +40,24 @@ immune system (drift, quarantine, promotion gate), and fleet scale-out. In progr
 
 - Version bumped to 0.2.0 (in-progress release line).
 
+### Added (M25-02..M25-11 — fleet-control data models)
+
+- **`hiveplane.fleet`** — the frozen v0.2.0 model surface: triggers (source,
+  event filter, dedup, cooldown, rate limit, task template, admission rule,
+  events/runs/DLQ), pipelines (validated DAG with edges, handoff mappings,
+  per-step gates, budget, run linkage), versioned policy packs with lint status
+  and policy decision records, secrets with rotation metadata and injection
+  references, distributed workers with leases and heartbeats, artifacts with
+  retention policies, metering events and day/week/month cost periods, and
+  desired-state reconciliation (desired specs, reconcile state, drift records).
+- **20 tenant-scoped tables** for the above, with composite foreign keys where a
+  real parent-child relationship exists and tenant-qualified uniques.
+- **Migration `0004`** — forward-only and idempotent; auto-migration on startup
+  preserved. Verified up/down against PostgreSQL 16.
+- **Tests** — model validation (malformed trigger/pipeline/policy definitions
+  rejected with actionable errors), schema coverage, tenant scoping, and
+  migration up/down. Coverage ≥ 95% with a database (as CI runs).
+
 ## [0.1.0] - 2026-09-25
 
 The first release: the certified control loop. Register agents, certify them against a

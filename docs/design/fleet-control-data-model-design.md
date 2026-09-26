@@ -2,10 +2,12 @@
 
 > Status: draft
 >
-> **Implementation status (M25-01):** landed. The `hiveplane.tenancy` package, tenant-scoped
-> ORM schema with composite FKs, migration `0003`, store-layer `TenantContext` enforcement
-> across every durable store, and API tenant resolution (`X-Hiveplane-Tenant`) are all in
-> place and verified against PostgreSQL 16. Decisions and the task sequence live in
+> **Implementation status (M25):** complete. The `hiveplane.tenancy` package, tenant-scoped
+> ORM schema with composite FKs, migrations `0003`/`0004`, store-layer `TenantContext`
+> enforcement across every durable store, API tenant resolution (`X-Hiveplane-Tenant`), and
+> the full `hiveplane.fleet` model surface (triggers, pipelines, policy packs/decisions,
+> secrets, workers, artifacts, metering/cost, reconciliation) are all in place and verified
+> against PostgreSQL 16. Decisions and the M25-01 task sequence live in
 > [`docs/plans/m25-01-tenancy-scoping.md`](../plans/m25-01-tenancy-scoping.md).
 
 **Milestones:** M25 · **Extends:** D7

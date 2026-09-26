@@ -35,8 +35,8 @@ def _run(state: RunState = RunState.PAUSED) -> Run:
 
 def test_round_trip(pg_engine: Engine) -> None:
     store = PostgresRunStore(pg_engine)
-    store.clear()
     seed_workload(pg_engine)
+    store.clear()
     store.save_run(_run())
     store.add_event(
         RunEvent(
@@ -89,8 +89,8 @@ def test_event_sequences_are_assigned_atomically(pg_engine: Engine) -> None:
     composite primary key (regression: ``max_seq or -1`` treated 0 as falsy and
     inserted a duplicate sequence 0)."""
     store = PostgresRunStore(pg_engine)
-    store.clear()
     seed_workload(pg_engine)
+    store.clear()
     store.save_run(_run())
     for _ in range(3):
         store.add_event(
@@ -116,8 +116,8 @@ def test_concurrent_event_appends_do_not_collide(pg_engine: Engine) -> None:
     ``(run_id, sequence)`` primary key.
     """
     store = PostgresRunStore(pg_engine)
-    store.clear()
     seed_workload(pg_engine)
+    store.clear()
     store.save_run(_run())
 
     threads_count = 8
@@ -153,8 +153,8 @@ def test_concurrent_event_appends_do_not_collide(pg_engine: Engine) -> None:
 
 def test_paused_run_survives_restart(pg_engine: Engine) -> None:
     store = PostgresRunStore(pg_engine)
-    store.clear()
     seed_workload(pg_engine)
+    store.clear()
     store.save_run(_run(state=RunState.PAUSED))
 
     fresh_engine = create_engine_from_settings()

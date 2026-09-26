@@ -134,8 +134,8 @@ def test_in_memory_round_trip() -> None:
 
 def test_postgres_round_trip(pg_engine: Engine) -> None:
     store = PostgresCertificationStore(pg_engine)
-    store.clear()
     seed_workload(pg_engine, name="repo-agent")
+    store.clear()
     record = _record()
     store.add(record)
 
@@ -153,8 +153,8 @@ def test_postgres_round_trip(pg_engine: Engine) -> None:
 
 def test_postgres_record_survives_new_store_instance(pg_engine: Engine) -> None:
     store = PostgresCertificationStore(pg_engine)
-    store.clear()
     seed_workload(pg_engine, name="repo-agent")
+    store.clear()
     store.add(_record("rec-restart"))
 
     fresh_engine = create_engine_from_settings()

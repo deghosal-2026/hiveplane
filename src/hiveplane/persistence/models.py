@@ -8,10 +8,12 @@ are lossless. ``run_admissions`` is an implementation addition needed by
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 
 from sqlalchemy import (
+    BigInteger,
     Boolean,
+    Date,
     DateTime,
     Float,
     ForeignKeyConstraint,
@@ -426,4 +428,412 @@ class MembershipRow(Base):
     operator_id: Mapped[str] = mapped_column(String(253))
     role: Mapped[str] = mapped_column(String(32))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+# --- Fleet control primitives (M25-02..M25-09, D21) -------------------------
+
+
+class TriggerRow(_TenantScoped, Base):
+    """Declared triggers for workloads and pipelines (M25-02)."""
+
+    __tablename__ = "triggers"
+    __table_args__ = (UniqueConstraint("trigger_id", "tenant_id", name="uq_triggers_id_tenant"),)
+
+    trigger_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    source: Mapped[str] = mapped_column(String(32), index=True)
+    target_kind: Mapped[str] = mapped_column(String(32))
+    target_ref: Mapped[str] = mapped_column(String(253), index=True)
+    cooldown_seconds: Mapped[int] = mapped_column(Integer, default=0)
+    admission_rule: Mapped[str] = mapped_column(String(32))
+    enabled: Mapped[bool] = mapped_column(Boolean, default=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class TriggerEventRow(_TenantScoped, Base):
+    """Append-only received trigger events (M25-02)."""
+
+    __tablename__ = "trigger_events"
+    __table_args__ = (
+        Index("ix_trigger_events_trigger_received", "trigger_id", "received_at"),
+        ForeignKeyConstraint(
+            ["trigger_id", "tenant_id"],
+            ["triggers.trigger_id", "triggers.tenant_id"],
+            ondelete="CASCADE",
+        ),
+    )
+
+    event_id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    trigger_id: Mapped[str] = mapped_column(String(64))
+    source: Mapped[str] = mapped_column(String(32))
+    received_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    dedup_key: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    outcome: Mapped[str] = mapped_column(String(32), index=True)
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class TriggerRunRow(_TenantScoped, Base):
+    """Trigger-to-run linkage and decision (M25-02)."""
+
+    __tablename__ = "trigger_runs"
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["trigger_id", "tenant_id"],
+            ["triggers.trigger_id", "triggers.tenant_id"],
+            ondelete="CASCADE",
+        ),
+    )
+
+    trigger_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    event_id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    run_id: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+    fired_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    status: Mapped[str] = mapped_column(String(32), index=True)
+    reason: Mapped[str | None] = mapped_column(String(2000), nullable=True)
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class TriggerDlqRow(_TenantScoped, Base):
+    """Dead-lettered trigger events awaiting replay (M25-02)."""
+
+    __tablename__ = "trigger_dlq"
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["trigger_id", "tenant_id"],
+            ["triggers.trigger_id", "triggers.tenant_id"],
+            ondelete="CASCADE",
+        ),
+    )
+
+    entry_id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    trigger_id: Mapped[str] = mapped_column(String(64), index=True)
+    event_id: Mapped[str] = mapped_column(String(128))
+    failure_reason: Mapped[str] = mapped_column(String(2000))
+    attempts: Mapped[int] = mapped_column(Integer, default=0)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    replayed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class PipelineRow(_TenantScoped, Base):
+    """Versioned pipeline DAGs (M25-03)."""
+
+    __tablename__ = "pipelines"
+    __table_args__ = (
+        UniqueConstraint("pipeline_id", "tenant_id", name="uq_pipelines_id_tenant"),
+    )
+
+    pipeline_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    name: Mapped[str] = mapped_column(String(253), index=True)
+    version: Mapped[int] = mapped_column(Integer)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class PipelineRunRow(_TenantScoped, Base):
+    """Pipeline-run linkage to parent and child runs (M25-03)."""
+
+    __tablename__ = "pipeline_runs"
+    __table_args__ = (
+        Index("ix_pipeline_runs_pipeline_state", "pipeline_id", "state"),
+        ForeignKeyConstraint(
+            ["pipeline_id", "tenant_id"],
+            ["pipelines.pipeline_id", "pipelines.tenant_id"],
+        ),
+    )
+
+    pipeline_run_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    pipeline_id: Mapped[str] = mapped_column(String(64))
+    version: Mapped[int] = mapped_column(Integer)
+    node_id: Mapped[str] = mapped_column(String(128))
+    parent_run_id: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+    child_run_id: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+    state: Mapped[str] = mapped_column(String(32), index=True)
+    cost_usd: Mapped[float] = mapped_column(Float, default=0.0)
+    started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class PolicyPackVersionRow(_TenantScoped, Base):
+    """Versioned, inheritable policy packs (M25-04)."""
+
+    __tablename__ = "policy_pack_versions"
+    __table_args__ = (
+        UniqueConstraint(
+            "pack_version_id", "tenant_id", name="uq_policy_pack_versions_id_tenant"
+        ),
+        UniqueConstraint(
+            "tenant_id", "name", "version", name="uq_policy_pack_versions_name_version"
+        ),
+        ForeignKeyConstraint(
+            ["parent_pack_id", "tenant_id"],
+            ["policy_pack_versions.pack_version_id", "policy_pack_versions.tenant_id"],
+        ),
+    )
+
+    pack_version_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    name: Mapped[str] = mapped_column(String(253), index=True)
+    version: Mapped[int] = mapped_column(Integer)
+    parent_pack_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    lint_status: Mapped[str] = mapped_column(String(32), index=True)
+    content_hash: Mapped[str] = mapped_column(String(128))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class PolicyDecisionRow(_TenantScoped, Base):
+    """Append-only policy decisions with their reason and rule (M25-04)."""
+
+    __tablename__ = "policy_decisions"
+    __table_args__ = (
+        ForeignKeyConstraint(["run_id", "tenant_id"], ["runs.id", "runs.tenant_id"]),
+    )
+
+    decision_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    run_id: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+    workload: Mapped[str] = mapped_column(String(253), index=True)
+    outcome: Mapped[str] = mapped_column(String(32), index=True)
+    reason: Mapped[str] = mapped_column(String(2000))
+    originating_rule_id: Mapped[str | None] = mapped_column(String(253), nullable=True)
+    action_class: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    policy_pack_version_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    evaluated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class SecretRow(_TenantScoped, Base):
+    """Ciphertext-at-rest secrets with rotation metadata (M25-05)."""
+
+    __tablename__ = "secrets"
+    __table_args__ = (
+        UniqueConstraint("secret_id", "tenant_id", name="uq_secrets_id_tenant"),
+        UniqueConstraint("tenant_id", "name", name="uq_secrets_tenant_name"),
+    )
+
+    secret_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    name: Mapped[str] = mapped_column(String(253), index=True)
+    scope: Mapped[str] = mapped_column(String(32))
+    scope_ref: Mapped[str | None] = mapped_column(String(253), nullable=True)
+    ciphertext: Mapped[str] = mapped_column(String)
+    key_id: Mapped[str] = mapped_column(String(253))
+    next_rotation_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True, index=True
+    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    rotated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class SecretRefRow(_TenantScoped, Base):
+    """Where a secret was injected (audit trail) (M25-05)."""
+
+    __tablename__ = "secret_refs"
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["secret_id", "tenant_id"],
+            ["secrets.secret_id", "secrets.tenant_id"],
+            ondelete="CASCADE",
+        ),
+    )
+
+    ref_id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    secret_id: Mapped[str] = mapped_column(String(64), index=True)
+    run_id: Mapped[str] = mapped_column(String(64), index=True)
+    injection_target: Mapped[str] = mapped_column(String(32))
+    target_name: Mapped[str] = mapped_column(String(253))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class WorkerRow(_TenantScoped, Base):
+    """Registered execution workers (M25-06)."""
+
+    __tablename__ = "workers"
+    __table_args__ = (
+        UniqueConstraint("worker_id", "tenant_id", name="uq_workers_id_tenant"),
+    )
+
+    worker_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    state: Mapped[str] = mapped_column(String(32), index=True)
+    version: Mapped[str] = mapped_column(String(64))
+    registered_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    last_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class WorkerLeaseRow(_TenantScoped, Base):
+    """Current run lease held by a worker (M25-06)."""
+
+    __tablename__ = "worker_leases"
+    __table_args__ = (
+        Index("ix_worker_leases_worker_expires", "worker_id", "expires_at"),
+        ForeignKeyConstraint(
+            ["worker_id", "tenant_id"],
+            ["workers.worker_id", "workers.tenant_id"],
+            ondelete="CASCADE",
+        ),
+        ForeignKeyConstraint(["run_id", "tenant_id"], ["runs.id", "runs.tenant_id"]),
+    )
+
+    lease_id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    run_id: Mapped[str] = mapped_column(String(64), index=True)
+    worker_id: Mapped[str] = mapped_column(String(64), index=True)
+    attempt: Mapped[int] = mapped_column(Integer)
+    granted_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
+    fencing_token: Mapped[int] = mapped_column(Integer, default=0)
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class WorkerHeartbeatRow(_TenantScoped, Base):
+    """Bounded rolling worker liveness signals (M25-06)."""
+
+    __tablename__ = "worker_heartbeats"
+    __table_args__ = (
+        Index("ix_worker_heartbeats_worker_seen", "worker_id", "seen_at"),
+        ForeignKeyConstraint(
+            ["worker_id", "tenant_id"],
+            ["workers.worker_id", "workers.tenant_id"],
+            ondelete="CASCADE",
+        ),
+    )
+
+    heartbeat_id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    worker_id: Mapped[str] = mapped_column(String(64), index=True)
+    seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    status: Mapped[str] = mapped_column(String(32))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class RetentionPolicyRow(_TenantScoped, Base):
+    """Per-tenant artifact retention rules (M25-07)."""
+
+    __tablename__ = "retention_policies"
+    __table_args__ = (
+        UniqueConstraint("policy_id", "tenant_id", name="uq_retention_policies_id_tenant"),
+    )
+
+    policy_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    data_class: Mapped[str] = mapped_column(String(128), index=True)
+    retain_days: Mapped[int] = mapped_column(Integer)
+    legal_hold: Mapped[bool] = mapped_column(Boolean, default=False)
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class ArtifactRow(_TenantScoped, Base):
+    """Metadata for stored execution artifacts (M25-07)."""
+
+    __tablename__ = "artifacts"
+    __table_args__ = (
+        Index("ix_artifacts_run_created", "run_id", "created_at"),
+        ForeignKeyConstraint(["run_id", "tenant_id"], ["runs.id", "runs.tenant_id"]),
+        ForeignKeyConstraint(
+            ["retention_policy_id", "tenant_id"],
+            ["retention_policies.policy_id", "retention_policies.tenant_id"],
+        ),
+    )
+
+    artifact_id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    run_id: Mapped[str] = mapped_column(String(64), index=True)
+    location: Mapped[str] = mapped_column(String(2048))
+    size_bytes: Mapped[int] = mapped_column(BigInteger)
+    content_hash: Mapped[str] = mapped_column(String(128))
+    retention_policy_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class MeteringEventRow(_TenantScoped, Base):
+    """Append-only attributed usage facts (M25-08)."""
+
+    __tablename__ = "metering_events"
+    __table_args__ = (
+        Index("ix_metering_events_tenant_occurred", "tenant_id", "occurred_at"),
+        Index("ix_metering_events_workload_occurred", "workload_id", "occurred_at"),
+    )
+
+    event_id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    team_id: Mapped[str] = mapped_column(String(64), index=True)
+    workload_id: Mapped[str] = mapped_column(String(253), index=True)
+    run_id: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+    pipeline_run_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    cost_type: Mapped[str] = mapped_column(String(32), index=True)
+    model: Mapped[str | None] = mapped_column(String(253), nullable=True)
+    cost_usd: Mapped[float] = mapped_column(Float)
+    saved_usd: Mapped[float] = mapped_column(Float, default=0.0)
+    occurred_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class CostPeriodRow(Base):
+    """Materialized day/week/month cost buckets (M25-08)."""
+
+    __tablename__ = "cost_periods"
+    __table_args__ = (Index("ix_cost_periods_scope", "tenant_id", "team_id", "workload_id"),)
+
+    tenant_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    team_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    workload_id: Mapped[str] = mapped_column(String(253), primary_key=True)
+    period: Mapped[str] = mapped_column(String(16), primary_key=True)
+    period_start: Mapped[date] = mapped_column(Date, primary_key=True)
+    total_cost_usd: Mapped[float] = mapped_column(Float, default=0.0)
+    cost_per_completed_task: Mapped[float] = mapped_column(Float, default=0.0)
+    cache_savings_usd: Mapped[float] = mapped_column(Float, default=0.0)
+    carry_in_usd: Mapped[float] = mapped_column(Float, default=0.0)
+    roi_flag: Mapped[bool] = mapped_column(Boolean, default=False)
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class DesiredSpecRow(_TenantScoped, Base):
+    """Declared fleet objects from a desired-state source (M25-09)."""
+
+    __tablename__ = "desired_specs"
+    __table_args__ = (
+        UniqueConstraint(
+            "tenant_id", "source_id", "kind", "name", name="uq_desired_specs_scope"
+        ),
+    )
+
+    spec_id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    source_id: Mapped[str] = mapped_column(String(128), index=True)
+    source: Mapped[str] = mapped_column(String(16))
+    kind: Mapped[str] = mapped_column(String(32), index=True)
+    name: Mapped[str] = mapped_column(String(253))
+    revision: Mapped[str] = mapped_column(String(128))
+    content_hash: Mapped[str] = mapped_column(String(128))
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class ReconcileStateRow(Base):
+    """Last-observed convergence state per source (M25-09)."""
+
+    __tablename__ = "reconcile_state"
+
+    tenant_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    source_id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    source: Mapped[str] = mapped_column(String(16))
+    last_revision: Mapped[str] = mapped_column(String(128))
+    last_observed_hash: Mapped[str] = mapped_column(String(128))
+    last_reconcile_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+    status: Mapped[str] = mapped_column(String(32), index=True)
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class DriftRecordRow(_TenantScoped, Base):
+    """Field-level declared-vs-observed differences (M25-09)."""
+
+    __tablename__ = "drift_records"
+    __table_args__ = (Index("ix_drift_records_object", "object_ref"),)
+
+    drift_id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    object_ref: Mapped[str] = mapped_column(String(253))
+    field: Mapped[str] = mapped_column(String(253))
+    detected_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    resolution: Mapped[str] = mapped_column(String(32), index=True)
+    reconcile_run_id: Mapped[str | None] = mapped_column(String(128), nullable=True)
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)

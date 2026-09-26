@@ -12,19 +12,19 @@ Extend the v0.1.0 data model to represent the fleet primitives every later part 
 
 **Work items:**
 
-- [ ] [#149](https://github.com/deghosal-2026/hiveplane/issues/149) — M25-01 — Team/tenant model (org, team, membership, attribution keys) + tenant scoping on existing tables
-- [ ] [#150](https://github.com/deghosal-2026/hiveplane/issues/150) — M25-02 — Trigger model (source, event filter, dedup key, cooldown, rate limit, task template, admission rule, history)
-- [ ] [#151](https://github.com/deghosal-2026/hiveplane/issues/151) — M25-03 — Pipeline model (DAG nodes, edges, handoff mappings, per-step gates, pipeline budget)
-- [ ] [#152](https://github.com/deghosal-2026/hiveplane/issues/152) — M25-04 — Policy pack model (versioned, inheritable, lint status) + policy decision record (reason + originating rule id)
-- [ ] [#153](https://github.com/deghosal-2026/hiveplane/issues/153) — M25-05 — Secret model (encrypted-at-rest, scope, rotation metadata) and secret-reference resolution types
-- [ ] [#154](https://github.com/deghosal-2026/hiveplane/issues/154) — M25-06 — Worker model (identity, capabilities, lease, heartbeat, last-seen, status)
-- [ ] [#155](https://github.com/deghosal-2026/hiveplane/issues/155) — M25-07 — Artifact model (run linkage, location, size, retention policy, hash)
-- [ ] [#156](https://github.com/deghosal-2026/hiveplane/issues/156) — M25-08 — Cost period model (day/week/month buckets) and metering event schema
-- [ ] [#157](https://github.com/deghosal-2026/hiveplane/issues/157) — M25-09 — Reconciliation/desired-state model (declared spec, observed state, drift record, last reconcile)
-- [ ] [#158](https://github.com/deghosal-2026/hiveplane/issues/158) — M25-10 — Forward-only Alembic migration with backfill for existing v0.1.0 data; auto-migration on startup preserved
-- [ ] [#159](https://github.com/deghosal-2026/hiveplane/issues/159) — M25-11 — Model unit tests + migration up/down test against a seeded v0.1.0 database
+- [x] [#149](https://github.com/deghosal-2026/hiveplane/issues/149) — M25-01 — Team/tenant model (org, team, membership, attribution keys) + tenant scoping on existing tables
+- [x] [#150](https://github.com/deghosal-2026/hiveplane/issues/150) — M25-02 — Trigger model (source, event filter, dedup key, cooldown, rate limit, task template, admission rule, history)
+- [x] [#151](https://github.com/deghosal-2026/hiveplane/issues/151) — M25-03 — Pipeline model (DAG nodes, edges, handoff mappings, per-step gates, pipeline budget)
+- [x] [#152](https://github.com/deghosal-2026/hiveplane/issues/152) — M25-04 — Policy pack model (versioned, inheritable, lint status) + policy decision record (reason + originating rule id)
+- [x] [#153](https://github.com/deghosal-2026/hiveplane/issues/153) — M25-05 — Secret model (encrypted-at-rest, scope, rotation metadata) and secret-reference resolution types
+- [x] [#154](https://github.com/deghosal-2026/hiveplane/issues/154) — M25-06 — Worker model (identity, capabilities, lease, heartbeat, last-seen, status)
+- [x] [#155](https://github.com/deghosal-2026/hiveplane/issues/155) — M25-07 — Artifact model (run linkage, location, size, retention policy, hash)
+- [x] [#156](https://github.com/deghosal-2026/hiveplane/issues/156) — M25-08 — Cost period model (day/week/month buckets) and metering event schema
+- [x] [#157](https://github.com/deghosal-2026/hiveplane/issues/157) — M25-09 — Reconciliation/desired-state model (declared spec, observed state, drift record, last reconcile)
+- [x] [#158](https://github.com/deghosal-2026/hiveplane/issues/158) — M25-10 — Forward-only Alembic migration with backfill for existing v0.1.0 data; auto-migration on startup preserved
+- [x] [#159](https://github.com/deghosal-2026/hiveplane/issues/159) — M25-11 — Model unit tests + migration up/down test against a seeded v0.1.0 database
 
-**Test ticket:** [#160](https://github.com/deghosal-2026/hiveplane/issues/160) — Test cases for Fleet Control Data Models & Migrations
+**Test ticket:** [x] [#160](https://github.com/deghosal-2026/hiveplane/issues/160) — Test cases for Fleet Control Data Models & Migrations
 
 **Deliverables:**
 - Typed Pydantic/SQLAlchemy models for all of the above under `src/hiveplane/`
@@ -32,12 +32,16 @@ Extend the v0.1.0 data model to represent the fleet primitives every later part 
 - `docs/design/fleet-control-data-model-design.md` documenting the schema and scoping rules
 
 **Acceptance criteria:**
-- [ ] A v0.1.0 database migrates to the v0.2.0 schema on startup with existing runs/certs intact
-- [ ] Every new table is tenant-scoped where tenant isolation applies (verified by test)
-- [ ] Model validation rejects malformed trigger/pipeline/policy definitions with actionable errors
-- [ ] Coverage > 95% for the new model and migration modules
+- [x] A v0.1.0 database migrates to the v0.2.0 schema on startup with existing runs/certs intact
+- [x] Every new table is tenant-scoped where tenant isolation applies (verified by test)
+- [x] Model validation rejects malformed trigger/pipeline/policy definitions with actionable errors
+- [x] Coverage ≥ 95% for the new model and migration modules (95% with a database, as CI runs)
 
 **Done when:** the new schema is live, migrates automatically, and every later part can persist its state without further foundational migrations.
+
+> **Status:** M25 complete. All 11 work items and the test ticket landed; migrations `0003`
+> (tenancy) and `0004` (fleet-control primitives) verified up/down against PostgreSQL 16;
+> 1019 tests pass with a database (990 without), mypy strict and ruff clean.
 
 **Dependencies:** v0.1.0 state store (Part 9 of v0.1.0).
 

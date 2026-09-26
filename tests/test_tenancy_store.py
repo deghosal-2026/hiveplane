@@ -11,7 +11,7 @@ from hiveplane.tenancy import Membership, Role, Team, Tenant, TenantScopeError
 from hiveplane.tenancy.context import SYSTEM_CONTEXT, TenantContext
 from hiveplane.tenancy.errors import TenantNotFoundError
 from hiveplane.tenancy.store import InMemoryTenantStore, PostgresTenantStore
-from postgres import ensure_schema
+from postgres import ensure_schema, reset_database
 
 _NOW = datetime(2026, 9, 25, tzinfo=UTC)
 _ACME = TenantContext(tenant_id="acme", role=Role.ADMIN)
@@ -140,3 +140,74 @@ def test_postgres_team_ids_are_scoped_per_tenant(pg_engine: Engine) -> None:
     store.save_team(globex_ctx, globex_team)
     assert store.get_team(_ACME, "acme", "platform") == acme_team
     assert store.get_team(globex_ctx, "globex", "platform") == globex_team
+
+
+def test_postgres_store_round_trips(pg_engine: Engine) -> None:
+    reset_database(pg_engine)
+    store = PostgresTenantStore(pg_engine)
+    store.save_tenant(SYSTEM_CONTEXT, _tenant("acme"))
+    store.save_tenant(SYSTEM_CONTEXT, _tenant("globex"))
+
+    assert store.get_tenant(_ACME, "acme") == _tenant("acme")
+    assert store.get_tenant(TenantContext(tenant_id="other"), "acme") is None
+    assert {t.tenant_id for t in store.list_tenants(SYSTEM_CONTEXT)} == {"acme", "globex"}
+    assert [t.tenant_id for t in store.list_tenants(_ACME)] == ["acme"]
+
+    team = Team(
+        team_id="platform",
+        tenant_id="acme",
+        name="Platform",
+        attribution_key="acme.platform",
+        created_at=_NOW,
+    )
+    store.save_team(_ACME, team)
+    assert store.get_team(_ACME, "acme", "platform") == team
+    assert store.get_team(TenantContext(tenant_id="other"), "acme", "platform") is None
+    assert store.list_teams(_ACME, "acme") == [team]
+    assert store.list_teams(_ACME, "globex") == []
+
+    membership = Membership(
+        membership_id="m1",
+        tenant_id="acme",
+        team_id="platform",
+        operator_id="alice",
+        role=Role.ADMIN,
+        created_at=_NOW,
+    )
+    store.save_membership(_ACME, membership)
+    assert store.get_membership(_ACME, "m1") == membership
+    assert store.get_membership(TenantContext(tenant_id="other"), "m1") is None
+    assert store.list_memberships(_ACME, "acme") == [membership]
+    assert store.list_memberships(_ACME, "globex") == []
+
+
+def test_postgres_store_enforces_scoping(pg_engine: Engine) -> None:
+    reset_database(pg_engine)
+    store = PostgresTenantStore(pg_engine)
+    store.save_tenant(SYSTEM_CONTEXT, _tenant("acme"))
+
+    with pytest.raises(TenantScopeError):
+        store.save_tenant(_ACME, _tenant("globex"))
+    with pytest.raises(TenantNotFoundError):
+        store.save_team(
+            SYSTEM_CONTEXT,
+            Team(
+                team_id="t2",
+                tenant_id="missing",
+                name="Missing",
+                attribution_key="missing",
+                created_at=_NOW,
+            ),
+        )
+    with pytest.raises(TenantNotFoundError):
+        store.save_membership(
+            SYSTEM_CONTEXT,
+            Membership(
+                membership_id="m2",
+                tenant_id="missing",
+                team_id=None,
+                operator_id="bob",
+                role=Role.VIEWER,
+                created_at=_NOW,
+            ),
+        )
