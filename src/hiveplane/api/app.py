@@ -29,6 +29,7 @@ from hiveplane.api.approvals import router as approvals_router
 from hiveplane.api.certifications import router as certifications_router
 from hiveplane.api.drift import router as drift_router
 from hiveplane.api.health import router as health_router
+from hiveplane.api.identity import router as identity_router
 from hiveplane.api.learning import router as learning_router
 from hiveplane.api.mcp import router as mcp_router
 from hiveplane.api.pipelines import router as pipelines_router
@@ -46,6 +47,7 @@ from hiveplane.api.security import router as security_router
 from hiveplane.api.spend import router as spend_router
 from hiveplane.api.transparency import router as transparency_router
 from hiveplane.api.triggers import router as triggers_router
+from hiveplane.auth.service import build_auth_service
 from hiveplane.budget.errors import MissingModelIdentityError, UnknownModelPriceError
 from hiveplane.budget.pricing import CostTable
 from hiveplane.budget.service import BudgetService
@@ -196,6 +198,7 @@ from hiveplane.router.classifier import LLMTaskClassifier
 from hiveplane.router.engine import RouterEngine
 from hiveplane.router.store import build_router_store
 from hiveplane.sandbox.manager import InMemorySandboxManager
+from hiveplane.secrets.factory import build_secret_service
 from hiveplane.tenancy import TenantContext
 from hiveplane.transparency import (
     PublicVerifier,
@@ -358,6 +361,8 @@ def create_app(
     )
     app.state.circuit_breakers = circuit_breakers
     app.state.mcp_registry = build_mcp_registry(settings)
+    app.state.secret_service = build_secret_service(settings)
+    app.state.auth_service = build_auth_service(settings=settings)
     mcp_executor = (
         McpToolExecutor(app.state.mcp_registry) if settings.mcp.enabled else None
     )
@@ -738,6 +743,7 @@ def create_app(
     app.include_router(learning_router)
     app.include_router(health_router)
     app.include_router(mcp_router)
+    app.include_router(identity_router)
     app.include_router(route_router)
     app.include_router(agent_tools_router)
     app.include_router(adapters_router)

@@ -7,7 +7,12 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, ConfigDict, Field
 
-from hiveplane.api.deps import get_promotion_gate, get_tenant_context
+from hiveplane.api.deps import (
+    get_promotion_gate,
+    get_tenant_context,
+    require_permission,
+)
+from hiveplane.auth.models import OperatorIdentity, Permission
 from hiveplane.certification.models import TargetContext
 from hiveplane.certification.promotion import PromotionGate, PromotionRecord
 from hiveplane.registry.errors import VersionNotFoundError, WorkloadNotFoundError
@@ -52,7 +57,10 @@ class RecertifyResponse(BaseModel):
 
 @router.post("/promotions", response_model=PromotionRecord)
 def request_promotion(
-    request: PromotionRequest, gate: GateDep, ctx: TenantDep
+    request: PromotionRequest,
+    gate: GateDep,
+    ctx: TenantDep,
+    _: Annotated[OperatorIdentity, Depends(require_permission(Permission.PROMOTE))],
 ) -> PromotionRecord:
     """Request promotion; returns 409 with the changed bindings when refused."""
     try:
@@ -72,7 +80,10 @@ def request_promotion(
 
 @router.post("/promotions/recertify", response_model=RecertifyResponse)
 def recertify_and_promote(
-    request: RecertifyRequest, gate: GateDep, ctx: TenantDep
+    request: RecertifyRequest,
+    gate: GateDep,
+    ctx: TenantDep,
+    _: Annotated[OperatorIdentity, Depends(require_permission(Permission.PROMOTE))],
 ) -> RecertifyResponse:
     """Re-certify the current artifact and promote it, or return the refusal."""
     certification, promotion = gate.recertify_and_promote(

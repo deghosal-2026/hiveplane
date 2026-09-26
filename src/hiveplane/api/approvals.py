@@ -7,7 +7,12 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, ConfigDict, Field
 
-from hiveplane.api.deps import get_approval_service, get_run_service
+from hiveplane.api.deps import (
+    get_approval_service,
+    get_run_service,
+    require_permission,
+)
+from hiveplane.auth.models import OperatorIdentity, Permission
 from hiveplane.core.approval import ApprovalRecord, ApprovalStatus
 from hiveplane.core.run import RunState
 from hiveplane.execution.models import InterventionAction
@@ -47,7 +52,11 @@ def get_approval(approval_id: str, service: ApprovalDep) -> ApprovalRecord:
 
 @router.post("/approvals/{approval_id}/approve", response_model=ApprovalRecord)
 def approve(
-    approval_id: str, payload: ApprovalDecisionRequest, service: ApprovalDep, runs: RunDep
+    approval_id: str,
+    payload: ApprovalDecisionRequest,
+    service: ApprovalDep,
+    runs: RunDep,
+    _: Annotated[OperatorIdentity, Depends(require_permission(Permission.APPROVE))],
 ) -> ApprovalRecord:
     """Approve a request and resume the paused run."""
     approval = service.get(approval_id)
@@ -64,7 +73,11 @@ def approve(
 
 @router.post("/approvals/{approval_id}/deny", response_model=ApprovalRecord)
 def deny(
-    approval_id: str, payload: ApprovalDecisionRequest, service: ApprovalDep, runs: RunDep
+    approval_id: str,
+    payload: ApprovalDecisionRequest,
+    service: ApprovalDep,
+    runs: RunDep,
+    _: Annotated[OperatorIdentity, Depends(require_permission(Permission.APPROVE))],
 ) -> ApprovalRecord:
     """Deny a request and fail the paused run."""
     approval = service.get(approval_id)

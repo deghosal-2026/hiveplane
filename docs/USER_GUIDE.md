@@ -866,3 +866,38 @@ cannot widen a workload's tool surface; a call outside the list is denied with
 tool output is treated as untrusted by default. The kill switch disables a tool
 fleet-wide instantly and is checked before the transport, so discovery refreshes
 cannot resurrect a killed tool.
+
+## Secrets, RBAC & Access Audit
+
+Secrets are stored per tenant with envelope encryption and injected only at the
+execution boundary — never persisted to disk and never placed in agent context,
+logs, traces, audit, fan-out, or artifacts.
+
+```bash
+hiveplane secrets put pg-readonly --from-env PG_PASSWORD
+hiveplane secrets rotate pg-readonly --value "$NEW_PASSWORD"
+hiveplane secrets list            # metadata only (never plaintext)
+hiveplane secrets show pg-readonly
+```
+
+Workloads reference secrets by versioned ref `secret://<tenant>/<name>@<version>`;
+pinned refs keep their version, unversioned refs pick up the new current version
+on the next run. Revoked versions fail closed — there is no fallback to an older
+value.
+
+**Scoped API keys and roles.** Roles are `admin` (approve, promote, kill switch,
+secrets/keys, read), `approver` (approve + read), and `viewer` (read). A key may
+carry a narrowing scope; a scoped key can never exceed its scope even if the role
+would allow more. All privileged actions are authorized server-side — a direct API
+call with a viewer key returns `403`.
+
+```bash
+hiveplane keys create --role approver --scope approvals:write
+hiveplane keys list
+hiveplane keys revoke <key_id>
+hiveplane auth whoami
+```
+
+Enable enforcement with `HIVEPLANE_AUTH__ENABLED=true`; callers then pass
+`Authorization: Bearer <token>`. Login history and privileged-action allow/deny
+decisions are recorded and queryable at `GET /audit/access`.

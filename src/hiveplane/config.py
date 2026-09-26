@@ -297,6 +297,18 @@ class HealthSettings(BaseModel):
     min_runs_for_score: int = Field(default=5, ge=1)
 
 
+class AuthSettings(BaseModel):
+    """Operator authn/authz settings (M45)."""
+
+    enabled: bool = False
+
+
+class SecretsSettings(BaseModel):
+    """Encrypted secret store settings (M45)."""
+
+    master_key_file: str = ".hiveplane/secrets.key"
+
+
 class McpSettings(BaseModel):
     """Live MCP Registry v2 transport settings (M44)."""
 
@@ -398,6 +410,8 @@ class Settings(BaseSettings):
     health: HealthSettings = Field(default_factory=HealthSettings)
     probes: ProbesSettings = Field(default_factory=ProbesSettings)
     mcp: McpSettings = Field(default_factory=McpSettings)
+    secrets: SecretsSettings = Field(default_factory=SecretsSettings)
+    auth: AuthSettings = Field(default_factory=AuthSettings)
     eval: EvalSettings = Field(default_factory=EvalSettings)
 
 

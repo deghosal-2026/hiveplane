@@ -13,7 +13,9 @@ from hiveplane.api.deps import (
     get_policy_pack_registry,
     get_policy_pack_store,
     get_tenant_context,
+    require_permission,
 )
+from hiveplane.auth.models import OperatorIdentity, Permission
 from hiveplane.core.decision import PolicyContext, PolicyDecision
 from hiveplane.policy.engine import PolicyEngine
 from hiveplane.policy.kill_switch import KillSwitch, KillSwitchRecord
@@ -68,7 +70,10 @@ def list_disabled_tools(kill_switch: KillSwitchDep) -> list[KillSwitchRecord]:
 
 @router.post("/tools/{tool_id}/disable", response_model=KillSwitchRecord)
 def disable_tool(
-    tool_id: str, payload: KillSwitchRequest, kill_switch: KillSwitchDep
+    tool_id: str,
+    payload: KillSwitchRequest,
+    kill_switch: KillSwitchDep,
+    _: Annotated[OperatorIdentity, Depends(require_permission(Permission.KILL_SWITCH))],
 ) -> KillSwitchRecord:
     """Disable a tool fleet-wide (fail-closed at the tool-call boundary)."""
     return kill_switch.disable(tool_id, actor=payload.actor, reason=payload.reason)
@@ -76,7 +81,10 @@ def disable_tool(
 
 @router.post("/tools/{tool_id}/enable", response_model=KillSwitchRecord)
 def enable_tool(
-    tool_id: str, payload: KillSwitchRequest, kill_switch: KillSwitchDep
+    tool_id: str,
+    payload: KillSwitchRequest,
+    kill_switch: KillSwitchDep,
+    _: Annotated[OperatorIdentity, Depends(require_permission(Permission.KILL_SWITCH))],
 ) -> KillSwitchRecord:
     """Re-enable a disabled tool."""
     return kill_switch.enable(tool_id, actor=payload.actor)

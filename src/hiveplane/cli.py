@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import urllib.error
 import urllib.request
 from http import HTTPStatus
@@ -61,6 +62,9 @@ policies_app = typer.Typer(
 )
 health_app = typer.Typer(help="Inspect agent health and SLOs.", no_args_is_help=True)
 probes_app = typer.Typer(help="Inspect synthetic probe results.", no_args_is_help=True)
+secrets_app = typer.Typer(help="Manage encrypted secrets.", no_args_is_help=True)
+keys_app = typer.Typer(help="Manage scoped API keys.", no_args_is_help=True)
+auth_app = typer.Typer(help="Operator authentication.", no_args_is_help=True)
 app.add_typer(certs_app, name="certs")
 app.add_typer(runs_app, name="runs")
 app.add_typer(approvals_app, name="approvals")
@@ -80,6 +84,9 @@ app.add_typer(experiment_app, name="experiment")
 app.add_typer(policies_app, name="policies")
 app.add_typer(health_app, name="health")
 app.add_typer(probes_app, name="probes")
+app.add_typer(secrets_app, name="secrets")
+app.add_typer(keys_app, name="keys")
+app.add_typer(auth_app, name="auth")
 
 ManifestArg = Annotated[
     Path,
@@ -1949,3 +1956,137 @@ def mcp_tools(
         _fail("list MCP tools", status_code, body)
     for tool in json.loads(body):
         typer.echo(f"{tool['tool_id']}  {tool['tool_name']}  {tool['status']}")
+
+
+# --------------------------------------------------------------------------- #
+# Secrets, keys, and auth (M45)
+# --------------------------------------------------------------------------- #
+def _secret_value(value: str | None, from_env: str | None) -> str:
+    if value is not None:
+        return value
+    if from_env is not None:
+        resolved = os.environ.get(from_env)
+        if resolved is None:
+            typer.secho(
+                f"environment variable {from_env!r} is not set",
+                fg=typer.colors.RED,
+                err=True,
+            )
+            raise typer.Exit(code=2)
+        return resolved
+    typer.secho("provide --value or --from-env", fg=typer.colors.RED, err=True)
+    raise typer.Exit(code=2)
+
+
+@secrets_app.command("put")
+def secrets_put(
+    name: Annotated[str, typer.Argument(help="Secret name.")],
+    value: Annotated[str | None, typer.Option("--value", help="Secret value (write-only).")] = None,
+    from_env: Annotated[
+        str | None, typer.Option("--from-env", help="Read the value from an env var.")
+    ] = None,
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Create a secret; the value is never echoed or returned."""
+    payload = {"name": name, "value": _secret_value(value, from_env)}
+    status_code, body = _request("POST", f"{api_url.rstrip('/')}/secrets", payload)
+    if status_code >= 400 or status_code == 0:
+        _fail("put secret", status_code, body)
+    data = json.loads(body)
+    typer.secho(f"OK: {data['name']}@v{data['current_version']}", fg=typer.colors.GREEN)
+
+
+@secrets_app.command("rotate")
+def secrets_rotate(
+    name: Annotated[str, typer.Argument(help="Secret name.")],
+    value: Annotated[str | None, typer.Option("--value", help="New secret value.")] = None,
+    from_env: Annotated[
+        str | None, typer.Option("--from-env", help="Read the value from an env var.")
+    ] = None,
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Rotate a secret to a new version (takes effect on the next run)."""
+    payload = {"name": name, "value": _secret_value(value, from_env)}
+    status_code, body = _request("POST", f"{api_url.rstrip('/')}/secrets/{name}/rotate", payload)
+    if status_code >= 400 or status_code == 0:
+        _fail("rotate secret", status_code, body)
+    data = json.loads(body)
+    typer.secho(f"OK: {data['name']}@v{data['current_version']}", fg=typer.colors.GREEN)
+
+
+@secrets_app.command("list")
+def secrets_list(api_url: ApiUrl = "http://localhost:8100") -> None:
+    """List secret metadata (never plaintext)."""
+    status_code, body = _request("GET", f"{api_url.rstrip('/')}/secrets")
+    if status_code >= 400 or status_code == 0:
+        _fail("list secrets", status_code, body)
+    for secret in json.loads(body):
+        typer.echo(f"{secret['name']}  v{secret['current_version']}  {secret['versions']}")
+
+
+@secrets_app.command("show")
+def secrets_show(
+    name: Annotated[str, typer.Argument(help="Secret name.")],
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Show one secret's metadata."""
+    status_code, body = _request("GET", f"{api_url.rstrip('/')}/secrets/{name}")
+    if status_code >= 400 or status_code == 0:
+        _fail("show secret", status_code, body)
+    secret = json.loads(body)
+    typer.echo(
+        f"{secret['name']}  current=v{secret['current_version']}  versions={secret['versions']}"
+    )
+
+
+@keys_app.command("create")
+def keys_create(
+    role: Annotated[str, typer.Option("--role", help="admin|approver|viewer.")] = "viewer",
+    scope: Annotated[
+        list[str] | None, typer.Option("--scope", help="Narrowing scope (repeatable).")
+    ] = None,
+    label: Annotated[str | None, typer.Option("--label")] = None,
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Issue a scoped API key; the token is shown exactly once."""
+    payload: dict[str, object] = {"role": role, "label": label}
+    if scope:
+        payload["scopes"] = scope
+    status_code, body = _request("POST", f"{api_url.rstrip('/')}/keys", payload)
+    if status_code >= 400 or status_code == 0:
+        _fail("create key", status_code, body)
+    data = json.loads(body)
+    typer.secho(f"key id: {data['key_id']}", fg=typer.colors.GREEN)
+    typer.echo(f"token (store it now): {data['token']}")
+
+
+@keys_app.command("list")
+def keys_list(api_url: ApiUrl = "http://localhost:8100") -> None:
+    """List API keys (hashed only)."""
+    status_code, body = _request("GET", f"{api_url.rstrip('/')}/keys")
+    if status_code >= 400 or status_code == 0:
+        _fail("list keys", status_code, body)
+    for key in json.loads(body):
+        typer.echo(f"{key['key_id']}  {key['role']}  revoked={bool(key['revoked_at'])}")
+
+
+@keys_app.command("revoke")
+def keys_revoke(
+    key_id: Annotated[str, typer.Argument(help="API key id.")],
+    api_url: ApiUrl = "http://localhost:8100",
+) -> None:
+    """Revoke an API key."""
+    status_code, body = _request("DELETE", f"{api_url.rstrip('/')}/keys/{key_id}")
+    if status_code >= 400 or status_code == 0:
+        _fail("revoke key", status_code, body)
+    typer.secho(f"OK: revoked {key_id}", fg=typer.colors.GREEN)
+
+
+@auth_app.command("whoami")
+def auth_whoami(api_url: ApiUrl = "http://localhost:8100") -> None:
+    """Show the verified caller identity."""
+    status_code, body = _request("GET", f"{api_url.rstrip('/')}/auth/whoami")
+    if status_code >= 400 or status_code == 0:
+        _fail("whoami", status_code, body)
+    identity = json.loads(body)
+    typer.echo(f"{identity['operator_id']}  {identity['role']}  tenant={identity['tenant_id']}")

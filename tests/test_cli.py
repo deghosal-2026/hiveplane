@@ -1250,3 +1250,95 @@ def test_parse_server_uri_variants() -> None:
     }
     assert _parse_server_uri("https://mcp.example.com/rpc")["kind"] == "http"
     assert _parse_server_uri("sse://mcp.example.com/sse")["target"] == "mcp.example.com/sse"
+
+
+def test_secrets_cli_put_list_show_rotate(monkeypatch: Any) -> None:
+    calls: list[tuple[str, str]] = []
+
+    def fake_request(
+        method: str, url: str, payload: dict[str, Any] | None = None
+    ) -> tuple[int, str]:
+        calls.append((method, url))
+        assert payload is None or "value" in payload
+        if url.endswith("/secrets") and method == "POST":
+            return 201, json.dumps({"name": "pg", "current_version": 1})
+        if url.endswith("/secrets") and method == "GET":
+            return 200, json.dumps(
+                [{"name": "pg", "current_version": 2, "versions": [1, 2]}]
+            )
+        if url.endswith("/secrets/pg/rotate"):
+            return 200, json.dumps({"name": "pg", "current_version": 2})
+        if url.endswith("/secrets/pg"):
+            return 200, json.dumps(
+                {"name": "pg", "current_version": 2, "versions": [1, 2]}
+            )
+        raise AssertionError(f"unexpected {method} {url}")
+
+    monkeypatch.setattr("hiveplane.cli._request", fake_request)
+
+    put = runner.invoke(app, ["secrets", "put", "pg", "--value", "canary"])
+    listed = runner.invoke(app, ["secrets", "list"])
+    shown = runner.invoke(app, ["secrets", "show", "pg"])
+    rotated = runner.invoke(app, ["secrets", "rotate", "pg", "--value", "new"])
+
+    assert put.exit_code == 0 and "canary" not in put.output
+    assert "pg" in listed.output
+    assert "current=v2" in shown.output
+    assert rotated.exit_code == 0
+
+
+def test_secrets_cli_requires_a_value() -> None:
+    result = runner.invoke(app, ["secrets", "put", "pg"])
+    assert result.exit_code == 2
+
+
+def test_secrets_cli_from_env(monkeypatch: Any) -> None:
+    monkeypatch.setenv("MY_SECRET", "from-env")
+    captured: dict[str, Any] = {}
+
+    def fake_request(
+        method: str, url: str, payload: dict[str, Any] | None = None
+    ) -> tuple[int, str]:
+        captured.update(payload or {})
+        return 201, json.dumps({"name": "pg", "current_version": 1})
+
+    monkeypatch.setattr("hiveplane.cli._request", fake_request)
+    result = runner.invoke(app, ["secrets", "put", "pg", "--from-env", "MY_SECRET"])
+    assert result.exit_code == 0
+    assert captured["value"] == "from-env"
+
+    missing = runner.invoke(app, ["secrets", "put", "pg", "--from-env", "NOPE"])
+    assert missing.exit_code == 2
+
+
+def test_keys_cli_create_list_revoke_and_auth_whoami(monkeypatch: Any) -> None:
+    def fake_request(
+        method: str, url: str, payload: dict[str, Any] | None = None
+    ) -> tuple[int, str]:
+        if url.endswith("/keys") and method == "POST":
+            return 201, json.dumps({"key_id": "key-1", "token": "hp_token"})
+        if url.endswith("/keys") and method == "GET":
+            return 200, json.dumps(
+                [{"key_id": "key-1", "role": "approver", "revoked_at": None}]
+            )
+        if url.endswith("/keys/key-1"):
+            return 200, json.dumps({"key_id": "key-1", "role": "approver", "revoked_at": "t"})
+        if url.endswith("/auth/whoami"):
+            return 200, json.dumps(
+                {"operator_id": "alice", "role": "admin", "tenant_id": "default"}
+            )
+        raise AssertionError(f"unexpected {method} {url}")
+
+    monkeypatch.setattr("hiveplane.cli._request", fake_request)
+
+    created = runner.invoke(
+        app, ["keys", "create", "--role", "approver", "--scope", "approvals:write"]
+    )
+    listed = runner.invoke(app, ["keys", "list"])
+    revoked = runner.invoke(app, ["keys", "revoke", "key-1"])
+    whoami = runner.invoke(app, ["auth", "whoami"])
+
+    assert created.exit_code == 0 and "hp_token" in created.output
+    assert "key-1" in listed.output
+    assert revoked.exit_code == 0
+    assert "alice" in whoami.output

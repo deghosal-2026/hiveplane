@@ -504,6 +504,72 @@ class McpToolVersionRow(_TenantScoped, Base):
     payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
 
 
+class VaultSecretRow(_TenantScoped, Base):
+    """Per-tenant secret metadata for the M45 secret vault (ciphertext lives in
+    ``secret_vault_versions``; distinct from the M25 ``secrets`` table)."""
+
+    __tablename__ = "secret_vault"
+    __table_args__ = (
+        UniqueConstraint("tenant_id", "name", name="uq_secret_vault_tenant_name"),
+    )
+
+    secret_id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    name: Mapped[str] = mapped_column(String(253), index=True)
+    current_version: Mapped[int] = mapped_column(Integer)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    rotated_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class VaultSecretVersionRow(Base):
+    """Append-only encrypted secret versions for the M45 secret vault."""
+
+    __tablename__ = "secret_vault_versions"
+
+    version_id: Mapped[str] = mapped_column(String(160), primary_key=True)
+    tenant_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    secret_id: Mapped[str] = mapped_column(String(128), index=True)
+    version: Mapped[int] = mapped_column(Integer)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    revoked_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class ApiKeyRow(_TenantScoped, Base):
+    """Scoped operator API keys (hashed only) (M45)."""
+
+    __tablename__ = "api_keys"
+
+    key_id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    role: Mapped[str] = mapped_column(String(32))
+    hashed_key: Mapped[str] = mapped_column(String(128), index=True)
+    revoked_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
+class AccessAuditRow(_TenantScoped, Base):
+    """Append-only access audit: logins and privileged actions (M45)."""
+
+    __tablename__ = "access_audit"
+    __table_args__ = (Index("ix_access_audit_tenant_created", "tenant_id", "created_at"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    kind: Mapped[str] = mapped_column(String(16), index=True)
+    actor: Mapped[str] = mapped_column(String(253), index=True)
+    method: Mapped[str] = mapped_column(String(32))
+    action: Mapped[str] = mapped_column(String(64), index=True)
+    result: Mapped[str] = mapped_column(String(16))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    payload: Mapped[dict[str, object]] = mapped_column(_PAYLOAD)
+
+
 class TriggerRuleRow(_TenantScoped, Base):
     """Trigger rules per workload."""
 

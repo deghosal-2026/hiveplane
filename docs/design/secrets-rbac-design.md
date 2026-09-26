@@ -1,6 +1,6 @@
 # D33: Secrets, RBAC & Identity Design
 
-> Status: draft
+> Status: implemented (M45)
 
 **Milestones:** M45 · **Extends:** —
 

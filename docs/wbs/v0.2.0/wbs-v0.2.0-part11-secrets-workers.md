@@ -12,15 +12,15 @@ Give the plane a secrets store and an identity model, then make execution distri
 
 **Work items:**
 
-- [ ] [#333](https://github.com/deghosal-2026/hiveplane/issues/333) — M45-01 — Encrypted secret store (per-tenant scope), encrypted at rest with a managed key
-- [ ] [#334](https://github.com/deghosal-2026/hiveplane/issues/334) — M45-02 — Runtime injection: env-var and file mounts; secrets resolved at execution boundary
-- [ ] [#335](https://github.com/deghosal-2026/hiveplane/issues/335) — M45-03 — Context protection: secrets never enter agent context, logs, traces, or audit events (verified by test)
-- [ ] [#336](https://github.com/deghosal-2026/hiveplane/issues/336) — M45-04 — Rotation: rotate secrets without redeploying workloads; versioned secret refs
-- [ ] [#337](https://github.com/deghosal-2026/hiveplane/issues/337) — M45-05 — RBAC-lite: roles (admin/approver/viewer), per-tenant membership, scoped API keys
-- [ ] [#338](https://github.com/deghosal-2026/hiveplane/issues/338) — M45-06 — UI login + API-key authn; role checks on approve/promote/kill-switch actions
-- [ ] [#339](https://github.com/deghosal-2026/hiveplane/issues/339) — M45-07 — Access audit: operator login history + API-key usage analytics
-- [ ] [#340](https://github.com/deghosal-2026/hiveplane/issues/340) — M45-08 — CLI/API for secret and key management
-- [ ] [#341](https://github.com/deghosal-2026/hiveplane/issues/341) — M45-09 — Tests: secret never appears in logs/traces/context; viewer cannot approve; rotation works; scoped key is limited
+- [x] [#333](https://github.com/deghosal-2026/hiveplane/issues/333) — M45-01 — Encrypted secret store (per-tenant scope), encrypted at rest with a managed key
+- [x] [#334](https://github.com/deghosal-2026/hiveplane/issues/334) — M45-02 — Runtime injection: env-var and file mounts; secrets resolved at execution boundary
+- [x] [#335](https://github.com/deghosal-2026/hiveplane/issues/335) — M45-03 — Context protection: secrets never enter agent context, logs, traces, or audit events (verified by test)
+- [x] [#336](https://github.com/deghosal-2026/hiveplane/issues/336) — M45-04 — Rotation: rotate secrets without redeploying workloads; versioned secret refs
+- [x] [#337](https://github.com/deghosal-2026/hiveplane/issues/337) — M45-05 — RBAC-lite: roles (admin/approver/viewer), per-tenant membership, scoped API keys
+- [x] [#338](https://github.com/deghosal-2026/hiveplane/issues/338) — M45-06 — UI login + API-key authn; role checks on approve/promote/kill-switch actions
+- [x] [#339](https://github.com/deghosal-2026/hiveplane/issues/339) — M45-07 — Access audit: operator login history + API-key usage analytics
+- [x] [#340](https://github.com/deghosal-2026/hiveplane/issues/340) — M45-08 — CLI/API for secret and key management
+- [x] [#341](https://github.com/deghosal-2026/hiveplane/issues/341) — M45-09 — Tests: secret never appears in logs/traces/context; viewer cannot approve; rotation works; scoped key is limited
 
 **Test ticket:** [#342](https://github.com/deghosal-2026/hiveplane/issues/342) — Test cases for Secrets Store, Rotation, RBAC-lite & Access Audit
 
@@ -29,13 +29,15 @@ Give the plane a secrets store and an identity model, then make execution distri
 - `docs/design/secrets-rbac-design.md` and `docs/design/secrets-rbac-design.md`
 
 **Acceptance criteria:**
-- [ ] A secret never appears in logs, traces, or agent context (verified by automated test)
-- [ ] Rotating a secret takes effect for the next run without redeploy
-- [ ] A viewer-role operator cannot approve, promote, or trigger a kill switch (403)
-- [ ] A scoped API key cannot exceed its scope
-- [ ] Login history and API-key usage are recorded and queryable
+- [x] A secret never appears in logs, traces, or agent context (verified by automated test)
+- [x] Rotating a secret takes effect for the next run without redeploy
+- [x] A viewer-role operator cannot approve, promote, or trigger a kill switch (403)
+- [x] A scoped API key cannot exceed its scope
+- [x] Login history and API-key usage are recorded and queryable
 
 **Done when:** secrets are safe, rotation is operational, and operator actions are role-scoped and audited.
+
+> **Status:** M45 complete. `hiveplane.secrets` provides a per-tenant envelope-encrypted secret vault (AES-256-GCM data keys wrapped by a local key-provider key; ciphertext only at rest), versioned refs `secret://<tenant>/<name>@<version>`, rotation that takes effect next run, and boundary injection as env vars or tmpfs files. A per-run `Redactor` plus `RedactionLogFilter` guarantee secrets never reach context, logs, traces, audit, fan-out, or artifacts (asserted by absence tests, fail-closed). `hiveplane.auth` adds RBAC-lite (admin/approver/viewer), scoped API keys that narrow but never widen a role, and server-side authorization on approve, promote, and kill-switch actions (401/403 from direct API calls). Access audit records logins and privileged actions. Ships API (`/secrets`, `/keys`, `/auth/*`, `/audit/access`), CLI (`secrets`, `keys`, `auth whoami`), tables `secret_vault`/`secret_vault_versions`/`api_keys`/`access_audit` (migration `0023`; new tables avoid the M25 `secrets` table). Issues #333–#342 closed; 2025 tests pass with a database, coverage 95.08%, ruff and mypy strict clean.
 
 **Dependencies:** M25 (secret/identity models); v0.1.0 redaction.
 

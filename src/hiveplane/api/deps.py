@@ -2,13 +2,24 @@
 
 from __future__ import annotations
 
-from fastapi import HTTPException, Request, status
+from collections.abc import Callable
+from typing import Annotated
+
+from fastapi import Depends, HTTPException, Request, status
 
 from hiveplane.a2a import A2AAdapter
 from hiveplane.adapters.base import Adapter
 from hiveplane.agent_tools.engine import AgentToolInvoker
 from hiveplane.agent_tools.registry import AgentToolRegistry
 from hiveplane.agent_tools.store import AgentToolStore
+from hiveplane.auth.models import (
+    AuthenticationError,
+    AuthMethod,
+    AuthorizationError,
+    OperatorIdentity,
+    Permission,
+)
+from hiveplane.auth.service import AuthService
 from hiveplane.budget.store import BudgetStore
 from hiveplane.certification.promotion import PromotionGate
 from hiveplane.certification.workflow import CertificationCoordinator
@@ -41,6 +52,7 @@ from hiveplane.reconcile.store import ReconcileStore
 from hiveplane.registry.service import RegistryService
 from hiveplane.router.engine import RouterEngine
 from hiveplane.router.store import RouterStore
+from hiveplane.secrets.service import SecretService
 from hiveplane.tenancy import Role, TenantContext
 from hiveplane.tenancy.context import DEFAULT_CONTEXT
 from hiveplane.transparency.verify import PublicVerifier
@@ -99,6 +111,64 @@ def get_policy_pack_registry(request: Request) -> PolicyPackRegistry:
     """Return the policy pack registry bound to the application state."""
     registry: PolicyPackRegistry = request.app.state.policy_pack_registry
     return registry
+
+
+def get_auth_service(request: Request) -> AuthService:
+    """Return the auth service bound to the application state."""
+    service: AuthService = request.app.state.auth_service
+    return service
+
+
+def get_secret_service(request: Request) -> SecretService:
+    """Return the secret service bound to the application state."""
+    service: SecretService = request.app.state.secret_service
+    return service
+
+
+def get_principal(request: Request) -> OperatorIdentity:
+    """Resolve the caller's identity; anonymous admin when auth is disabled."""
+    from fastapi import HTTPException, status
+
+    from hiveplane.config import get_settings
+    from hiveplane.tenancy.models import Role
+
+    settings = get_settings()
+    if not settings.auth.enabled:
+        return OperatorIdentity(
+            operator_id="anonymous",
+            tenant_id="default",
+            role=Role.ADMIN,
+            method=AuthMethod.SESSION,
+        )
+    service: AuthService = request.app.state.auth_service
+    header = request.headers.get("Authorization", "")
+    if not header.startswith("Bearer "):
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "missing bearer key")
+    try:
+        return service.authenticate_key(header[len("Bearer ") :])
+    except AuthenticationError as exc:
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, str(exc)) from exc
+
+
+def require_permission(
+    permission: Permission,
+) -> Callable[..., OperatorIdentity]:
+    """Build a dependency that authorizes ``permission`` server-side."""
+
+    def _dependency(
+        request: Request,
+        identity: Annotated[OperatorIdentity, Depends(get_principal)],
+    ) -> OperatorIdentity:
+        from fastapi import HTTPException, status
+
+        service: AuthService = request.app.state.auth_service
+        try:
+            service.authorize(identity, permission)
+        except AuthorizationError as exc:
+            raise HTTPException(status.HTTP_403_FORBIDDEN, str(exc)) from exc
+        return identity
+
+    return _dependency
 
 
 def get_mcp_registry(request: Request) -> McpRegistry:

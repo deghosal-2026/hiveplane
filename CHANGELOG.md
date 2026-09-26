@@ -549,6 +549,31 @@ immune system (drift, quarantine, promotion gate), and fleet scale-out. In progr
   `GET /mcp/tools`, `POST /mcp/tools/{id}/onboard`, `DELETE /mcp/tools/{id}`; tables
   `mcp_servers`, `mcp_tools`, `mcp_tool_versions` (migration `0022`).
 
+### Added (M45 — Secrets, RBAC-lite & access audit)
+
+- **Encrypted secret vault** (`hiveplane.secrets`) — per-tenant secrets stored
+  with envelope encryption (AES-256-GCM data keys wrapped by a local key-provider
+  key; ciphertext only at rest). Versioned refs
+  `secret://<tenant>/<name>@<version>`; pinned versions and `@latest`.
+- **Rotation** — `secrets rotate <name>` appends a new current version that takes
+  effect on the next run without redeploying workloads; in-flight pins are
+  unaffected; revoked versions fail closed (no fallback).
+- **Boundary injection** — secrets resolve at the execution boundary and inject
+  as environment variables or tmpfs files, never persisted to disk.
+- **Context protection** — a per-run `Redactor` and `RedactionLogFilter` keep
+  secrets out of context, logs, traces, audit, fan-out, and artifacts, with
+  fail-closed absence checks.
+- **RBAC-lite & scoped API keys** (`hiveplane.auth`) — admin/approver/viewer
+  roles, scoped keys that narrow (never widen) a role, and server-side
+  authorization on approve, promote, and kill-switch actions (401/403).
+- **Access audit** — append-only login history and privileged-action trail.
+- **API + CLI** — `POST/GET /secrets`, `POST /secrets/{name}/rotate`,
+  `POST/GET/DELETE /keys`, `POST /auth/login`, `GET /auth/whoami`,
+  `GET /audit/access`; CLI `secrets put|rotate|list|show`, `keys create|list|revoke`,
+  `auth whoami`.
+- **Persistence** — tables `secret_vault`, `secret_vault_versions`, `api_keys`,
+  `access_audit` (migration `0023`).
+
 ## [0.1.0] - 2026-09-25
 
 The first release: the certified control loop. Register agents, certify them against a
