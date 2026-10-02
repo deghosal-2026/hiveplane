@@ -1,6 +1,7 @@
 # D16: Agent Health Design
 
 > Status: draft
+> **v0.2.0:** extended by [Agent Health & SLO v2 (D31)](agent-health-slo-design.md).
 
 ## Problem
 

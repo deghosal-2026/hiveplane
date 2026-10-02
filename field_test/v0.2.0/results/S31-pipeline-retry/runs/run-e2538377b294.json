@@ -1,0 +1,246 @@
+{
+  "run": {
+    "status": 200,
+    "body": {
+      "id": "run-e2538377b294",
+      "workload_id": "failing-agent",
+      "caller": "pipeline:prun-f1cf7ad1d56b",
+      "state": "failed",
+      "model_identity": null,
+      "created_at": "2026-10-02T00:47:50.214018Z",
+      "updated_at": "2026-10-02T00:47:50.226864Z",
+      "started_at": "2026-10-02T00:47:50.223354Z",
+      "finished_at": "2026-10-02T00:47:50.226864Z",
+      "trigger_origin": null,
+      "pipeline_origin": {
+        "pipeline_run_id": "prun-f1cf7ad1d56b",
+        "pipeline_id": "ft-retry",
+        "node_id": "a",
+        "parent_run_id": null,
+        "attempt": 2
+      },
+      "agent_tool_origin": null,
+      "manifest_version": 2,
+      "context": "sandbox",
+      "sandbox": true,
+      "task": {},
+      "result": null,
+      "failure_reason": "RuntimeError: deliberate field-test failure (failing-agent)",
+      "cost_usd": 0.0,
+      "sandbox_id": "sb-380766e9f4af",
+      "trace_id": "a2167e78bb4370206f23514202a234d2",
+      "shadow_of": null,
+      "probe": false,
+      "read_only": false,
+      "canary_rollout_id": null,
+      "canary_arm": null,
+      "tenant_id": "default",
+      "team_id": "default",
+      "attribution_key": "default"
+    }
+  },
+  "events": {
+    "status": 200,
+    "body": [
+      {
+        "run_id": "run-e2538377b294",
+        "sequence": 0,
+        "type": "admission",
+        "actor": "pipeline:prun-f1cf7ad1d56b",
+        "timestamp": "2026-10-02T00:47:50.221307Z",
+        "from_state": null,
+        "to_state": "queued",
+        "detail": "sandbox_only"
+      },
+      {
+        "run_id": "run-e2538377b294",
+        "sequence": 1,
+        "type": "state_change",
+        "actor": "pipeline",
+        "timestamp": "2026-10-02T00:47:50.224244Z",
+        "from_state": "queued",
+        "to_state": "running",
+        "detail": null
+      },
+      {
+        "run_id": "run-e2538377b294",
+        "sequence": 2,
+        "type": "sandbox",
+        "actor": "pipeline",
+        "timestamp": "2026-10-02T00:47:50.225431Z",
+        "from_state": null,
+        "to_state": null,
+        "detail": "provisioned sb-380766e9f4af"
+      },
+      {
+        "run_id": "run-e2538377b294",
+        "sequence": 3,
+        "type": "state_change",
+        "actor": "adapter",
+        "timestamp": "2026-10-02T00:47:50.228453Z",
+        "from_state": "running",
+        "to_state": "failed",
+        "detail": "RuntimeError: deliberate field-test failure (failing-agent)"
+      },
+      {
+        "run_id": "run-e2538377b294",
+        "sequence": 4,
+        "type": "sandbox",
+        "actor": "adapter",
+        "timestamp": "2026-10-02T00:47:50.230383Z",
+        "from_state": null,
+        "to_state": null,
+        "detail": "destroyed sb-380766e9f4af"
+      }
+    ]
+  },
+  "story": {
+    "status": 200,
+    "body": {
+      "run_id": "run-e2538377b294",
+      "workload": "failing-agent",
+      "team": "platform",
+      "state": "failed",
+      "context": "sandbox",
+      "model_identity": null,
+      "cost_usd": 0.0,
+      "sandbox": true,
+      "sandbox_id": "sb-380766e9f4af",
+      "certification_status": "uncertified",
+      "attestation_id": null,
+      "trace_id": "a2167e78bb4370206f23514202a234d2",
+      "entries": [
+        {
+          "timestamp": "2026-10-02T00:47:50.214018Z",
+          "kind": "admission",
+          "summary": "sandbox_only",
+          "detail": {
+            "outcome": "sandbox_only",
+            "refused_reason": null,
+            "escalation_required": false,
+            "sandbox": true,
+            "checks": [
+              {
+                "step": "halt",
+                "passed": true,
+                "reason": null,
+                "rule": "incident"
+              },
+              {
+                "step": "certification",
+                "passed": true,
+                "reason": null,
+                "rule": "certification"
+              },
+              {
+                "step": "model_identity",
+                "passed": true,
+                "reason": null,
+                "rule": "model_binding"
+              },
+              {
+                "step": "budget",
+                "passed": true,
+                "reason": null,
+                "rule": "run"
+              },
+              {
+                "step": "policy",
+                "passed": true,
+                "reason": "no tool policy applies",
+                "rule": "run.allow"
+              },
+              {
+                "step": "sandbox",
+                "passed": true,
+                "reason": null,
+                "rule": "sandbox"
+              }
+            ]
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:47:50.224244Z",
+          "kind": "state",
+          "summary": "queued -> running",
+          "detail": {
+            "actor": "pipeline",
+            "detail": null,
+            "from_state": "queued",
+            "to_state": "running",
+            "sequence": 1
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:47:50.225431Z",
+          "kind": "sandbox",
+          "summary": "provisioned sb-380766e9f4af",
+          "detail": {
+            "actor": "pipeline",
+            "detail": "provisioned sb-380766e9f4af",
+            "from_state": null,
+            "to_state": null,
+            "sequence": 2
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:47:50.228453Z",
+          "kind": "state",
+          "summary": "running -> failed",
+          "detail": {
+            "actor": "adapter",
+            "detail": "RuntimeError: deliberate field-test failure (failing-agent)",
+            "from_state": "running",
+            "to_state": "failed",
+            "sequence": 3
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:47:50.230383Z",
+          "kind": "sandbox",
+          "summary": "destroyed sb-380766e9f4af",
+          "detail": {
+            "actor": "adapter",
+            "detail": "destroyed sb-380766e9f4af",
+            "from_state": null,
+            "to_state": null,
+            "sequence": 4
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:47:50.234663Z",
+          "kind": "delivery",
+          "summary": "slack delivered",
+          "detail": {
+            "target": "#platform-oncall",
+            "status": "delivered",
+            "attempts": 1,
+            "error": null
+          }
+        }
+      ]
+    }
+  },
+  "usage": {
+    "status": 200,
+    "body": []
+  },
+  "deliveries": {
+    "status": 200,
+    "body": [
+      {
+        "run_id": "run-e2538377b294",
+        "destination_type": "slack",
+        "target": "#platform-oncall",
+        "status": "delivered",
+        "attempts": 1,
+        "error": null,
+        "timestamp": "2026-10-02T00:47:50.234663Z"
+      }
+    ]
+  },
+  "feedback": {
+    "status": 200,
+    "body": []
+  }
+}

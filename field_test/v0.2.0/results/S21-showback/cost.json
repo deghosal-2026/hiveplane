@@ -1,0 +1,67 @@
+{
+  "showback": {
+    "tenant_id": "default",
+    "kind": "month",
+    "period_key": "2026-10",
+    "group_by": "team",
+    "rows": [
+      {
+        "tenant_id": "default",
+        "team_id": "platform",
+        "workload_id": null,
+        "total_cost_usd": 0.0,
+        "wasted_usd": 0.0,
+        "cache_savings_usd": 0.0,
+        "completed_tasks": 0,
+        "cost_per_completed_task": 0.0
+      },
+      {
+        "tenant_id": "default",
+        "team_id": "support",
+        "workload_id": null,
+        "total_cost_usd": 0.0,
+        "wasted_usd": 0.0,
+        "cache_savings_usd": 0.0,
+        "completed_tasks": 0,
+        "cost_per_completed_task": 0.0
+      }
+    ],
+    "total_cost_usd": 0.0,
+    "total_completed_tasks": 0,
+    "fleet_cpct": 0.0,
+    "cache_savings_usd": 0.0,
+    "unattributed": 0
+  },
+  "roi": {
+    "rows": [
+      {
+        "workload_id": "context-guard-probe",
+        "spend_usd": 0.0,
+        "value_usd": 0.0,
+        "completed_tasks": 0,
+        "roi": 0.0,
+        "expensive_low_value": false,
+        "evidence": []
+      },
+      {
+        "workload_id": "velocity-guard-probe",
+        "spend_usd": 0.0,
+        "value_usd": 0.0,
+        "completed_tasks": 0,
+        "roi": 0.0,
+        "expensive_low_value": false,
+        "evidence": []
+      }
+    ],
+    "total_spend_usd": 0.0,
+    "total_value_usd": 0.0,
+    "fleet_roi": 0.0
+  },
+  "forecast": {
+    "spent_usd": 0.0,
+    "elapsed_fraction": 0.03328290369212963,
+    "projected_usd": 0.0,
+    "projected_overrun_usd": 0.0,
+    "overrun_probability": 0.0
+  }
+}

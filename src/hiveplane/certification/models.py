@@ -19,6 +19,7 @@ from pydantic import (
     model_validator,
 )
 
+from hiveplane.certification.binding import ArtifactBinding
 from hiveplane.core.types import Duration
 
 
@@ -120,7 +121,10 @@ class Attestation(BaseModel):
     timestamp: datetime
     environment: Environment
     signer: Signer
+    artifact_hash: str | None = None
+    binding: ArtifactBinding | None = None
     previous_attestation_id: str | None = None
+    profile: str = "full"
 
     @field_validator("timestamp")
     @classmethod
@@ -208,6 +212,17 @@ class BenchmarkTask(BaseModel):
     critical: bool = False
     timeout_seconds: int = Field(default=30, gt=0)
     allow_network: bool = False
+    profiles: list[str] = Field(default_factory=lambda: ["full"])
+
+    @field_validator("profiles")
+    @classmethod
+    def _profiles_are_known(cls, value: list[str]) -> list[str]:
+        if not value:
+            raise ValueError("a task must belong to at least one profile")
+        unknown = sorted(set(value) - {"fast", "full"})
+        if unknown:
+            raise ValueError(f"unknown benchmark profiles: {', '.join(unknown)}")
+        return value
 
 
 class BenchmarkCorpus(BaseModel):
@@ -259,6 +274,33 @@ class CheckStatus(StrEnum):
     FAIL = "fail"
 
 
+class Severity(StrEnum):
+    """How serious a regression is (DD-11, M33)."""
+
+    NONE = "none"
+    WARNING = "warning"
+    CRITICAL = "critical"
+
+
+class ReplayFrameSet(BaseModel):
+    """A replayable reference for one benchmark task (D18, M33-03).
+
+    The frame set links a regressed/improved task to its deterministic task
+    contract (input, expected outcome, and check) and the trace id of the run,
+    so the exact task can be replayed against the fake provider.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    task_id: str = Field(min_length=1)
+    trace_id: str | None = None
+    input: dict[str, JsonValue] = Field(default_factory=dict)
+    expected: dict[str, JsonValue] = Field(default_factory=dict)
+    check: dict[str, JsonValue] = Field(default_factory=dict)
+    replay_ref: str = Field(min_length=1)
+    replayable: bool = True
+
+
 class BenchmarkTaskResult(BaseModel):
     """The result of executing and checking one benchmark task."""
 
@@ -268,6 +310,7 @@ class BenchmarkTaskResult(BaseModel):
     status: CheckStatus
     latency_ms: int = Field(ge=0)
     tokens: int = Field(default=0, ge=0)
+    cost_usd: float = Field(default=0.0, ge=0.0)
     trace_id: str | None = None
     critical: bool = False
     failure_reason: str | None = None
@@ -325,6 +368,12 @@ class TaskDelta(BaseModel):
     before: CheckStatus
     after: CheckStatus
     failure_reason: str | None = None
+    critical: bool = False
+    severity: Severity = Severity.NONE
+    latency_delta_ms: int = 0
+    tokens_delta: int = 0
+    cost_delta_usd: float = 0.0
+    replay: ReplayFrameSet | None = None
 
 
 class RegressionDiff(BaseModel):
@@ -343,6 +392,33 @@ class RegressionDiff(BaseModel):
     added: list[str] = Field(default_factory=list)
     removed: list[str] = Field(default_factory=list)
     blocked: bool
+    severity: Severity = Severity.NONE
+    critical_regressions: list[str] = Field(default_factory=list)
+    warnings: list[str] = Field(default_factory=list)
+    baseline_attestation_id: str | None = None
+    summary: str = ""
+
+
+class RegressionReport(BaseModel):
+    """A machine-readable and human-readable regression artifact (M33-05)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    workload_id: str = Field(min_length=1)
+    before_attestation_id: str = Field(min_length=1)
+    after_attestation_id: str = Field(min_length=1)
+    severity: Severity
+    blocked: bool
+    machine_report: dict[str, JsonValue] = Field(default_factory=dict)
+    human_report: str = ""
+    generated_at: datetime
+
+    @field_validator("generated_at")
+    @classmethod
+    def _generated_at_must_be_timezone_aware(cls, value: datetime) -> datetime:
+        if value.tzinfo is None:
+            raise ValueError("generated_at must be timezone-aware")
+        return value
 
 
 class CertificationRecord(BaseModel):
@@ -354,6 +430,7 @@ class CertificationRecord(BaseModel):
     certification: Certification
     attestation: Attestation
     benchmark_result: BenchmarkResult
+    regression_report: RegressionReport | None = None
 
 
 _TRANSITIONS: dict[CertificationStatus, dict[CertificationEvent, CertificationStatus]] = {

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import pytest
@@ -17,7 +18,12 @@ from hiveplane.config import (
 )
 
 
-def test_defaults_load() -> None:
+def test_defaults_load(monkeypatch: pytest.MonkeyPatch) -> None:
+    # A test asserting built-in defaults must not inherit an external database
+    # endpoint (the Postgres-gated suite is allowed to set HIVEPLANE_DATABASE__*).
+    for key in list(os.environ):
+        if key.startswith("HIVEPLANE_DATABASE__"):
+            monkeypatch.delenv(key, raising=False)
     settings = Settings()
 
     assert settings.environment == "local"
@@ -80,6 +86,9 @@ def test_nested_env_override(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_dotenv_file_is_loaded(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    for key in list(os.environ):
+        if key.startswith("HIVEPLANE_DATABASE__"):
+            monkeypatch.delenv(key, raising=False)
     (tmp_path / ".env").write_text("HIVEPLANE_DATABASE__HOST=from-dotenv\n")
     monkeypatch.chdir(tmp_path)
 

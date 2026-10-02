@@ -110,6 +110,7 @@ def test_gateway_allows_a_second_call_once_approved(
     run = service.submit(
         workload="agent-1", caller="cli", context=AdmissionContext.SANDBOX, model_identity=_MODEL
     )
+    service.start(run.id, actor="cli")
 
     first = gateway.invoke(run.id, ToolCallRequest(tool_id="mcp.t.write"))
     assert first.outcome is ToolCallOutcome.ESCALATED
@@ -117,6 +118,7 @@ def test_gateway_allows_a_second_call_once_approved(
     pending = approvals.list(run_id=run.id)
     assert pending and pending[0].status is ApprovalStatus.PENDING
     approvals.decide(pending[0].approval_id, status=ApprovalStatus.APPROVED, operator="op")
+    service.intervene(run.id, InterventionAction.RESUME, actor="op")
 
     second = gateway.invoke(run.id, ToolCallRequest(tool_id="mcp.t.write"))
     assert second.outcome is ToolCallOutcome.ALLOWED

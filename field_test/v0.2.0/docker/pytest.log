@@ -1,0 +1,15 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.13, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/deghosal/Desktop/code/github/hiveplane
+configfile: pyproject.toml
+plugins: cov-7.1.0, playwright-0.9.0, langsmith-0.12.6, base-url-2.1.0, anyio-4.15.1
+collected 80 items / 13 deselected / 67 selected
+
+tests/docker/test_api_contract.py ........                               [ 11%]
+tests/docker/test_container_fixtures.py ..                               [ 14%]
+tests/docker/test_durability.py .                                        [ 16%]
+tests/docker/test_llm_matrix.py ..                                       [ 19%]
+tests/docker/test_stack_health.py ...                                    [ 23%]
+tests/docker/test_v02_ui.py .......                                      [ 34%]
+tests/docker/test_v02_api.py .......                                     [ 44%]
+tests/docker/test_v02_autonomy.py .

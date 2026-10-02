@@ -3,27 +3,27 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue.svg)](https://www.python.org/)
 [![PyPI](https://img.shields.io/badge/pypi-hiveplane-blue.svg)](https://pypi.org/project/hiveplane/)
-[![Status: alpha](https://img.shields.io/badge/status-alpha-orange.svg)](#mvp-010)
+[![Status: beta](https://img.shields.io/badge/status-beta-green.svg)](#milestones)
 [![Ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 [![Type checked](https://img.shields.io/badge/mypy-strict-blue.svg)](https://github.com/python/mypy)
-[![Coverage](https://img.shields.io/badge/coverage-92%25%20gate-yellow.svg)](https://github.com/deghosal-2026/hiveplane/actions)
+[![Coverage](https://img.shields.io/badge/coverage-95%25%20gate-green.svg)](https://github.com/deghosal-2026/hiveplane/actions)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/14940/badge)](https://www.bestpractices.dev/projects/14940/passing)
-[![Field Test](https://img.shields.io/badge/field%20test-v0.1.0%20%7C%2010%2F10%20scenarios-brightgreen.svg)](docs/field-test/v0.1.0/FIELD_TEST_REPORT.md)
+[![Field Test](https://img.shields.io/badge/field%20test-v0.2.0%20%7C%2036%2F36%20scenarios-brightgreen.svg)](docs/field-test/v0.2.0/FIELD_TEST_REPORT.md)
 [![Changelog](https://img.shields.io/badge/changelog-Keep%20a%20Changelog-%23E05735.svg)](CHANGELOG.md)
 
-> A Kubernetes-like control plane for AI agents: register agents, define budgets and permissions, route tasks, inspect workflow state, and intervene when a run becomes unsafe or uneconomical.
+> A Kubernetes-like control plane for AI agents: register agents, define budgets and permissions, route tasks, inspect workflow state, and intervene when a run becomes unsafe or uneconomical. Production is earned, not assumed — agents are certified against a reproducible benchmark before they run in production, and re-certified when they drift.
 
 ---
 
 ## Install & Quick Start
 
 ```bash
-pip install hiveplane          # Python 3.12+
+pip install hiveplane==0.2.0   # Python 3.12+
 hiveplane init my-fleet        # scaffold a working project
 cd my-fleet
 hiveplane validate workload.yaml
 hiveplane certify workload.yaml
-hiveplane submit --workload workload --task "summarize open PRs"
+hiveplane submit --agent my-fleet --task '{"goal": "summarize open PRs"}'
 hiveplane runs list
 ```
 
@@ -33,8 +33,11 @@ Run the full local stack (API, UI, Postgres, Redis, telemetry) with Docker Compo
 scripts/dev-up.sh
 ```
 
-See the [User Guide](docs/USER_GUIDE.md) for the operator workflow, and the
-[v0.1.0 release notes](docs/release/v0.1.0/release-notes.md) for what ships in this release.
+New here? Follow the [Tutorials](docs/tutorials/), read the
+[Architecture Tour](docs/architecture-tour.md), and keep the
+[Operator Runbook](docs/runbooks/operator-runbook.md) handy. Upgrading from v0.1.0? See the
+[Migration Guide](docs/release/v0.2.0/migration-guide.md). What ships:
+[v0.2.0 release notes](docs/release/v0.2.0/release-notes.md).
 
 ---
 
@@ -289,24 +292,25 @@ If three real agents can run through the same lifecycle and operators can meanin
 
 ## Milestones
 
-### v0.2.0
+### v0.2.0 — The Complete Fleet OS (final big release)
 
-- approval queue UI
-- richer policy conditions
-- budget analytics by agent/team
-- stronger adapter contract
+- triggers (webhook/PR/alert/cron/watch) + trigger DSL, freeze windows, DLQ
+- promotion gate + re-certification + regression diff + drift auto-quarantine
+- certification learns from production: feedback → corpus, online eval sampling, agent signing
+- progressive delivery: shadow runs, canary routing, auto-promote
+- multi-agent pipelines + smart task router + agent-as-tool composition
+- fleet control: GitOps desired-state reconciliation, distributed workers, preemption + QoS, backlog autoscaling, worker identity, leader election (HA), chaos mode
+- defense: injection scanning, tool kill switch, context-window budgets, spend-velocity guards
+- health: SLO/error budget, burn throttle, retries, circuit breakers, synthetic probes
+- MCP registry v2 (live transport), secrets store + RBAC-lite
+- 9-channel fan-out + Slack interactive + mobile approvals
+- cost: showback, cost-per-completed-task, ROI flags, chargeback metering API
+- multi-tenant isolation, Helm chart + k3d reference deploy, backup/restore, air-gapped bundle
+- API v2 + Python SDK + agent-as-service endpoints + plugin hooks; weekly fleet digest + compliance evidence pack
+- `ask` NL operator copilot, incident mode, global search
+- PydanticAI + OpenAI Agents SDK/CrewAI adapters; alpha → beta
 
-### v0.3.0
-
-- multi-runtime support
-- state diff and replay helpers
-- reliability metrics and SLO hooks
-
-### v0.4.0
-
-- multi-tenant support
-- ROI dashboards
-- Helm chart and reference cluster deployment
+After v0.2.0: maintenance mode (docs, community, security patches). Full scope: [roadmap](docs/prd/09-roadmap.md).
 
 ---
 
@@ -364,14 +368,14 @@ pip install -e ".[dev]"
 
 ```bash
 make test    # pytest
-make cov     # pytest with coverage report (> 92% required)
+make cov     # pytest with coverage report (> 95% required)
 make lint    # ruff
 make type    # mypy (strict)
 make check   # lint + type + cov
 make test-e2e  # operator UI browser tests (Playwright, Chromium)
 ```
 
-CI (`.github/workflows/ci.yml`) runs the same gates on Python 3.12 and 3.13, fails the build below 92% coverage, and runs the operator UI browser tests in a separate job.
+CI (`.github/workflows/ci.yml`) runs the same gates on Python 3.12 and 3.13, fails the build below 95% coverage, and runs the operator UI browser tests in a separate job.
 
 ### Local stack
 
@@ -393,20 +397,29 @@ Full index: [docs/README.md](docs/README.md).
 
 **Guides**
 
-- [User Guide](docs/USER_GUIDE.md) — operator workflow
+- [User Guide](docs/USER_GUIDE.md) — the full operator and subsystem reference
+- [Architecture Tour](docs/architecture-tour.md) — guided walkthrough of the v0.2.0 system
+- [Tutorials](docs/tutorials/) — getting started, certify/promote/drift, autonomy
+- [Operator Runbook](docs/runbooks/operator-runbook.md) — day-two operations and incidents
 - [Adapters](docs/ADAPTERS.md) — adapter contract, conformance, sandbox, shaping, model binding
 - [Observability](docs/observability.md) — signals, agent health, certification metrics, cost showback
 - [Workload Manifest Format Spec](docs/workloads/manifest-format-spec.md) · [JSON Schema](docs/workloads/manifest.schema.json)
 - [Contributing Workloads](docs/workloads/CONTRIBUTING.md)
 - [Example workloads](examples/workloads/README.md) · [Scripts](scripts/README.md)
 
+**Release v0.2.0**
+
+- [Release Notes](docs/release/v0.2.0/release-notes.md)
+- [Migration Guide (v0.1.0 → v0.2.0)](docs/release/v0.2.0/migration-guide.md)
+- [CHANGELOG](CHANGELOG.md)
+- [Field Test Report](docs/field-test/v0.2.0/FIELD_TEST_REPORT.md) · [Docker Test Report](docs/field-test/v0.2.0/DOCKER_TEST_REPORT.md)
+- [Security Audit](docs/release/v0.2.0/security-audit.md) · [SECURITY.md](SECURITY.md)
+- [WBS v0.2.0](docs/wbs/v0.2.0/wbs-v0.2.0-index.md)
+
 **Release v0.1.0**
 
 - [Release Notes](docs/release/v0.1.0/release-notes.md)
-- [CHANGELOG](CHANGELOG.md)
-- [Field Test Report](docs/field-test/v0.1.0/FIELD_TEST_REPORT.md) · [Field Test Plan](docs/field-test/v0.1.0/field-test-plan.md)
-- [Docker Test Report](docs/field-test/v0.1.0/DOCKER_TEST_REPORT.md) · [Docker Test Plan](docs/field-test/v0.1.0/docker-test-plan.md)
-- [Security Audit](docs/release/v0.1.0/security-audit.md)
+- [Field Test Report](docs/field-test/v0.1.0/FIELD_TEST_REPORT.md) · [Security Audit](docs/release/v0.1.0/security-audit.md)
 - [WBS v0.1.0](docs/wbs/v0.1.0/wbs-v0.1.0-index.md)
 
 **Design & requirements**

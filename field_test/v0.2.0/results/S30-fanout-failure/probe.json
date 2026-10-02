@@ -1,0 +1,31 @@
+{
+  "scenario": "S30",
+  "model": "omlx/qwen3-4b-instruct-2507/4bit",
+  "runs": {
+    "run-04a2371a89e1": {
+      "state": "failed",
+      "failure_reason": "RuntimeError: deliberate field-test failure (failing-agent)",
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "sandbox",
+        "state_change"
+      ],
+      "state_path": [
+        "running",
+        "failed"
+      ],
+      "tool_calls": [],
+      "policy_rules": [],
+      "llm_calls": [],
+      "deliveries": [
+        {
+          "type": "slack",
+          "status": "delivered"
+        }
+      ]
+    }
+  }
+}

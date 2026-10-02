@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "hiveplane.fullname" . }}-api
+  labels:
+    {{- include "hiveplane.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+spec:
+  replicas: {{ .Values.api.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: api
+  template:
+    metadata:
+      labels:
+        {{- include "hiveplane.labels" . | nindent 8 }}
+        app.kubernetes.io/component: api
+      annotations:
+        {{- toYaml .Values.podAnnotations | nindent 8 }}
+    spec:
+      serviceAccountName: {{ default (include "hiveplane.fullname" .) .Values.serviceAccount.name }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: api
+          image: "{{ .Values.api.image.repository }}:{{ .Values.api.image.tag }}"
+          imagePullPolicy: {{ .Values.api.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.api.containerPort }}
+          env:
+            - name: HIVEPLANE_EXECUTION__STORE
+              value: postgres
+            - name: HIVEPLANE_DATABASE__HOST
+              value: {{ include "hiveplane.fullname" . }}-postgres
+            - name: HIVEPLANE_DATABASE__PORT
+              value: "5432"
+            - name: HIVEPLANE_DATABASE__NAME
+              value: {{ .Values.postgres.auth.database | quote }}
+            - name: HIVEPLANE_DATABASE__USER
+              value: {{ .Values.postgres.auth.username | quote }}
+            - name: HIVEPLANE_DATABASE__PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hiveplane.postgresSecretName" . }}
+                  key: password
+            - name: HIVEPLANE_REDIS__HOST
+              value: {{ include "hiveplane.fullname" . }}-redis
+            {{- if .Values.telemetry.enabled }}
+            - name: HIVEPLANE_OTEL__ENDPOINT
+              value: http://{{ include "hiveplane.fullname" . }}-otel-collector:4318
+            {{- end }}
+            {{- range $key, $value := .Values.api.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            {{- toYaml .Values.api.resources | nindent 12 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "hiveplane.fullname" . }}-api
+  labels:
+    {{- include "hiveplane.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+spec:
+  type: {{ .Values.api.service.type }}
+  selector:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: api
+  ports:
+    - name: http
+      port: {{ .Values.api.service.port }}
+      targetPort: http

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Triggers · HivePlane{% endblock %}
+{% block content %}
+<h1>Triggers</h1>
+
+{% if triggers %}
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Source</th>
+      <th>Target workload</th>
+      <th>Schedule</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for trigger in triggers %}
+    <tr>
+      <td>{{ trigger.id }}</td>
+      <td>{{ trigger.source }}</td>
+      <td>{{ trigger.target.ref }}</td>
+      <td>{{ trigger.schedule or "—" }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">No triggers configured.</p>
+{% endif %}
+{% endblock %}

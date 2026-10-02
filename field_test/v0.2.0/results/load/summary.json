@@ -1,0 +1,9 @@
+{
+  "concurrency": 50,
+  "admitted": 50,
+  "terminal": 50,
+  "failures": {},
+  "submit_seconds": 2.037,
+  "total_seconds": 4.412,
+  "throughput_runs_per_second": 11.334
+}

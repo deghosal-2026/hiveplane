@@ -1,0 +1,25 @@
+==> Seeding MCP tool registry
+==> Seeding tools from /Users/deghosal/Desktop/code/github/hiveplane/field_test/workloads
+present    mcp.github.read_issue
+present    mcp.github.read_large_issue
+present    mcp.github.read_issue
+present    mcp.github.read_issue
+present    pagerduty.acknowledge
+present    mcp.github.read_issue
+present    mcp.github.read_issue
+present    mcp.github.read_large_issue
+present    pagerduty.acknowledge
+present    mcp.github.read_issue
+present    mcp.github.read_large_issue
+present    pagerduty.acknowledge
+present    mcp.github.read_issue
+present    pagerduty.acknowledge
+OK: 0 registered, 14 already present
+==> Registering workloads (api: http://localhost:8100)
+    OK    support-agent
+    OK    eval-judge
+    OK    uncertified-agent
+    OK    model-swap-agent
+    OK    regressed-agent
+    OK    budget-probe
+==> Setup complete: three Tier 1 workloads + negative variants registered, tools seeded

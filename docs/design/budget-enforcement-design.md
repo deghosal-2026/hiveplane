@@ -1,6 +1,7 @@
 # D5: Budget Enforcement Design
 
 > Status: draft
+> **v0.2.0:** extended by [Runtime Guards (D30)](runtime-guards-design.md).
 
 ## Problem
 

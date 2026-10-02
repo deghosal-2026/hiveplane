@@ -1,0 +1,25 @@
+# S10 agent-as-tool
+
+status:   pass
+detail:   nested run run-95e4d9aa9c2a (depth 1, allowed); unknown caller refused
+started:  2026-10-02T00:44:43.460498+00:00
+duration: 5.33s
+model:    omlx/qwen3-4b-instruct-2507/4bit
+git_sha:  b186ba158779686f69cd3fdaba1672de84a13038
+calls:    823
+runs:     run-b691eb54b81e
+
+## Mutating calls (inputs)
+
+  POST /workloads -> 409
+  PUT /workloads/support-agent -> 200
+  POST /certifications -> 201
+  POST /quarantines/quar-5ca4f814a1c8/reinstate -> 409
+  POST /certifications -> 201
+  POST /quarantines/quar-af2a9b9a8904/reinstate -> 409
+  POST /certifications -> 201
+  POST /certifications -> 201
+  POST /runs -> 201
+  POST /runs/run-b691eb54b81e/start -> 200
+  POST /agent-tools/agent.support-agent/invoke -> 200
+  POST /agent-tools/agent.support-agent/invoke -> 403

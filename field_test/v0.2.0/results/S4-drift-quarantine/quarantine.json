@@ -1,0 +1,91 @@
+{
+  "active": [
+    {
+      "quarantine_id": "quar-5283a5c2c62d",
+      "workload": "support-agent",
+      "status": "active",
+      "severity": "critical",
+      "reason": "behavioral drift confirmed (1/2): pass-rate drop 0.833 (threshold 0.100), 5 new failure(s), 1 critical",
+      "actor": "drift-detector",
+      "baseline_attestation_id": "att-c7d391416def",
+      "assessment": {
+        "workload": "support-agent",
+        "baseline_attestation_id": "att-c7d391416def",
+        "verdict": "drifted",
+        "pass_rate_before": 1.0,
+        "pass_rate_after": 0.16666666666666666,
+        "pass_rate_delta": 0.833333,
+        "failed_before": 0,
+        "failed_after": 5,
+        "new_failures": 5,
+        "critical_failures": 1,
+        "threshold_pass_rate": 0.1,
+        "max_new_failures": 2,
+        "required_consecutive_failures": 2,
+        "consecutive_failures": 1,
+        "exceeded": true,
+        "strong_signal": true,
+        "should_quarantine": true,
+        "reason": "behavioral drift confirmed (1/2): pass-rate drop 0.833 (threshold 0.100), 5 new failure(s), 1 critical",
+        "evidence": {
+          "new_failures": 5,
+          "pass_rate_delta": 0.833333,
+          "max_new_failures": 2,
+          "critical_failures": 1,
+          "threshold_pass_rate": 0.1,
+          "consecutive_failures": 1
+        },
+        "tenant_id": "default",
+        "timestamp": "2026-10-02T01:22:13.991995Z"
+      },
+      "evidence": {
+        "new_failures": 5,
+        "pass_rate_delta": 0.833333,
+        "max_new_failures": 2,
+        "critical_failures": 1,
+        "threshold_pass_rate": 0.1,
+        "consecutive_failures": 1
+      },
+      "regression_diff": null,
+      "notified": [
+        "#agent-certifications",
+        "http://webhook-sink:8081/webhook"
+      ],
+      "cancelled_runs": [],
+      "tenant_id": "default",
+      "timestamp": "2026-10-02T01:22:13.996647Z",
+      "reinstated_at": null,
+      "reinstated_by": null
+    }
+  ],
+  "assessment": {
+    "workload": "support-agent",
+    "baseline_attestation_id": "att-c7d391416def",
+    "verdict": "drifted",
+    "pass_rate_before": 1.0,
+    "pass_rate_after": 0.16666666666666666,
+    "pass_rate_delta": 0.833333,
+    "failed_before": 0,
+    "failed_after": 5,
+    "new_failures": 5,
+    "critical_failures": 1,
+    "threshold_pass_rate": 0.1,
+    "max_new_failures": 2,
+    "required_consecutive_failures": 2,
+    "consecutive_failures": 1,
+    "exceeded": true,
+    "strong_signal": true,
+    "should_quarantine": true,
+    "reason": "behavioral drift confirmed (1/2): pass-rate drop 0.833 (threshold 0.100), 5 new failure(s), 1 critical",
+    "evidence": {
+      "pass_rate_delta": 0.833333,
+      "new_failures": 5,
+      "critical_failures": 1,
+      "consecutive_failures": 1,
+      "threshold_pass_rate": 0.1,
+      "max_new_failures": 2
+    },
+    "tenant_id": "default",
+    "timestamp": "2026-10-02T01:22:13.991995Z"
+  }
+}

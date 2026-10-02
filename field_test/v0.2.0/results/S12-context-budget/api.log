@@ -1,0 +1,30 @@
+INFO:     192.168.65.1:41034 - "POST /workloads HTTP/1.1" 201 Created
+INFO:     192.168.65.1:28980 - "POST /runs HTTP/1.1" 201 Created
+INFO:     192.168.65.1:52512 - "POST /runs/run-7a55ae1737c3/start HTTP/1.1" 200 OK
+INFO:     192.168.65.1:48306 - "GET /runs/run-7a55ae1737c3 HTTP/1.1" 200 OK
+INFO:     192.168.65.1:41014 - "GET /runs/run-7a55ae1737c3 HTTP/1.1" 200 OK
+INFO:     192.168.65.1:61523 - "GET /runs/run-7a55ae1737c3/events HTTP/1.1" 200 OK
+INFO:     192.168.65.1:61392 - "GET /runs/run-7a55ae1737c3/usage HTTP/1.1" 200 OK
+INFO:     192.168.65.1:28265 - "POST /runs/run-7a55ae1737c3/stop HTTP/1.1" 200 OK
+INFO:     192.168.65.1:28166 - "GET /runs/run-7a55ae1737c3 HTTP/1.1" 200 OK
+INFO:     192.168.65.1:24718 - "GET /runs/run-7a55ae1737c3/events HTTP/1.1" 200 OK
+INFO:     192.168.65.1:47954 - "GET /runs/run-7a55ae1737c3/story HTTP/1.1" 200 OK
+INFO:     192.168.65.1:54040 - "GET /runs/run-7a55ae1737c3/usage HTTP/1.1" 200 OK
+INFO:     192.168.65.1:20247 - "GET /runs/run-7a55ae1737c3/deliveries HTTP/1.1" 200 OK
+INFO:     192.168.65.1:41901 - "GET /runs/run-7a55ae1737c3/feedback HTTP/1.1" 200 OK
+Exception in thread Thread-191 (_run):
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "/usr/local/lib/python3.12/threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "/usr/local/lib/python3.12/site-packages/hiveplane/telemetry.py", line 148, in _run
+    context.run(work)
+  File "/usr/local/lib/python3.12/site-packages/hiveplane/adapters/raw_worker.py", line 184, in <lambda>
+    telemetry.propagate_context(lambda: self._execute(entry, context, control))
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/hiveplane/adapters/raw_worker.py", line 348, in _execute
+    self._reporter.transition(
+  File "/usr/local/lib/python3.12/site-packages/hiveplane/execution/service.py", line 561, in transition
+    raise IllegalTransitionError(run_id, run.state, target)
+hiveplane.execution.errors.IllegalTransitionError: run 'run-7a55ae1737c3' cannot transition from 'paused' to 'completed'

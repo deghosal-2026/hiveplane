@@ -4,16 +4,19 @@ from __future__ import annotations
 
 import importlib
 import sys
+import threading
 from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
 
-from conformance import Harness, assert_adapter_conforms
+from conformance import Harness, assert_adapter_conforms, assert_adapter_conforms_v2
 from hiveplane.adapters.base import AdapterRunExecutor
 from hiveplane.adapters.langgraph import LangGraphAdapter
 from hiveplane.adapters.loader import EntrypointLoader
+from hiveplane.adapters.openai_agents import OpenAIAgentsAdapter
+from hiveplane.adapters.pydanticai import PydanticAIAdapter
 from hiveplane.budget.pricing import CostTable
 from hiveplane.budget.service import BudgetService
 from hiveplane.budget.store import InMemoryBudgetStore
@@ -52,6 +55,7 @@ def release(run_id):
 
 def run(task, ctx):
     ctx.tool_call("mcp.t.read", host="api.example.com", output="payload")
+    ctx.complete("ping")
     ctx.report_usage(input_tokens=100, output_tokens=50)
     if task.get("hold"):
         _HELD.setdefault(ctx.run_id, threading.Event()).set()
@@ -88,6 +92,7 @@ class S(TypedDict, total=False):
 def work(state: S, config: RunnableConfig) -> S:
     ctx = config["configurable"]["hiveplane_ctx"]
     ctx.tool_call("mcp.t.read", host="api.example.com", output="payload")
+    ctx.complete("ping")
     ctx.report_usage(input_tokens=100, output_tokens=50)
     if state.get("task", {}).get("hold"):
         _HELD.setdefault(ctx.run_id, threading.Event()).set()
@@ -101,6 +106,22 @@ b.add_node("work", work)
 b.add_edge(START, "work")
 b.add_edge("work", END)
 graph = b.compile(checkpointer=InMemorySaver())
+'''
+
+_PYDANTICAI_SCENARIO = '''
+from pydantic_ai import Agent
+
+
+def build(model):
+    return Agent(model, system_prompt="be a helpful conformance agent")
+'''
+
+_OPENAI_AGENTS_SCENARIO = '''
+from agents import Agent
+
+
+def build(model):
+    return Agent(name="conformance", model=model, instructions="be a helpful conformance agent")
 '''
 
 
@@ -187,6 +208,44 @@ def _raw_harness(tmp_path: Path, make_manifest: Callable[..., AgentWorkload]) ->
     )
 
 
+def _pydanticai_harness(
+    tmp_path: Path, make_manifest: Callable[..., AgentWorkload]
+) -> Harness:
+    _module, name = _import_scenario(tmp_path, "conformance_pai", _PYDANTICAI_SCENARIO)
+    workload = _workload(make_manifest, f"{name}:build", adapter="pydanticai")
+    service, registry, policy = _service(workload)
+    gateway = build_tool_gateway(registry, policy, service, approvals=None)
+    adapter = PydanticAIAdapter(service, gateway, EntrypointLoader(root=tmp_path))
+    service.attach_executor(AdapterRunExecutor(adapter))
+    return Harness(
+        adapter=adapter,
+        service=service,
+        workload=workload.name,
+        model_identity=_MODEL,
+        held=lambda run_id: threading.Event(),
+        release=lambda run_id: None,
+    )
+
+
+def _openai_agents_harness(
+    tmp_path: Path, make_manifest: Callable[..., AgentWorkload]
+) -> Harness:
+    _module, name = _import_scenario(tmp_path, "conformance_oa", _OPENAI_AGENTS_SCENARIO)
+    workload = _workload(make_manifest, f"{name}:build", adapter="openai-agents")
+    service, registry, policy = _service(workload)
+    gateway = build_tool_gateway(registry, policy, service, approvals=None)
+    adapter = OpenAIAgentsAdapter(service, gateway, EntrypointLoader(root=tmp_path))
+    service.attach_executor(AdapterRunExecutor(adapter))
+    return Harness(
+        adapter=adapter,
+        service=service,
+        workload=workload.name,
+        model_identity=_MODEL,
+        held=lambda run_id: threading.Event(),
+        release=lambda run_id: None,
+    )
+
+
 def _langgraph_harness(tmp_path: Path, make_manifest: Callable[..., AgentWorkload]) -> Harness:
     module, name = _import_scenario(tmp_path, "conformance_lg", _LG_SCENARIO)
     workload = _workload(make_manifest, f"{name}:graph", adapter="langgraph")
@@ -215,6 +274,47 @@ def test_langgraph_conforms(
 ) -> None:
     pytest.importorskip("langgraph")
     assert_adapter_conforms(_langgraph_harness(tmp_path, make_manifest))
+
+
+def test_raw_worker_conforms_v2(
+    make_manifest: Callable[..., AgentWorkload], tmp_path: Path
+) -> None:
+    assert_adapter_conforms_v2(_raw_harness(tmp_path, make_manifest))
+
+
+def test_langgraph_conforms_v2(
+    make_manifest: Callable[..., AgentWorkload], tmp_path: Path
+) -> None:
+    pytest.importorskip("langgraph")
+    assert_adapter_conforms_v2(_langgraph_harness(tmp_path, make_manifest))
+
+
+def test_pydanticai_conforms(
+    make_manifest: Callable[..., AgentWorkload], tmp_path: Path
+) -> None:
+    pytest.importorskip("pydantic_ai")
+    assert_adapter_conforms(_pydanticai_harness(tmp_path, make_manifest))
+
+
+def test_pydanticai_conforms_v2(
+    make_manifest: Callable[..., AgentWorkload], tmp_path: Path
+) -> None:
+    pytest.importorskip("pydantic_ai")
+    assert_adapter_conforms_v2(_pydanticai_harness(tmp_path, make_manifest))
+
+
+def test_openai_agents_conforms(
+    make_manifest: Callable[..., AgentWorkload], tmp_path: Path
+) -> None:
+    pytest.importorskip("agents")
+    assert_adapter_conforms(_openai_agents_harness(tmp_path, make_manifest))
+
+
+def test_openai_agents_conforms_v2(
+    make_manifest: Callable[..., AgentWorkload], tmp_path: Path
+) -> None:
+    pytest.importorskip("agents")
+    assert_adapter_conforms_v2(_openai_agents_harness(tmp_path, make_manifest))
 
 
 class _DeadAdapter:

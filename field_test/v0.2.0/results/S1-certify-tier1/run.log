@@ -1,0 +1,24 @@
+# S1 certify-tier1
+
+status:   pass
+detail:   Tier 1 certified; attestation valid
+started:  2026-10-02T00:43:41.998348+00:00
+duration: 2.55s
+model:    omlx/qwen3-4b-instruct-2507/4bit
+git_sha:  b186ba158779686f69cd3fdaba1672de84a13038
+calls:    137
+runs:     (none)
+
+## Mutating calls (inputs)
+
+  POST /workloads -> 409
+  PUT /workloads/support-agent -> 200
+  POST /certifications -> 201
+  POST /certifications -> 201
+  POST /workloads -> 409
+  PUT /workloads/eval-judge -> 200
+  POST /certifications -> 201
+  POST /certifications -> 201
+  POST /workloads -> 409
+  PUT /workloads/uncertified-agent -> 200
+  POST /runs -> 403

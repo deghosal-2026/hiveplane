@@ -1,0 +1,291 @@
+{
+  "run": {
+    "status": 200,
+    "body": {
+      "id": "run-704f968c76d3",
+      "workload_id": "support-agent",
+      "caller": "benchmark",
+      "state": "completed",
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "created_at": "2026-10-02T00:45:43.436528Z",
+      "updated_at": "2026-10-02T00:45:43.468859Z",
+      "started_at": "2026-10-02T00:45:43.461590Z",
+      "finished_at": "2026-10-02T00:45:43.468859Z",
+      "trigger_origin": null,
+      "pipeline_origin": null,
+      "agent_tool_origin": null,
+      "manifest_version": 10,
+      "context": "sandbox",
+      "sandbox": true,
+      "task": {
+        "query": "downtime window",
+        "account_id": "ACC-050"
+      },
+      "result": {
+        "answer": "Scheduled maintenance: Sunday 2-4am UTC",
+        "status": "success",
+        "account_tier": "pro"
+      },
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "sandbox_id": "sb-c727fe10f2ef",
+      "trace_id": "231c705ff8be91944d42c0cbed7feb82",
+      "shadow_of": null,
+      "probe": false,
+      "read_only": false,
+      "canary_rollout_id": null,
+      "canary_arm": null,
+      "tenant_id": "default",
+      "team_id": "default",
+      "attribution_key": "default"
+    }
+  },
+  "events": {
+    "status": 200,
+    "body": [
+      {
+        "run_id": "run-704f968c76d3",
+        "sequence": 0,
+        "type": "admission",
+        "actor": "benchmark",
+        "timestamp": "2026-10-02T00:45:43.459847Z",
+        "from_state": null,
+        "to_state": "queued",
+        "detail": "sandbox_only"
+      },
+      {
+        "run_id": "run-704f968c76d3",
+        "sequence": 1,
+        "type": "state_change",
+        "actor": "benchmark",
+        "timestamp": "2026-10-02T00:45:43.462350Z",
+        "from_state": "queued",
+        "to_state": "running",
+        "detail": null
+      },
+      {
+        "run_id": "run-704f968c76d3",
+        "sequence": 2,
+        "type": "sandbox",
+        "actor": "benchmark",
+        "timestamp": "2026-10-02T00:45:43.463436Z",
+        "from_state": null,
+        "to_state": null,
+        "detail": "provisioned sb-c727fe10f2ef"
+      },
+      {
+        "run_id": "run-704f968c76d3",
+        "sequence": 3,
+        "type": "policy_decision",
+        "actor": "policy",
+        "timestamp": "2026-10-02T00:45:43.465799Z",
+        "from_state": null,
+        "to_state": null,
+        "detail": "sandbox.allow: sandbox context allows the tool"
+      },
+      {
+        "run_id": "run-704f968c76d3",
+        "sequence": 4,
+        "type": "tool_call",
+        "actor": "adapter",
+        "timestamp": "2026-10-02T00:45:43.467199Z",
+        "from_state": null,
+        "to_state": null,
+        "detail": "mcp.github.read_issue"
+      },
+      {
+        "run_id": "run-704f968c76d3",
+        "sequence": 5,
+        "type": "state_change",
+        "actor": "adapter",
+        "timestamp": "2026-10-02T00:45:43.469545Z",
+        "from_state": "running",
+        "to_state": "completed",
+        "detail": null
+      },
+      {
+        "run_id": "run-704f968c76d3",
+        "sequence": 6,
+        "type": "sandbox",
+        "actor": "adapter",
+        "timestamp": "2026-10-02T00:45:43.470531Z",
+        "from_state": null,
+        "to_state": null,
+        "detail": "destroyed sb-c727fe10f2ef"
+      }
+    ]
+  },
+  "story": {
+    "status": 200,
+    "body": {
+      "run_id": "run-704f968c76d3",
+      "workload": "support-agent",
+      "team": "support",
+      "state": "completed",
+      "context": "sandbox",
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "cost_usd": 0.0,
+      "sandbox": true,
+      "sandbox_id": "sb-c727fe10f2ef",
+      "certification_status": "provisional",
+      "attestation_id": "att-ded5bec79b72",
+      "trace_id": "231c705ff8be91944d42c0cbed7feb82",
+      "entries": [
+        {
+          "timestamp": "2026-10-02T00:45:43.436528Z",
+          "kind": "admission",
+          "summary": "sandbox_only",
+          "detail": {
+            "outcome": "sandbox_only",
+            "refused_reason": null,
+            "escalation_required": false,
+            "sandbox": true,
+            "checks": [
+              {
+                "step": "halt",
+                "passed": true,
+                "reason": null,
+                "rule": "incident"
+              },
+              {
+                "step": "certification",
+                "passed": true,
+                "reason": null,
+                "rule": "certification"
+              },
+              {
+                "step": "model_identity",
+                "passed": true,
+                "reason": null,
+                "rule": "model_binding"
+              },
+              {
+                "step": "budget",
+                "passed": true,
+                "reason": null,
+                "rule": "run"
+              },
+              {
+                "step": "policy",
+                "passed": true,
+                "reason": "no tool policy applies",
+                "rule": "run.allow"
+              },
+              {
+                "step": "sandbox",
+                "passed": true,
+                "reason": null,
+                "rule": "sandbox"
+              }
+            ]
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:45:43.462350Z",
+          "kind": "state",
+          "summary": "queued -> running",
+          "detail": {
+            "actor": "benchmark",
+            "detail": null,
+            "from_state": "queued",
+            "to_state": "running",
+            "sequence": 1
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:45:43.463436Z",
+          "kind": "sandbox",
+          "summary": "provisioned sb-c727fe10f2ef",
+          "detail": {
+            "actor": "benchmark",
+            "detail": "provisioned sb-c727fe10f2ef",
+            "from_state": null,
+            "to_state": null,
+            "sequence": 2
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:45:43.465799Z",
+          "kind": "policy_decision",
+          "summary": "sandbox.allow: sandbox context allows the tool",
+          "detail": {
+            "actor": "policy",
+            "detail": "sandbox.allow: sandbox context allows the tool",
+            "from_state": null,
+            "to_state": null,
+            "sequence": 3
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:45:43.467199Z",
+          "kind": "tool_call",
+          "summary": "mcp.github.read_issue",
+          "detail": {
+            "actor": "adapter",
+            "detail": "mcp.github.read_issue",
+            "from_state": null,
+            "to_state": null,
+            "sequence": 4
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:45:43.469545Z",
+          "kind": "state",
+          "summary": "running -> completed",
+          "detail": {
+            "actor": "adapter",
+            "detail": null,
+            "from_state": "running",
+            "to_state": "completed",
+            "sequence": 5
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:45:43.470531Z",
+          "kind": "sandbox",
+          "summary": "destroyed sb-c727fe10f2ef",
+          "detail": {
+            "actor": "adapter",
+            "detail": "destroyed sb-c727fe10f2ef",
+            "from_state": null,
+            "to_state": null,
+            "sequence": 6
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:45:43.472165Z",
+          "kind": "delivery",
+          "summary": "slack delivered",
+          "detail": {
+            "target": "#support-agent-results",
+            "status": "delivered",
+            "attempts": 1,
+            "error": null
+          }
+        }
+      ]
+    }
+  },
+  "usage": {
+    "status": 200,
+    "body": []
+  },
+  "deliveries": {
+    "status": 200,
+    "body": [
+      {
+        "run_id": "run-704f968c76d3",
+        "destination_type": "slack",
+        "target": "#support-agent-results",
+        "status": "delivered",
+        "attempts": 1,
+        "error": null,
+        "timestamp": "2026-10-02T00:45:43.472165Z"
+      }
+    ]
+  },
+  "feedback": {
+    "status": 200,
+    "body": []
+  }
+}

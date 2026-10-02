@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from enum import StrEnum
+from typing import Protocol
 
 from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, JsonValue, field_validator
 
@@ -10,6 +11,7 @@ from hiveplane.core.fanout import FanOutType
 from hiveplane.core.run import AdmissionContext, Run
 from hiveplane.core.spec import validate_model_identity
 from hiveplane.core.workload import AgentWorkload
+from hiveplane.scheduler.models import QosClass
 
 
 class AdmissionOutcome(StrEnum):
@@ -103,6 +105,10 @@ class RunSubmission(BaseModel):
     context: AdmissionContext
     task: dict[str, JsonValue] = Field(default_factory=dict)
     model_identity: str | None = None
+    #: Optional QoS class (M47). When set, the run is registered with the scheduler
+    #: and guaranteed runs may preempt checkpointed best-effort victims.
+    qos: QosClass | None = None
+    priority: int = 0
 
     @field_validator("model_identity")
     @classmethod
@@ -110,3 +116,21 @@ class RunSubmission(BaseModel):
         if value is None:
             return None
         return validate_model_identity(value)
+
+
+class CanaryAssignment(BaseModel):
+    """The canary arm chosen for a run before it executes (M38-04)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    rollout_id: str = Field(min_length=1)
+    arm: str = Field(min_length=1)
+    candidate_version: int | None = Field(default=None, ge=1)
+
+
+class CanaryRouter(Protocol):
+    """Selects a canary arm for a production run and records its sample."""
+
+    def route(self, run: Run) -> CanaryAssignment | None: ...
+
+    def record(self, run: Run) -> None: ...

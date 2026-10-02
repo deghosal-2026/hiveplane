@@ -136,6 +136,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        GIT_SHA: ${GIT_SHA:-}
     environment:
       HIVEPLANE_ENVIRONMENT: ${HIVEPLANE_ENVIRONMENT:-local}
       HIVEPLANE_DATABASE__HOST: postgres
@@ -148,9 +150,17 @@ services:
       HIVEPLANE_OTEL__ENDPOINT: http://otel-collector:4318
       HIVEPLANE_EXECUTION__ADAPTER: ${HIVEPLANE_EXECUTION__ADAPTER:-auto}
       HIVEPLANE_EXECUTION__STORE: postgres
+      # RBAC + rate limiting are enabled only for the dedicated --auth pass (S16/S17).
+      HIVEPLANE_AUTH__ENABLED: ${HIVEPLANE_AUTH__ENABLED:-false}
+      HIVEPLANE_AUTH__ADMIN_KEY: ${HIVEPLANE_AUTH__ADMIN_KEY:-}
+      HIVEPLANE_AUTH__SYSTEM_KEY: ${HIVEPLANE_AUTH__SYSTEM_KEY:-}
+      HIVEPLANE_API__RATE_LIMIT_ENABLED: ${HIVEPLANE_API__RATE_LIMIT_ENABLED:-false}
+      HIVEPLANE_API__RATE_LIMIT_REQUESTS: ${HIVEPLANE_API__RATE_LIMIT_REQUESTS:-600}
+      HIVEPLANE_API__RATE_LIMIT_WINDOW_SECONDS: ${HIVEPLANE_API__RATE_LIMIT_WINDOW_SECONDS:-60}
       HIVEPLANE_EXECUTION__CHECKPOINT_PATH: ${HIVEPLANE_EXECUTION__CHECKPOINT_PATH:-/app/.hiveplane/checkpoints/graph.json}
       HIVEPLANE_CERTIFICATION__EXECUTOR: ${HIVEPLANE_CERTIFICATION__EXECUTOR:-adapter}
       HIVEPLANE_CERTIFICATION__CORPORA_DIR: ${HIVEPLANE_CERTIFICATION__CORPORA_DIR:-field_test}
+      HIVEPLANE_RECONCILE__ALLOW_DESTRUCTIVE: ${HIVEPLANE_RECONCILE__ALLOW_DESTRUCTIVE:-false}
       HIVEPLANE_CERTIFICATION__PRODUCTION__MIN_PRODUCTION_RUNS_SURVIVED: ${HIVEPLANE_CERTIFICATION__PRODUCTION__MIN_PRODUCTION_RUNS_SURVIVED:-50}
       # Persistent Ed25519 attestation key: attestations must verify across
       # container restarts/recreates (M23, #125).
@@ -164,6 +174,8 @@ services:
       HIVEPLANE_BUDGET__ZERO_COST_PREFIXES: ${HIVEPLANE_BUDGET__ZERO_COST_PREFIXES:-}
       HIVEPLANE_FANOUT__SLACK_WEBHOOK_URL: ${HIVEPLANE_FANOUT__SLACK_WEBHOOK_URL:-}
       HIVEPLANE_FANOUT__GENERIC_WEBHOOK_URL: ${HIVEPLANE_FANOUT__GENERIC_WEBHOOK_URL:-}
+      # HMAC secrets for signed trigger webhook ingest (S6/S27).
+      HIVEPLANE_TRIGGERS__SECRETS: ${HIVEPLANE_TRIGGERS__SECRETS:-}
     ports:
       - "${API_PORT:-8100}:8000"
     volumes:
@@ -190,6 +202,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        GIT_SHA: ${GIT_SHA:-}
     command: ["hiveplane-ui"]
     environment:
       HIVEPLANE_UI__API_URL: http://api:8000

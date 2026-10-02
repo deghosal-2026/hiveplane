@@ -8,17 +8,21 @@ from hiveplane.adapters.base import Adapter, AdapterRunExecutor
 from hiveplane.adapters.dispatch import DispatchingAdapter
 from hiveplane.adapters.langgraph import LangGraphAdapter
 from hiveplane.adapters.loader import EntrypointLoader
+from hiveplane.adapters.openai_agents import OpenAIAgentsAdapter
+from hiveplane.adapters.pydanticai import PydanticAIAdapter
 from hiveplane.adapters.raw_worker import RawWorkerAdapter, Spawner
 from hiveplane.api.sandbox_channel import SandboxChannel
 from hiveplane.budget.pricing import CostTable
 from hiveplane.config import get_settings
 from hiveplane.core.fanout import FanOutType
 from hiveplane.core.spec import RuntimeAdapter
+from hiveplane.defense.guard import DefenseGuard
 from hiveplane.execution.admission import AdmissionPipeline
 from hiveplane.execution.fanout import FanOutService, SlackTransport, WebhookTransport
 from hiveplane.execution.gates import (
     ApprovalRequests,
     BudgetGate,
+    HaltGate,
     ManifestSandboxGate,
     NullRunExecutor,
     PolicyGate,
@@ -28,16 +32,26 @@ from hiveplane.execution.gates import (
 from hiveplane.execution.service import RunService
 from hiveplane.execution.store import InMemoryRunStore, JsonFileRunStore, RunStore
 from hiveplane.execution.subprocess_spawner import SubprocessSpawner
-from hiveplane.execution.tool_executor import FixtureToolExecutor
+from hiveplane.execution.tool_executor import (
+    CompositeToolExecutor,
+    FixtureToolExecutor,
+    ToolExecutor,
+)
 from hiveplane.execution.tools import ToolGateway
+from hiveplane.guards.breaker import CircuitBreakerRegistry
+from hiveplane.guards.manager import GuardLimits, GuardLimitsLookup
 from hiveplane.llm.provider import LLMProvider
 from hiveplane.persistence.audit import AuditLog, InMemoryAuditLog
 from hiveplane.persistence.base import create_engine_from_settings
 from hiveplane.persistence.postgres_audit import PostgresAuditLog
 from hiveplane.persistence.run_store import PostgresRunStore
+from hiveplane.policy.kill_switch import KillSwitch
+from hiveplane.registry.errors import WorkloadNotFoundError
 from hiveplane.registry.service import RegistryService
+from hiveplane.reporting.pii import PIIScrubber, ScrubbingAuditLog
 from hiveplane.shaping.injection import InjectionScanner
 from hiveplane.shaping.pipeline import ShapingPipeline
+from hiveplane.tenancy.context import SYSTEM_CONTEXT
 
 
 def build_run_store(store: str | None = None) -> RunStore:
@@ -55,8 +69,14 @@ def build_audit_log() -> AuditLog:
     """Build the configured audit log (Postgres when the store is Postgres)."""
     settings = get_settings()
     if settings.execution.store == "postgres":
-        return PostgresAuditLog(create_engine_from_settings(settings))
-    return InMemoryAuditLog()
+        backend: AuditLog = PostgresAuditLog(create_engine_from_settings(settings))
+    else:
+        backend = InMemoryAuditLog()
+    if settings.reporting.pii_enabled:
+        return ScrubbingAuditLog(
+            backend, PIIScrubber(salt=settings.reporting.pii_salt)
+        )
+    return backend
 
 
 def build_run_service(
@@ -65,6 +85,8 @@ def build_run_service(
     approvals: ApprovalRequests,
     budget_gate: BudgetGate,
     sandbox_runtime: SandboxRuntime,
+    *,
+    halt: HaltGate | None = None,
 ) -> RunService:
     """Build a RunService with the real policy and budget gates."""
     settings = get_settings()
@@ -79,6 +101,7 @@ def build_run_service(
         },
         enabled=settings.fanout.enabled,
         max_retries=settings.fanout.max_retries,
+        verification_base_url=settings.certification.public_verification_base_url,
     )
     return RunService(
         store,
@@ -88,6 +111,7 @@ def build_run_service(
             policy_gate,
             budget_gate,
             ManifestSandboxGate(),
+            halt=halt,
         ),
         executor=NullRunExecutor(),
         fanout=fanout,
@@ -98,11 +122,62 @@ def build_run_service(
     )
 
 
+def build_guard_limit_lookup(
+    registry_service: RegistryService, defaults: GuardLimits
+) -> GuardLimitsLookup:
+    """Resolve guard limits per workload, falling back to the plane defaults.
+
+    A workload manifest may override ``context_tokens``/velocity limits under
+    ``spec.guards``; unset fields keep the plane-wide value (#508).
+    """
+
+    def lookup(workload: str) -> GuardLimits:
+        try:
+            spec = registry_service.get(workload, ctx=SYSTEM_CONTEXT).manifest.spec.guards
+        except WorkloadNotFoundError:
+            return defaults
+        if spec is None:
+            return defaults
+        return GuardLimits(
+            context_tokens=(
+                spec.context_tokens
+                if spec.context_tokens is not None
+                else defaults.context_tokens
+            ),
+            context_warn_at=(
+                spec.context_warn_at
+                if spec.context_warn_at is not None
+                else defaults.context_warn_at
+            ),
+            velocity_window_seconds=(
+                spec.velocity_window_seconds
+                if spec.velocity_window_seconds is not None
+                else defaults.velocity_window_seconds
+            ),
+            velocity_limit_usd=(
+                spec.velocity_limit_usd
+                if spec.velocity_limit_usd is not None
+                else defaults.velocity_limit_usd
+            ),
+            velocity_multiplier=(
+                spec.velocity_multiplier
+                if spec.velocity_multiplier is not None
+                else defaults.velocity_multiplier
+            ),
+        )
+
+    return lookup
+
+
 def build_tool_gateway(
     registry_service: RegistryService,
     policy_gate: PolicyGate,
     run_service: RunService,
     approvals: ApprovalRequests | None,
+    defense: DefenseGuard | None = None,
+    kill_switch: KillSwitch | None = None,
+    breaker: CircuitBreakerRegistry | None = None,
+    mcp_executor: ToolExecutor | None = None,
 ) -> ToolGateway:
     """Build the tool-call boundary over the live run service.
 
@@ -111,11 +186,21 @@ def build_tool_gateway(
     ``tool_fixtures`` setting disables the executor (caller output only).
     """
     settings = get_settings()
-    executor: FixtureToolExecutor | None = (
+    fixture: FixtureToolExecutor | None = (
         FixtureToolExecutor(settings.execution.tool_fixtures)
         if settings.execution.tool_fixtures
         else None
     )
+    executors: list[ToolExecutor] = []
+    if fixture is not None:
+        executors.append(fixture)
+    if mcp_executor is not None:
+        executors.append(mcp_executor)
+    executor: ToolExecutor | None = None
+    if len(executors) == 1:
+        executor = executors[0]
+    elif executors:
+        executor = CompositeToolExecutor(executors)
     return ToolGateway(
         registry_service,
         policy_gate,
@@ -123,6 +208,9 @@ def build_tool_gateway(
         shaping=ShapingPipeline(InjectionScanner()),
         approvals=approvals,
         executor=executor,
+        defense=defense,
+        kill_switch=kill_switch,
+        breaker=breaker,
     )
 
 
@@ -229,8 +317,93 @@ def attach_langgraph(
     return adapter
 
 
-def attach_auto_adapters(
+def build_pydanticai(
     run_service: RunService,
+    tool_gateway: ToolGateway,
+    *,
+    root: str | Path | None = None,
+    spawner: Spawner | None = None,
+    provider: LLMProvider | None = None,
+    cost_table: CostTable | None = None,
+) -> PydanticAIAdapter:
+    """Build a PydanticAI adapter without binding it to the run service (M31)."""
+    settings = get_settings()
+    return PydanticAIAdapter(
+        run_service,
+        tool_gateway,
+        EntrypointLoader(root=root or settings.execution.entrypoints_root),
+        spawner=spawner,
+        provider=provider,
+        cost_table=cost_table,
+    )
+
+
+def attach_pydanticai(
+    run_service: RunService,
+    tool_gateway: ToolGateway,
+    *,
+    root: str | Path | None = None,
+    spawner: Spawner | None = None,
+    provider: LLMProvider | None = None,
+    cost_table: CostTable | None = None,
+) -> PydanticAIAdapter:
+    """Build the PydanticAI adapter and bind it as the run service's executor."""
+    adapter = build_pydanticai(
+        run_service,
+        tool_gateway,
+        root=root,
+        spawner=spawner,
+        provider=provider,
+        cost_table=cost_table,
+    )
+    run_service.attach_executor(AdapterRunExecutor(adapter))
+    return adapter
+
+
+def build_openai_agents(
+    run_service: RunService,
+    tool_gateway: ToolGateway,
+    *,
+    root: str | Path | None = None,
+    spawner: Spawner | None = None,
+    provider: LLMProvider | None = None,
+    cost_table: CostTable | None = None,
+) -> OpenAIAgentsAdapter:
+    """Build an OpenAI Agents adapter without binding it to the run service (M31)."""
+    settings = get_settings()
+    return OpenAIAgentsAdapter(
+        run_service,
+        tool_gateway,
+        EntrypointLoader(root=root or settings.execution.entrypoints_root),
+        spawner=spawner,
+        provider=provider,
+        cost_table=cost_table,
+    )
+
+
+def attach_openai_agents(
+    run_service: RunService,
+    tool_gateway: ToolGateway,
+    *,
+    root: str | Path | None = None,
+    spawner: Spawner | None = None,
+    provider: LLMProvider | None = None,
+    cost_table: CostTable | None = None,
+) -> OpenAIAgentsAdapter:
+    """Build the OpenAI Agents adapter and bind it as the run service's executor."""
+    adapter = build_openai_agents(
+        run_service,
+        tool_gateway,
+        root=root,
+        spawner=spawner,
+        provider=provider,
+        cost_table=cost_table,
+    )
+    run_service.attach_executor(AdapterRunExecutor(adapter))
+    return adapter
+
+
+def attach_auto_adapters(    run_service: RunService,
     tool_gateway: ToolGateway,
     *,
     root: str | Path | None = None,
@@ -257,6 +430,22 @@ def attach_auto_adapters(
             sandbox_mode=sandbox_mode,
         ),
         RuntimeAdapter.LANGGRAPH: build_langgraph(
+            run_service,
+            tool_gateway,
+            root=root,
+            spawner=spawner,
+            provider=provider,
+            cost_table=cost_table,
+        ),
+        RuntimeAdapter.PYDANTIC_AI: build_pydanticai(
+            run_service,
+            tool_gateway,
+            root=root,
+            spawner=spawner,
+            provider=provider,
+            cost_table=cost_table,
+        ),
+        RuntimeAdapter.OPENAI_AGENTS: build_openai_agents(
             run_service,
             tool_gateway,
             root=root,

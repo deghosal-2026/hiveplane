@@ -1,0 +1,66 @@
+{
+  "schedule": {
+    "workload_id": "support-agent",
+    "interval_seconds": 1,
+    "next_run": "2026-10-02T00:46:09.589593Z",
+    "last_run": null,
+    "tenant_id": "default"
+  },
+  "healthy": [
+    {
+      "probe_id": "probe-3f1df07aa752",
+      "workload_id": "support-agent",
+      "passed": true,
+      "status": "passed",
+      "latency_ms": 0,
+      "cost_usd": 0.0,
+      "detail": {
+        "state": "completed",
+        "result": {
+          "answer": "Reset at portal.example.com/settings",
+          "status": "success",
+          "account_tier": "pro"
+        },
+        "expected": {
+          "answer": "Reset at portal.example.com/settings",
+          "status": "success",
+          "account_tier": "pro"
+        }
+      },
+      "tag": "probe",
+      "warning": null,
+      "created_at": "2026-10-02T00:46:09.840158Z",
+      "tenant_id": "default"
+    }
+  ],
+  "decayed": [
+    {
+      "probe_id": "probe-421dbfcb4bf5",
+      "workload_id": "support-agent",
+      "passed": false,
+      "status": "failed",
+      "latency_ms": 0,
+      "cost_usd": 0.0,
+      "detail": {
+        "state": "completed",
+        "result": {
+          "answer": "Reset at portal.example.com/settings",
+          "status": "success",
+          "account_tier": "pro"
+        },
+        "expected": {
+          "status": "degraded"
+        }
+      },
+      "tag": "probe",
+      "warning": {
+        "workload_id": "support-agent",
+        "reason": "synthetic probe failed (early drift warning)",
+        "rule_id": "probe.decay",
+        "created_at": "2026-10-02T00:46:10.120654Z"
+      },
+      "created_at": "2026-10-02T00:46:10.120654Z",
+      "tenant_id": "default"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-.PHONY: help install test test-e2e docker-test cov lint type check fmt clean
+.PHONY: help install test test-e2e test-docker-v02 docker-test docker-test-v02 field-test-v02 cov lint type check fmt clean
 
 help:
 	@echo "HivePlane developer targets:"
@@ -6,6 +6,8 @@ help:
 	@echo "  make test     Run the test suite"
 	@echo "  make test-e2e Run operator UI browser tests (Playwright)"
 	@echo "  make docker-test Run the container-layer suite (requires a local LLM; no skips)"
+	@echo "  make docker-test-v02 Run the v0.2.0 container + scenario suite (M61, no skips)"
+	@echo "  make field-test-v02 Run the v0.2.0 real-agent field test (S1-S31 + H1-H5)"
 	@echo "  make cov      Run tests with coverage report"
 	@echo "  make lint     Run ruff"
 	@echo "  make type     Run mypy (strict)"
@@ -25,6 +27,12 @@ test-e2e:
 
 docker-test:
 	scripts/docker-test.sh
+
+docker-test-v02:
+	scripts/docker-test-v02.sh
+
+field-test-v02:
+	scripts/field-test-v02.sh
 
 cov:
 	python -m pytest --cov=src/hiveplane --cov-report=term-missing

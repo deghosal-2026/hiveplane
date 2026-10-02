@@ -1,0 +1,40 @@
+{
+  "scenario": "S13",
+  "model": "omlx/qwen3-4b-instruct-2507/4bit",
+  "runs": {
+    "run-9f3d18199800": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "sandbox",
+        "state_change",
+        "usage"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [],
+      "policy_rules": [],
+      "llm_calls": [
+        {
+          "model": "omlx/qwen3-4b-instruct-2507/4bit",
+          "input_tokens": 15,
+          "output_tokens": 1,
+          "prompt": "Reply with the single word: ok",
+          "response": "ok"
+        }
+      ],
+      "deliveries": [
+        {
+          "type": "slack",
+          "status": "delivered"
+        }
+      ]
+    }
+  }
+}

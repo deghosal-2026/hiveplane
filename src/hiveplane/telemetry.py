@@ -11,6 +11,7 @@ from __future__ import annotations
 from collections.abc import Callable, Iterator, Mapping
 from contextlib import contextmanager
 from contextvars import copy_context
+from typing import Any
 
 from opentelemetry import metrics as otel_metrics
 from opentelemetry import trace
@@ -26,7 +27,6 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor, SpanExporter
 from opentelemetry.sdk.trace.sampling import ParentBased, TraceIdRatioBased
 from opentelemetry.trace import Span, SpanKind, Tracer
-from opentelemetry.util.types import AttributeValue
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
 from hiveplane import metrics as hive_metrics
@@ -68,9 +68,9 @@ def current_trace_id() -> str | None:
 
 def run_attributes(
     run: Run, workload: AgentWorkload | None = None
-) -> dict[str, AttributeValue]:
+) -> dict[str, Any]:
     """Build the correlation attributes for a run, enriching from its workload."""
-    attributes: dict[str, AttributeValue] = {RUN_ID: run.id, WORKLOAD: run.workload_id}
+    attributes: dict[str, Any] = {RUN_ID: run.id, WORKLOAD: run.workload_id}
     if workload is not None:
         attributes[WORKLOAD] = workload.name
         if workload.team is not None:
@@ -87,12 +87,12 @@ def span(
     *,
     run: Run | None = None,
     workload: AgentWorkload | None = None,
-    attributes: Mapping[str, AttributeValue] | None = None,
+    attributes: Mapping[str, Any] | None = None,
     kind: SpanKind = SpanKind.INTERNAL,
     context: Context | None = None,
 ) -> Iterator[Span]:
     """Start a span, seeding it with run correlation and any extra attributes."""
-    merged: dict[str, AttributeValue] = {}
+    merged: dict[str, Any] = {}
     if run is not None:
         merged.update(run_attributes(run, workload))
     if attributes is not None:

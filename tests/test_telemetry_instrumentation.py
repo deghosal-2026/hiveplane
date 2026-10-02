@@ -43,15 +43,23 @@ class _Runs:
         self.events: list[tuple[EventType, str, str | None]] = []
         self.interventions: list[InterventionAction] = []
 
-    def get(self, run_id: str) -> Run:
+    def get(self, run_id: str, *, ctx: object = None) -> Run:
         return self._run
 
-    def intervene(self, run_id: str, action: InterventionAction, *, actor: str) -> Run:
+    def intervene(
+        self, run_id: str, action: InterventionAction, *, actor: str, ctx: object = None
+    ) -> Run:
         self.interventions.append(action)
         return self._run
 
     def record_event(
-        self, run_id: str, event_type: EventType, actor: str, *, detail: str | None = None
+        self,
+        run_id: str,
+        event_type: EventType,
+        actor: str,
+        *,
+        detail: str | None = None,
+        ctx: object = None,
     ) -> None:
         self.events.append((event_type, actor, detail))
 
@@ -101,7 +109,7 @@ def _workload(
 
 
 def _gateway(workload: AgentWorkload, runs: _Runs) -> ToolGateway:
-    registry = SimpleNamespace(get=lambda name: SimpleNamespace(manifest=workload))
+    registry = SimpleNamespace(get=lambda name, **_: SimpleNamespace(manifest=workload))
     return ToolGateway(
         registry,  # type: ignore[arg-type]
         PolicyEngine(InMemoryPolicyPackStore(), clock=lambda: _FIXED_NOW),

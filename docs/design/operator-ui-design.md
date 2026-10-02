@@ -1,6 +1,7 @@
 # D9: Operator UI Design
 
 > Status: draft
+> **v0.2.0:** extended by [Operator Experience (D36)](operator-experience-design.md).
 
 ## Problem
 

@@ -1,0 +1,16 @@
+# S30 fanout-failure
+
+status:   pass
+detail:   on_failed delivery recorded
+started:  2026-10-02T00:47:48.986888+00:00
+duration: 1.16s
+model:    omlx/qwen3-4b-instruct-2507/4bit
+git_sha:  b186ba158779686f69cd3fdaba1672de84a13038
+calls:    12
+runs:     run-04a2371a89e1
+
+## Mutating calls (inputs)
+
+  POST /workloads -> 201
+  POST /runs -> 201
+  POST /runs/run-04a2371a89e1/start -> 200

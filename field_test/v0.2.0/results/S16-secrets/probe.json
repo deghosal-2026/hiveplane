@@ -1,0 +1,21 @@
+{
+  "scenario": "S16",
+  "model": "omlx/qwen3-4b-instruct-2507/4bit",
+  "runs": {
+    "run-8a93aa68e406": {
+      "state": "queued",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission"
+      ],
+      "state_path": [],
+      "tool_calls": [],
+      "policy_rules": [],
+      "llm_calls": [],
+      "deliveries": []
+    }
+  }
+}

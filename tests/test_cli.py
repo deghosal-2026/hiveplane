@@ -316,6 +316,47 @@ def test_certs_compare_reports_regressions(monkeypatch: Any) -> None:
     assert "blocked" in result.output.lower()
 
 
+def test_verify_reports_a_valid_attestation(monkeypatch: Any) -> None:
+    captured: dict[str, Any] = {}
+
+    def _fake(method: str, url: str, payload: dict[str, Any] | None = None) -> tuple[int, str]:
+        captured["url"] = url
+        return 200, json.dumps({"attestation_id": "att-1", "valid": True, "log_seq": 0})
+
+    monkeypatch.setattr("hiveplane.cli._request", _fake)
+
+    result = runner.invoke(app, ["verify", "att-1"])
+
+    assert result.exit_code == 0
+    assert "att-1" in result.output
+    assert captured["url"].endswith("/attestations/att-1/verify")
+
+
+def test_verify_invalid_attestation_exits_nonzero(monkeypatch: Any) -> None:
+    monkeypatch.setattr(
+        "hiveplane.cli._request",
+        lambda method, url, payload=None: (
+            200,
+            json.dumps({"attestation_id": "att-1", "valid": False, "reason": "bad"}),
+        ),
+    )
+
+    result = runner.invoke(app, ["verify", "att-1"])
+
+    assert result.exit_code == 1
+
+
+def test_verify_reports_unknown_attestation(monkeypatch: Any) -> None:
+    monkeypatch.setattr(
+        "hiveplane.cli._request",
+        lambda method, url, payload=None: (404, json.dumps({"detail": "not found"})),
+    )
+
+    result = runner.invoke(app, ["verify", "missing"])
+
+    assert result.exit_code == 1
+
+
 # --------------------------------------------------------------------------- #
 # Submission CLI (#52)
 # --------------------------------------------------------------------------- #
@@ -931,3 +972,534 @@ def test_tools_seed_requires_a_workloads_dir(tmp_path: Path) -> None:
     )
 
     assert result.exit_code == 1
+
+
+def test_route_reports_choice(monkeypatch: Any) -> None:
+    monkeypatch.setattr(
+        "hiveplane.cli._request",
+        lambda method, url, payload=None: (
+            200,
+            json.dumps(
+                {
+                    "outcome": "routed",
+                    "chosen": "repo-agent",
+                    "classifier_model": "gpt-4o",
+                    "candidates": [{"score": 0.91, "workload": "repo-agent"}],
+                }
+            ),
+        ),
+    )
+
+    result = runner.invoke(app, ["route", "triage this ticket"])
+
+    assert result.exit_code == 0
+    assert "repo-agent" in result.output
+
+
+def test_route_reports_refusal(monkeypatch: Any) -> None:
+    monkeypatch.setattr(
+        "hiveplane.cli._request",
+        lambda method, url, payload=None: (
+            200,
+            json.dumps(
+                {
+                    "outcome": "refused",
+                    "reason": "no certified candidate",
+                    "candidates": [{"score": 0.2, "workload": "weak-agent"}],
+                }
+            ),
+        ),
+    )
+
+    result = runner.invoke(app, ["route", "triage this ticket"])
+
+    assert result.exit_code == 0
+    assert "refused" in result.output
+    assert "weak-agent" in result.output
+
+
+def test_agents_list_prints_tools(monkeypatch: Any) -> None:
+    monkeypatch.setattr(
+        "hiveplane.cli._request",
+        lambda method, url, payload=None: (
+            200,
+            json.dumps([{"tool_id": "agent.triage", "description": "Triage tickets"}]),
+        ),
+    )
+
+    result = runner.invoke(app, ["agents", "list"])
+
+    assert result.exit_code == 0
+    assert "agent.triage" in result.output
+
+
+def test_agents_invoke_prints_nested_run(monkeypatch: Any) -> None:
+    monkeypatch.setattr(
+        "hiveplane.cli._request",
+        lambda method, url, payload=None: (
+            200,
+            json.dumps(
+                {"tool_id": "agent.triage", "nested_run_id": "run-9", "depth": 1}
+            ),
+        ),
+    )
+
+    result = runner.invoke(
+        app, ["agents", "invoke", "agent.triage", "--caller-run", "run-1"]
+    )
+
+    assert result.exit_code == 0
+    assert "run-9" in result.output
+
+
+def test_feedback_posts_a_verdict(monkeypatch: Any) -> None:
+    captured: dict[str, Any] = {}
+
+    def _fake(method: str, url: str, payload: dict[str, Any] | None = None) -> tuple[int, str]:
+        captured["method"] = method
+        captured["url"] = url
+        captured["payload"] = payload
+        return 201, json.dumps({"feedback_id": "fb-1", "verdict": "failed-with-lesson"})
+
+    monkeypatch.setattr("hiveplane.cli._request", _fake)
+
+    result = runner.invoke(
+        app,
+        ["feedback", "run-1", "--verdict", "failed-with-lesson", "--notes", "escalate"],
+    )
+
+    assert result.exit_code == 0
+    assert captured["method"] == "POST"
+    assert captured["url"].endswith("/runs/run-1/feedback")
+    assert captured["payload"]["verdict"] == "failed-with-lesson"
+    assert captured["payload"]["notes"] == "escalate"
+
+
+def test_feedback_reports_api_failure(monkeypatch: Any) -> None:
+    monkeypatch.setattr(
+        "hiveplane.cli._request",
+        lambda method, url, payload=None: (409, json.dumps({"detail": "not terminal"})),
+    )
+
+    result = runner.invoke(app, ["feedback", "run-1", "--verdict", "good"])
+
+    assert result.exit_code == 1
+
+
+def test_corpus_candidates_lists(monkeypatch: Any) -> None:
+    captured: dict[str, Any] = {}
+
+    def _fake(method: str, url: str, payload: dict[str, Any] | None = None) -> tuple[int, str]:
+        captured["url"] = url
+        return 200, json.dumps(
+            [
+                {
+                    "candidate_id": "cand-1",
+                    "workload_id": "repo-agent",
+                    "status": "pending",
+                    "source_run_id": "run-1",
+                }
+            ]
+        )
+
+    monkeypatch.setattr("hiveplane.cli._request", _fake)
+
+    result = runner.invoke(app, ["corpus", "candidates", "--workload", "repo-agent"])
+
+    assert result.exit_code == 0
+    assert "cand-1" in result.output
+    assert "workload=repo-agent" in captured["url"]
+
+
+def test_corpus_approve_posts_reviewer(monkeypatch: Any) -> None:
+    captured: dict[str, Any] = {}
+
+    def _fake(method: str, url: str, payload: dict[str, Any] | None = None) -> tuple[int, str]:
+        captured["url"] = url
+        captured["payload"] = payload
+        return 200, json.dumps({"candidate_id": "cand-1", "status": "approved"})
+
+    monkeypatch.setattr("hiveplane.cli._request", _fake)
+
+    result = runner.invoke(app, ["corpus", "approve", "cand-1", "--reviewer", "bob"])
+
+    assert result.exit_code == 0
+    assert captured["url"].endswith("/corpus/candidates/cand-1/approve")
+    assert captured["payload"] == {"reviewer": "bob"}
+
+
+def test_corpus_reject_sends_reason(monkeypatch: Any) -> None:
+    captured: dict[str, Any] = {}
+
+    def _fake(method: str, url: str, payload: dict[str, Any] | None = None) -> tuple[int, str]:
+        captured["payload"] = payload
+        return 200, json.dumps({"candidate_id": "cand-1", "status": "rejected"})
+
+    monkeypatch.setattr("hiveplane.cli._request", _fake)
+
+    result = runner.invoke(
+        app, ["corpus", "reject", "cand-1", "--reason", "wrong"]
+    )
+
+    assert result.exit_code == 0
+    assert captured["payload"]["reason"] == "wrong"
+
+
+def test_eval_samples_lists(monkeypatch: Any) -> None:
+    captured: dict[str, Any] = {}
+
+    def _fake(method: str, url: str, payload: dict[str, Any] | None = None) -> tuple[int, str]:
+        captured["url"] = url
+        return 200, json.dumps(
+            [{"sample_id": "sample-1", "run_id": "run-1", "rubric_version": 1}]
+        )
+
+    monkeypatch.setattr("hiveplane.cli._request", _fake)
+
+    result = runner.invoke(app, ["eval", "samples", "--workload", "repo-agent"])
+
+    assert result.exit_code == 0
+    assert "sample-1" in result.output
+    assert "workload=repo-agent" in captured["url"]
+
+
+def test_eval_quality_prints_score(monkeypatch: Any) -> None:
+    monkeypatch.setattr(
+        "hiveplane.cli._request",
+        lambda method, url, payload=None: (
+            200,
+            json.dumps(
+                {
+                    "workload_id": "repo-agent",
+                    "sample_count": 3,
+                    "mean_score": 0.72,
+                    "dip": True,
+                }
+            ),
+        ),
+    )
+
+    result = runner.invoke(app, ["eval", "quality", "repo-agent"])
+
+    assert result.exit_code == 0
+    assert "0.72" in result.output
+    assert "dip" in result.output.lower()
+
+
+def test_tools_add_from_server_onboards_discovered_tools(monkeypatch: Any) -> None:
+    calls: list[tuple[str, str]] = []
+
+    def fake_request(
+        method: str, url: str, payload: dict[str, Any] | None = None
+    ) -> tuple[int, str]:
+        calls.append((method, url))
+        if url.endswith("/mcp/servers") and method == "POST":
+            return 201, json.dumps({"server_id": "srv-1", "status": "connected"})
+        if url.endswith("/mcp/tools"):
+            return 200, json.dumps(
+                [
+                    {"tool_id": "tool-1", "tool_name": "read_file", "server_id": "srv-1"},
+                    {"tool_id": "tool-2", "tool_name": "other", "server_id": "srv-2"},
+                ]
+            )
+        if url.endswith("/mcp/tools/tool-1/onboard"):
+            return 200, json.dumps({"tool_id": "tool-1"})
+        raise AssertionError(f"unexpected {method} {url}")
+
+    monkeypatch.setattr("hiveplane.cli._request", fake_request)
+
+    result = runner.invoke(app, ["tools", "add", "--server", "stdio://python -m x"])
+
+    assert result.exit_code == 0
+    assert "onboarded tool-1" in result.output
+    assert ("POST", "/mcp/servers") not in calls  # base URL includes more path
+    assert any(url.endswith("/mcp/tools/tool-1/onboard") for _, url in calls)
+    assert not any("tool-2" in url for _, url in calls)
+
+
+def test_mcp_servers_and_tools_commands(monkeypatch: Any) -> None:
+    def fake_request(
+        method: str, url: str, payload: dict[str, Any] | None = None
+    ) -> tuple[int, str]:
+        if url.endswith("/mcp/servers"):
+            return 200, json.dumps(
+                [{"server_id": "srv-1", "status": "connected", "fingerprint": "abc123"}]
+            )
+        if "/mcp/tools" in url:
+            return 200, json.dumps(
+                [{"tool_id": "tool-1", "tool_name": "read_file", "status": "active"}]
+            )
+        raise AssertionError(f"unexpected {method} {url}")
+
+    monkeypatch.setattr("hiveplane.cli._request", fake_request)
+
+    servers = runner.invoke(app, ["mcp", "servers"])
+    tools = runner.invoke(app, ["mcp", "tools", "--status", "active"])
+
+    assert servers.exit_code == 0 and "srv-1" in servers.output
+    assert tools.exit_code == 0 and "tool-1" in tools.output
+
+
+def test_parse_server_uri_variants() -> None:
+    from hiveplane.cli import _parse_server_uri
+
+    assert _parse_server_uri("stdio://python -m my.tools") == {
+        "kind": "stdio",
+        "target": "python",
+        "args": ["-m", "my.tools"],
+    }
+    assert _parse_server_uri("https://mcp.example.com/rpc")["kind"] == "http"
+    assert _parse_server_uri("sse://mcp.example.com/sse")["target"] == "mcp.example.com/sse"
+
+
+def test_secrets_cli_put_list_show_rotate(monkeypatch: Any) -> None:
+    calls: list[tuple[str, str]] = []
+
+    def fake_request(
+        method: str, url: str, payload: dict[str, Any] | None = None
+    ) -> tuple[int, str]:
+        calls.append((method, url))
+        assert payload is None or "value" in payload
+        if url.endswith("/secrets") and method == "POST":
+            return 201, json.dumps({"name": "pg", "current_version": 1})
+        if url.endswith("/secrets") and method == "GET":
+            return 200, json.dumps(
+                [{"name": "pg", "current_version": 2, "versions": [1, 2]}]
+            )
+        if url.endswith("/secrets/pg/rotate"):
+            return 200, json.dumps({"name": "pg", "current_version": 2})
+        if url.endswith("/secrets/pg"):
+            return 200, json.dumps(
+                {"name": "pg", "current_version": 2, "versions": [1, 2]}
+            )
+        raise AssertionError(f"unexpected {method} {url}")
+
+    monkeypatch.setattr("hiveplane.cli._request", fake_request)
+
+    put = runner.invoke(app, ["secrets", "put", "pg", "--value", "canary"])
+    listed = runner.invoke(app, ["secrets", "list"])
+    shown = runner.invoke(app, ["secrets", "show", "pg"])
+    rotated = runner.invoke(app, ["secrets", "rotate", "pg", "--value", "new"])
+
+    assert put.exit_code == 0 and "canary" not in put.output
+    assert "pg" in listed.output
+    assert "current=v2" in shown.output
+    assert rotated.exit_code == 0
+
+
+def test_secrets_cli_requires_a_value() -> None:
+    result = runner.invoke(app, ["secrets", "put", "pg"])
+    assert result.exit_code == 2
+
+
+def test_secrets_cli_from_env(monkeypatch: Any) -> None:
+    monkeypatch.setenv("MY_SECRET", "from-env")
+    captured: dict[str, Any] = {}
+
+    def fake_request(
+        method: str, url: str, payload: dict[str, Any] | None = None
+    ) -> tuple[int, str]:
+        captured.update(payload or {})
+        return 201, json.dumps({"name": "pg", "current_version": 1})
+
+    monkeypatch.setattr("hiveplane.cli._request", fake_request)
+    result = runner.invoke(app, ["secrets", "put", "pg", "--from-env", "MY_SECRET"])
+    assert result.exit_code == 0
+    assert captured["value"] == "from-env"
+
+    missing = runner.invoke(app, ["secrets", "put", "pg", "--from-env", "NOPE"])
+    assert missing.exit_code == 2
+
+
+def test_keys_cli_create_list_revoke_and_auth_whoami(monkeypatch: Any) -> None:
+    def fake_request(
+        method: str, url: str, payload: dict[str, Any] | None = None
+    ) -> tuple[int, str]:
+        if url.endswith("/keys") and method == "POST":
+            return 201, json.dumps({"key_id": "key-1", "token": "hp_token"})
+        if url.endswith("/keys") and method == "GET":
+            return 200, json.dumps(
+                [{"key_id": "key-1", "role": "approver", "revoked_at": None}]
+            )
+        if url.endswith("/keys/key-1"):
+            return 200, json.dumps({"key_id": "key-1", "role": "approver", "revoked_at": "t"})
+        if url.endswith("/auth/whoami"):
+            return 200, json.dumps(
+                {"operator_id": "alice", "role": "admin", "tenant_id": "default"}
+            )
+        raise AssertionError(f"unexpected {method} {url}")
+
+    monkeypatch.setattr("hiveplane.cli._request", fake_request)
+
+    created = runner.invoke(
+        app, ["keys", "create", "--role", "approver", "--scope", "approvals:write"]
+    )
+    listed = runner.invoke(app, ["keys", "list"])
+    revoked = runner.invoke(app, ["keys", "revoke", "key-1"])
+    whoami = runner.invoke(app, ["auth", "whoami"])
+
+    assert created.exit_code == 0 and "hp_token" in created.output
+    assert "key-1" in listed.output
+    assert revoked.exit_code == 0
+    assert "alice" in whoami.output
+
+
+def test_workers_cli_list_and_enroll(monkeypatch: Any) -> None:
+    calls: list[tuple[str, str]] = []
+
+    def fake_request(
+        method: str, url: str, payload: dict[str, Any] | None = None
+    ) -> tuple[int, str]:
+        calls.append((method, url))
+        if "/workers/enroll" in url:
+            return 200, json.dumps(
+                {"token": "wt_token", "record": {"token_id": "wt-1"}}
+            )
+        if "/workers" in url:
+            return 200, json.dumps(
+                [
+                    {
+                        "worker": {"worker_id": "w1", "state": "ready"},
+                        "load": 1,
+                        "active_leases": ["lease-1"],
+                    }
+                ]
+            )
+        raise AssertionError(f"unexpected {method} {url}")
+
+    monkeypatch.setattr("hiveplane.cli._request", fake_request)
+
+    listed = runner.invoke(app, ["workers", "list"])
+    enrolled = runner.invoke(app, ["workers", "enroll", "--worker-id", "w1"])
+
+    assert listed.exit_code == 0 and "w1" in listed.output
+    assert enrolled.exit_code == 0 and "wt_token" in enrolled.output
+
+
+def test_queue_command(monkeypatch: Any) -> None:
+    def fake_request(
+        method: str, url: str, payload: dict[str, Any] | None = None
+    ) -> tuple[int, str]:
+        return 200, json.dumps(
+            {
+                "depth": 1,
+                "by_qos": {"best_effort": 1},
+                "by_priority": {"0": 1},
+                "waiting": [
+                    {
+                        "task_id": "task-1",
+                        "workload": "repo-agent",
+                        "qos": "best_effort",
+                        "priority": 0,
+                        "reason": "awaiting capacity",
+                    }
+                ],
+                "running_by_workload": {},
+                "running_by_tenant": {},
+            }
+        )
+
+    monkeypatch.setattr("hiveplane.cli._request", fake_request)
+    result = runner.invoke(app, ["queue"])
+    assert result.exit_code == 0
+    assert "depth=1" in result.output
+    assert "task-1" in result.output
+
+
+def test_cluster_and_chaos_cli(monkeypatch: Any) -> None:
+    def fake_request(
+        method: str, url: str, payload: dict[str, Any] | None = None
+    ) -> tuple[int, str]:
+        if url.endswith("/cluster/leader"):
+            return 200, json.dumps({"leader_id": "replica-a", "epoch": 3, "expires_at": None})
+        if url.endswith("/chaos/drills") and method == "POST":
+            return 200, json.dumps(
+                {
+                    "drill_id": "drill-1",
+                    "kind": "kill-worker",
+                    "verdict": "pass",
+                    "injected": "killed a worker mid-run",
+                    "observed": "reassigned 1 lease",
+                }
+            )
+        if url.endswith("/chaos/drills"):
+            return 200, json.dumps(
+                [{"kind": "kill-worker", "verdict": "pass", "observed": "reassigned"}]
+            )
+        raise AssertionError(f"unexpected {method} {url}")
+
+    monkeypatch.setattr("hiveplane.cli._request", fake_request)
+
+    leader = runner.invoke(app, ["cluster", "leader"])
+    drilled = runner.invoke(app, ["chaos", "run", "kill-worker"])
+    listed = runner.invoke(app, ["chaos", "drills"])
+
+    assert leader.exit_code == 0 and "epoch=3" in leader.output
+    assert drilled.exit_code == 0 and "pass" in drilled.output
+    assert listed.exit_code == 0
+
+
+def test_cost_showback_cli(monkeypatch: Any) -> None:
+    def fake_request(
+        method: str, url: str, payload: dict[str, Any] | None = None
+    ) -> tuple[int, str]:
+        return 200, json.dumps(
+            {
+                "period_key": "2026-03",
+                "total_cost_usd": 12.5,
+                "fleet_cpct": 6.25,
+                "unattributed": 0,
+                "rows": [
+                    {
+                        "team_id": "team-a",
+                        "workload_id": None,
+                        "total_cost_usd": 12.5,
+                        "completed_tasks": 2,
+                        "cost_per_completed_task": 6.25,
+                    }
+                ],
+            }
+        )
+
+    monkeypatch.setattr("hiveplane.cli._request", fake_request)
+    result = runner.invoke(app, ["cost", "showback", "--period", "month"])
+    assert result.exit_code == 0
+    assert "cpct=$6.25" in result.output
+    assert "team-a" in result.output
+
+
+def test_cost_forecast_and_roi_cli(monkeypatch: Any) -> None:
+    def fake_request(
+        method: str, url: str, payload: dict[str, Any] | None = None
+    ) -> tuple[int, str]:
+        if "/cost/forecast" in url:
+            return 200, json.dumps(
+                {
+                    "spent_usd": 10.0,
+                    "elapsed_fraction": 0.5,
+                    "projected_usd": 20.0,
+                    "projected_overrun_usd": 0.0,
+                    "overrun_probability": 0.1,
+                }
+            )
+        if "/cost/roi/fleet" in url:
+            return 200, json.dumps(
+                {
+                    "rows": [
+                        {
+                            "workload_id": "bad",
+                            "roi": 0.1,
+                            "expensive_low_value": True,
+                            "evidence": ["spend high"],
+                        }
+                    ],
+                    "fleet_roi": 1.2,
+                }
+            )
+        raise AssertionError(f"unexpected {method} {url}")
+
+    monkeypatch.setattr("hiveplane.cli._request", fake_request)
+    forecast_result = runner.invoke(app, ["cost", "forecast"])
+    roi_result = runner.invoke(app, ["cost", "roi"])
+    assert forecast_result.exit_code == 0 and "projected" in forecast_result.output
+    assert roi_result.exit_code == 0 and "bad" in roi_result.output

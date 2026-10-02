@@ -6,7 +6,7 @@ import json
 import urllib.request
 from collections.abc import Callable, Mapping
 from datetime import UTC, datetime
-from typing import Any, Protocol
+from typing import Any, Protocol, cast
 
 from pydantic import JsonValue
 
@@ -16,6 +16,8 @@ from hiveplane.core.run import Run, RunState
 from hiveplane.core.workload import AgentWorkload
 from hiveplane.execution.models import DeliveryRecord, DeliveryStatus
 from hiveplane.execution.store import RunStore
+from hiveplane.tenancy import TenantContext
+from hiveplane.tenancy.context import context_for_run
 
 Poster = Callable[[str, dict[str, Any]], None]
 
@@ -77,15 +79,28 @@ def _destinations(run: Run, workload: AgentWorkload) -> list[FanOutDestination]:
     return []
 
 
-def _message(run: Run, workload: AgentWorkload) -> dict[str, JsonValue]:
+def _message(
+    run: Run,
+    workload: AgentWorkload,
+    *,
+    verification_base_url: str | None = None,
+    artifacts: list[dict[str, JsonValue]] | None = None,
+) -> dict[str, JsonValue]:
     certification = workload.spec.certification
+    attestation_id = certification.attestation_id if certification else None
+    verification_url: str | None = None
+    if attestation_id and verification_base_url:
+        base = verification_base_url.rstrip("/")
+        verification_url = f"{base}/attestations/{attestation_id}/verify"
     return {
         "run_id": run.id,
         "workload": run.workload_id,
         "state": run.state.value,
         "failure_reason": run.failure_reason,
         "cost_usd": run.cost_usd,
-        "attestation_id": certification.attestation_id if certification else None,
+        "attestation_id": attestation_id,
+        "verification_url": verification_url,
+        "artifacts": cast("list[JsonValue]", artifacts or []),
     }
 
 
@@ -100,18 +115,35 @@ class FanOutService:
         enabled: bool = True,
         max_retries: int = 3,
         clock: Callable[[], datetime] | None = None,
+        verification_base_url: str | None = None,
+        artifact_lookup: Callable[[str], list[dict[str, JsonValue]]] | None = None,
     ) -> None:
         self._store = store
         self._transports = dict(transports)
         self._enabled = enabled
         self._max_retries = max_retries
         self._clock = clock or (lambda: datetime.now(UTC))
+        self._verification_base_url = verification_base_url
+        self._artifact_lookup = artifact_lookup
+
+    def _artifacts(self, run: Run) -> list[dict[str, JsonValue]]:
+        if self._artifact_lookup is None:
+            return []
+        try:
+            return self._artifact_lookup(run.id)
+        except Exception:
+            return []
 
     def notify(self, run: Run, workload: AgentWorkload) -> list[DeliveryRecord]:
         """Deliver a run's outcome to every configured destination."""
         if not self._enabled:
             return []
-        message = _message(run, workload)
+        message = _message(
+            run,
+            workload,
+            verification_base_url=self._verification_base_url,
+            artifacts=self._artifacts(run),
+        )
         records: list[DeliveryRecord] = []
         for destination in _destinations(run, workload):
             records.append(self._deliver(run, workload, destination, message))
@@ -121,7 +153,12 @@ class FanOutService:
         """Deliver an escalation notice to on_escalation destinations."""
         if not self._enabled:
             return []
-        message = _message(run, workload)
+        message = _message(
+            run,
+            workload,
+            verification_base_url=self._verification_base_url,
+            artifacts=self._artifacts(run),
+        )
         records: list[DeliveryRecord] = []
         for destination in workload.spec.fan_out.on_escalation:
             records.append(self._deliver(run, workload, destination, message))
@@ -148,6 +185,10 @@ class FanOutService:
             active.set_attribute("attempts", record.attempts)
             return record
 
+    @staticmethod
+    def _run_ctx(run: Run) -> TenantContext:
+        return context_for_run(run.tenant_id, run.team_id, run.attribution_key)
+
     def _attempt(
         self,
         run: Run,
@@ -165,7 +206,7 @@ class FanOutService:
             timestamp=self._clock(),
         )
         if transport is None:
-            return self._finish(record, DeliveryStatus.FAILED, "no transport configured")
+            return self._finish(run, record, DeliveryStatus.FAILED, "no transport configured")
         error: str | None = None
         attempts = 0
         for _ in range(self._max_retries + 1):
@@ -175,16 +216,19 @@ class FanOutService:
             except Exception as exc:
                 error = str(exc)
                 continue
-            return self._finish(
-                record.model_copy(update={"attempts": attempts}), DeliveryStatus.DELIVERED, None
-            )
+            delivered = record.model_copy(update={"attempts": attempts})
+            return self._finish(run, delivered, DeliveryStatus.DELIVERED, None)
         return self._finish(
-            record.model_copy(update={"attempts": attempts}), DeliveryStatus.FAILED, error
+            run, record.model_copy(update={"attempts": attempts}), DeliveryStatus.FAILED, error
         )
 
     def _finish(
-        self, record: DeliveryRecord, status: DeliveryStatus, error: str | None
+        self,
+        run: Run,
+        record: DeliveryRecord,
+        status: DeliveryStatus,
+        error: str | None,
     ) -> DeliveryRecord:
         finished = record.model_copy(update={"status": status, "error": error})
-        self._store.add_delivery(finished)
+        self._store.add_delivery(finished, ctx=self._run_ctx(run))
         return finished

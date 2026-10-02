@@ -1,0 +1,14 @@
+{
+  "malformed": 422,
+  "clean": 200,
+  "tampered_status": 400,
+  "tampered_body": {
+    "detail": "workload bundle 'fleet-bundle' failed verification: signature or digest mismatch",
+    "error": {
+      "code": 400,
+      "message": "workload bundle 'fleet-bundle' failed verification: signature or digest mismatch",
+      "details": null,
+      "request_id": "07cd4cd4a9d541c095c7f6656cd20931"
+    }
+  }
+}

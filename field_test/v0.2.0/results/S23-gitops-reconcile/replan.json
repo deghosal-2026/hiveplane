@@ -1,0 +1,13 @@
+{
+  "run_id": "rr-95cef36e09e6",
+  "tenant_id": "default",
+  "source_id": "ft-gitops-inline",
+  "source": "git",
+  "revision": "ffa2b0ecab82a035",
+  "mode": "plan",
+  "started_at": "2026-10-02T01:22:14.724380Z",
+  "finished_at": "2026-10-02T01:22:14.727826Z",
+  "outcome": "in_sync",
+  "actions": [],
+  "error": null
+}

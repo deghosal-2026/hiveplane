@@ -1,0 +1,61 @@
+{{- if .Values.telemetry.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "hiveplane.fullname" . }}-prometheus
+  labels:
+    {{- include "hiveplane.labels" . | nindent 4 }}
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+    scrape_configs:
+      - job_name: hiveplane-api
+        static_configs:
+          - targets: ["{{ include "hiveplane.fullname" . }}-api:{{ .Values.api.service.port }}"]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "hiveplane.fullname" . }}-prometheus
+  labels:
+    {{- include "hiveplane.labels" . | nindent 4 }}
+    app.kubernetes.io/component: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: prometheus
+  template:
+    metadata:
+      labels:
+        {{- include "hiveplane.labels" . | nindent 8 }}
+        app.kubernetes.io/component: prometheus
+    spec:
+      containers:
+        - name: prometheus
+          image: "{{ .Values.telemetry.prometheus.image.repository }}:{{ .Values.telemetry.prometheus.image.tag }}"
+          args: ["--config.file=/etc/prometheus/prometheus.yml"]
+          ports:
+            - {name: http, containerPort: 9090}
+          volumeMounts:
+            - {name: config, mountPath: /etc/prometheus}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "hiveplane.fullname" . }}-prometheus
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "hiveplane.fullname" . }}-prometheus
+  labels:
+    {{- include "hiveplane.labels" . | nindent 4 }}
+spec:
+  selector:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: prometheus
+  ports:
+    - {name: http, port: 9090, targetPort: http}
+{{- end }}

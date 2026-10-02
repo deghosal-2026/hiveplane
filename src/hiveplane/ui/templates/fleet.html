@@ -2,6 +2,25 @@
 {% block title %}Fleet · HivePlane{% endblock %}
 {% block content %}
 <h1>Fleet</h1>
+{% if ok %}<p class="badge certified">{{ ok }}</p>{% endif %}
+{% if error %}<p class="badge failed">{{ error }}</p>{% endif %}
+{% if fleet_state and fleet_state.halted %}
+<div class="card" style="border: 2px solid #c00;">
+  <div class="muted">Incident mode</div>
+  <div class="value" style="color:#c00;">HALTED</div>
+  {% if fleet_state.active %}
+  <div class="muted">
+    {{ fleet_state.active.incident_id }} · scope={{ fleet_state.active.scope }} ·
+    by {{ fleet_state.active.actor }}
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+{% if visible_actions.kill_switch %}
+<form method="post" action="/fleet/{{ 'resume' if fleet_state and fleet_state.halted else 'pause' }}">
+  <button type="submit">{{ 'Resume fleet' if fleet_state and fleet_state.halted else 'Halt fleet' }}</button>
+</form>
+{% endif %}
 <div class="grid">
   <div class="card">
     <div class="muted">Workloads</div>

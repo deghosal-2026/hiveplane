@@ -1,0 +1,22 @@
+{
+  "run_id": "rr-1f9c9d7969fd",
+  "tenant_id": "default",
+  "source_id": "ft-gitops-inline",
+  "source": "git",
+  "revision": "acd706b40792c2e2",
+  "mode": "apply",
+  "started_at": "2026-10-02T01:22:14.683545Z",
+  "finished_at": "2026-10-02T01:22:14.693099Z",
+  "outcome": "applied",
+  "actions": [
+    {
+      "action_id": "act-94cc0eb48bb42a7dd83615df",
+      "kind": "deregister_workload",
+      "object_kind": "workload",
+      "object_ref": "gitops-temp",
+      "status": "applied",
+      "detail": "deregistered; history retained"
+    }
+  ],
+  "error": null
+}

@@ -135,6 +135,7 @@ def _event_entry(event: RunEvent) -> StoryEntry | None:
             "detail": event.detail,
             "from_state": event.from_state.value if event.from_state else None,
             "to_state": event.to_state.value if event.to_state else None,
+            "sequence": event.sequence,
         },
     )
 

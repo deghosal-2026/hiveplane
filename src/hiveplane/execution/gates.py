@@ -26,14 +26,23 @@ from hiveplane.execution.models import DeliveryRecord, RunContext
 from hiveplane.registry.models import AdmissionDecision
 from hiveplane.registry.service import RegistryService
 from hiveplane.sandbox.models import SandboxInstance
+from hiveplane.tenancy import DEFAULT_CONTEXT, TenantContext
 
 
 class CertificationGate(Protocol):
     """Reads certification status and attestation model for admission."""
 
-    def check_admission(self, workload: str, context: AdmissionContext) -> AdmissionDecision: ...
+    def check_admission(
+        self,
+        workload: str,
+        context: AdmissionContext,
+        *,
+        ctx: TenantContext = DEFAULT_CONTEXT,
+    ) -> AdmissionDecision: ...
 
-    def attestation_model(self, workload: str) -> str | None: ...
+    def attestation_model(
+        self, workload: str, *, ctx: TenantContext = DEFAULT_CONTEXT
+    ) -> str | None: ...
 
 
 class RegistryCertificationGate:
@@ -42,13 +51,21 @@ class RegistryCertificationGate:
     def __init__(self, registry: RegistryService) -> None:
         self._registry = registry
 
-    def check_admission(self, workload: str, context: AdmissionContext) -> AdmissionDecision:
+    def check_admission(
+        self,
+        workload: str,
+        context: AdmissionContext,
+        *,
+        ctx: TenantContext = DEFAULT_CONTEXT,
+    ) -> AdmissionDecision:
         """Return the registry admission decision for a workload and context."""
-        return self._registry.check_admission(workload, context)
+        return self._registry.check_admission(workload, context, ctx=ctx)
 
-    def attestation_model(self, workload: str) -> str | None:
+    def attestation_model(
+        self, workload: str, *, ctx: TenantContext = DEFAULT_CONTEXT
+    ) -> str | None:
         """Return the model identity bound to the latest attestation, if any."""
-        attestations = self._registry.list_attestations(workload)
+        attestations = self._registry.list_attestations(workload, ctx=ctx)
         return attestations[-1].model_identity if attestations else None
 
 
@@ -80,15 +97,33 @@ class PermissivePolicyGate:
 class BudgetGate(Protocol):
     """Checks budget headroom and records priced usage."""
 
-    def check(self, workload: AgentWorkload, context: AdmissionContext) -> BudgetCheck: ...
+    def check(
+        self,
+        workload: AgentWorkload,
+        context: AdmissionContext,
+        *,
+        ctx: TenantContext = DEFAULT_CONTEXT,
+    ) -> BudgetCheck: ...
 
-    def record_usage(self, workload: AgentWorkload, report: UsageReport) -> BudgetOutcome: ...
+    def record_usage(
+        self,
+        workload: AgentWorkload,
+        report: UsageReport,
+        *,
+        ctx: TenantContext = DEFAULT_CONTEXT,
+    ) -> BudgetOutcome: ...
 
 
 class UnlimitedBudgetGate:
     """Phase-1 default that never blocks; replaced by the budget service."""
 
-    def check(self, workload: AgentWorkload, context: AdmissionContext) -> BudgetCheck:
+    def check(
+        self,
+        workload: AgentWorkload,
+        context: AdmissionContext,
+        *,
+        ctx: TenantContext = DEFAULT_CONTEXT,
+    ) -> BudgetCheck:
         """Return an allow check against the workload's per-run budget."""
         limit = workload.spec.budget.per_run_usd
         return BudgetCheck(
@@ -99,7 +134,13 @@ class UnlimitedBudgetGate:
             remaining_usd=limit,
         )
 
-    def record_usage(self, workload: AgentWorkload, report: UsageReport) -> BudgetOutcome:
+    def record_usage(
+        self,
+        workload: AgentWorkload,
+        report: UsageReport,
+        *,
+        ctx: TenantContext = DEFAULT_CONTEXT,
+    ) -> BudgetOutcome:
         """Return an allow outcome that passes cost through unchanged."""
         limit = workload.spec.budget.per_run_usd
         return BudgetOutcome(
@@ -122,6 +163,14 @@ class SandboxGate(Protocol):
         workload: AgentWorkload,
         context: AdmissionContext,
         action_class: ActionClass | None,
+    ) -> bool: ...
+
+
+class HaltGate(Protocol):
+    """Reports whether incident mode is halting admission (M53)."""
+
+    def halted(
+        self, *, tenant_id: str | None = None, workload: str | None = None
     ) -> bool: ...
 
 
@@ -178,6 +227,9 @@ class ApprovalRequests(Protocol):
         rule: str,
         reason: str,
         action_class: ActionClass | None = None,
+        tool_id: str | None = None,
+        tenant_id: str | None = None,
+        ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> ApprovalRecord: ...
 
     def list(
@@ -186,6 +238,7 @@ class ApprovalRequests(Protocol):
         status: ApprovalStatus | None = None,
         workload: str | None = None,
         run_id: str | None = None,
+        ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> list[ApprovalRecord]:
         """List approvals, optionally filtered (used for approved re-dispatch)."""
         ...

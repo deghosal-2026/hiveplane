@@ -1,0 +1,53 @@
+apiVersion: hiveplane/v1
+kind: AgentWorkload
+metadata:
+  name: failing-agent
+  owner: platform-team
+  team: platform
+  description: S30/S31 fixture — a run that deterministically fails (terminal failure path).
+  labels:
+    environment: field-test
+    source: field_test
+spec:
+  runtime:
+    adapter: raw-worker
+    entrypoint: field_test.shims.failing_agent:run
+  model:
+    strategy: tiered
+    identity:
+      provider: omlx
+      family: qwen3-4b-instruct-2507
+      version: "4bit"
+  tools:
+    allow: []
+    deny:
+      - mcp.github.delete_repo
+    default_trust: read_only
+  budget:
+    per_run_usd: 0.50
+    per_day_usd: 5.00
+    per_team_usd: 50.00
+  approvals:
+    required_for:
+      - production_write
+    contact: "#platform-oncall"
+    auto_escalate_after: 300s
+  sandbox:
+    enabled: true
+    resource_caps:
+      memory_mb: 512
+      cpu_cores: 1.0
+      wall_clock_s: 300
+    egress:
+      allow: ["api.github.com"]
+      deny: ["169.254.169.254"]
+      mode: restricted
+    filesystem: isolated
+  fan_out:
+    on_failed:
+      - type: slack
+        channel: "#platform-oncall"
+    always_include: [trace_link]
+  observability:
+    contract: standard
+    trace_sampling: 1.0

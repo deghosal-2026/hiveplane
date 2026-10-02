@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Diff · HivePlane{% endblock %}
+{% block content %}
+<h1>Diff</h1>
+
+<form method="get" action="/diff">
+  <label class="muted" for="kind">Kind</label>
+  <select id="kind" name="kind">
+    <option value="version" {% if kind == "version" %}selected{% endif %}>Version</option>
+    <option value="regression" {% if kind == "regression" %}selected{% endif %}>Regression</option>
+    <option value="runs" {% if kind == "runs" %}selected{% endif %}>Runs</option>
+    <option value="replay" {% if kind == "replay" %}selected{% endif %}>Replay</option>
+  </select>
+  <input name="name" placeholder="workload" />
+  <input name="from_version" placeholder="from version" />
+  <input name="to_version" placeholder="to version" />
+  <input name="before_id" placeholder="before id" />
+  <input name="after_id" placeholder="after id" />
+  <button type="submit">Compare</button>
+</form>
+
+{% if view.title %}
+<h2>{{ view.title }}</h2>
+{% endif %}
+
+{% if view.entries %}
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Before</th>
+      <th>After</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for entry in view.entries %}
+    <tr>
+      <td>{{ entry.field }}</td>
+      <td>{{ entry.before }}</td>
+      <td>{{ entry.after }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">No diff to show.</p>
+{% endif %}
+{% endblock %}

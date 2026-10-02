@@ -1,0 +1,17 @@
+{
+  "title": "HivePlane Fleet",
+  "uid": "hiveplane-fleet",
+  "schemaVersion": 39,
+  "editable": true,
+  "timezone": "browser",
+  "panels": [
+    {
+      "id": 1,
+      "type": "timeseries",
+      "title": "hiveplane_runs_submitted_total",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{"refId": "A", "expr": "hiveplane_runs_submitted_total"}],
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 0}
+    }
+  ]
+}

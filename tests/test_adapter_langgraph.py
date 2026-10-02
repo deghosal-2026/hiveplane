@@ -66,6 +66,9 @@ class _Graph:
 
 
 class _Tools:
+    def reset_drive(self, run_id: str) -> None:
+        return None
+
     def invoke(self, run_id: str, request: object) -> ToolCallResult:
         return ToolCallResult(run_id=run_id, tool_id="mcp.t.x", outcome=ToolCallOutcome.ALLOWED)
 
@@ -76,7 +79,7 @@ class _Reporter:
         self.events: list[EventType] = []
         self.usage: list[UsageReport] = []
 
-    def get(self, run_id: str) -> Run:
+    def get(self, run_id: str, *, ctx: object = None) -> Run:
         return _run()
 
     def transition(
@@ -88,16 +91,25 @@ class _Reporter:
         detail: str | None = None,
         failure_reason: str | None = None,
         result: object | None = None,
+        ctx: object = None,
     ) -> Run:
         self.transitions.append((target, failure_reason))
         return _run()
 
-    def record_usage(self, run_id: str, report: UsageReport) -> Run:
+    def record_usage(
+        self, run_id: str, report: UsageReport, *, ctx: object = None
+    ) -> Run:
         self.usage.append(report)
         return _run()
 
     def record_event(
-        self, run_id: str, event_type: EventType, actor: str, *, detail: str | None = None
+        self,
+        run_id: str,
+        event_type: EventType,
+        actor: str,
+        *,
+        detail: str | None = None,
+        ctx: object = None,
     ) -> None:
         self.events.append(event_type)
 

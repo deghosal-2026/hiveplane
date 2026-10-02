@@ -1,0 +1,23 @@
+# S9 shadow
+
+status:   pass
+detail:   shadow diff produced (changed=False); shadow deliveries=0
+started:  2026-10-02T00:44:38.252214+00:00
+duration: 5.19s
+model:    omlx/qwen3-4b-instruct-2507/4bit
+git_sha:  b186ba158779686f69cd3fdaba1672de84a13038
+calls:    671
+runs:     run-068595da6327
+
+## Mutating calls (inputs)
+
+  POST /workloads -> 409
+  PUT /workloads/support-agent -> 200
+  POST /certifications -> 201
+  POST /quarantines/quar-5ca4f814a1c8/reinstate -> 409
+  POST /certifications -> 201
+  POST /quarantines/quar-af2a9b9a8904/reinstate -> 409
+  POST /certifications -> 201
+  POST /runs -> 201
+  POST /runs/run-068595da6327/start -> 200
+  POST /shadow -> 201

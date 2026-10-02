@@ -7,37 +7,63 @@
 
 <h2>Pending</h2>
 {% if pending %}
+<form id="bulk-form" method="post" action="/approvals/bulk">
+  <button type="submit" name="decision" value="approve">Approve selected</button>
+  <button class="danger" type="submit" name="decision" value="deny">Deny selected</button>
+</form>
 <table>
   <thead>
     <tr>
+      <th></th>
       <th>Approval</th>
       <th>Run</th>
       <th>Workload</th>
       <th>Rule</th>
       <th>Reason</th>
       <th>Requested</th>
+      <th>Delegated to</th>
+      <th>Comments</th>
       <th>Decision</th>
     </tr>
   </thead>
   <tbody>
     {% for approval in pending %}
     <tr>
+      <td><input type="checkbox" name="approval_id" value="{{ approval.approval_id }}" form="bulk-form" /></td>
       <td>{{ approval.approval_id }}</td>
       <td><a href="/runs/{{ approval.run_id }}">{{ approval.run_id }}</a></td>
       <td>{{ approval.workload }}</td>
       <td>{{ approval.rule }}</td>
       <td>{{ approval.reason }}</td>
       <td class="muted">{{ approval.requested_at }}</td>
+      <td>{{ approval.delegated_to or "—" }}</td>
+      <td>
+        {% if approval.comments %}
+        <ul class="comments">
+          {% for comment in approval.comments %}
+          <li><span class="muted">{{ comment.author }}</span>: {{ comment.text }}</li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <span class="muted">—</span>
+        {% endif %}
+      </td>
       <td>
         <form class="inline" method="post" action="/approvals/{{ approval.approval_id }}/approve">
-          <input name="operator" placeholder="operator" required />
           <input name="reason" placeholder="reason" />
           <button type="submit">Approve</button>
         </form>
         <form class="inline" method="post" action="/approvals/{{ approval.approval_id }}/deny">
-          <input name="operator" placeholder="operator" required />
           <input name="reason" placeholder="reason" />
           <button class="danger" type="submit">Deny</button>
+        </form>
+        <form class="inline" method="post" action="/approvals/{{ approval.approval_id }}/comment">
+          <input name="text" placeholder="comment" required />
+          <button type="submit">Comment</button>
+        </form>
+        <form class="inline" method="post" action="/approvals/{{ approval.approval_id }}/delegate">
+          <input name="assignee" placeholder="assignee" required />
+          <button type="submit">Delegate</button>
         </form>
       </td>
     </tr>

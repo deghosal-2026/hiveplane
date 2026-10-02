@@ -1,0 +1,12 @@
+{
+  "status": 409,
+  "body": {
+    "detail": "manifest version 1 is not the current version 3; publish it before promoting (changed bindings: manifest, toolset, model_binding, policy_version)",
+    "error": {
+      "code": 409,
+      "message": "manifest version 1 is not the current version 3; publish it before promoting (changed bindings: manifest, toolset, model_binding, policy_version)",
+      "details": null,
+      "request_id": "ec92f5fd375b41a99ad3098a6402152a"
+    }
+  }
+}

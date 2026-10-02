@@ -1,0 +1,17 @@
+# S12 context-budget
+
+status:   pass
+detail:   context budget exceeded -> run paused (used 16 > limit 1 tokens)
+started:  2026-10-02T00:44:54.177972+00:00
+duration: 1.15s
+model:    omlx/qwen3-4b-instruct-2507/4bit
+git_sha:  b186ba158779686f69cd3fdaba1672de84a13038
+calls:    14
+runs:     run-7a55ae1737c3
+
+## Mutating calls (inputs)
+
+  POST /workloads -> 201
+  POST /runs -> 201
+  POST /runs/run-7a55ae1737c3/start -> 200
+  POST /runs/run-7a55ae1737c3/stop -> 200

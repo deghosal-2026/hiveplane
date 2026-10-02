@@ -1,0 +1,858 @@
+{
+  "scenario": "S3",
+  "model": "omlx/qwen3-4b-instruct-2507/4bit",
+  "runs": {
+    "run-990c923dfcb2": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "policy_decision",
+        "sandbox",
+        "state_change",
+        "tool_call"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [
+        "mcp.github.read_issue"
+      ],
+      "policy_rules": [
+        "sandbox.allow: sandbox context allows the tool"
+      ],
+      "llm_calls": [],
+      "deliveries": [
+        {
+          "type": "slack",
+          "status": "delivered"
+        }
+      ]
+    },
+    "run-d2af68cfbbc5": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "policy_decision",
+        "sandbox",
+        "state_change",
+        "tool_call"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [
+        "mcp.github.read_issue"
+      ],
+      "policy_rules": [
+        "sandbox.allow: sandbox context allows the tool"
+      ],
+      "llm_calls": [],
+      "deliveries": [
+        {
+          "type": "slack",
+          "status": "delivered"
+        }
+      ]
+    },
+    "run-decb77f52360": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "policy_decision",
+        "sandbox",
+        "state_change",
+        "tool_call"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [
+        "mcp.github.read_issue"
+      ],
+      "policy_rules": [
+        "sandbox.allow: sandbox context allows the tool"
+      ],
+      "llm_calls": [],
+      "deliveries": [
+        {
+          "type": "slack",
+          "status": "delivered"
+        }
+      ]
+    },
+    "run-0ab5b4a77a1d": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "policy_decision",
+        "sandbox",
+        "state_change",
+        "tool_call"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [
+        "mcp.github.read_issue",
+        "pagerduty.acknowledge"
+      ],
+      "policy_rules": [
+        "sandbox.allow: sandbox context allows the tool",
+        "sandbox.allow: sandbox context allows the tool"
+      ],
+      "llm_calls": [],
+      "deliveries": [
+        {
+          "type": "slack",
+          "status": "delivered"
+        }
+      ]
+    },
+    "run-587bba489d44": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "policy_decision",
+        "sandbox",
+        "state_change",
+        "tool_call"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [
+        "mcp.github.read_large_issue"
+      ],
+      "policy_rules": [
+        "sandbox.allow: sandbox context allows the tool"
+      ],
+      "llm_calls": [],
+      "deliveries": [
+        {
+          "type": "slack",
+          "status": "delivered"
+        }
+      ]
+    },
+    "run-e181b4d356cd": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "policy_decision",
+        "sandbox",
+        "state_change",
+        "tool_call"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [
+        "mcp.github.read_issue"
+      ],
+      "policy_rules": [
+        "sandbox.allow: sandbox context allows the tool"
+      ],
+      "llm_calls": [],
+      "deliveries": [
+        {
+          "type": "slack",
+          "status": "delivered"
+        }
+      ]
+    },
+    "run-238a9f823a6a": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "policy_decision",
+        "sandbox",
+        "state_change",
+        "tool_call"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [
+        "mcp.github.read_issue"
+      ],
+      "policy_rules": [
+        "sandbox.allow: sandbox context allows the tool"
+      ],
+      "llm_calls": [],
+      "deliveries": [
+        {
+          "type": "slack",
+          "status": "delivered"
+        }
+      ]
+    },
+    "run-819aacb40704": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "policy_decision",
+        "sandbox",
+        "state_change",
+        "tool_call"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [
+        "mcp.github.read_issue"
+      ],
+      "policy_rules": [
+        "sandbox.allow: sandbox context allows the tool"
+      ],
+      "llm_calls": [],
+      "deliveries": [
+        {
+          "type": "slack",
+          "status": "delivered"
+        }
+      ]
+    },
+    "run-e6c9854c8966": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "policy_decision",
+        "sandbox",
+        "state_change",
+        "tool_call"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [
+        "mcp.github.read_issue"
+      ],
+      "policy_rules": [
+        "sandbox.allow: sandbox context allows the tool"
+      ],
+      "llm_calls": [],
+      "deliveries": [
+        {
+          "type": "slack",
+          "status": "delivered"
+        }
+      ]
+    },
+    "run-a7a0ab100295": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "policy_decision",
+        "sandbox",
+        "state_change",
+        "tool_call"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [
+        "mcp.github.read_issue",
+        "pagerduty.acknowledge"
+      ],
+      "policy_rules": [
+        "sandbox.allow: sandbox context allows the tool",
+        "sandbox.allow: sandbox context allows the tool"
+      ],
+      "llm_calls": [],
+      "deliveries": [
+        {
+          "type": "slack",
+          "status": "delivered"
+        }
+      ]
+    },
+    "run-23956831d470": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "policy_decision",
+        "sandbox",
+        "state_change",
+        "tool_call"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [
+        "mcp.github.read_large_issue"
+      ],
+      "policy_rules": [
+        "sandbox.allow: sandbox context allows the tool"
+      ],
+      "llm_calls": [],
+      "deliveries": [
+        {
+          "type": "slack",
+          "status": "delivered"
+        }
+      ]
+    },
+    "run-f80c62e153f5": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "policy_decision",
+        "sandbox",
+        "state_change",
+        "tool_call"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [
+        "mcp.github.read_issue"
+      ],
+      "policy_rules": [
+        "sandbox.allow: sandbox context allows the tool"
+      ],
+      "llm_calls": [],
+      "deliveries": [
+        {
+          "type": "slack",
+          "status": "delivered"
+        }
+      ]
+    },
+    "run-1ec1c6e7bcfb": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "policy_decision",
+        "sandbox",
+        "state_change",
+        "tool_call"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [
+        "mcp.github.read_issue"
+      ],
+      "policy_rules": [
+        "sandbox.allow: sandbox context allows the tool"
+      ],
+      "llm_calls": [],
+      "deliveries": [
+        {
+          "type": "slack",
+          "status": "delivered"
+        }
+      ]
+    },
+    "run-65c494d1f9af": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "policy_decision",
+        "sandbox",
+        "state_change",
+        "tool_call"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [
+        "mcp.github.read_issue"
+      ],
+      "policy_rules": [
+        "sandbox.allow: sandbox context allows the tool"
+      ],
+      "llm_calls": [],
+      "deliveries": [
+        {
+          "type": "slack",
+          "status": "delivered"
+        }
+      ]
+    },
+    "run-2f868070a4a1": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "policy_decision",
+        "sandbox",
+        "state_change",
+        "tool_call"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [
+        "mcp.github.read_issue"
+      ],
+      "policy_rules": [
+        "sandbox.allow: sandbox context allows the tool"
+      ],
+      "llm_calls": [],
+      "deliveries": [
+        {
+          "type": "slack",
+          "status": "delivered"
+        }
+      ]
+    },
+    "run-4189389d8bdc": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "policy_decision",
+        "sandbox",
+        "state_change",
+        "tool_call"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [
+        "mcp.github.read_issue",
+        "pagerduty.acknowledge"
+      ],
+      "policy_rules": [
+        "sandbox.allow: sandbox context allows the tool",
+        "sandbox.allow: sandbox context allows the tool"
+      ],
+      "llm_calls": [],
+      "deliveries": [
+        {
+          "type": "slack",
+          "status": "delivered"
+        }
+      ]
+    },
+    "run-44f021a9a317": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "policy_decision",
+        "sandbox",
+        "state_change",
+        "tool_call"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [
+        "mcp.github.read_large_issue"
+      ],
+      "policy_rules": [
+        "sandbox.allow: sandbox context allows the tool"
+      ],
+      "llm_calls": [],
+      "deliveries": [
+        {
+          "type": "slack",
+          "status": "delivered"
+        }
+      ]
+    },
+    "run-3a7bab9c36ba": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "policy_decision",
+        "sandbox",
+        "state_change",
+        "tool_call"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [
+        "mcp.github.read_issue"
+      ],
+      "policy_rules": [
+        "sandbox.allow: sandbox context allows the tool"
+      ],
+      "llm_calls": [],
+      "deliveries": [
+        {
+          "type": "slack",
+          "status": "delivered"
+        }
+      ]
+    },
+    "run-0c44a7c96e6e": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "policy_decision",
+        "sandbox",
+        "state_change",
+        "tool_call"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [
+        "mcp.github.read_issue"
+      ],
+      "policy_rules": [
+        "sandbox.allow: sandbox context allows the tool"
+      ],
+      "llm_calls": [],
+      "deliveries": [
+        {
+          "type": "slack",
+          "status": "delivered"
+        }
+      ]
+    },
+    "run-db766053abea": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "policy_decision",
+        "sandbox",
+        "state_change",
+        "tool_call"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [
+        "mcp.github.read_issue"
+      ],
+      "policy_rules": [
+        "sandbox.allow: sandbox context allows the tool"
+      ],
+      "llm_calls": [],
+      "deliveries": [
+        {
+          "type": "slack",
+          "status": "delivered"
+        }
+      ]
+    },
+    "run-e88b9af20810": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "policy_decision",
+        "sandbox",
+        "state_change",
+        "tool_call"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [
+        "mcp.github.read_issue"
+      ],
+      "policy_rules": [
+        "sandbox.allow: sandbox context allows the tool"
+      ],
+      "llm_calls": [],
+      "deliveries": [
+        {
+          "type": "slack",
+          "status": "delivered"
+        }
+      ]
+    },
+    "run-7345c35f49de": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "policy_decision",
+        "sandbox",
+        "state_change",
+        "tool_call"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [
+        "mcp.github.read_issue",
+        "pagerduty.acknowledge"
+      ],
+      "policy_rules": [
+        "sandbox.allow: sandbox context allows the tool",
+        "sandbox.allow: sandbox context allows the tool"
+      ],
+      "llm_calls": [],
+      "deliveries": [
+        {
+          "type": "slack",
+          "status": "delivered"
+        }
+      ]
+    },
+    "run-674b5d6d89e9": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "policy_decision",
+        "sandbox",
+        "state_change",
+        "tool_call"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [
+        "mcp.github.read_large_issue"
+      ],
+      "policy_rules": [
+        "sandbox.allow: sandbox context allows the tool"
+      ],
+      "llm_calls": [],
+      "deliveries": [
+        {
+          "type": "slack",
+          "status": "delivered"
+        }
+      ]
+    },
+    "run-a1a1be0a73d7": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "policy_decision",
+        "sandbox",
+        "state_change",
+        "tool_call"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [
+        "mcp.github.read_issue"
+      ],
+      "policy_rules": [
+        "sandbox.allow: sandbox context allows the tool"
+      ],
+      "llm_calls": [],
+      "deliveries": [
+        {
+          "type": "slack",
+          "status": "delivered"
+        }
+      ]
+    },
+    "run-2357f5313fba": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "sandbox",
+        "state_change"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [],
+      "policy_rules": [],
+      "llm_calls": [],
+      "deliveries": []
+    },
+    "run-d5be086a43a6": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "sandbox",
+        "state_change"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [],
+      "policy_rules": [],
+      "llm_calls": [],
+      "deliveries": []
+    },
+    "run-6d4599afc48c": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "sandbox",
+        "state_change"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [],
+      "policy_rules": [],
+      "llm_calls": [],
+      "deliveries": []
+    },
+    "run-1d0fd2f0d5ed": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "sandbox",
+        "state_change"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [],
+      "policy_rules": [],
+      "llm_calls": [],
+      "deliveries": []
+    },
+    "run-c0b289590f10": {
+      "state": "completed",
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "context": "sandbox",
+      "sandbox": true,
+      "event_types": [
+        "admission",
+        "sandbox",
+        "state_change"
+      ],
+      "state_path": [
+        "running",
+        "completed"
+      ],
+      "tool_calls": [],
+      "policy_rules": [],
+      "llm_calls": [],
+      "deliveries": []
+    }
+  }
+}

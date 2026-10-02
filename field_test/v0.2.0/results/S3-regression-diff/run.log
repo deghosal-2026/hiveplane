@@ -1,0 +1,20 @@
+# S3 regression-diff
+
+status:   pass
+detail:   regressed 6->2; 3 regressions (blocked)
+started:  2026-10-02T00:43:44.621733+00:00
+duration: 2.06s
+model:    omlx/qwen3-4b-instruct-2507/4bit
+git_sha:  b186ba158779686f69cd3fdaba1672de84a13038
+calls:    188
+runs:     (none)
+
+## Mutating calls (inputs)
+
+  POST /workloads -> 409
+  PUT /workloads/support-agent -> 200
+  POST /certifications -> 201
+  POST /certifications -> 201
+  POST /workloads -> 409
+  PUT /workloads/regressed-agent -> 200
+  POST /certifications -> 201

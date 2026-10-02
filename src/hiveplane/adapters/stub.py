@@ -7,6 +7,13 @@ calls, reports no usage, and never decides policy.
 
 from __future__ import annotations
 
+from collections.abc import Iterator
+
+from hiveplane.adapters.base import (
+    AdapterCapabilities,
+    AdapterEvent,
+    buffered_stream,
+)
 from hiveplane.core.run import RunState
 from hiveplane.core.usage import UsageReport
 from hiveplane.core.workload import AgentWorkload
@@ -41,7 +48,7 @@ class StubAdapter:
         self._states[run_id] = RunState.RUNNING
         return True
 
-    def cancel(self, run_id: str) -> None:
+    def cancel(self, run_id: str, *, deadline_s: float | None = None) -> None:
         """Record the run as cancelled."""
         self._states[run_id] = RunState.CANCELLED
 
@@ -56,3 +63,25 @@ class StubAdapter:
     def tool_calls(self, run_id: str) -> list[ToolCallResult]:
         """Return the tool calls routed through the boundary for a run."""
         return list(self._tool_calls.get(run_id, []))
+
+    def capabilities(self) -> AdapterCapabilities:
+        """Declare the reference adapter's capabilities."""
+        return AdapterCapabilities(
+            streaming=False,
+            pause_resume=True,
+            tool_execution=True,
+            sandbox=True,
+            deterministic_replay=False,
+        )
+
+    def stream(self, run_id: str) -> Iterator[AdapterEvent]:
+        """Yield a buffered state stream for the run."""
+        return buffered_stream(run_id, self.status(run_id))
+
+    def model_identity(self, run_id: str) -> str | None:
+        """The stub performs no inference, so it reports no identity."""
+        return None
+
+    def conformance_version(self) -> str:
+        """Conform to contract v2."""
+        return "2"

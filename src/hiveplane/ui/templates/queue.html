@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Queue · HivePlane{% endblock %}
+{% block content %}
+<h1>Queue</h1>
+<div class="grid">
+  <div class="card">
+    <div class="muted">Depth</div>
+    <div class="value">{{ view.depth }}</div>
+  </div>
+</div>
+
+<h2>QoS breakdown</h2>
+{% if view.by_qos %}
+<table>
+  <thead>
+    <tr>
+      <th>QoS</th>
+      <th>Waiting</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for qos, count in view.by_qos.items() %}
+    <tr>
+      <td>{{ qos }}</td>
+      <td>{{ count }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">No QoS data recorded.</p>
+{% endif %}
+
+<h2>Priority breakdown</h2>
+{% if view.by_priority %}
+<table>
+  <thead>
+    <tr>
+      <th>Priority</th>
+      <th>Waiting</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for priority, count in view.by_priority.items() %}
+    <tr>
+      <td>{{ priority }}</td>
+      <td>{{ count }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">No priority data recorded.</p>
+{% endif %}
+
+<h2>Running by workload</h2>
+{% if view.running_by_workload %}
+<table>
+  <thead>
+    <tr>
+      <th>Workload</th>
+      <th>Running</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for workload, count in view.running_by_workload.items() %}
+    <tr>
+      <td>{{ workload }}</td>
+      <td>{{ count }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">No running tasks recorded.</p>
+{% endif %}
+
+<h2>Waiting items</h2>
+{% if view.items %}
+<table>
+  <thead>
+    <tr>
+      <th>Task</th>
+      <th>Workload</th>
+      <th>QoS</th>
+      <th>Priority</th>
+      <th>Reason</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in view.items %}
+    <tr>
+      <td>{{ item.task_id }}</td>
+      <td>{{ item.workload }}</td>
+      <td>{{ item.qos }}</td>
+      <td>{{ item.priority }}</td>
+      <td>{{ item.reason }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">No waiting items in the queue.</p>
+{% endif %}
+{% endblock %}

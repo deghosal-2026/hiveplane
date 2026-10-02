@@ -1,0 +1,26 @@
+# S20 dlq-replay
+
+status:   pass
+detail:   failed delivery dead-lettered (template: event has no field 'missing.field'); replayed once; second replay 409
+started:  2026-10-02T00:45:33.600913+00:00
+duration: 9.0s
+model:    omlx/qwen3-4b-instruct-2507/4bit
+git_sha:  b186ba158779686f69cd3fdaba1672de84a13038
+calls:    1639
+runs:     (none)
+
+## Mutating calls (inputs)
+
+  POST /workloads -> 409
+  PUT /workloads/support-agent -> 200
+  POST /certifications -> 201
+  POST /quarantines/quar-5ca4f814a1c8/reinstate -> 409
+  POST /certifications -> 201
+  POST /quarantines/quar-af2a9b9a8904/reinstate -> 409
+  POST /certifications -> 201
+  POST /quarantines/quar-101c5ab6dffa/reinstate -> 409
+  POST /certifications -> 201
+  POST /triggers -> 201
+  POST /triggers/webhook/ft-dlq -> 500
+  POST /triggers/dlq/dlq-ev-f7737ef9773a/replay -> 200
+  POST /triggers/dlq/dlq-ev-f7737ef9773a/replay -> 409

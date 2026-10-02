@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Health · HivePlane{% endblock %}
+{% block content %}
+<h1>Health</h1>
+<div class="grid">
+  <div class="card">
+    <div class="muted">Healthy</div>
+    <div class="value">{{ view.healthy }}</div>
+  </div>
+  <div class="card">
+    <div class="muted">Degraded / other</div>
+    <div class="value">{{ view.degraded }}</div>
+  </div>
+</div>
+
+<h2>Workloads</h2>
+{% if view.workloads %}
+<table>
+  <thead>
+    <tr>
+      <th>Workload</th>
+      <th>Status</th>
+      <th>Success rate</th>
+      <th>Error budget remaining</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in view.workloads %}
+    <tr>
+      <td>{{ row.workload }}</td>
+      <td><span class="badge {{ row.status }}">{{ row.status }}</span></td>
+      <td>{{ "%.1f"|format(row.success_rate * 100) }}%</td>
+      <td>{{ "%.2f"|format(row.error_budget_remaining) }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">No health data recorded.</p>
+{% endif %}
+{% endblock %}

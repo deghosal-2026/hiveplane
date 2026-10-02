@@ -1,0 +1,21 @@
+INFO:     192.168.65.1:58830 - "POST /workloads HTTP/1.1" 409 Conflict
+INFO:     192.168.65.1:65421 - "PUT /workloads/uncertified-agent HTTP/1.1" 200 OK
+INFO:     192.168.65.1:44347 - "POST /runs HTTP/1.1" 201 Created
+INFO:     192.168.65.1:51283 - "DELETE /workloads/uncertified-agent HTTP/1.1" 409 Conflict
+INFO:     192.168.65.1:27661 - "GET /readyz HTTP/1.1" 200 OK
+INFO:     192.168.65.1:31507 - "GET /readyz HTTP/1.1" 200 OK
+INFO:     192.168.65.1:32889 - "GET /runs/run-3a4a5c53b6e3 HTTP/1.1" 200 OK
+INFO:     192.168.65.1:62523 - "GET /runs/run-3a4a5c53b6e3 HTTP/1.1" 200 OK
+INFO:     192.168.65.1:51218 - "GET /runs/run-3a4a5c53b6e3/events HTTP/1.1" 200 OK
+INFO:     192.168.65.1:21493 - "GET /runs/run-3a4a5c53b6e3/story HTTP/1.1" 200 OK
+INFO:     192.168.65.1:58208 - "GET /runs/run-3a4a5c53b6e3/usage HTTP/1.1" 200 OK
+INFO:     192.168.65.1:42351 - "GET /runs/run-3a4a5c53b6e3/deliveries HTTP/1.1" 200 OK
+INFO:     192.168.65.1:56523 - "GET /runs/run-3a4a5c53b6e3/feedback HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1]
+INFO:     Started server process [1]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)

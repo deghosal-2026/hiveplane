@@ -1,0 +1,17 @@
+# S31 pipeline-retry
+
+status:   pass
+detail:   2 children (attempt 2), all terminal
+started:  2026-10-02T00:47:50.167512+00:00
+duration: 0.17s
+model:    omlx/qwen3-4b-instruct-2507/4bit
+git_sha:  b186ba158779686f69cd3fdaba1672de84a13038
+calls:    13
+runs:     (none)
+
+## Mutating calls (inputs)
+
+  POST /workloads -> 409
+  PUT /workloads/failing-agent -> 200
+  POST /pipelines -> 201
+  POST /pipelines/ft-retry/runs -> 200

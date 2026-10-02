@@ -1,0 +1,11 @@
+apiVersion: v2
+name: hiveplane
+description: HivePlane — the control plane for production agent fleets.
+type: application
+version: 0.2.0
+appVersion: "0.2.0"
+home: https://github.com/deghosal-2026/hiveplane
+sources:
+  - https://github.com/deghosal-2026/hiveplane
+maintainers:
+  - name: HivePlane

@@ -9,10 +9,11 @@ remains the escape hatch for tests and non-sandboxed runs.
 
 from __future__ import annotations
 
+import os
 import shutil
 import subprocess
 import tempfile
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -20,6 +21,29 @@ from pydantic import BaseModel, ConfigDict
 
 from hiveplane.core.sandbox import ResourceCaps
 from hiveplane.sandbox.manager import _limit_process
+
+#: Non-sensitive variables the sandboxed child may inherit so it can start
+#: Python. Everything else in the control plane's environment (provider keys,
+#: the database URL, settings) is withheld (#503).
+_MINIMAL_ENV_KEYS = (
+    "PATH",
+    "HOME",
+    "LANG",
+    "LC_ALL",
+    "TMPDIR",
+    "TZ",
+    "PYTHONPATH",
+    "PYTHONHOME",
+    "SYSTEMROOT",
+)
+
+
+def minimal_env(extra: Mapping[str, str] | None = None) -> dict[str, str]:
+    """A minimal child environment, optionally extended with injected secrets."""
+    env = {key: os.environ[key] for key in _MINIMAL_ENV_KEYS if key in os.environ}
+    if extra:
+        env.update(extra)
+    return env
 
 
 class SpawnOutcome(BaseModel):
@@ -45,8 +69,14 @@ class SubprocessSpawner:
         caps: ResourceCaps | None = None,
         *,
         workdir: str | Path | None = None,
+        env: Mapping[str, str] | None = None,
     ) -> SpawnOutcome:
-        """Run ``command`` under the caps and return the outcome."""
+        """Run ``command`` under the caps and return the outcome.
+
+        ``env`` is the *only* environment the child receives; when omitted a
+        minimal non-sensitive environment is used so control-plane secrets never
+        reach agent code (#503).
+        """
         wall_clock = caps.wall_clock_s if caps is not None else 300
         scratch = (
             Path(workdir)
@@ -54,8 +84,9 @@ class SubprocessSpawner:
             else Path(tempfile.mkdtemp(prefix="hiveplane-sandbox-"))
         )
         cleanup = workdir is None
+        child_env = minimal_env(env)
         try:
-            return self._run(list(command), caps, scratch, wall_clock)
+            return self._run(list(command), caps, scratch, wall_clock, child_env)
         finally:
             if cleanup:
                 shutil.rmtree(scratch, ignore_errors=True)
@@ -66,11 +97,13 @@ class SubprocessSpawner:
         caps: ResourceCaps | None,
         scratch: Path,
         wall_clock: int,
+        env: Mapping[str, str],
     ) -> SpawnOutcome:
         try:
             completed = subprocess.run(
                 command,
                 cwd=scratch,
+                env=dict(env),
                 capture_output=True,
                 timeout=wall_clock,
                 check=False,

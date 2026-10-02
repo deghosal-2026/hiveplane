@@ -1,0 +1,15 @@
+{
+  "status": 200,
+  "body": {
+    "drill_id": "drill-97622259917f4ccb",
+    "kind": "kill-worker",
+    "scope": "sandbox",
+    "scope_ref": "ft-worker-1",
+    "injected": "killed a worker mid-run",
+    "observed": "marked 0 worker(s) unhealthy; reassigned 0 lease(s)",
+    "verdict": "pass",
+    "started_at": "2026-10-02T00:45:13.252136Z",
+    "finished_at": "2026-10-02T00:45:13.253869Z",
+    "notes": []
+  }
+}

@@ -9,7 +9,9 @@ import pytest
 from fastapi.testclient import TestClient
 
 from hiveplane.api.app import create_app
+from hiveplane.auth.models import Scope
 from hiveplane.core.workload import AgentWorkload
+from hiveplane.tenancy.models import Role
 
 ManifestFactory = Callable[..., AgentWorkload]
 
@@ -55,6 +57,64 @@ def test_duplicate_registration_returns_409(
     response = client.post("/workloads", json=payload)
 
     assert response.status_code == 409
+
+
+def _auth_app(
+    monkeypatch: pytest.MonkeyPatch,
+    make_manifest: ManifestFactory,
+    *,
+    role: Role,
+) -> Any:
+    monkeypatch.setenv("HIVEPLANE_AUTH__ENABLED", "true")
+    from hiveplane.config import get_settings
+
+    get_settings.cache_clear()
+    app = create_app()
+    app.state.registry_service.create(make_manifest(name="prod-agent"))
+    return app
+
+
+def test_viewer_key_cannot_delete_workload(
+    monkeypatch: pytest.MonkeyPatch, make_manifest: ManifestFactory
+) -> None:
+    app = _auth_app(monkeypatch, make_manifest, role=Role.VIEWER)
+    client = TestClient(app)
+    viewer = app.state.auth_service.keys.create("default", Role.VIEWER)
+    headers = {"Authorization": f"Bearer {viewer.token}"}
+
+    response = client.delete("/workloads/prod-agent", headers=headers)
+
+    assert response.status_code == 403
+
+
+def test_readonly_scoped_key_cannot_register_tool_or_trigger(
+    monkeypatch: pytest.MonkeyPatch, make_manifest: ManifestFactory
+) -> None:
+    app = _auth_app(monkeypatch, make_manifest, role=Role.ADMIN)
+    client = TestClient(app)
+    scoped = app.state.auth_service.keys.create(
+        "default", Role.ADMIN, scopes=[Scope.FLEET_READ]
+    )
+    headers = {"Authorization": f"Bearer {scoped.token}"}
+
+    tool = client.post(
+        "/tools",
+        json={
+            "tool_id": "mcp.t.read",
+            "name": "mcp.t.read",
+            "mcp_server": "test",
+            "trust_level": "read_only",
+        },
+        headers=headers,
+    )
+    trigger = client.post(
+        "/workloads/prod-agent/triggers",
+        json={"type": "webhook", "url": "https://example.com/hook"},
+        headers=headers,
+    )
+
+    assert tool.status_code == 403
+    assert trigger.status_code == 403
 
 
 def test_get_missing_returns_404(client: TestClient) -> None:

@@ -1,0 +1,263 @@
+{
+  "run": {
+    "status": 200,
+    "body": {
+      "id": "run-d9d7b852c6d6",
+      "workload_id": "budget-probe",
+      "caller": "field-test-v02",
+      "state": "completed",
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "created_at": "2026-10-02T00:45:44.952068Z",
+      "updated_at": "2026-10-02T00:45:45.282114Z",
+      "started_at": "2026-10-02T00:45:44.962510Z",
+      "finished_at": "2026-10-02T00:45:45.282114Z",
+      "trigger_origin": null,
+      "pipeline_origin": null,
+      "agent_tool_origin": null,
+      "manifest_version": 2,
+      "context": "sandbox",
+      "sandbox": true,
+      "task": {
+        "query": "reset password",
+        "account_id": "ACC-001"
+      },
+      "result": {
+        "status": "completed",
+        "response": "ok"
+      },
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "sandbox_id": "sb-5527bd3892a9",
+      "trace_id": "e0584dc2b30d7cdc8ca73ab5ad419daa",
+      "shadow_of": null,
+      "probe": false,
+      "read_only": false,
+      "canary_rollout_id": null,
+      "canary_arm": null,
+      "tenant_id": "default",
+      "team_id": "default",
+      "attribution_key": "default"
+    }
+  },
+  "events": {
+    "status": 200,
+    "body": [
+      {
+        "run_id": "run-d9d7b852c6d6",
+        "sequence": 0,
+        "type": "admission",
+        "actor": "field-test-v02",
+        "timestamp": "2026-10-02T00:45:44.957988Z",
+        "from_state": null,
+        "to_state": "queued",
+        "detail": "sandbox_only"
+      },
+      {
+        "run_id": "run-d9d7b852c6d6",
+        "sequence": 1,
+        "type": "state_change",
+        "actor": "api",
+        "timestamp": "2026-10-02T00:45:44.963384Z",
+        "from_state": "queued",
+        "to_state": "running",
+        "detail": null
+      },
+      {
+        "run_id": "run-d9d7b852c6d6",
+        "sequence": 2,
+        "type": "sandbox",
+        "actor": "api",
+        "timestamp": "2026-10-02T00:45:44.964585Z",
+        "from_state": null,
+        "to_state": null,
+        "detail": "provisioned sb-5527bd3892a9"
+      },
+      {
+        "run_id": "run-d9d7b852c6d6",
+        "sequence": 3,
+        "type": "usage",
+        "actor": "adapter",
+        "timestamp": "2026-10-02T00:45:45.276934Z",
+        "from_state": null,
+        "to_state": null,
+        "detail": "0.0"
+      },
+      {
+        "run_id": "run-d9d7b852c6d6",
+        "sequence": 4,
+        "type": "state_change",
+        "actor": "adapter",
+        "timestamp": "2026-10-02T00:45:45.283756Z",
+        "from_state": "running",
+        "to_state": "completed",
+        "detail": null
+      },
+      {
+        "run_id": "run-d9d7b852c6d6",
+        "sequence": 5,
+        "type": "sandbox",
+        "actor": "adapter",
+        "timestamp": "2026-10-02T00:45:45.285539Z",
+        "from_state": null,
+        "to_state": null,
+        "detail": "destroyed sb-5527bd3892a9"
+      }
+    ]
+  },
+  "story": {
+    "status": 200,
+    "body": {
+      "run_id": "run-d9d7b852c6d6",
+      "workload": "budget-probe",
+      "team": "platform",
+      "state": "completed",
+      "context": "sandbox",
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "cost_usd": 0.0,
+      "sandbox": true,
+      "sandbox_id": "sb-5527bd3892a9",
+      "certification_status": "uncertified",
+      "attestation_id": null,
+      "trace_id": "e0584dc2b30d7cdc8ca73ab5ad419daa",
+      "entries": [
+        {
+          "timestamp": "2026-10-02T00:45:44.952068Z",
+          "kind": "admission",
+          "summary": "sandbox_only",
+          "detail": {
+            "outcome": "sandbox_only",
+            "refused_reason": null,
+            "escalation_required": false,
+            "sandbox": true,
+            "checks": [
+              {
+                "step": "halt",
+                "passed": true,
+                "reason": null,
+                "rule": "incident"
+              },
+              {
+                "step": "certification",
+                "passed": true,
+                "reason": null,
+                "rule": "certification"
+              },
+              {
+                "step": "model_identity",
+                "passed": true,
+                "reason": null,
+                "rule": "model_binding"
+              },
+              {
+                "step": "budget",
+                "passed": true,
+                "reason": null,
+                "rule": "run"
+              },
+              {
+                "step": "policy",
+                "passed": true,
+                "reason": "no tool policy applies",
+                "rule": "run.allow"
+              },
+              {
+                "step": "sandbox",
+                "passed": true,
+                "reason": null,
+                "rule": "sandbox"
+              }
+            ]
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:45:44.963384Z",
+          "kind": "state",
+          "summary": "queued -> running",
+          "detail": {
+            "actor": "api",
+            "detail": null,
+            "from_state": "queued",
+            "to_state": "running",
+            "sequence": 1
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:45:44.964585Z",
+          "kind": "sandbox",
+          "summary": "provisioned sb-5527bd3892a9",
+          "detail": {
+            "actor": "api",
+            "detail": "provisioned sb-5527bd3892a9",
+            "from_state": null,
+            "to_state": null,
+            "sequence": 2
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:45:45.255699Z",
+          "kind": "model_call",
+          "summary": "16 tokens, $0.0000",
+          "detail": {
+            "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+            "input_tokens": 15,
+            "output_tokens": 1,
+            "tool_calls": 0,
+            "cost_usd": 0.0,
+            "prompt": "Reply with the single word: ok",
+            "response": "ok",
+            "latency_ms": 290
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:45:45.283756Z",
+          "kind": "state",
+          "summary": "running -> completed",
+          "detail": {
+            "actor": "adapter",
+            "detail": null,
+            "from_state": "running",
+            "to_state": "completed",
+            "sequence": 4
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:45:45.285539Z",
+          "kind": "sandbox",
+          "summary": "destroyed sb-5527bd3892a9",
+          "detail": {
+            "actor": "adapter",
+            "detail": "destroyed sb-5527bd3892a9",
+            "from_state": null,
+            "to_state": null,
+            "sequence": 5
+          }
+        }
+      ]
+    }
+  },
+  "usage": {
+    "status": 200,
+    "body": [
+      {
+        "run_id": "run-d9d7b852c6d6",
+        "input_tokens": 15,
+        "output_tokens": 1,
+        "tool_calls": 0,
+        "cost_usd": 0.0,
+        "timestamp": "2026-10-02T00:45:45.255699Z",
+        "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+        "prompt": "Reply with the single word: ok",
+        "response": "ok",
+        "latency_ms": 290
+      }
+    ]
+  },
+  "deliveries": {
+    "status": 200,
+    "body": []
+  },
+  "feedback": {
+    "status": 200,
+    "body": []
+  }
+}

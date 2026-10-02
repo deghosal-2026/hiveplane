@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from sqlalchemy import UniqueConstraint
+
+from hiveplane.core.run import Run
 from hiveplane.persistence import models  # noqa: F401  (registers tables)
 from hiveplane.persistence.base import Base, create_engine_from_settings
 
@@ -22,6 +25,7 @@ def test_all_design_tables_exist() -> None:
         "run_events",
         "usage_events",
         "audit_log",
+        "audit_anchor",
         "approvals",
         "certifications",
         "attestations",
@@ -32,6 +36,56 @@ def test_all_design_tables_exist() -> None:
         "health_signals",
         "cost_attributions",
         "run_admissions",
+        "triggers",
+        "trigger_events",
+        "trigger_runs",
+        "trigger_dlq",
+        "pipelines",
+        "pipeline_runs",
+        "policy_pack_versions",
+        "policy_decisions",
+        "secrets",
+        "secret_refs",
+        "workers",
+        "worker_leases",
+        "worker_heartbeats",
+        "retention_policies",
+        "artifacts",
+        "metering_events",
+        "cost_periods",
+        "desired_specs",
+        "reconcile_state",
+        "drift_records",
+        "reconcile_runs",
+        "trigger_nonces",
+        "trigger_freezes",
+        "pipeline_run_headers",
+        "pipeline_node_runs",
+        "router_decisions",
+        "agent_tool_invocations",
+        "promotions",
+        "run_feedback",
+        "corpus_candidates",
+        "candidate_reviews",
+        "corpus_versions",
+        "eval_samples",
+        "judge_scores",
+        "rubrics",
+        "shadow_runs",
+        "canary_rollouts",
+        "canary_samples",
+        "experiment_campaigns",
+        "experiment_arms",
+        "tool_kill_switch",
+        "incidents",
+        "corpus_releases",
+        "event_subscriptions",
+        "report_runs",
+        "report_schedules",
+        "audit_exports",
+        "evidence_packs",
+        "purge_records",
+        "notification_preferences",
     }
     assert expected <= set(Base.metadata.tables)
 
@@ -48,3 +102,45 @@ def test_engine_is_created_from_settings() -> None:
     engine = create_engine_from_settings()
     assert engine.url.drivername == "postgresql+psycopg"
     engine.dispose()
+
+
+def test_every_table_is_tenant_scoped() -> None:
+    # ``attestation_log``, ``signing_keys``, and ``rubrics`` are global
+    # control-plane material (M35/M36) and are deliberately not tenant-partitioned.
+    # ``used_approval_tokens`` is the global single-use token replay guard (M51).
+    exempt = {
+        "tenants",
+        "teams",
+        "memberships",
+        "attestation_log",
+        "signing_keys",
+        "rubrics",
+        "tool_kill_switch",
+        "leader_leases",
+        "incidents",
+        "audit_anchor",
+        "used_approval_tokens",
+    }
+    missing = {
+        name
+        for name in Base.metadata.tables
+        if name not in exempt
+        and "tenant_id" not in Base.metadata.tables[name].columns
+    }
+    assert missing == set()
+
+
+def test_tenant_qualified_uniques_include_tenant_id() -> None:
+    uniques = {
+        constraint.name: {column.name for column in constraint.columns}
+        for constraint in Base.metadata.tables["teams"].constraints
+        if isinstance(constraint, UniqueConstraint)
+        and isinstance(constraint.name, str)
+        and constraint.name.startswith("uq_")
+    }
+    assert uniques["uq_teams_tenant_name"] == {"tenant_id", "name"}
+    assert uniques["uq_teams_tenant_attribution"] == {"tenant_id", "attribution_key"}
+
+
+def test_run_carries_tenant_attribution() -> None:
+    assert {"tenant_id", "team_id", "attribution_key"} <= set(Run.model_fields)

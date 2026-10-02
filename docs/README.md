@@ -4,7 +4,7 @@ Documentation for the HivePlane project — the control plane for production age
 
 **HivePlane is the certification pipeline.** Agents must be **certified** against a reproducible benchmark before they operate in production, and re-certified when they drift. No other agent platform gates production on evidence. This is not a feature — it is the thesis.
 
-**Current release:** v0.1.0 (in development) — Seedling. The thesis ships here: register → certify → gate → run → intervene → deliver.
+**Current release:** v0.2.0 (beta) — the Complete Fleet OS. The thesis still ships first: register → certify → gate → run → intervene → deliver — now with autonomy (triggers, pipelines, GitOps), an immune system (drift, quarantine, promotion gate), defense, scale-out, and multi-tenancy.
 
 ## Sections
 
@@ -56,6 +56,11 @@ Documentation for the HivePlane project — the control plane for production age
 
 ### Reference Docs
 
+- [Architecture Tour](architecture-tour.md) — guided walkthrough of the v0.2.0 system
+- [Tutorials](tutorials/) — hands-on: getting started, certify/promote/drift, autonomy
+- [Operator Runbook](runbooks/operator-runbook.md) — day-two operations and incidents
+- [Article series](articles/) — six release-accompanying posts (drafts)
+- [Maintenance-mode backlog](maintenance-backlog.md) — posts-release docs/community/security work
 - [Workload Manifest Format Spec](workloads/manifest-format-spec.md) — The stable contract (all fields)
 - [Manifest JSON Schema](workloads/manifest.schema.json) — Machine-readable contract; also served at `GET /manifest/schema`
 - [Contributing Workloads](workloads/CONTRIBUTING.md) — How to add a workload
@@ -65,6 +70,12 @@ Documentation for the HivePlane project — the control plane for production age
 
 ### Versioned Artifacts
 
+- [v0.2.0 Migration Guide](release/v0.2.0/migration-guide.md)
+- [v0.2.0 Release Notes](release/v0.2.0/release-notes.md)
+- [v0.2.0 Security Audit](release/v0.2.0/security-audit.md)
+- [v0.2.0 Announcement (draft)](release/v0.2.0/announcement.md)
+- [v0.2.0 Field Test Report](field-test/v0.2.0/FIELD_TEST_REPORT.md)
+- [v0.2.0 WBS Index](wbs/v0.2.0/wbs-v0.2.0-index.md)
 - [v0.1.0 WBS Index](wbs/v0.1.0/wbs-v0.1.0-index.md)
 - [v0.1.0 Field Test Plan](field-test/v0.1.0/field-test-plan.md)
 - [v0.1.0 Field Test Report](field-test/v0.1.0/FIELD_TEST_REPORT.md)

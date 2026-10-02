@@ -82,6 +82,9 @@
     <tr>
       <th>Workload</th>
       <th>When</th>
+      <th>Status</th>
+      <th>Severity</th>
+      <th>Reason</th>
       <th>Record</th>
     </tr>
   </thead>
@@ -90,6 +93,9 @@
     <tr>
       <td>{{ entry.workload }}</td>
       <td class="muted">{{ entry.timestamp }}</td>
+      <td>{{ entry.status }}</td>
+      <td>{{ entry.severity or "-" }}</td>
+      <td>{{ entry.reason or "-" }}</td>
       <td>{{ entry.record_id }}</td>
     </tr>
     {% endfor %}

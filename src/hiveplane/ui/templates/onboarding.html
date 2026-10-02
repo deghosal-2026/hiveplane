@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Onboarding · HivePlane{% endblock %}
+{% block content %}
+<h1>Onboarding</h1>
+
+<p class="muted">{{ view.completed }} of {{ view.steps | length }} complete</p>
+
+{% if view.completed == view.steps | length %}
+<div class="banner ok">All steps complete — you're ready to ship.</div>
+{% endif %}
+
+<div class="grid">
+  {% for step in view.steps %}
+  <div class="card">
+    <h2>{{ step.title }}</h2>
+    {% if step.done %}
+    <span class="badge certified">done</span>
+    {% else %}
+    <span class="badge pending">pending</span>
+    {% endif %}
+    <p><a href="{{ step.href }}">{{ step.href }}</a></p>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+# H5 quarantine-reinstate
+
+status:   pass
+detail:   re-cert + reinstate while quarantined
+started:  2026-10-02T00:48:38.267868+00:00
+duration: 25.92s
+model:    omlx/qwen3-4b-instruct-2507/4bit
+git_sha:  b186ba158779686f69cd3fdaba1672de84a13038
+calls:    3441
+runs:     (none)
+
+## Mutating calls (inputs)
+
+  POST /workloads -> 409
+  PUT /workloads/support-agent -> 200
+  POST /certifications -> 201
+  POST /quarantines/quar-5ca4f814a1c8/reinstate -> 409
+  POST /certifications -> 201
+  POST /quarantines/quar-af2a9b9a8904/reinstate -> 409
+  POST /certifications -> 201
+  POST /quarantines/quar-101c5ab6dffa/reinstate -> 409
+  POST /certifications -> 201
+  POST /quarantines/quar-a79b5620e013/reinstate -> 409
+  POST /certifications -> 201
+  POST /quarantines -> 201
+  POST /certifications -> 201
+  POST /quarantines/quar-4fe00fef33df/reinstate -> 409

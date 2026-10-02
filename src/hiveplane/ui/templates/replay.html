@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Replay · HivePlane{% endblock %}
+{% block content %}
+<h1>Replay</h1>
+<p class="muted">
+  run {{ view.run_id }} · digest {{ view.digest }}
+  {% if view.side_effects %}· side effects enabled{% endif %}
+</p>
+
+{% if view.frames %}
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Event</th>
+      <th>State</th>
+      <th>Detail</th>
+      <th>Model</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for frame in view.frames %}
+    <tr>
+      <td>{{ frame.sequence }}</td>
+      <td>{{ frame.event_type }}</td>
+      <td>{{ frame.state }}</td>
+      <td>{{ frame.detail }}</td>
+      <td>{{ frame.usage }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">No frames to show.</p>
+{% endif %}
+{% endblock %}

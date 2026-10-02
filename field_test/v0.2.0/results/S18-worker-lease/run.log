@@ -1,0 +1,46 @@
+# S18 worker-lease
+
+status:   pass
+detail:   leased ['lease-112cd7a36a0c436b8b50']; killed -> reassigned (worker deregistered); lease-expiry reclaim reassigned a stale worker's lease (attempt 2); drill operable; rogue + revoked-token refused
+started:  2026-10-02T00:45:10.980793+00:00
+duration: 12.07s
+model:    omlx/qwen3-4b-instruct-2507/4bit
+git_sha:  b186ba158779686f69cd3fdaba1672de84a13038
+calls:    1385
+runs:     run-0bddc3b6f792, run-c14c03951a65
+
+## Mutating calls (inputs)
+
+  POST /workloads -> 409
+  PUT /workloads/support-agent -> 200
+  POST /certifications -> 201
+  POST /quarantines/quar-5ca4f814a1c8/reinstate -> 409
+  POST /certifications -> 201
+  POST /quarantines/quar-af2a9b9a8904/reinstate -> 409
+  POST /certifications -> 201
+  POST /quarantines/quar-101c5ab6dffa/reinstate -> 409
+  POST /certifications -> 201
+  POST /workers/enroll -> 200
+  POST /workers/register -> 201
+  POST /runs -> 201
+  POST /runs/run-0bddc3b6f792/start -> 200
+  POST /workers/ft-worker-1/leases -> 200
+  POST /chaos/drills -> 200
+  DELETE /workers/ft-worker-1 -> 200
+  POST /workers/enroll -> 200
+  POST /workers/register -> 201
+  POST /workers/enroll -> 200
+  POST /workers/register -> 201
+  POST /runs -> 201
+  POST /runs/run-c14c03951a65/start -> 200
+  POST /workers/ft-worker-expiry/leases -> 200
+  POST /workers/ft-worker-target/heartbeat -> 200
+  POST /workers/ft-worker-target/heartbeat -> 200
+  POST /workers/ft-worker-target/heartbeat -> 200
+  POST /workers/ft-worker-target/heartbeat -> 200
+  POST /workers/reclaim?heartbeat_timeout_seconds=2 -> 200
+  POST /runs/run-c14c03951a65/stop -> 409
+  POST /workers/register -> 401
+  POST /workers/enroll -> 200
+  POST /workers/tokens/wt-fe80c0bc640341238f8e/revoke -> 200
+  POST /workers/register -> 401

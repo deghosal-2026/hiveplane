@@ -6,13 +6,18 @@ from collections.abc import Callable
 from datetime import UTC, datetime
 from typing import Any, Literal, overload
 
-from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+    Ed25519PrivateKey,
+    Ed25519PublicKey,
+)
 
 from hiveplane import metrics
+from hiveplane.certification.binding import compute_binding
 from hiveplane.certification.models import (
     Attestation,
     CertificationEvent,
     CertificationStatus,
+    TargetContext,
     advance_status,
 )
 from hiveplane.certification.signing import verify_attestation
@@ -46,6 +51,8 @@ from hiveplane.registry.models import (
     WorkloadVersion,
 )
 from hiveplane.registry.store import RegistryStore
+from hiveplane.tenancy import DEFAULT_CONTEXT, TenantContext
+from hiveplane.transparency.provenance import WorkloadBundle, sign_bundle, verify_bundle
 
 CERT_RELEVANT_FIELDS: tuple[str, ...] = (
     "spec.runtime",
@@ -119,13 +126,40 @@ class RegistryService:
         *,
         clock: Callable[[], datetime] | None = None,
         attestation_public_key: Ed25519PublicKey | None = None,
+        bundle_signing_key: Ed25519PrivateKey | None = None,
+        bundle_key_id: str = "hp-signing-key-01",
+        key_resolver: Callable[[str], Ed25519PublicKey | None] | None = None,
     ) -> None:
         self._store = store
         self._clock = clock or (lambda: datetime.now(UTC))
         self._attestation_public_key = attestation_public_key
+        self._bundle_signing_key = bundle_signing_key
+        self._bundle_key_id = bundle_key_id
+        self._key_resolver = key_resolver
+
+    @property
+    def store(self) -> RegistryStore:
+        """Return the registry store backing this service."""
+        return self._store
+
+    def _resolve_key(self, key_id: str) -> Ed25519PublicKey | None:
+        """Resolve a signing key id, falling back to the single configured key."""
+        if self._key_resolver is not None:
+            return self._key_resolver(key_id)
+        return self._attestation_public_key
 
     def _now(self) -> datetime:
         return self._clock()
+
+    @property
+    def attestation_public_key(self) -> Ed25519PublicKey | None:
+        """Return the public key used to verify attestation signatures."""
+        return self._attestation_public_key
+
+    @property
+    def clock(self) -> Callable[[], datetime]:
+        """Return the clock this registry reads time from."""
+        return self._clock
 
     # ------------------------------------------------------------------ #
     # Workload CRUD
@@ -136,6 +170,7 @@ class RegistryService:
         *,
         version: int,
         created_at: datetime,
+        tenant_id: str = DEFAULT_CONTEXT.tenant_id,
         needs_re_certification: bool = False,
     ) -> WorkloadRecord:
         return WorkloadRecord(
@@ -149,30 +184,57 @@ class RegistryService:
             created_at=created_at,
             updated_at=created_at,
             needs_re_certification=needs_re_certification,
+            artifact_hash=compute_binding(manifest).artifact_hash,
+            bundle=self._sign_bundle(manifest),
+            tenant_id=tenant_id,
+        )
+
+    def _sign_bundle(self, manifest: AgentWorkload) -> WorkloadBundle | None:
+        """Sign the agent bundle at registration (M35-03), when a key is configured."""
+        if self._bundle_signing_key is None:
+            return None
+        return sign_bundle(
+            manifest,
+            self._bundle_signing_key,
+            key_id=self._bundle_key_id,
+            workload_id=manifest.name,
+            registered_at=self._now(),
         )
 
     @overload
     def create(
-        self, manifest: AgentWorkload, *, dry_run: Literal[False] = False
+        self,
+        manifest: AgentWorkload,
+        *,
+        dry_run: Literal[False] = False,
+        ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> WorkloadRecord: ...
 
     @overload
     def create(
-        self, manifest: AgentWorkload, *, dry_run: Literal[True]
+        self,
+        manifest: AgentWorkload,
+        *,
+        dry_run: Literal[True],
+        ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> EnforcementSummary: ...
 
     def create(
-        self, manifest: AgentWorkload, *, dry_run: bool = False
+        self,
+        manifest: AgentWorkload,
+        *,
+        dry_run: bool = False,
+        ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> WorkloadRecord | EnforcementSummary:
         """Register a new workload, or report enforcement with ``dry_run``."""
         if dry_run:
-            return self.enforcement_summary(manifest)
-        if self._store.get_workload(manifest.name) is not None:
+            return self.enforcement_summary(manifest, ctx=ctx)
+        if self._store.get_workload(manifest.name, ctx=ctx) is not None:
             raise WorkloadAlreadyExistsError(manifest.name)
-        self._validate_tools(manifest)
+        self._validate_tools(manifest, ctx=ctx)
         now = self._now()
-        record = self._build_record(manifest, version=1, created_at=now)
-        self._store.save_workload(record)
+        record = self._build_record(manifest, version=1, created_at=now, tenant_id=ctx.tenant_id)
+        self._store.save_workload(record, ctx=ctx)
         self._store.add_version(
             WorkloadVersion(
                 workload=manifest.name,
@@ -180,9 +242,10 @@ class RegistryService:
                 manifest=manifest,
                 status=VersionStatus.ACTIVE,
                 created_at=now,
-            )
+            ),
+            ctx=ctx,
         )
-        self._sync_triggers(manifest)
+        self._sync_triggers(manifest, ctx=ctx)
         return record
 
     @overload
@@ -192,31 +255,43 @@ class RegistryService:
         manifest: AgentWorkload,
         *,
         dry_run: Literal[False] = False,
+        ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> WorkloadRecord: ...
 
     @overload
     def update(
-        self, name: str, manifest: AgentWorkload, *, dry_run: Literal[True]
+        self,
+        name: str,
+        manifest: AgentWorkload,
+        *,
+        dry_run: Literal[True],
+        ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> EnforcementSummary: ...
 
     def update(
-        self, name: str, manifest: AgentWorkload, *, dry_run: bool = False
+        self,
+        name: str,
+        manifest: AgentWorkload,
+        *,
+        dry_run: bool = False,
+        ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> WorkloadRecord | EnforcementSummary:
         """Register a new manifest version for an existing workload."""
-        existing = self.get(name)
+        existing = self.get(name, ctx=ctx)
         if dry_run:
-            return self.enforcement_summary(manifest)
-        self._validate_tools(manifest)
+            return self.enforcement_summary(manifest, ctx=ctx)
+        self._validate_tools(manifest, ctx=ctx)
 
         changes = changed_fields(existing.manifest, manifest)
         re_cert = requires_re_certification(changes)
         now = self._now()
         new_version = existing.current_version + 1
 
-        for version in self._store.list_versions(name):
+        for version in self._store.list_versions(name, ctx=ctx):
             if version.status is VersionStatus.ACTIVE:
                 self._store.save_version(
-                    version.model_copy(update={"status": VersionStatus.SUPERSEDED})
+                    version.model_copy(update={"status": VersionStatus.SUPERSEDED}),
+                    ctx=ctx,
                 )
 
         self._store.add_version(
@@ -228,21 +303,25 @@ class RegistryService:
                 created_at=now,
                 re_certification_required=re_cert,
                 changed_fields=changes,
-            )
+            ),
+            ctx=ctx,
         )
         record = self._build_record(
             manifest,
             version=new_version,
             created_at=existing.created_at,
+            tenant_id=ctx.tenant_id,
             needs_re_certification=re_cert,
         ).model_copy(update={"updated_at": now})
-        self._store.save_workload(record)
-        self._sync_triggers(manifest)
+        if self._artifact_changed(existing, record):
+            record = self._invalidate_for_production(record)
+        self._store.save_workload(record, ctx=ctx)
+        self._sync_triggers(manifest, ctx=ctx)
         return record
 
-    def get(self, name: str) -> WorkloadRecord:
+    def get(self, name: str, *, ctx: TenantContext = DEFAULT_CONTEXT) -> WorkloadRecord:
         """Return the current record for a workload."""
-        record = self._store.get_workload(name)
+        record = self._store.get_workload(name, ctx=ctx)
         if record is None:
             raise WorkloadNotFoundError(name)
         return record
@@ -258,16 +337,15 @@ class RegistryService:
         descending: bool = False,
         limit: int | None = None,
         offset: int = 0,
+        ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> list[WorkloadRecord]:
-        """Return the fleet catalog, filtered, sorted, and paginated."""
+        """Return the acting tenant's fleet catalog, filtered, sorted, and paginated."""
         if sort not in _SORT_KEYS:
-            raise ValueError(
-                f"invalid sort field {sort!r}; expected one of {sorted(_SORT_KEYS)}"
-            )
+            raise ValueError(f"invalid sort field {sort!r}; expected one of {sorted(_SORT_KEYS)}")
         runtime_filter = self._coerce_runtime(runtime)
         status_filter = self._coerce_status(certification_status)
 
-        records = self._store.list_workloads()
+        records = self._store.list_workloads(ctx=ctx)
         if owner is not None:
             records = [record for record in records if record.owner == owner]
         if team is not None:
@@ -275,9 +353,7 @@ class RegistryService:
         if runtime_filter is not None:
             records = [record for record in records if record.runtime is runtime_filter]
         if status_filter is not None:
-            records = [
-                record for record in records if record.certification_status is status_filter
-            ]
+            records = [record for record in records if record.certification_status is status_filter]
 
         records.sort(key=_SORT_KEYS[sort], reverse=descending)
         if offset:
@@ -286,26 +362,45 @@ class RegistryService:
             records = records[:limit]
         return records
 
-    def delete(self, name: str) -> None:
-        """Deregister a workload."""
-        if not self._store.delete_workload(name):
+    def delete(
+        self, name: str, *, ctx: TenantContext = DEFAULT_CONTEXT, cascade: bool = False
+    ) -> None:
+        """Deregister a workload; ``cascade=True`` forces it out with its runs."""
+        if not self._store.delete_workload(name, ctx=ctx, cascade=cascade):
             raise WorkloadNotFoundError(name)
 
     # ------------------------------------------------------------------ #
     # Versioning
     # ------------------------------------------------------------------ #
-    def versions(self, name: str) -> list[WorkloadVersion]:
+    def versions(self, name: str, *, ctx: TenantContext = DEFAULT_CONTEXT) -> list[WorkloadVersion]:
         """Return the append-only manifest version history."""
-        self.get(name)
-        return self._store.list_versions(name)
+        self.get(name, ctx=ctx)
+        return self._store.list_versions(name, ctx=ctx)
 
-    def version_diff(self, name: str, from_version: int, to_version: int) -> VersionDiff:
+    def get_version(
+        self, name: str, version: int, *, ctx: TenantContext = DEFAULT_CONTEXT
+    ) -> WorkloadVersion:
+        """Return one manifest version, or raise when it does not exist."""
+        self.get(name, ctx=ctx)
+        stored = self._store.get_version(name, version, ctx=ctx)
+        if stored is None:
+            raise VersionNotFoundError(name, version)
+        return stored
+
+    def version_diff(
+        self,
+        name: str,
+        from_version: int,
+        to_version: int,
+        *,
+        ctx: TenantContext = DEFAULT_CONTEXT,
+    ) -> VersionDiff:
         """Return the field-level diff between two manifest versions."""
-        self.get(name)
-        before = self._store.get_version(name, from_version)
+        self.get(name, ctx=ctx)
+        before = self._store.get_version(name, from_version, ctx=ctx)
         if before is None:
             raise VersionNotFoundError(name, from_version)
-        after = self._store.get_version(name, to_version)
+        after = self._store.get_version(name, to_version, ctx=ctx)
         if after is None:
             raise VersionNotFoundError(name, to_version)
         changes = changed_fields(before.manifest, after.manifest)
@@ -317,10 +412,12 @@ class RegistryService:
             re_certification_required=requires_re_certification(changes),
         )
 
-    def promote(self, name: str, version: int) -> WorkloadRecord:
+    def promote(
+        self, name: str, version: int, *, ctx: TenantContext = DEFAULT_CONTEXT
+    ) -> WorkloadRecord:
         """Promote a manifest version, blocking until re-certification passes."""
-        record = self.get(name)
-        target = self._store.get_version(name, version)
+        record = self.get(name, ctx=ctx)
+        target = self._store.get_version(name, version, ctx=ctx)
         if target is None:
             raise VersionNotFoundError(name, version)
         if target.re_certification_required and record.needs_re_certification:
@@ -332,17 +429,21 @@ class RegistryService:
                 "updated_at": self._now(),
             }
         )
-        self._store.save_workload(updated)
+        self._store.save_workload(updated, ctx=ctx)
         return updated
 
     # ------------------------------------------------------------------ #
     # Certification lifecycle and admission
     # ------------------------------------------------------------------ #
     def record_certification_event(
-        self, name: str, event: CertificationEvent
+        self,
+        name: str,
+        event: CertificationEvent,
+        *,
+        ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> WorkloadRecord:
         """Apply a certification event to a workload and persist the transition."""
-        record = self.get(name)
+        record = self.get(name, ctx=ctx)
         new_status = advance_status(record.certification_status, event)
         manifest = self._with_status(record.manifest, new_status)
         resolved = new_status in (CertificationStatus.PROVISIONAL, CertificationStatus.CERTIFIED)
@@ -357,17 +458,103 @@ class RegistryService:
                 "updated_at": self._now(),
             }
         )
-        self._store.save_workload(updated)
+        self._store.save_workload(updated, ctx=ctx)
         return updated
 
-    def increment_production_runs(self, name: str) -> WorkloadRecord:
+    def increment_production_runs(
+        self, name: str, *, ctx: TenantContext = DEFAULT_CONTEXT
+    ) -> WorkloadRecord:
         """Count a completed production run toward the certification survival gate."""
-        record = self.get(name)
+        record = self.get(name, ctx=ctx)
         updated = record.model_copy(
             update={"production_runs_survived": record.production_runs_survived + 1}
         )
-        self._store.save_workload(updated)
+        self._store.save_workload(updated, ctx=ctx)
         return updated
+
+    def request_re_certification(
+        self, name: str, *, ctx: TenantContext = DEFAULT_CONTEXT
+    ) -> WorkloadRecord:
+        """Flag a workload as requiring re-certification (M26 reconcile action).
+
+        The controller calls this when desired state changes a certification
+        threshold, which :meth:`update` alone does not treat as cert-relevant.
+        """
+        record = self.get(name, ctx=ctx)
+        updated = record.model_copy(
+            update={"needs_re_certification": True, "updated_at": self._now()}
+        )
+        self._store.save_workload(updated, ctx=ctx)
+        return updated
+
+    def quarantine(self, name: str, *, ctx: TenantContext = DEFAULT_CONTEXT) -> WorkloadRecord:
+        """Force a workload into quarantine, blocking staging/production admission.
+
+        Quarantine preserves the record, its history, and its attestations; it
+        only changes the certification status so the workload cannot be admitted.
+        """
+        record = self.get(name, ctx=ctx)
+        manifest = self._with_status(record.manifest, CertificationStatus.QUARANTINED)
+        updated = record.model_copy(
+            update={
+                "certification_status": CertificationStatus.QUARANTINED,
+                "manifest": manifest,
+                "updated_at": self._now(),
+            }
+        )
+        self._store.save_workload(updated, ctx=ctx)
+        return updated
+
+    def artifact_hash(self, name: str, *, ctx: TenantContext = DEFAULT_CONTEXT) -> str | None:
+        """Return the current artifact binding hash for a workload."""
+        record = self.get(name, ctx=ctx)
+        if record.artifact_hash is not None:
+            return record.artifact_hash
+        return compute_binding(record.manifest).artifact_hash
+
+    def mark_uncertified_for_production(
+        self, name: str, *, ctx: TenantContext = DEFAULT_CONTEXT
+    ) -> WorkloadRecord:
+        """Invalidate a workload for production after its artifact changed (M32-04).
+
+        The status becomes ``uncertified`` and re-certification is required, so a
+        changed artifact can never silently keep production admission.
+        """
+        record = self.get(name, ctx=ctx)
+        if record.certification_status is CertificationStatus.UNCERTIFIED:
+            return record
+        updated = record.model_copy(
+            update={
+                "certification_status": CertificationStatus.UNCERTIFIED,
+                "manifest": self._with_status(record.manifest, CertificationStatus.UNCERTIFIED),
+                "needs_re_certification": True,
+                "updated_at": self._now(),
+            }
+        )
+        self._store.save_workload(updated, ctx=ctx)
+        return updated
+
+    def _artifact_changed(self, existing: WorkloadRecord, updated: WorkloadRecord) -> bool:
+        return (
+            existing.artifact_hash is not None
+            and updated.artifact_hash is not None
+            and existing.artifact_hash != updated.artifact_hash
+        )
+
+    def _invalidate_for_production(self, record: WorkloadRecord) -> WorkloadRecord:
+        """Flip a certified/provisional record to uncertified when its hash changed."""
+        if record.certification_status not in (
+            CertificationStatus.CERTIFIED,
+            CertificationStatus.PROVISIONAL,
+        ):
+            return record
+        return record.model_copy(
+            update={
+                "certification_status": CertificationStatus.UNCERTIFIED,
+                "manifest": self._with_status(record.manifest, CertificationStatus.UNCERTIFIED),
+                "needs_re_certification": True,
+            }
+        )
 
     @staticmethod
     def _with_status(manifest: AgentWorkload, status: CertificationStatus) -> AgentWorkload:
@@ -382,17 +569,29 @@ class RegistryService:
         self,
         attestation: Attestation,
         *,
-        event: CertificationEvent,
+        event: CertificationEvent | None = None,
+        status: CertificationStatus | None = None,
         expires_at: datetime | None = None,
+        ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> WorkloadRecord:
-        """Advance certification status and attach a signed attestation to the manifest."""
-        record = self.get(attestation.workload_id)
-        new_status = advance_status(record.certification_status, event)
+        """Attach a signed attestation and advance the certification status.
+
+        The target status is ``status`` when given, otherwise it is derived by
+        applying ``event`` to the current status. Passing ``status`` (the
+        engine's resolved status) is how the survival-gated production deferral
+        is recorded: the passing production attestation is attached while the
+        status stays ``provisional``.
+        """
+        record = self.get(attestation.workload_id, ctx=ctx)
+        if status is not None:
+            new_status = status
+        elif event is not None:
+            new_status = advance_status(record.certification_status, event)
+        else:
+            raise ValueError("apply_attestation requires an event or a status")
         certification = record.manifest.spec.certification
         if certification is None:
-            raise ValueError(
-                f"workload {attestation.workload_id!r} has no certification block"
-            )
+            raise ValueError(f"workload {attestation.workload_id!r} has no certification block")
         updated_certification = certification.model_copy(
             update={
                 "status": new_status,
@@ -413,23 +612,32 @@ class RegistryService:
             CertificationStatus.PROVISIONAL,
             CertificationStatus.CERTIFIED,
         )
+        survival = (
+            record.production_runs_survived
+            if new_status is record.certification_status
+            else _survival_after_transition(record.production_runs_survived, new_status)
+        )
         updated = record.model_copy(
             update={
                 "certification_status": new_status,
                 "manifest": manifest,
                 "needs_re_certification": False if resolved else record.needs_re_certification,
-                "production_runs_survived": _survival_after_transition(
-                    record.production_runs_survived, new_status
-                ),
+                "production_runs_survived": survival,
                 "updated_at": self._now(),
             }
         )
-        self._store.save_workload(updated)
+        self._store.save_workload(updated, ctx=ctx)
         return updated
 
-    def check_admission(self, name: str, context: AdmissionContext) -> AdmissionDecision:
+    def check_admission(
+        self,
+        name: str,
+        context: AdmissionContext,
+        *,
+        ctx: TenantContext = DEFAULT_CONTEXT,
+    ) -> AdmissionDecision:
         """Evaluate admission for a target context without raising."""
-        record = self.get(name)
+        record = self.get(name, ctx=ctx)
         status = record.certification_status
         if context is AdmissionContext.SANDBOX:
             return AdmissionDecision(
@@ -440,11 +648,25 @@ class RegistryService:
             required = CertificationStatus.PROVISIONAL
         else:
             required = CertificationStatus.CERTIFIED
-            admitted = (
-                status is CertificationStatus.CERTIFIED
-                and not record.needs_re_certification
-                and self._has_valid_attestation(record)
-            )
+            if status is CertificationStatus.CERTIFIED:
+                admitted = (
+                    not record.needs_re_certification
+                    and self._has_valid_attestation(record)
+                    and self._has_valid_bundle(record)
+                )
+            elif status is CertificationStatus.PROVISIONAL:
+                # Survival gate (DD-09): a workload that passed the production
+                # benchmark but has not yet survived enough production runs must
+                # still be admitted, or the runs that count toward the gate can
+                # never happen. Require the production-context attestation so a
+                # staging-only provisional is never let into production.
+                admitted = (
+                    not record.needs_re_certification
+                    and self._has_valid_attestation(record, target_context=TargetContext.PRODUCTION)
+                    and self._has_valid_bundle(record)
+                )
+            else:
+                admitted = False
         reason = None
         if not admitted:
             reason = (
@@ -460,15 +682,41 @@ class RegistryService:
             reason=reason,
         )
 
-    def require_admission(self, name: str, context: AdmissionContext) -> AdmissionDecision:
+    def require_admission(
+        self,
+        name: str,
+        context: AdmissionContext,
+        *,
+        ctx: TenantContext = DEFAULT_CONTEXT,
+    ) -> AdmissionDecision:
         """Like :meth:`check_admission` but raises when admission is refused."""
-        decision = self.check_admission(name, context)
+        decision = self.check_admission(name, context, ctx=ctx)
         if not decision.admitted:
             required = decision.required_status or CertificationStatus.CERTIFIED
             raise AdmissionRefusedError(name, context.value, required, decision.actual_status)
         return decision
 
-    def _has_valid_attestation(self, record: WorkloadRecord) -> bool:
+    def _has_valid_bundle(self, record: WorkloadRecord) -> bool:
+        """Return True when the registered bundle proves the code identity.
+
+        Provenance is enforced whenever the control plane is configured with a
+        bundle signing key; without one, certification alone governs admission.
+        """
+        if self._bundle_signing_key is None:
+            return True
+        if record.bundle is None:
+            return False
+        public_key = self._resolve_key(record.bundle.key_id)
+        if public_key is None:
+            return False
+        return verify_bundle(record.bundle, record.manifest, public_key)
+
+    def _has_valid_attestation(
+        self,
+        record: WorkloadRecord,
+        *,
+        target_context: TargetContext | None = None,
+    ) -> bool:
         certification = record.manifest.spec.certification
         if certification is None or certification.expires_at is None:
             return False
@@ -477,7 +725,9 @@ class RegistryService:
                 workload=record.name, result="failed"
             )
             return False
-        if self._attestation_public_key is None or not certification.attestation_id:
+        if (self._attestation_public_key is None and self._key_resolver is None) or (
+            not certification.attestation_id
+        ):
             return False
         attestation = self._store.get_attestation(certification.attestation_id)
         if attestation is None or attestation.workload_id != record.name:
@@ -485,7 +735,13 @@ class RegistryService:
                 workload=record.name, result="failed"
             )
             return False
-        verified = verify_attestation(attestation, self._attestation_public_key)
+        if target_context is not None and attestation.target_context is not target_context:
+            metrics.get_metrics().record_attestation_verification(
+                workload=record.name, result="failed"
+            )
+            return False
+        public_key = self._resolve_key(attestation.signer.key_id)
+        verified = public_key is not None and verify_attestation(attestation, public_key)
         metrics.get_metrics().record_attestation_verification(
             workload=record.name, result="verified" if verified else "failed"
         )
@@ -494,21 +750,24 @@ class RegistryService:
     # ------------------------------------------------------------------ #
     # Attestations
     # ------------------------------------------------------------------ #
-    def store_attestation(self, attestation: Attestation) -> Attestation:
+    def store_attestation(
+        self, attestation: Attestation, *, ctx: TenantContext = DEFAULT_CONTEXT
+    ) -> Attestation:
         """Store an attestation immutably (append-only)."""
-        if self._store.get_attestation(attestation.attestation_id) is not None:
+        if self._store.get_attestation(attestation.attestation_id, ctx=ctx) is not None:
             raise AttestationAlreadyExistsError(attestation.attestation_id)
-        self._store.add_attestation(attestation)
+        self._store.add_attestation(attestation, ctx=ctx)
         return attestation
 
-    def get_attestation(self, attestation_id: str) -> Attestation:
+    def get_attestation(
+        self, attestation_id: str, *, ctx: TenantContext = DEFAULT_CONTEXT
+    ) -> Attestation:
         """Return an attestation after verifying its signature on read."""
-        attestation = self._store.get_attestation(attestation_id)
+        attestation = self._store.get_attestation(attestation_id, ctx=ctx)
         if attestation is None:
             raise AttestationNotFoundError(attestation_id)
-        if self._attestation_public_key is None or not verify_attestation(
-            attestation, self._attestation_public_key
-        ):
+        public_key = self._resolve_key(attestation.signer.key_id)
+        if public_key is None or not verify_attestation(attestation, public_key):
             metrics.get_metrics().record_attestation_verification(
                 workload=attestation.workload_id, result="failed"
             )
@@ -518,30 +777,43 @@ class RegistryService:
         )
         return attestation
 
-    def list_attestations(self, name: str) -> list[Attestation]:
+    def find_attestation(
+        self, attestation_id: str, *, ctx: TenantContext = DEFAULT_CONTEXT
+    ) -> Attestation | None:
+        """Return a raw attestation (no signature check), or ``None``.
+
+        Used by public verification, which must not raise and must not treat a
+        forged signature as an error the caller can probe.
+        """
+        return self._store.get_attestation(attestation_id, ctx=ctx)
+
+    def list_attestations(
+        self, name: str, *, ctx: TenantContext = DEFAULT_CONTEXT
+    ) -> list[Attestation]:
         """Return verified attestations for a workload."""
-        self.get(name)
-        attestations = self._store.list_attestations(name)
+        self.get(name, ctx=ctx)
+        attestations = self._store.list_attestations(name, ctx=ctx)
         for attestation in attestations:
-            if self._attestation_public_key is None or not verify_attestation(
-                attestation, self._attestation_public_key
-            ):
+            public_key = self._resolve_key(attestation.signer.key_id)
+            if public_key is None or not verify_attestation(attestation, public_key):
                 raise AttestationVerificationError(attestation.attestation_id)
         return attestations
 
     # ------------------------------------------------------------------ #
     # Tools and triggers
     # ------------------------------------------------------------------ #
-    def register_tool(self, tool: ToolRecord) -> ToolRecord:
+    def register_tool(
+        self, tool: ToolRecord, *, ctx: TenantContext = DEFAULT_CONTEXT
+    ) -> ToolRecord:
         """Register an MCP tool definition."""
-        if self._store.get_tool(tool.tool_id) is not None:
+        if self._store.get_tool(tool.tool_id, ctx=ctx) is not None:
             raise ToolAlreadyExistsError(tool.tool_id)
-        self._store.save_tool(tool)
+        self._store.save_tool(tool, ctx=ctx)
         return tool
 
-    def get_tool(self, tool_id: str) -> ToolRecord:
+    def get_tool(self, tool_id: str, *, ctx: TenantContext = DEFAULT_CONTEXT) -> ToolRecord:
         """Return a registered tool."""
-        tool = self._store.get_tool(tool_id)
+        tool = self._store.get_tool(tool_id, ctx=ctx)
         if tool is None:
             raise UnknownToolError(tool_id)
         return tool
@@ -551,43 +823,60 @@ class RegistryService:
         *,
         trust_level: ToolTrustLevel | None = None,
         mcp_server: str | None = None,
+        ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> list[ToolRecord]:
         """List registered tools, optionally filtered."""
-        tools = self._store.list_tools()
+        tools = self._store.list_tools(ctx=ctx)
         if trust_level is not None:
             tools = [tool for tool in tools if tool.trust_level is trust_level]
         if mcp_server is not None:
             tools = [tool for tool in tools if tool.mcp_server == mcp_server]
         return tools
 
-    def list_triggers(self, name: str) -> list[TriggerRecord]:
+    def list_triggers(
+        self, name: str, *, ctx: TenantContext = DEFAULT_CONTEXT
+    ) -> list[TriggerRecord]:
         """List trigger rules stored for a workload."""
-        self.get(name)
-        return self._store.list_triggers(name)
+        self.get(name, ctx=ctx)
+        return self._store.list_triggers(name, ctx=ctx)
 
-    def add_trigger(self, name: str, rule: TriggerRule) -> TriggerRecord:
+    def add_trigger(
+        self,
+        name: str,
+        rule: TriggerRule,
+        *,
+        ctx: TenantContext = DEFAULT_CONTEXT,
+    ) -> TriggerRecord:
         """Add a trigger rule to a workload."""
-        self.get(name)
-        trigger_id = self._next_trigger_id(name)
+        self.get(name, ctx=ctx)
+        trigger_id = self._next_trigger_id(name, ctx=ctx)
         record = TriggerRecord(
             trigger_id=trigger_id, workload=name, rule=rule, created_at=self._now()
         )
-        self._store.add_trigger(record)
+        self._store.add_trigger(record, ctx=ctx)
         return record
 
-    def delete_trigger(self, name: str, trigger_id: str) -> None:
+    def delete_trigger(
+        self,
+        name: str,
+        trigger_id: str,
+        *,
+        ctx: TenantContext = DEFAULT_CONTEXT,
+    ) -> None:
         """Remove a trigger rule from a workload."""
-        self.get(name)
-        if not self._store.delete_trigger(name, trigger_id):
+        self.get(name, ctx=ctx)
+        if not self._store.delete_trigger(name, trigger_id, ctx=ctx):
             raise WorkloadNotFoundError(f"{name}/triggers/{trigger_id}")
 
-    def _next_trigger_id(self, name: str) -> str:
-        existing = self._store.list_triggers(name)
+    def _next_trigger_id(self, name: str, *, ctx: TenantContext = DEFAULT_CONTEXT) -> str:
+        existing = self._store.list_triggers(name, ctx=ctx)
         return f"{name}-t{len(existing) + 1}"
 
-    def _sync_triggers(self, manifest: AgentWorkload) -> None:
-        for record in self._store.list_triggers(manifest.name):
-            self._store.delete_trigger(manifest.name, record.trigger_id)
+    def _sync_triggers(
+        self, manifest: AgentWorkload, *, ctx: TenantContext = DEFAULT_CONTEXT
+    ) -> None:
+        for record in self._store.list_triggers(manifest.name, ctx=ctx):
+            self._store.delete_trigger(manifest.name, record.trigger_id, ctx=ctx)
         for index, rule in enumerate(manifest.spec.triggers, start=1):
             self._store.add_trigger(
                 TriggerRecord(
@@ -595,23 +884,25 @@ class RegistryService:
                     workload=manifest.name,
                     rule=rule,
                     created_at=self._now(),
-                )
+                ),
+                ctx=ctx,
             )
 
-    def _validate_tools(self, manifest: AgentWorkload) -> None:
+    def _validate_tools(
+        self, manifest: AgentWorkload, *, ctx: TenantContext = DEFAULT_CONTEXT
+    ) -> None:
         for entry in manifest.spec.tools.allow:
-            if self._store.get_tool(entry.tool_id) is None:
+            if self._store.get_tool(entry.tool_id, ctx=ctx) is None:
                 raise UnknownToolError(entry.tool_id)
-            if (
-                entry.trust_level is ToolTrustLevel.DESTRUCTIVE
-                and not entry.require_approval
-            ):
+            if entry.trust_level is ToolTrustLevel.DESTRUCTIVE and not entry.require_approval:
                 raise DestructiveToolRequiresApprovalError(entry.tool_id)
 
     # ------------------------------------------------------------------ #
     # Dry-run summary
     # ------------------------------------------------------------------ #
-    def enforcement_summary(self, manifest: AgentWorkload) -> EnforcementSummary:
+    def enforcement_summary(
+        self, manifest: AgentWorkload, *, ctx: TenantContext = DEFAULT_CONTEXT
+    ) -> EnforcementSummary:
         """Report what would be enforced for a manifest without persisting it."""
         spec = manifest.spec
         cert = spec.certification
@@ -635,7 +926,7 @@ class RegistryService:
         if not spec.tools.allow and not spec.tools.deny:
             warnings.append("no tools declared; default is deny-all")
         for entry in spec.tools.allow:
-            if self._store.get_tool(entry.tool_id) is None:
+            if self._store.get_tool(entry.tool_id, ctx=ctx) is None:
                 warnings.append(f"tool {entry.tool_id!r} is not registered")
 
         fan_out = spec.fan_out

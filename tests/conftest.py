@@ -18,11 +18,40 @@ from postgres import postgres_engine
 from telemetry import SpanRecorder
 
 
+@pytest.fixture(scope="session", autouse=True)
+def _database_env_from_dotenv() -> None:
+    """Expose ``HIVEPLANE_DATABASE__*`` from the repo ``.env`` to Postgres tests.
+
+    Tests run in a temporary cwd, so pydantic cannot find the repo ``.env``.
+    CI provides the endpoint as real environment variables; for local runs we
+    copy any missing ``HIVEPLANE_DATABASE__*`` value from the repo ``.env`` so
+    the developer's database port actually takes effect (and matches the engine
+    the Postgres-gated fixtures connect to).
+    """
+    env_file = Path(__file__).resolve().parents[1] / ".env"
+    if not env_file.is_file():
+        return
+    for raw in env_file.read_text().splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        key = key.strip()
+        if key.startswith("HIVEPLANE_DATABASE__"):
+            os.environ.setdefault(key, value.strip().strip("\"'"))
+
+
 @pytest.fixture(autouse=True)
 def _isolated_settings(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Iterator[None]:
-    """Run each test in a clean cwd with no HIVEPLANE_* env vars or cached settings."""
+    """Run each test in a clean cwd with no HIVEPLANE_* env vars or cached settings.
+
+    ``HIVEPLANE_DATABASE__*`` variables are preserved: the Postgres-gated tests
+    need a database endpoint, exactly as CI provides one. All other
+    ``HIVEPLANE_*`` variables are stripped so operator-local config cannot leak
+    into tests.
+    """
     for key in list(os.environ):
-        if key.startswith("HIVEPLANE_"):
+        if key.startswith("HIVEPLANE_") and not key.startswith("HIVEPLANE_DATABASE__"):
             monkeypatch.delenv(key, raising=False)
     monkeypatch.chdir(tmp_path)
     get_settings.cache_clear()

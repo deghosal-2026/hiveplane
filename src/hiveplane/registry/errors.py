@@ -25,6 +25,16 @@ class WorkloadAlreadyExistsError(RegistryError):
         self.name = name
 
 
+class WorkloadInUseError(RegistryError):
+    """Raised when deleting a workload that still has dependent records (e.g. runs)."""
+
+    def __init__(self, name: str) -> None:
+        super().__init__(
+            f"workload {name!r} cannot be deleted while it has existing runs"
+        )
+        self.name = name
+
+
 class VersionNotFoundError(RegistryError):
     """Raised when a manifest version does not exist."""
 

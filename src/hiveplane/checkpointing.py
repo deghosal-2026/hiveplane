@@ -21,6 +21,7 @@ from collections import defaultdict
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 from langchain_core.runnables import RunnableConfig
 from langgraph.checkpoint.base import (
@@ -37,8 +38,19 @@ from hiveplane.config import get_settings
 _EncodedBlob = list[str]
 
 
+def _thread_id(config: RunnableConfig) -> str:
+    """Return the thread id from a LangGraph config, defaulting to ``default``."""
+    configurable = config.get("configurable") or {}
+    return str(configurable.get("thread_id", "default"))
+
+
 class JsonFileCheckpointSaver(InMemorySaver):
-    """An in-memory checkpoint saver that mirrors every write to a JSON file."""
+    """An in-memory checkpoint saver that mirrors each thread to its own file.
+
+    ``path`` is a directory; every thread (run) persists to ``<thread_id>.json``
+    so one run's supersteps never rewrite another run's state, and a terminal
+    run's file is deleted by :meth:`delete_thread` (#507).
+    """
 
     def __init__(
         self, path: str | Path, *, serde: SerializerProtocol | None = None
@@ -46,12 +58,17 @@ class JsonFileCheckpointSaver(InMemorySaver):
         super().__init__(serde=serde)
         self._path = Path(path)
         self._lock = threading.RLock()
+        self._path.mkdir(parents=True, exist_ok=True)
         self._load()
 
     @property
     def path(self) -> Path:
-        """Return the file this saver persists to."""
+        """Return the directory this saver persists to."""
         return self._path
+
+    def _thread_path(self, thread_id: str) -> Path:
+        safe = quote(thread_id, safe="")
+        return self._path / f"{safe}.json"
 
     def put(
         self,
@@ -60,10 +77,10 @@ class JsonFileCheckpointSaver(InMemorySaver):
         metadata: CheckpointMetadata,
         new_versions: ChannelVersions,
     ) -> RunnableConfig:
-        """Store a checkpoint and flush the saver to disk."""
+        """Store a checkpoint and flush its thread to disk."""
         with self._lock:
             result = super().put(config, checkpoint, metadata, new_versions)
-            self._save()
+            self._save_thread(_thread_id(config))
             return result
 
     def put_writes(
@@ -73,32 +90,51 @@ class JsonFileCheckpointSaver(InMemorySaver):
         task_id: str,
         task_path: str = "",
     ) -> None:
-        """Store intermediate writes and flush the saver to disk."""
+        """Store intermediate writes and flush its thread to disk."""
         with self._lock:
             super().put_writes(config, writes, task_id, task_path)
-            self._save()
+            self._save_thread(_thread_id(config))
 
     def delete_thread(self, thread_id: str) -> None:
-        """Delete a thread's checkpoints and flush the saver to disk."""
+        """Delete a thread's checkpoints and remove its per-thread file."""
         with self._lock:
             super().delete_thread(thread_id)
-            self._save()
+            self._thread_path(thread_id).unlink(missing_ok=True)
 
-    def _save(self) -> None:
-        data = {
-            "storage": _storage_to_json(self.storage),
-            "writes": _writes_to_json(self.writes),
-            "blobs": _blobs_to_json(self.blobs),
+    def _thread_data(self, thread_id: str) -> dict[str, Any]:
+        storage = _storage_to_json(self.storage)
+        return {
+            "storage": {thread_id: storage[thread_id]} if thread_id in storage else {},
+            "writes": [
+                entry
+                for entry in _writes_to_json(self.writes)
+                if entry["thread"] == thread_id
+            ],
+            "blobs": [
+                entry
+                for entry in _blobs_to_json(self.blobs)
+                if entry["thread"] == thread_id
+            ],
         }
-        self._path.parent.mkdir(parents=True, exist_ok=True)
-        temp = self._path.with_name(f"{self._path.name}.tmp")
+
+    def _save_thread(self, thread_id: str) -> None:
+        data = self._thread_data(thread_id)
+        if not (data["storage"] or data["writes"] or data["blobs"]):
+            self._thread_path(thread_id).unlink(missing_ok=True)
+            return
+        self._path.mkdir(parents=True, exist_ok=True)
+        target = self._thread_path(thread_id)
+        temp = target.with_name(f"{target.name}.tmp")
         temp.write_text(json.dumps(data), encoding="utf-8")
-        temp.replace(self._path)
+        temp.replace(target)
 
     def _load(self) -> None:
-        if not self._path.is_file():
+        if not self._path.is_dir():
             return
-        data = json.loads(self._path.read_text(encoding="utf-8"))
+        for path in sorted(self._path.glob("*.json")):
+            self._merge(json.loads(path.read_text(encoding="utf-8")))
+
+    def _merge(self, data: dict[str, Any]) -> None:
         storage: defaultdict[str, dict[str, dict[str, tuple[Any, Any, str | None]]]] = (
             defaultdict(lambda: defaultdict(dict))
         )
@@ -110,7 +146,7 @@ class JsonFileCheckpointSaver(InMemorySaver):
                         _decode_blob(saved[1]),
                         saved[2],
                     )
-        self.storage = storage
+            self.storage[thread_id] = storage[thread_id]
 
         writes: defaultdict[tuple[str, str, str], dict[tuple[str, int], tuple[Any, ...]]] = (
             defaultdict(dict)
@@ -124,9 +160,8 @@ class JsonFileCheckpointSaver(InMemorySaver):
                     _decode_blob(saved[4]),
                     saved[5],
                 )
-        self.writes = writes
+            self.writes[key] = writes[key]
 
-        blobs: dict[tuple[str, str, str, Any], tuple[str, bytes]] = {}
         for entry in data.get("blobs", []):
             blob_key = (
                 entry["thread"],
@@ -134,8 +169,7 @@ class JsonFileCheckpointSaver(InMemorySaver):
                 entry["channel"],
                 entry["version"],
             )
-            blobs[blob_key] = _decode_blob(entry["blob"])
-        self.blobs = blobs
+            self.blobs[blob_key] = _decode_blob(entry["blob"])
 
 
 def default_checkpointer() -> BaseCheckpointSaver[str]:

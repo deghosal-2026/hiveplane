@@ -1,0 +1,101 @@
+# HivePlane Helm values. This file is a public contract: bump the chart version
+# and document breaking changes in deploy/helm/hiveplane/README.md.
+
+nameOverride: ""
+fullnameOverride: ""
+
+imagePullSecrets: []
+
+serviceAccount:
+  create: true
+  name: ""
+
+api:
+  image:
+    repository: hiveplane/api
+    tag: "0.2.0"
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  #: Port the API process listens on inside the container (uvicorn default 8000).
+  containerPort: 8000
+  service:
+    type: ClusterIP
+    port: 8100
+  resources: {}
+  # Extra environment variables for the control plane (HIVEPLANE_*).
+  env:
+    HIVEPLANE_EXECUTION__ADAPTER: auto
+    HIVEPLANE_CERTIFICATION__EXECUTOR: adapter
+    HIVEPLANE_CERTIFICATION__CORPORA_DIR: field_test
+    HIVEPLANE_RECONCILE__ALLOW_DESTRUCTIVE: "true"
+
+ui:
+  enabled: true
+  image:
+    repository: hiveplane/ui
+    tag: "0.2.0"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 8000
+  resources: {}
+
+postgres:
+  image:
+    repository: postgres
+    tag: "16"
+  auth:
+    database: hiveplane
+    username: hiveplane
+    # Set an existing secret with key `password` to avoid storing it here.
+    existingSecret: ""
+    password: hiveplane
+  persistence:
+    enabled: true
+    size: 8Gi
+    storageClass: ""
+  resources: {}
+
+redis:
+  image:
+    repository: redis
+    tag: "7"
+  resources: {}
+
+telemetry:
+  enabled: true
+  otelCollector:
+    image:
+      repository: otel/opentelemetry-collector
+      tag: "0.109.0"
+  tempo:
+    image:
+      repository: grafana/tempo
+      tag: "2.6.1"
+  prometheus:
+    image:
+      repository: prom/prometheus
+      tag: "v2.54.1"
+  grafana:
+    enabled: true
+    image:
+      repository: grafana/grafana
+      tag: "11.2.0"
+    adminUser: admin
+    adminPassword: admin
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: hiveplane.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+podAnnotations: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}

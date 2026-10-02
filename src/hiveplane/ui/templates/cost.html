@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Cost · HivePlane{% endblock %}
+{% block content %}
+<h1>Cost</h1>
+<div class="grid">
+  <div class="card">
+    <div class="muted">Total attributed spend</div>
+    <div class="value">${{ "%.2f"|format(view.total_usd) }}</div>
+  </div>
+  <div class="card">
+    <div class="muted">Workloads</div>
+    <div class="value">{{ view.by_workload | length }}</div>
+  </div>
+</div>
+
+<h2>Spend by workload</h2>
+{% if view.by_workload %}
+{% set max_spend = view.by_workload | map(attribute="total_usd") | max %}
+<table>
+  <thead>
+    <tr>
+      <th>Workload</th>
+      <th>Team</th>
+      <th>Share</th>
+      <th>Spend</th>
+      <th>Runs</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in view.by_workload %}
+    {% set pct = (row.total_usd / max_spend * 100) if max_spend else 0 %}
+    <tr>
+      <td>{{ row.workload }}</td>
+      <td>{{ row.team or "—" }}</td>
+      <td class="bar-cell">
+        <svg width="100%" height="14" viewBox="0 0 100 14" preserveAspectRatio="none"
+             role="img" aria-label="{{ row.workload }} spend share">
+          <rect x="0" y="2" width="{{ pct }}" height="10" fill="var(--accent)"></rect>
+        </svg>
+      </td>
+      <td>${{ "%.2f"|format(row.total_usd) }}</td>
+      <td>{{ row.run_count }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">No spend recorded.</p>
+{% endif %}
+
+<h2>By team</h2>
+{% if view.by_team %}
+<table>
+  <thead>
+    <tr>
+      <th>Team</th>
+      <th>Total</th>
+      <th>Runs</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in view.by_team %}
+    <tr>
+      <td>{{ row.team }}</td>
+      <td>${{ "%.2f"|format(row.total_usd) }}</td>
+      <td>{{ row.run_count }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">No spend recorded.</p>
+{% endif %}
+{% endblock %}

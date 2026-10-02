@@ -5,13 +5,17 @@ from __future__ import annotations
 from collections.abc import Callable
 from datetime import UTC, datetime
 
+import pytest
+
 from hiveplane.core.decision import DecisionOutcome, PolicyContext, PolicyDecision
 from hiveplane.core.run import AdmissionContext, Run, RunState
 from hiveplane.core.usage import BudgetCheck, BudgetLevel, BudgetOutcome, UsageReport
 from hiveplane.core.workload import AgentWorkload
 from hiveplane.execution.admission import AdmissionPipeline
 from hiveplane.execution.models import AdmissionOutcome
+from hiveplane.policy.engine import PolicyEngine
 from hiveplane.registry.models import AdmissionDecision
+from hiveplane.tenancy import DEFAULT_CONTEXT, TenantContext
 
 
 def _clock() -> datetime:
@@ -36,7 +40,13 @@ class _Cert:
         self._admitted = admitted
         self._model = model
 
-    def check_admission(self, workload: str, context: AdmissionContext) -> AdmissionDecision:
+    def check_admission(
+        self,
+        workload: str,
+        context: AdmissionContext,
+        *,
+        ctx: TenantContext = DEFAULT_CONTEXT,
+    ) -> AdmissionDecision:
         return AdmissionDecision(
             workload=workload,
             context=context,
@@ -45,7 +55,9 @@ class _Cert:
             reason=None if self._admitted else "not certified",
         )
 
-    def attestation_model(self, workload: str) -> str | None:
+    def attestation_model(
+        self, workload: str, *, ctx: TenantContext = DEFAULT_CONTEXT
+    ) -> str | None:
         return self._model
 
 
@@ -67,7 +79,13 @@ class _Budget:
     def __init__(self, allowed: bool) -> None:
         self._allowed = allowed
 
-    def check(self, workload: AgentWorkload, context: AdmissionContext) -> BudgetCheck:
+    def check(
+        self,
+        workload: AgentWorkload,
+        context: AdmissionContext,
+        *,
+        ctx: TenantContext = DEFAULT_CONTEXT,
+    ) -> BudgetCheck:
         return BudgetCheck(
             allowed=self._allowed,
             level=BudgetLevel.RUN,
@@ -77,7 +95,13 @@ class _Budget:
             reason=None if self._allowed else "budget exhausted",
         )
 
-    def record_usage(self, workload: AgentWorkload, report: UsageReport) -> BudgetOutcome:
+    def record_usage(
+        self,
+        workload: AgentWorkload,
+        report: UsageReport,
+        *,
+        ctx: TenantContext = DEFAULT_CONTEXT,
+    ) -> BudgetOutcome:
         raise AssertionError("not used during admission")
 
 
@@ -176,3 +200,106 @@ def test_model_identity_is_skipped_when_run_has_none(
         _run(AdmissionContext.SANDBOX, model=None), make_manifest()
     )
     assert result.outcome is AdmissionOutcome.SANDBOX_ONLY
+
+
+def test_require_approval_forces_escalation(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    result = _pipeline(cert=_Cert(True, "m1")).check(
+        _run(AdmissionContext.PRODUCTION), make_manifest(), require_approval=True
+    )
+    assert result.outcome is AdmissionOutcome.ADMITTED
+    assert result.escalation_required is True
+
+
+def test_require_approval_defaults_off(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    result = _pipeline(cert=_Cert(True, "m1")).check(
+        _run(AdmissionContext.PRODUCTION), make_manifest()
+    )
+    assert result.escalation_required is False
+
+
+def test_missing_run_context_raises(make_manifest: Callable[..., AgentWorkload]) -> None:
+    run = _run(AdmissionContext.PRODUCTION).model_copy(update={"context": None})
+
+    with pytest.raises(ValueError, match=r"run\.context is required"):
+        _pipeline(cert=_Cert(True, "m1")).check(run, make_manifest())
+
+
+class _FailingHalt:
+    def halted(self, *, tenant_id: str | None = None, workload: str | None = None) -> bool:
+        raise RuntimeError("halt backend unavailable")
+
+
+def test_halt_backend_failure_fails_closed(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    pipeline = AdmissionPipeline(
+        _Cert(True, "m1"),
+        _Policy(DecisionOutcome.ALLOW),
+        _Budget(True),
+        _Sandbox(False),
+        halt=_FailingHalt(),
+        clock=_clock,
+    )
+
+    result = pipeline.check(_run(AdmissionContext.PRODUCTION), make_manifest())
+
+    assert result.outcome is AdmissionOutcome.REFUSED
+    assert result.refused_reason is not None and "halted" in result.refused_reason
+
+
+def _tenant_engine(tenant_id: str) -> PolicyEngine:
+    from hiveplane.policy.models import (
+        PolicyPack,
+        PolicyPackMetadata,
+        PolicyPackOverride,
+        PolicyPackRule,
+        PolicyPackRuleMatch,
+        PolicyPackSpec,
+    )
+    from hiveplane.policy.packs import InMemoryPolicyPackStore
+    from hiveplane.tenancy import Role, TenantContext
+
+    store = InMemoryPolicyPackStore()
+    store.save(
+        PolicyPack(
+            metadata=PolicyPackMetadata(
+                name="strict", team="platform", version="1", tenant_id=tenant_id
+            ),
+            spec=PolicyPackSpec(
+                overrides=[
+                    PolicyPackOverride(
+                        match=PolicyPackRuleMatch(environment=AdmissionContext.PRODUCTION),
+                        rules=[PolicyPackRule(action=DecisionOutcome.DENY)],
+                    )
+                ]
+            ),
+        ),
+        ctx=TenantContext(tenant_id=tenant_id, role=Role.ADMIN),
+    )
+    return PolicyEngine(store, clock=_clock)
+
+
+def test_admission_uses_the_runs_tenant_packs(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    pipeline = AdmissionPipeline(
+        _Cert(True, "m1"),
+        _tenant_engine("tenant-a"),
+        _Budget(True),
+        _Sandbox(False),
+        clock=_clock,
+    )
+    run_a = _run(AdmissionContext.PRODUCTION).model_copy(update={"tenant_id": "tenant-a"})
+
+    result_a = pipeline.check(run_a, make_manifest())
+    result_b = pipeline.check(
+        run_a.model_copy(update={"tenant_id": "tenant-b"}), make_manifest()
+    )
+
+    assert result_a.outcome is AdmissionOutcome.REFUSED
+    assert any(check.rule == "pack.deny" for check in result_a.checks)
+    assert not any(check.rule == "pack.deny" for check in result_b.checks)

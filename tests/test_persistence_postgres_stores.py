@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 
 from sqlalchemy import Engine
 
+from hiveplane.auth.models import AccessEvent, AccessResult, AuthMethod, LoginEvent
+from hiveplane.auth.store import PostgresAuthStore
 from hiveplane.certification.models import (
     Attestation,
     CertificationStatus,
@@ -17,11 +19,25 @@ from hiveplane.certification.models import (
 from hiveplane.core.approval import ApprovalRecord, ApprovalStatus
 from hiveplane.core.tools import ToolTrustLevel
 from hiveplane.core.triggers import TriggerMatch, TriggerRule, TriggerType
+from hiveplane.cost.models import CostEvent
+from hiveplane.cost.store import PostgresCostStore
+from hiveplane.delivery.models import (
+    DeliveryAttempt,
+    DeliveryChannel,
+    DeliveryEventType,
+    DeliveryStatus,
+)
+from hiveplane.delivery.store import PostgresDeliveryStore
+from hiveplane.fleet.cost import CostType
 from hiveplane.policy.store import PostgresApprovalStore
 from hiveplane.registry.models import ToolRecord, TriggerRecord
 from hiveplane.registry.store import PostgresRegistryStore
+from hiveplane.tenancy.context import context_for_run
+from postgres import reset_database, seed_workload
 
 _NOW = datetime(2026, 1, 1, tzinfo=UTC)
+_OLD = _NOW - timedelta(days=10)
+_CUTOFF = _NOW - timedelta(days=5)
 _ENV = Environment(
     sandbox_image="img", runtime_adapter="raw-worker", control_plane_version="0.1.0"
 )
@@ -54,7 +70,8 @@ def _attestation(attestation_id: str, workload: str = "agent-1") -> Attestation:
 
 def test_registry_tools_and_triggers_round_trip(pg_engine: Engine) -> None:
     store = PostgresRegistryStore(pg_engine)
-    store.clear()
+    reset_database(pg_engine)
+    seed_workload(pg_engine)
     store.save_tool(
         ToolRecord(
             tool_id="github.read",
@@ -89,7 +106,8 @@ def test_registry_tools_and_triggers_round_trip(pg_engine: Engine) -> None:
 
 def test_registry_attestations_round_trip(pg_engine: Engine) -> None:
     store = PostgresRegistryStore(pg_engine)
-    store.clear()
+    reset_database(pg_engine)
+    seed_workload(pg_engine)
     store.add_attestation(_attestation("att-1"))
 
     fetched = store.get_attestation("att-1")
@@ -101,7 +119,8 @@ def test_registry_attestations_round_trip(pg_engine: Engine) -> None:
 
 def test_approval_list_filters(pg_engine: Engine) -> None:
     store = PostgresApprovalStore(pg_engine)
-    store.clear()
+    reset_database(pg_engine)
+    seed_workload(pg_engine)
     store.save(
         ApprovalRecord(
             approval_id="appr-1",
@@ -129,3 +148,99 @@ def test_approval_list_filters(pg_engine: Engine) -> None:
     assert [r.approval_id for r in store.list_approvals(workload="agent-2")] == ["appr-2"]
     assert store.list_approvals(run_id="run-9") == []
     assert store.get("missing") is None
+
+
+def test_cost_store_delete_events_before(pg_engine: Engine) -> None:
+    store = PostgresCostStore(pg_engine)
+    reset_database(pg_engine)
+    scope = context_for_run("acme")
+    store.save_event(
+        CostEvent(
+            event_id="old",
+            tenant_id="acme",
+            team_id="team-a",
+            cost_type=CostType.LLM,
+            cost_usd=1.0,
+            occurred_at=_OLD,
+        ),
+        ctx=scope,
+    )
+    store.save_event(
+        CostEvent(
+            event_id="fresh",
+            tenant_id="acme",
+            team_id="team-a",
+            cost_type=CostType.LLM,
+            cost_usd=1.0,
+            occurred_at=_NOW,
+        ),
+        ctx=scope,
+    )
+
+    assert store.delete_events_before(cutoff=_CUTOFF, tenant_id="acme", ctx=scope) == 1
+    assert [event.event_id for event in store.list_events("acme", ctx=scope)] == ["fresh"]
+
+
+def test_auth_store_delete_events_before(pg_engine: Engine) -> None:
+    store = PostgresAuthStore(pg_engine)
+    reset_database(pg_engine)
+    scope = context_for_run("acme")
+    store.save_login(
+        LoginEvent(
+            tenant_id="acme",
+            actor="alice",
+            method=AuthMethod.SESSION,
+            result=AccessResult.ALLOW,
+            created_at=_OLD,
+        ),
+        ctx=scope,
+    )
+    store.save_access(
+        AccessEvent(
+            tenant_id="acme",
+            actor="alice",
+            method=AuthMethod.SESSION,
+            action="run.read",
+            result=AccessResult.ALLOW,
+            created_at=_OLD,
+        ),
+        ctx=scope,
+    )
+
+    assert store.delete_events_before(cutoff=_CUTOFF, tenant_id="acme", ctx=scope) == 2
+    assert store.list_logins("acme", ctx=scope) == []
+    assert store.list_access("acme", ctx=scope) == []
+
+
+def test_delivery_store_delete_attempts_before(pg_engine: Engine) -> None:
+    store = PostgresDeliveryStore(pg_engine)
+    reset_database(pg_engine)
+    scope = context_for_run("acme")
+    store.save_attempt(
+        DeliveryAttempt(
+            attempt_id="old",
+            tenant_id="acme",
+            event_type=DeliveryEventType.COMPLETED,
+            channel=DeliveryChannel.SLACK,
+            target="#ops",
+            status=DeliveryStatus.DELIVERED,
+            created_at=_OLD,
+        ),
+        ctx=scope,
+    )
+    store.save_attempt(
+        DeliveryAttempt(
+            attempt_id="fresh",
+            tenant_id="acme",
+            event_type=DeliveryEventType.COMPLETED,
+            channel=DeliveryChannel.SLACK,
+            target="#ops",
+            status=DeliveryStatus.DELIVERED,
+            created_at=_NOW,
+        ),
+        ctx=scope,
+    )
+
+    scope = context_for_run("acme")
+    assert store.delete_attempts_before(cutoff=_CUTOFF, tenant_id="acme", ctx=scope) == 1
+    assert [attempt.attempt_id for attempt in store.list_attempts("acme", ctx=scope)] == ["fresh"]

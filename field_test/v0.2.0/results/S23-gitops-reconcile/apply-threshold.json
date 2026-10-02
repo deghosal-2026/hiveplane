@@ -1,0 +1,30 @@
+{
+  "run_id": "rr-4b25b224ac79",
+  "tenant_id": "default",
+  "source_id": "ft-gitops-inline",
+  "source": "git",
+  "revision": "ffa2b0ecab82a035",
+  "mode": "apply",
+  "started_at": "2026-10-02T01:22:14.705265Z",
+  "finished_at": "2026-10-02T01:22:14.717395Z",
+  "outcome": "applied",
+  "actions": [
+    {
+      "action_id": "act-5853af4b1acb5e4e88dfb08a",
+      "kind": "update_workload",
+      "object_kind": "workload",
+      "object_ref": "support-agent",
+      "status": "applied",
+      "detail": "manifest updated"
+    },
+    {
+      "action_id": "act-c2b5135197f7ed0c73f6e305",
+      "kind": "recertify_workload",
+      "object_kind": "workload",
+      "object_ref": "support-agent",
+      "status": "applied",
+      "detail": "re-certification requested"
+    }
+  ],
+  "error": null
+}

@@ -1,0 +1,16 @@
+# S5 reinstatement
+
+status:   fail
+detail:   reinstate -> 409
+started:  2026-10-02T01:22:14.479351+00:00
+duration: 0.05s
+model:    omlx/qwen3-4b-instruct-2507/4bit
+git_sha:  739840737846df1d5061c0f119d125534f2ae07a
+calls:    4
+runs:     (none)
+
+## Mutating calls (inputs)
+
+  POST /workloads -> 409
+  PUT /workloads/support-agent -> 200
+  POST /quarantines/quar-5283a5c2c62d/reinstate -> 409

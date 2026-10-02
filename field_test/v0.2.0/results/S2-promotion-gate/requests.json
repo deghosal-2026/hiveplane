@@ -1,0 +1,498 @@
+[
+  {
+    "method": "POST",
+    "path": "/workloads",
+    "status": 409,
+    "ms": 5.9,
+    "tenant": null,
+    "note": null,
+    "request": {
+      "apiVersion": "hiveplane/v1",
+      "kind": "AgentWorkload",
+      "metadata": {
+        "name": "uncertified-agent",
+        "owner": "platform-team",
+        "team": "platform",
+        "description": "S2 negative fixture \u2014 never certified, must be refused production.",
+        "labels": {
+          "environment": "field-test",
+          "source": "field_test"
+        }
+      },
+      "spec": {
+        "runtime": {
+          "adapter": "raw-worker",
+          "entrypoint": "field_test.shims.support_agent:run",
+          "env": {},
+          "adapter_contract": "2"
+        },
+        "budget": {
+          "per_run_usd": 0.5,
+          "per_day_usd": 5.0,
+          "per_team_usd": 50.0
+        },
+        "model": {
+          "strategy": "tiered",
+          "identity": {
+            "provider": "openai",
+            "family": "gpt-4o",
+            "version": "2024-08-06"
+          }
+        },
+        "certification": {
+          "benchmark_corpus": "corpora/support-agent/hiveplane-corpus.yaml",
+          "staging_threshold": 0.8,
+          "production_threshold": 0.9,
+          "no_critical_failures": true,
+          "latency_budget_ms": 30000,
+          "re_cert_interval": 1209600,
+          "status": "uncertified",
+          "attestation_id": null,
+          "certified_at": null,
+          "certified_by": null,
+          "expires_at": null
+        },
+        "triggers": [],
+        "sandbox": {
+          "enabled": true,
+          "resource_caps": {
+            "memory_mb": 512,
+            "cpu_cores": 1.0,
+            "wall_clock_s": 300
+          },
+          "egress": {
+            "allow": [
+              "api.github.com",
+              "api.pagerduty.com"
+            ],
+            "deny": [
+              "169.254.169.254"
+            ],
+            "mode": "restricted"
+          },
+          "network": null,
+          "filesystem": "isolated"
+        },
+        "output_shaping": {
+          "max_bytes": 16384,
+          "truncate_strategy": "tail",
+          "filter_rules": [],
+          "injection_scan": true
+        },
+        "tools": {
+          "allow": [
+            {
+              "tool_id": "mcp.github.read_issue",
+              "trust_level": "read_only",
+              "require_approval": false,
+              "allow_untrusted": false
+            },
+            {
+              "tool_id": "pagerduty.acknowledge",
+              "trust_level": "destructive",
+              "require_approval": true,
+              "allow_untrusted": false
+            }
+          ],
+          "deny": [
+            "mcp.github.create_pr"
+          ],
+          "mcp_servers": [],
+          "default_trust": "read_only"
+        },
+        "approvals": {
+          "required_for": [
+            "destructive",
+            "production_write"
+          ],
+          "contact": "#platform-oncall",
+          "auto_escalate_after": 300
+        },
+        "guards": null,
+        "fan_out": {
+          "on_completed": [],
+          "on_failed": [
+            {
+              "type": "slack",
+              "channel": "#platform-oncall",
+              "url": null,
+              "project": null,
+              "issue_type": null
+            }
+          ],
+          "on_escalation": [],
+          "always_include": [
+            "trace_link",
+            "attestation_link"
+          ]
+        },
+        "health": {
+          "readiness_probe": {
+            "type": "dry_run",
+            "interval": 60
+          },
+          "slo": {
+            "availability_target": 0.99,
+            "quality_target": 0.9,
+            "error_budget_window": 86400
+          },
+          "failure_rate_threshold": 0.15
+        },
+        "observability": {
+          "contract": "standard",
+          "trace_sampling": 1.0
+        },
+        "io": null,
+        "secrets": [],
+        "time_windows": []
+      }
+    },
+    "request_shape": "dict",
+    "response": {
+      "detail": "workload 'uncertified-agent' already exists"
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "PUT",
+    "path": "/workloads/uncertified-agent",
+    "status": 200,
+    "ms": 10.3,
+    "tenant": null,
+    "note": null,
+    "request": {
+      "apiVersion": "hiveplane/v1",
+      "kind": "AgentWorkload",
+      "metadata": {
+        "name": "uncertified-agent",
+        "owner": "platform-team",
+        "team": "platform",
+        "description": "S2 negative fixture \u2014 never certified, must be refused production.",
+        "labels": {
+          "environment": "field-test",
+          "source": "field_test"
+        }
+      },
+      "spec": {
+        "runtime": {
+          "adapter": "raw-worker",
+          "entrypoint": "field_test.shims.support_agent:run",
+          "env": {},
+          "adapter_contract": "2"
+        },
+        "budget": {
+          "per_run_usd": 0.5,
+          "per_day_usd": 5.0,
+          "per_team_usd": 50.0
+        },
+        "model": {
+          "strategy": "tiered",
+          "identity": {
+            "provider": "openai",
+            "family": "gpt-4o",
+            "version": "2024-08-06"
+          }
+        },
+        "certification": {
+          "benchmark_corpus": "corpora/support-agent/hiveplane-corpus.yaml",
+          "staging_threshold": 0.8,
+          "production_threshold": 0.9,
+          "no_critical_failures": true,
+          "latency_budget_ms": 30000,
+          "re_cert_interval": 1209600,
+          "status": "uncertified",
+          "attestation_id": null,
+          "certified_at": null,
+          "certified_by": null,
+          "expires_at": null
+        },
+        "triggers": [],
+        "sandbox": {
+          "enabled": true,
+          "resource_caps": {
+            "memory_mb": 512,
+            "cpu_cores": 1.0,
+            "wall_clock_s": 300
+          },
+          "egress": {
+            "allow": [
+              "api.github.com",
+              "api.pagerduty.com"
+            ],
+            "deny": [
+              "169.254.169.254"
+            ],
+            "mode": "restricted"
+          },
+          "network": null,
+          "filesystem": "isolated"
+        },
+        "output_shaping": {
+          "max_bytes": 16384,
+          "truncate_strategy": "tail",
+          "filter_rules": [],
+          "injection_scan": true
+        },
+        "tools": {
+          "allow": [
+            {
+              "tool_id": "mcp.github.read_issue",
+              "trust_level": "read_only",
+              "require_approval": false,
+              "allow_untrusted": false
+            },
+            {
+              "tool_id": "pagerduty.acknowledge",
+              "trust_level": "destructive",
+              "require_approval": true,
+              "allow_untrusted": false
+            }
+          ],
+          "deny": [
+            "mcp.github.create_pr"
+          ],
+          "mcp_servers": [],
+          "default_trust": "read_only"
+        },
+        "approvals": {
+          "required_for": [
+            "destructive",
+            "production_write"
+          ],
+          "contact": "#platform-oncall",
+          "auto_escalate_after": 300
+        },
+        "guards": null,
+        "fan_out": {
+          "on_completed": [],
+          "on_failed": [
+            {
+              "type": "slack",
+              "channel": "#platform-oncall",
+              "url": null,
+              "project": null,
+              "issue_type": null
+            }
+          ],
+          "on_escalation": [],
+          "always_include": [
+            "trace_link",
+            "attestation_link"
+          ]
+        },
+        "health": {
+          "readiness_probe": {
+            "type": "dry_run",
+            "interval": 60
+          },
+          "slo": {
+            "availability_target": 0.99,
+            "quality_target": 0.9,
+            "error_budget_window": 86400
+          },
+          "failure_rate_threshold": 0.15
+        },
+        "observability": {
+          "contract": "standard",
+          "trace_sampling": 1.0
+        },
+        "io": null,
+        "secrets": [],
+        "time_windows": []
+      }
+    },
+    "request_shape": "dict",
+    "response": {
+      "name": "uncertified-agent",
+      "manifest": {
+        "apiVersion": "hiveplane/v1",
+        "kind": "AgentWorkload",
+        "metadata": {
+          "name": "uncertified-agent",
+          "owner": "platform-team",
+          "team": "platform",
+          "description": "S2 negative fixture \u2014 never certified, must be refused production.",
+          "labels": {
+            "environment": "field-test",
+            "source": "field_test"
+          }
+        },
+        "spec": {
+          "runtime": {
+            "adapter": "raw-worker",
+            "entrypoint": "field_test.shims.support_agent:run",
+            "env": {},
+            "adapter_contract": "2"
+          },
+          "budget": {
+            "per_run_usd": 0.5,
+            "per_day_usd": 5.0,
+            "per_team_usd": 50.0
+          },
+          "model": {
+            "strategy": "tiered",
+            "identity": {
+              "provider": "openai",
+              "family": "gpt-4o",
+              "version": "2024-08-06"
+            }
+          },
+          "certification": {
+            "benchmark_corpus": "corpora/support-agent/hiveplane-corpus.yaml",
+            "staging_threshold": 0.8,
+            "production_threshold": 0.9,
+            "no_critical_failures": true,
+            "latency_budget_ms": 30000,
+            "re_cert_interval": 1209600,
+            "status": "uncertified",
+            "attestation_id": null,
+            "certified_at": null,
+            "certified_by": null,
+            "expires_at": null
+          },
+          "triggers": [],
+          "sandbox": {
+            "enabled": true,
+            "resource_caps": {
+              "memory_mb": 512,
+              "cpu_cores": 1.0,
+              "wall_clock_s": 300
+            },
+            "egress": {
+              "allow": [
+                "api.github.com",
+                "api.pagerduty.com"
+              ],
+              "deny": [
+                "169.254.169.254"
+              ],
+              "mode": "restricted"
+            },
+            "network": null,
+            "filesystem": "isolated"
+          },
+          "output_shaping": {
+            "max_bytes": 16384,
+            "truncate_strategy": "tail",
+            "filter_rules": [],
+            "injection_scan": true
+          },
+          "tools": {
+            "allow": [
+              {
+                "tool_id": "mcp.github.read_issue",
+                "trust_level": "read_only",
+                "require_approval": false,
+                "allow_untrusted": false
+              },
+              {
+                "tool_id": "pagerduty.acknowledge",
+                "trust_level": "destructive",
+                "require_approval": true,
+                "allow_untrusted": false
+              }
+            ],
+            "deny": [
+              "mcp.github.create_pr"
+            ],
+            "mcp_servers": [],
+            "default_trust": "read_only"
+          },
+          "approvals": {
+            "required_for": [
+              "destructive",
+              "production_write"
+            ],
+            "contact": "#platform-oncall",
+            "auto_escalate_after": 300
+          },
+          "guards": null,
+          "fan_out": {
+            "on_completed": [],
+            "on_failed": [
+              {
+                "type": "slack",
+                "channel": "#platform-oncall",
+                "url": null,
+                "project": null,
+                "issue_type": null
+              }
+            ],
+            "on_escalation": [],
+            "always_include": [
+              "trace_link",
+              "attestation_link"
+            ]
+          },
+          "health": {
+            "readiness_probe": {
+              "type": "dry_run",
+              "interval": 60
+            },
+            "slo": {
+              "availability_target": 0.99,
+              "quality_target": 0.9,
+              "error_budget_window": 86400
+            },
+            "failure_rate_threshold": 0.15
+          },
+          "observability": {
+            "contract": "standard",
+            "trace_sampling": 1.0
+          },
+          "io": null,
+          "secrets": [],
+          "time_windows": []
+        }
+      },
+      "current_version": 3,
+      "certification_status": "uncertified",
+      "owner": "platform-team",
+      "team": "platform",
+      "runtime": "raw-worker",
+      "created_at": "2026-10-02T00:43:40.840857Z",
+      "updated_at": "2026-10-02T00:43:44.567867Z",
+      "needs_re_certification": false,
+      "artifact_hash": "c9f35a1584dcb44df57a3a83b081f28add0eea096c0589d0317d9432058a09ab",
+      "bundle": {
+        "workload_id": "uncertified-agent",
+        "bundle_digest": "7df8ace06e2a2d1868c66febf5edcb7f56365293029c02006f367a674f47b6ac",
+        "entrypoint_digest": "82606cee2eba7d217d23911fbabfba1c1ad88fabe39dc2b1c87a61590e49daa1",
+        "manifest_hash": "42979eb223c2ce14f993f6e9877306e954c9429f9acc724c759bc0c2c1810fb4",
+        "key_id": "hp-signing-key-01",
+        "signature": "WmqYRVI6751/xwWaPtWeBOHCtz6ByNvtFloj8PEW8e4f40sl1WTdgOeQOHraRRjH88mbOyZ+Qkn44NRg6CK6Bw==",
+        "registered_at": "2026-10-02T00:43:44.571198Z"
+      },
+      "production_runs_survived": 0,
+      "last_run_at": null,
+      "failure_count": 0,
+      "last_failure_at": null,
+      "tenant_id": "default"
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "POST",
+    "path": "/promotions",
+    "status": 409,
+    "ms": 19.4,
+    "tenant": null,
+    "note": null,
+    "request": {
+      "workload": "uncertified-agent",
+      "manifest_version": 1,
+      "operator": "field-test-v02"
+    },
+    "request_shape": "dict",
+    "response": {
+      "detail": "manifest version 1 is not the current version 3; publish it before promoting (changed bindings: manifest, toolset, model_binding, policy_version)",
+      "error": {
+        "code": 409,
+        "message": "manifest version 1 is not the current version 3; publish it before promoting (changed bindings: manifest, toolset, model_binding, policy_version)",
+        "details": null,
+        "request_id": "ec92f5fd375b41a99ad3098a6402152a"
+      }
+    },
+    "response_shape": "dict"
+  }
+]

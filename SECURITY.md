@@ -63,6 +63,7 @@ controls HivePlane provides:
 
 ## Release security evidence
 
-The v0.1.0 pre-release secret/dependency audit is recorded in
-[docs/release/v0.1.0/security-audit.md](docs/release/v0.1.0/security-audit.md)
-(trufflehog full-history scan, working-tree audit, and `pip-audit`).
+The pre-release secret/dependency audits are recorded in
+[docs/release/v0.2.0/security-audit.md](docs/release/v0.2.0/security-audit.md) (trufflehog
+full-history scan, working-tree audit, and `pip-audit`) and
+[docs/release/v0.1.0/security-audit.md](docs/release/v0.1.0/security-audit.md).

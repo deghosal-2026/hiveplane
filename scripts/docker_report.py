@@ -28,21 +28,39 @@ LAYERS: tuple[tuple[str, str], ...] = (
     ("L1", "Stack health"),
     ("L2", "API contract"),
     ("L3", "UI"),
-    ("L4", "Control loop"),
-    ("L5", "Governance"),
-    ("L6", "Durability"),
-    ("L7", "LLM matrix"),
+    ("L4", "Control loop & immune"),
+    ("L5", "Defense & governance"),
+    ("L6", "Autonomy"),
+    ("L7", "Fleet scale"),
+    ("L8", "Secrets, RBAC & tenancy"),
+    ("L9", "Cost, reporting & portability"),
+    ("L10", "Helm / k3d"),
+    ("L11", "Load test"),
+    ("L12", "Durability"),
+    ("L13", "LLM matrix"),
 )
 
 _MODULE_LAYER: dict[str, str] = {
     "test_container_fixtures": "L0",
     "test_stack_health": "L1",
     "test_api_contract": "L2",
+    "test_v02_api": "L2",
     "test_ui": "L3",
+    "test_v02_ui": "L3",
     "test_control_loop": "L4",
+    "test_v02_immune": "L4",
     "test_governance": "L5",
-    "test_durability": "L6",
-    "test_llm_matrix": "L7",
+    "test_v02_defense": "L5",
+    "test_v02_autonomy": "L6",
+    "test_v02_fleet": "L7",
+    "test_v02_secrets_tenancy": "L8",
+    "test_v02_cost_reporting": "L9",
+    "test_v02_delivery": "L9",
+    "test_v02_mcp": "L9",
+    "test_v02_helm": "L10",
+    "test_v02_load": "L11",
+    "test_durability": "L12",
+    "test_llm_matrix": "L13",
 }
 
 ISSUES_AND_LEARNINGS: tuple[str, ...] = (
@@ -182,6 +200,7 @@ def render(
     results: list[TestResult],
     environment: dict[str, object],
     log_dir: Path,
+    version_dir: str = "v0.1.0",
 ) -> str:
     """Render the full Markdown report."""
     summaries = summarize(results)
@@ -197,9 +216,10 @@ def render(
         overall = "NOT RUN"
 
     lines: list[str] = [
-        "# HivePlane v0.1.0 — Docker Test Report",
+        f"# HivePlane {version_dir} — Docker Test Report",
         "",
-        f"> Generated {datetime.now(UTC).isoformat()} by `scripts/docker-test.sh`.",
+        f"> Generated {datetime.now(UTC).isoformat()} by `scripts/docker-test.sh` / "
+        f"`scripts/docker-test-v02.sh`.",
         f"> **Overall: {overall}** — {passed} passed, {failed} failed, "
         f"{errored} errored, {skipped} skipped (of {total}).",
     ]
@@ -276,6 +296,7 @@ def main() -> int:
     parser.add_argument("--environment", type=Path)
     parser.add_argument("--log-dir", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--version-dir", default="v0.1.0")
     args = parser.parse_args()
 
     environment: dict[str, object] = {}
@@ -283,10 +304,9 @@ def main() -> int:
         environment = json.loads(args.environment.read_text(encoding="utf-8"))
 
     results = parse_junit(args.junit)
-    report = render(results, environment, args.log_dir)
+    report = render(results, environment, args.log_dir, args.version_dir)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(report, encoding="utf-8")
-    (args.log_dir / "report.md").write_text(report, encoding="utf-8")
 
     failed = sum(1 for r in results if r.status in ("failure", "error"))
     skipped = sum(1 for r in results if r.status == "skipped")

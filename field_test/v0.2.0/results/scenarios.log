@@ -1,0 +1,15 @@
+field test against http://localhost:8100 (model: omlx/qwen3-4b-instruct-2507/4bit)
+
+== S4 ==
+  [PASS] S4 drift-quarantine: seeded drift -> AUTO-quarantined (actor=drift-detector, severity=critical); production refused
+
+== S5 ==
+  [FAIL] S5 reinstatement: reinstate -> 409
+
+== S8 ==
+  [FAIL] S8 canary: reinstate support-agent -> 409
+
+== S23 ==
+  [PASS] S23 gitops-reconcile: add temp -> register; delete -> deregister; threshold change -> re-certified; converged
+
+field test: 2 passed, 2 failed, 0 blocked

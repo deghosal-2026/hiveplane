@@ -7,8 +7,10 @@ from typing import Any
 from hiveplane.ui.views import (
     build_cert_dashboard,
     build_fleet,
+    build_replay,
     build_run_detail,
     build_spend,
+    diff_from_replay,
 )
 
 _RUN_STATES = ("queued", "running", "paused", "completed", "failed", "cancelled")
@@ -246,3 +248,68 @@ def test_build_spend_empty_inputs() -> None:
     assert view.total_usd == 0.0
     assert view.by_workload == []
     assert view.by_team == []
+
+
+# --------------------------------------------------------------------------- #
+# Replay (M60)
+# --------------------------------------------------------------------------- #
+def test_build_replay_maps_frames_and_usage() -> None:
+    view = build_replay(
+        {
+            "run_id": "run-1",
+            "digest": "abc123",
+            "side_effects": False,
+            "frames": [
+                {
+                    "sequence": 0,
+                    "event_type": "state_change",
+                    "from_state": "queued",
+                    "to_state": "running",
+                    "detail": None,
+                },
+                {
+                    "sequence": 1,
+                    "event_type": "model_call",
+                    "usage": {"model_identity": "m1", "cost_usd": 0.02},
+                },
+            ],
+        }
+    )
+
+    assert view.run_id == "run-1"
+    assert view.digest == "abc123"
+    assert [frame.sequence for frame in view.frames] == [0, 1]
+    assert view.frames[0].state == "queued → running"
+    assert view.frames[1].usage == "m1"
+
+
+def test_build_replay_handles_empty_payload() -> None:
+    view = build_replay({})
+
+    assert view.run_id == ""
+    assert view.frames == []
+
+
+def test_diff_from_replay_maps_field_deltas() -> None:
+    view = diff_from_replay(
+        {
+            "source_run_id": "r1",
+            "target_run_id": "r2",
+            "identical": False,
+            "field_deltas": [{"field": "cost_usd", "before": 1.0, "after": 2.0}],
+        }
+    )
+
+    assert view.title == "run r1→r2"
+    assert [(entry.field, entry.before, entry.after) for entry in view.entries] == [
+        ("cost_usd", "1.0", "2.0")
+    ]
+
+
+def test_diff_from_replay_marks_identical() -> None:
+    view = diff_from_replay(
+        {"source_run_id": "r1", "target_run_id": "r2", "identical": True}
+    )
+
+    assert view.entries == []
+    assert "identical" in view.title

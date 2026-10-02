@@ -27,6 +27,7 @@ from hiveplane.certification.store import (
 )
 from hiveplane.config import Settings
 from hiveplane.persistence.base import create_engine_from_settings
+from postgres import seed_workload
 
 _NOW = datetime(2026, 9, 12, 10, 0, 0, tzinfo=UTC)
 _ENV = Environment(
@@ -133,6 +134,7 @@ def test_in_memory_round_trip() -> None:
 
 def test_postgres_round_trip(pg_engine: Engine) -> None:
     store = PostgresCertificationStore(pg_engine)
+    seed_workload(pg_engine, name="repo-agent")
     store.clear()
     record = _record()
     store.add(record)
@@ -151,6 +153,7 @@ def test_postgres_round_trip(pg_engine: Engine) -> None:
 
 def test_postgres_record_survives_new_store_instance(pg_engine: Engine) -> None:
     store = PostgresCertificationStore(pg_engine)
+    seed_workload(pg_engine, name="repo-agent")
     store.clear()
     store.add(_record("rec-restart"))
 

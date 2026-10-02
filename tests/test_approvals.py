@@ -11,6 +11,7 @@ from hiveplane.core.decision import ActionClass
 from hiveplane.policy.approvals import ApprovalService
 from hiveplane.policy.errors import ApprovalAlreadyDecidedError, ApprovalNotFoundError
 from hiveplane.policy.store import InMemoryApprovalStore
+from hiveplane.tenancy.context import context_for_run
 
 
 def _clock() -> datetime:
@@ -73,6 +74,53 @@ def test_decide_rejects_pending_status() -> None:
     service.request(run_id="run-1", workload="agent-1", rule="r", reason="x")
     with pytest.raises(ValueError):
         service.decide("ap-1", status=ApprovalStatus.PENDING, operator="alice")
+
+
+def test_comment_and_delegate_are_recorded() -> None:
+    service = _service()
+    record = service.request(run_id="r1", workload="a", rule="r", reason="x")
+    commented = service.comment(record.approval_id, author="alice", text="investigating")
+    assert commented.comments[0].text == "investigating"
+    assert commented.comments[0].author == "alice"
+    assert commented.comments[0].created_at == _clock()
+    delegated = service.delegate(record.approval_id, assignee="bob", operator="alice")
+    assert delegated.delegated_to == "bob" and delegated.delegated_by == "alice"
+    assert delegated.comments[-1].text == "delegated to bob"
+    persisted = service.get(record.approval_id)
+    assert persisted.delegated_to == "bob"
+    assert [comment.text for comment in persisted.comments] == [
+        "investigating",
+        "delegated to bob",
+    ]
+
+
+def test_comment_missing_raises() -> None:
+    with pytest.raises(ApprovalNotFoundError):
+        _service().comment("nope", author="alice", text="hello")
+
+
+def test_delegate_missing_raises() -> None:
+    with pytest.raises(ApprovalNotFoundError):
+        _service().delegate("nope", assignee="bob", operator="alice")
+
+
+def test_approval_escalation_is_tenant_scoped() -> None:
+    service = _service()
+    record = service.request(
+        run_id="run-1",
+        workload="agent-1",
+        rule="r",
+        reason="x",
+        tenant_id="acme",
+    )
+    assert record.tenant_id == "acme"
+    acme = context_for_run("acme")
+    assert [a.approval_id for a in service.list(ctx=acme)] == ["ap-1"]
+    assert service.get("ap-1", ctx=acme).tenant_id == "acme"
+    default = context_for_run("default")
+    assert service.list(ctx=default) == []
+    with pytest.raises(ApprovalNotFoundError):
+        service.get("ap-1", ctx=default)
 
 
 def test_list_filters() -> None:

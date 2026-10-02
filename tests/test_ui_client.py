@@ -180,3 +180,193 @@ def test_transport_error_maps_to_control_plane_error() -> None:
 
     assert excinfo.value.status_code is None
     assert "connection refused" in excinfo.value.detail
+
+
+def test_record_feedback_sends_verdict_notes_and_operator() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.method == "POST"
+        assert request.url.path == "/runs/r1/feedback"
+        assert json.loads(request.content) == {
+            "verdict": "failed-with-lesson",
+            "notes": "escalate",
+            "operator": "alice",
+        }
+        return httpx.Response(201, json={"feedback_id": "fb-1"})
+
+    result = _client(handler).record_feedback(
+        "r1", "failed-with-lesson", "escalate", "alice"
+    )
+
+    assert result["feedback_id"] == "fb-1"
+
+
+def test_with_token_forwards_bearer() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.headers["Authorization"] == "Bearer t1"
+        assert request.url.path == "/workloads"
+        return httpx.Response(200, json=[])
+
+    assert _client(handler).with_token("t1").list_workloads() == []
+
+
+def test_with_token_clone_without_token_omits_authorization() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert "Authorization" not in request.headers
+        return httpx.Response(200, json=[])
+
+    assert _client(handler).with_token("t1").with_token(None).list_workloads() == []
+
+
+def test_with_token_forwards_tenant_header() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.headers["X-Hiveplane-Tenant"] == "other"
+        assert request.url.path == "/workloads"
+        return httpx.Response(200, json=[])
+
+    assert _client(handler).with_token("t1", tenant_id="other").list_workloads() == []
+
+
+def test_with_token_omits_tenant_header_when_unset() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert "X-Hiveplane-Tenant" not in request.headers
+        return httpx.Response(200, json=[])
+
+    assert _client(handler).with_token("t1").list_workloads() == []
+
+
+def test_get_queue_hits_queue_path() -> None:
+    payload: dict[str, Any] = {"running": [], "pending": []}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.method == "GET"
+        assert request.url.path == "/queue"
+        return httpx.Response(200, json=payload)
+
+    assert _client(handler).get_queue() == payload
+
+
+def test_list_health_gets_health_path() -> None:
+    payload = [{"workload": "agent-a", "status": "healthy"}]
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.url.path == "/health"
+        return httpx.Response(200, json=payload)
+
+    assert _client(handler).list_health() == payload
+
+
+def test_get_roi_hits_fleet_roi_path() -> None:
+    payload: dict[str, Any] = {"roi": 1.5}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.url.path == "/cost/roi/fleet"
+        return httpx.Response(200, json=payload)
+
+    assert _client(handler).get_roi() == payload
+
+
+def test_search_passes_query_and_limit() -> None:
+    payload = [{"id": "w1"}]
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.url.path == "/search"
+        assert request.url.params["q"] == "agent"
+        assert request.url.params["limit"] == "20"
+        return httpx.Response(200, json=payload)
+
+    assert _client(handler).search("agent") == payload
+
+
+def test_search_passes_custom_limit() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.url.params["q"] == "agent"
+        assert request.url.params["limit"] == "5"
+        return httpx.Response(200, json=[])
+
+    assert _client(handler).search("agent", limit=5) == []
+
+
+def test_list_triggers_and_adapters() -> None:
+    calls: list[str] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        calls.append(request.url.path)
+        return httpx.Response(200, json=[])
+
+    client = _client(handler)
+    assert client.list_triggers() == []
+    assert client.list_adapters() == []
+    assert calls == ["/triggers", "/adapters"]
+
+
+def test_get_version_diff_encodes_name_and_params() -> None:
+    payload: dict[str, Any] = {"added": [], "removed": []}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.url.raw_path.decode().startswith("/workloads/agent%20a/versions/diff?")
+        assert request.url.params["from_version"] == "1"
+        assert request.url.params["to_version"] == "3"
+        return httpx.Response(200, json=payload)
+
+    assert _client(handler).get_version_diff("agent a", 1, 3) == payload
+
+
+def test_compare_certifications_encodes_ids() -> None:
+    payload: dict[str, Any] = {"regressions": []}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.url.raw_path.decode() == "/certifications/compare/b%201/c%202"
+        return httpx.Response(200, json=payload)
+
+    assert _client(handler).compare_certifications("b 1", "c 2") == payload
+
+
+def test_get_run_events_gets_events_path() -> None:
+    payload = [{"type": "started"}]
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.url.path == "/runs/r1/events"
+        return httpx.Response(200, json=payload)
+
+    assert _client(handler).get_run_events("r1") == payload
+
+
+def test_add_approval_comment_posts_author_and_text() -> None:
+    payload: dict[str, Any] = {"author": "alice", "text": "looks good"}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.method == "POST"
+        assert request.url.path == "/approvals/a1/comments"
+        assert json.loads(request.content) == {"author": "alice", "text": "looks good"}
+        return httpx.Response(201, json=payload)
+
+    assert _client(handler).add_approval_comment("a1", "alice", "looks good") == payload
+
+
+def test_whoami_gets_auth_whoami_path() -> None:
+    payload = {
+        "operator_id": "alice",
+        "tenant_id": "default",
+        "role": "admin",
+        "method": "api_key",
+        "scopes": [],
+    }
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.method == "GET"
+        assert request.url.path == "/auth/whoami"
+        return httpx.Response(200, json=payload)
+
+    assert _client(handler).whoami() == payload
+
+
+def test_delegate_approval_posts_assignee_and_operator() -> None:
+    payload: dict[str, Any] = {"assignee": "bob"}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.method == "POST"
+        assert request.url.path == "/approvals/a1/delegate"
+        assert json.loads(request.content) == {"assignee": "bob", "operator": "alice"}
+        return httpx.Response(200, json=payload)
+
+    assert _client(handler).delegate_approval("a1", "bob", "alice") == payload

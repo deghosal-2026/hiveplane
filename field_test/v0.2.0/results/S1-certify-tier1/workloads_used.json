@@ -1,0 +1,27 @@
+{
+  "workloads_root": "field_test/workloads",
+  "workloads": {
+    "support-agent": {
+      "manifest": "field_test/workloads/support-agent.yaml",
+      "runtime_adapter": "raw-worker",
+      "entrypoint": "field_test.shims.support_agent:run",
+      "benchmark_corpus": "corpora/support-agent/hiveplane-corpus.yaml",
+      "model_identity": {
+        "provider": "omlx",
+        "family": "qwen3-4b-instruct-2507",
+        "version": "4bit"
+      }
+    },
+    "eval-judge": {
+      "manifest": "field_test/workloads/eval-judge.yaml",
+      "runtime_adapter": "langgraph",
+      "entrypoint": "field_test.shims.eval_judge:graph",
+      "benchmark_corpus": "corpora/eval-judge/hiveplane-corpus.yaml",
+      "model_identity": {
+        "provider": "omlx",
+        "family": "qwen3-4b-instruct-2507",
+        "version": "4bit"
+      }
+    }
+  }
+}

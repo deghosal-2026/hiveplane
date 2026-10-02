@@ -1,0 +1,20 @@
+# S7 pipelines
+
+status:   pass
+detail:   3 nodes completed; children terminal
+started:  2026-10-02T00:43:53.450332+00:00
+duration: 18.93s
+model:    omlx/qwen3-4b-instruct-2507/4bit
+git_sha:  b186ba158779686f69cd3fdaba1672de84a13038
+calls:    473
+runs:     (none)
+
+## Mutating calls (inputs)
+
+  POST /workloads -> 409
+  PUT /workloads/support-agent -> 200
+  POST /certifications -> 201
+  POST /quarantines/quar-5ca4f814a1c8/reinstate -> 409
+  POST /certifications -> 201
+  POST /pipelines -> 201
+  POST /pipelines/ft-pipeline/runs -> 200

@@ -1,0 +1,24 @@
+# S26 fanout-audit
+
+status:   pass
+detail:   run deliveries exposed + delivered
+started:  2026-10-02T00:46:36.331714+00:00
+duration: 18.1s
+model:    omlx/qwen3-4b-instruct-2507/4bit
+git_sha:  b186ba158779686f69cd3fdaba1672de84a13038
+calls:    2401
+runs:     run-decff9398fd0
+
+## Mutating calls (inputs)
+
+  POST /workloads -> 409
+  PUT /workloads/support-agent -> 200
+  POST /certifications -> 201
+  POST /quarantines/quar-5ca4f814a1c8/reinstate -> 409
+  POST /certifications -> 201
+  POST /quarantines/quar-af2a9b9a8904/reinstate -> 409
+  POST /certifications -> 201
+  POST /quarantines/quar-101c5ab6dffa/reinstate -> 409
+  POST /certifications -> 201
+  POST /runs -> 201
+  POST /runs/run-decff9398fd0/start -> 200

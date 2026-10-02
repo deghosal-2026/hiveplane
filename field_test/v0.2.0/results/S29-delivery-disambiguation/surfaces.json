@@ -1,0 +1,14 @@
+{
+  "m51_audit": [],
+  "run_deliveries": [
+    {
+      "run_id": "run-8389888e6a07",
+      "destination_type": "slack",
+      "target": "#support-agent-results",
+      "status": "delivered",
+      "attempts": 1,
+      "error": null,
+      "timestamp": "2026-10-02T00:47:33.007833Z"
+    }
+  ]
+}

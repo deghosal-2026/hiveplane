@@ -37,6 +37,9 @@ def _run(state: RunState = RunState.RUNNING) -> Run:
 
 
 class _Tools:
+    def reset_drive(self, run_id: str) -> None:
+        return None
+
     def __init__(self, outcome: ToolCallOutcome) -> None:
         self._outcome = outcome
         self.requests: list[object] = []
@@ -51,13 +54,15 @@ class _Reporter:
         self._state = state
         self.usage: list[UsageReport] = []
 
-    def get(self, run_id: str) -> Run:
+    def get(self, run_id: str, *, ctx: object = None) -> Run:
         return _run(self._state)
 
     def transition(self, run_id: str, target: RunState, **kwargs: object) -> Run:
         return _run(target)
 
-    def record_usage(self, run_id: str, report: UsageReport) -> Run:
+    def record_usage(
+        self, run_id: str, report: UsageReport, *, ctx: object = None
+    ) -> Run:
         self.usage.append(report)
         return _run(self._state)
 

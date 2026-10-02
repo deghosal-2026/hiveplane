@@ -1,0 +1,85 @@
+==> HivePlane v0.2.0 field test run 20261001T225407Z
+==> Results: /Users/deghosal/desktop/code/github/hiveplane/field_test/v0.2.0/results
+==> Status: preflight
+==> Preflight: local LLM at http://127.0.0.1:8000/v1
+==> Status: resetting stack
+==> Status: bringing up stack
+==> Status: waiting for readyz
+==> Status: setup (seed tools + register workloads)
+==> Status: running scenarios
+==> Status: rendering report
+wrote /Users/deghosal/desktop/code/github/hiveplane/docs/field-test/v0.2.0/FIELD_TEST_REPORT.md (36 scenario records)
+==> --keep: leaving the stack up
+==> Status: failed
+==> HivePlane v0.2.0 field test run 20261001T231754Z
+==> Results: /Users/deghosal/Desktop/code/github/hiveplane/field_test/v0.2.0/results
+==> Status: preflight
+==> Preflight: local LLM at http://127.0.0.1:8000/v1
+==> Status: resetting stack
+==> Status: bringing up stack
+==> Status: waiting for readyz
+==> Status: setup (seed tools + register workloads)
+==> Status: running scenarios
+==> Status: rendering report
+wrote /Users/deghosal/Desktop/code/github/hiveplane/field_test/v0.2.0/results/report.generated.md (36 scenario records)
+==> --keep: leaving the stack up
+==> Status: failed
+==> HivePlane v0.2.0 field test run 20261001T235323Z
+==> Results: /Users/deghosal/Desktop/code/github/hiveplane/field_test/v0.2.0/results
+==> Status: preflight
+==> Preflight: local LLM at http://127.0.0.1:8000/v1
+==> Status: resetting stack
+==> Status: bringing up stack
+==> Status: waiting for readyz
+==> Status: setup (seed tools + register workloads)
+==> Status: running scenarios
+==> Status: rendering report
+wrote /Users/deghosal/Desktop/code/github/hiveplane/field_test/v0.2.0/results/report.generated.md (36 scenario records)
+==> --keep: leaving the stack up
+==> Status: completed
+==> Machine summary: /Users/deghosal/Desktop/code/github/hiveplane/field_test/v0.2.0/results/report.generated.md
+==> Curated report (not overwritten): /Users/deghosal/Desktop/code/github/hiveplane/docs/field-test/v0.2.0/FIELD_TEST_REPORT.md
+==> HivePlane v0.2.0 field test run 20261002T004317Z
+==> Results: /Users/deghosal/Desktop/code/github/hiveplane/field_test/v0.2.0/results
+==> Status: preflight
+==> Preflight: local LLM at http://127.0.0.1:8000/v1
+==> Status: resetting stack
+==> Status: bringing up stack
+==> Status: waiting for readyz
+==> Status: setup (seed tools + register workloads)
+==> Status: running scenarios
+==> Status: rendering report
+wrote /Users/deghosal/Desktop/code/github/hiveplane/field_test/v0.2.0/results/report.generated.md (36 scenario records)
+==> Status: tearing down
+==> Status: failed
+==> HivePlane v0.2.0 field test run 20261002T012151Z
+==> Results: /Users/deghosal/Desktop/code/github/hiveplane/field_test/v0.2.0/results
+==> Status: preflight
+==> Preflight: local LLM at http://127.0.0.1:8000/v1
+==> Status: resetting stack
+==> Status: bringing up stack
+==> Status: waiting for readyz
+==> Status: setup (seed tools + register workloads)
+==> Status: running scenarios
+==> Status: rendering report
+wrote /Users/deghosal/Desktop/code/github/hiveplane/field_test/v0.2.0/results/report.generated.md (4 scenario records)
+==> Status: tearing down
+==> Status: failed
+==> HivePlane v0.2.0 field test run 20261002T012227Z
+==> Results: /Users/deghosal/Desktop/code/github/hiveplane/field_test/v0.2.0/results
+==> Status: preflight
+==> Preflight: local LLM at http://127.0.0.1:8000/v1
+==> Status: resetting stack
+==> Status: bringing up stack
+==> HivePlane v0.2.0 field test run 20261002T012539Z
+==> Results: /Users/deghosal/Desktop/code/github/hiveplane/field_test/v0.2.0/results
+==> Status: preflight
+==> Preflight: local LLM at http://127.0.0.1:8000/v1
+==> Status: resetting stack
+==> Status: bringing up stack
+==> HivePlane v0.2.0 field test run 20261002T012856Z
+==> Results: /Users/deghosal/Desktop/code/github/hiveplane/field_test/v0.2.0/results
+==> Status: preflight
+==> Preflight: local LLM at http://127.0.0.1:8000/v1
+==> Status: resetting stack
+==> Status: bringing up stack

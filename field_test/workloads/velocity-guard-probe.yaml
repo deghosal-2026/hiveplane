@@ -1,0 +1,62 @@
+apiVersion: hiveplane/v1
+kind: AgentWorkload
+metadata:
+  name: velocity-guard-probe
+  owner: platform-team
+  team: platform
+  description: Spend-velocity probe — a tiny velocity ceiling pauses a priced run (S13).
+  labels:
+    environment: field-test
+    source: field_test
+spec:
+  runtime:
+    adapter: raw-worker
+    entrypoint: field_test.shims.budget_agent:run
+  model:
+    strategy: tiered
+    identity:
+      provider: omlx
+      family: qwen3-4b-instruct-2507
+      version: "4bit"
+  guards:
+    velocity_window_seconds: 60
+    velocity_limit_usd: 0.0001
+  certification:
+    benchmark_corpus: corpora/support-agent/hiveplane-corpus.yaml
+    staging_threshold: 0.80
+    production_threshold: 0.90
+    no_critical_failures: true
+    latency_budget_ms: 30000
+    re_cert_interval: 14d
+    status: uncertified
+  tools:
+    allow: []
+    deny: []
+    default_trust: read_only
+  budget:
+    per_run_usd: 1.00
+    per_day_usd: 10.00
+    per_team_usd: 100.00
+  sandbox:
+    enabled: true
+    resource_caps:
+      memory_mb: 512
+      cpu_cores: 1.0
+      wall_clock_s: 300
+    egress:
+      allow: ["api.github.com"]
+      deny: ["169.254.169.254"]
+      mode: restricted
+    filesystem: isolated
+  output_shaping:
+    max_bytes: 16384
+    truncate_strategy: tail
+    injection_scan: true
+  fan_out:
+    on_completed:
+      - type: slack
+        channel: "#platform-oncall"
+    always_include: [trace_link]
+  observability:
+    contract: standard
+    trace_sampling: 1.0

@@ -1,0 +1,26 @@
+# H2 execution-model
+
+status:   pass
+detail:   queued until started (no auto-run)
+started:  2026-10-02T00:47:50.477663+00:00
+duration: 23.78s
+model:    omlx/qwen3-4b-instruct-2507/4bit
+git_sha:  b186ba158779686f69cd3fdaba1672de84a13038
+calls:    3051
+runs:     run-72c504fdd429
+
+## Mutating calls (inputs)
+
+  POST /workloads -> 409
+  PUT /workloads/support-agent -> 200
+  POST /certifications -> 201
+  POST /quarantines/quar-5ca4f814a1c8/reinstate -> 409
+  POST /certifications -> 201
+  POST /quarantines/quar-af2a9b9a8904/reinstate -> 409
+  POST /certifications -> 201
+  POST /quarantines/quar-101c5ab6dffa/reinstate -> 409
+  POST /certifications -> 201
+  POST /quarantines/quar-a79b5620e013/reinstate -> 409
+  POST /certifications -> 201
+  POST /runs -> 201
+  POST /runs/run-72c504fdd429/start -> 200

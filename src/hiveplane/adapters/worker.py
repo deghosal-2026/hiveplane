@@ -44,6 +44,8 @@ from hiveplane.llm.models import (
     TokenUsage,
 )
 from hiveplane.llm.provider import LLMProvider
+from hiveplane.tenancy import TenantContext
+from hiveplane.tenancy.context import context_for_run
 
 _TERMINAL = (RunState.COMPLETED, RunState.FAILED, RunState.CANCELLED)
 
@@ -144,6 +146,8 @@ class WorkerContext:
         self._clock = clock
         self._provider = provider
         self._cost_table = cost_table or _DEFAULT_COST_TABLE
+        self._reported_model_identity: str | None = None
+        self._last_usage: UsageReport | None = None
 
     @property
     def run_id(self) -> str:
@@ -151,9 +155,23 @@ class WorkerContext:
         return self._run.id
 
     @property
+    def reported_model_identity(self) -> str | None:
+        """The model identity captured from actual inference (contract v2)."""
+        return self._reported_model_identity
+
+    @property
+    def last_usage(self) -> UsageReport | None:
+        """The most recent usage report recorded for the run, if any."""
+        return self._last_usage
+
+    @property
     def workload(self) -> str:
         """The name of the workload being executed."""
         return self._workload.name
+
+    def _run_ctx(self) -> TenantContext:
+        """A trusted internal context scoped to the run's own tenant."""
+        return context_for_run(self._run.tenant_id, self._run.team_id, self._run.attribution_key)
 
     @property
     def task(self) -> dict[str, JsonValue]:
@@ -240,6 +258,7 @@ class WorkerContext:
                 self._record_identity_mismatch(bound, canonical)
                 raise ModelIdentityMismatchError(bound, canonical)
             active.set_attribute("model_identity", canonical)
+            self._reported_model_identity = canonical
             active.set_attribute("input_tokens", response.usage.input_tokens)
             active.set_attribute("output_tokens", response.usage.output_tokens)
             cost = self._cost_table.price(
@@ -259,7 +278,8 @@ class WorkerContext:
             response=_truncate(response.content),
             latency_ms=latency_ms,
         )
-        updated = self._reporter.record_usage(self._run.id, report)
+        self._last_usage = report
+        updated = self._reporter.record_usage(self._run.id, report, ctx=self._run_ctx())
         if updated.state in _TERMINAL:
             raise RunTerminatedError(updated.state)
         return CompletionResult(
@@ -295,6 +315,7 @@ class WorkerContext:
             EventType.POLICY_DECISION,
             "adapter",
             detail=f"security: model_identity_mismatch expected={expected!r} actual={actual!r}",
+            ctx=self._run_ctx(),
         )
 
     def report_usage(
@@ -315,7 +336,8 @@ class WorkerContext:
             timestamp=self._clock(),
             model_identity=self._run.model_identity,
         )
-        updated = self._reporter.record_usage(self._run.id, report)
+        self._last_usage = report
+        updated = self._reporter.record_usage(self._run.id, report, ctx=self._run_ctx())
         if updated.state in _TERMINAL:
             raise RunTerminatedError(updated.state)
 

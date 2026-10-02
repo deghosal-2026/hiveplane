@@ -1,0 +1,24 @@
+# S6 triggers
+
+status:   pass
+detail:   3 sources; signed ingest accepted; duplicate deduped
+started:  2026-10-02T00:43:50.713416+00:00
+duration: 2.72s
+model:    omlx/qwen3-4b-instruct-2507/4bit
+git_sha:  b186ba158779686f69cd3fdaba1672de84a13038
+calls:    375
+runs:     (none)
+
+## Mutating calls (inputs)
+
+  POST /workloads -> 409
+  PUT /workloads/support-agent -> 200
+  POST /certifications -> 201
+  POST /quarantines/quar-5ca4f814a1c8/reinstate -> 409
+  POST /certifications -> 201
+  POST /triggers -> 201
+  POST /triggers -> 201
+  POST /triggers -> 201
+  POST /triggers/ft-wh/test -> 200
+  POST /triggers/webhook/ft-wh -> 202
+  POST /triggers/webhook/ft-wh -> 202

@@ -61,6 +61,19 @@ def test_story_orders_admission_state_and_usage(
     assert "model_call" in kinds
 
 
+def test_story_event_entries_carry_sequence(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    service, run_id, _ = _submit(make_manifest)
+    service.start(run_id, actor="cli")
+
+    story = service.story(run_id)
+
+    state_entries = [entry for entry in story.entries if entry.kind == "state"]
+    assert state_entries
+    assert isinstance(state_entries[0].detail["sequence"], int)
+
+
 def test_story_includes_model_call_detail(
     make_manifest: Callable[..., AgentWorkload],
 ) -> None:

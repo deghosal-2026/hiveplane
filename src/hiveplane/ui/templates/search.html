@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Search · HivePlane{% endblock %}
+{% block content %}
+<h1>Search</h1>
+
+<form method="get" action="/search">
+  <input name="q" value="{{ view.query }}" placeholder="runs, approvals, workloads" />
+  <button type="submit">Search</button>
+</form>
+
+{% if not view.query %}
+<p class="muted">Enter a query to search runs, approvals, and workloads.</p>
+{% elif view.hits %}
+<table>
+  <thead>
+    <tr>
+      <th>Kind</th>
+      <th>Result</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for hit in view.hits %}
+    <tr>
+      <td><span class="badge">{{ hit.kind }}</span></td>
+      <td>
+        {% if hit.kind == "run" %}
+        <a href="/runs/{{ hit.identifier }}">{{ hit.label }}</a>
+        {% elif hit.kind == "approval" %}
+        <a href="/approvals">{{ hit.label }}</a>
+        {% elif hit.kind == "workload" %}
+        <a href="/">{{ hit.label }}</a>
+        {% else %}
+        {{ hit.label }}
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">No matches for "{{ view.query }}".</p>
+{% endif %}
+{% endblock %}

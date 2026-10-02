@@ -78,6 +78,12 @@ db.sqlite3-journal
 
 # Docker run evidence is committed (M23, #93/#96): keep the runner logs.
 !field_test/v0.1.0/docker/*.log
+# v0.2.0 container + field-test evidence is committed (M61).
+!field_test/v0.2.0/docker/*.log
+!field_test/v0.2.0/results/**/*.log
+# The canonical report lives at docs/field-test/<ver>/DOCKER_TEST_REPORT.md; a
+# per-run copy must not be generated or committed.
+field_test/**/docker/report.md
 
 # Flask
 instance/
@@ -101,6 +107,9 @@ docker-compose.override.yml
 data/
 .hiveplane/
 *.pid
+
+# Subagent-driven-development scratch (ledgers, briefs, reports)
+.superpowers/
 
 # Editor / OS
 .idea/
@@ -126,3 +135,6 @@ field_test/agents/proven/exectrace/agent-crew/
 field_test/agents/proven/exectrace/agent-chatbot/
 field_test/agents/proven/exectrace/agent-react/
 field_test/agents/proven/exectrace/agent-mcp/
+
+# Local git worktrees (isolated feature workspaces)
+.worktrees/

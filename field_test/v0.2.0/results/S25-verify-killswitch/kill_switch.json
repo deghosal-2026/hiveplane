@@ -1,0 +1,21 @@
+{
+  "disabled": [
+    {
+      "tool_id": "mcp.github.read_issue",
+      "disabled": true,
+      "reason": null,
+      "actor": "anonymous",
+      "changed_at": "2026-10-02T00:46:22.567881Z"
+    }
+  ],
+  "denied": {
+    "run_id": "run-8eddeebc9641",
+    "tool_id": "mcp.github.read_issue",
+    "outcome": "denied",
+    "rule": "kill_switch",
+    "reason": "tool 'mcp.github.read_issue' is disabled fleet-wide",
+    "shaped_output": null,
+    "approval_id": null,
+    "egress_checked": false
+  }
+}

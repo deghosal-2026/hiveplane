@@ -8,12 +8,17 @@ can checkpoint cooperatively (operator pause/resume/cancel), and a LangGraph
 from __future__ import annotations
 
 import threading
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from contextlib import suppress
 from datetime import UTC, datetime
 from typing import Any, cast
 
 from hiveplane import telemetry
+from hiveplane.adapters.base import (
+    AdapterCapabilities,
+    AdapterEvent,
+    buffered_stream,
+)
 from hiveplane.adapters.errors import (
     EntrypointLoadError,
     MissingAdapterDependencyError,
@@ -28,7 +33,7 @@ from hiveplane.adapters.reporter import RunReporter
 from hiveplane.adapters.worker import RunControl, WorkerContext
 from hiveplane.budget.pricing import CostTable
 from hiveplane.core.event import EventType
-from hiveplane.core.run import RunState
+from hiveplane.core.run import Run, RunState
 from hiveplane.core.spec import RuntimeAdapter
 from hiveplane.core.usage import UsageReport
 from hiveplane.core.workload import AgentWorkload
@@ -36,6 +41,8 @@ from hiveplane.execution.errors import IllegalTransitionError
 from hiveplane.execution.models import RunContext
 from hiveplane.execution.tools import ToolCallResult, ToolGateway
 from hiveplane.llm.provider import LLMProvider
+from hiveplane.tenancy import TenantContext
+from hiveplane.tenancy.context import context_for_run
 
 _INTERRUPT_KEY = "__interrupt__"
 
@@ -64,6 +71,11 @@ def _thread_spawner(work: Callable[[], None]) -> None:
 
 def _configurable(run_id: str, ctx: WorkerContext) -> dict[str, Any]:
     return {"configurable": {"thread_id": run_id, "hiveplane_ctx": ctx}}
+
+
+def _run_ctx(run: Run) -> TenantContext:
+    """A trusted internal context scoped to the run's own tenant."""
+    return context_for_run(run.tenant_id, run.team_id, run.attribution_key)
 
 
 class LangGraphAdapter:
@@ -210,7 +222,7 @@ class LangGraphAdapter:
             control.resume()
         return True
 
-    def cancel(self, run_id: str) -> None:
+    def cancel(self, run_id: str, *, deadline_s: float | None = None) -> None:
         """Request cancellation; the run state is owned by the control plane."""
         session = self._sessions.get(run_id)
         if session is not None:
@@ -229,6 +241,34 @@ class LangGraphAdapter:
         session = self._sessions.get(run_id)
         return list(session[1].tool_calls) if session is not None else []
 
+    def capabilities(self) -> AdapterCapabilities:
+        """Declare the LangGraph adapter's capabilities."""
+        return AdapterCapabilities(
+            streaming=False,
+            pause_resume=True,
+            state_edit=False,
+            tool_execution=True,
+            sandbox=True,
+            deterministic_replay=True,
+        )
+
+    def stream(self, run_id: str) -> Iterator[AdapterEvent]:
+        """Yield a buffered state stream for the run."""
+        return buffered_stream(
+            run_id, self.status(run_id), model_identity=self.model_identity(run_id)
+        )
+
+    def model_identity(self, run_id: str) -> str | None:
+        """Return the model identity captured from inference, if any."""
+        session = self._sessions.get(run_id)
+        if session is None:
+            return None
+        return session[1].reported_model_identity
+
+    def conformance_version(self) -> str:
+        """Conform to contract v2."""
+        return "2"
+
     def _graph(self, workload: AgentWorkload) -> CompiledGraph:
         graph = self._graphs.get(workload.name)
         if graph is None:
@@ -244,17 +284,20 @@ class LangGraphAdapter:
         payload: Any,
     ) -> None:
         run = context.run
+        run_ctx = _run_ctx(run)
+        self._tools.reset_drive(run.id)
         config = _configurable(run.id, ctx)
         with telemetry.span("execution", run=run, workload=context.workload) as active:
             try:
                 for chunk in graph.stream(payload, config, stream_mode="values"):
                     if _INTERRUPT_KEY in chunk:
                         active.set_attribute("outcome", "paused")
-                        self._paused(run.id)
+                        self._paused(run.id, ctx=run_ctx)
                         return
                     ctx.checkpoint()
             except RunCancelledError:
                 active.set_attribute("outcome", "cancelled")
+                self._clear_checkpoint(graph, run.id)
                 return
             except ToolCallEscalatedError:
                 active.set_attribute("outcome", "escalated")
@@ -264,36 +307,53 @@ class LangGraphAdapter:
                     self._escalated[run.id] = True
                     self._states[run.id] = RunState.PAUSED
                 self._reporter.record_event(
-                    run.id, EventType.OPERATOR_ACTION, "adapter", detail="tool call escalated"
+                    run.id,
+                    EventType.OPERATOR_ACTION,
+                    "adapter",
+                    detail="tool call escalated",
+                    ctx=run_ctx,
                 )
                 return
             except WorkerError as exc:
                 active.set_attribute("outcome", "failed")
-                self._fail(run.id, str(exc))
+                self._fail(run.id, str(exc), ctx=run_ctx)
+                self._clear_checkpoint(graph, run.id)
                 return
             except Exception as exc:
                 active.set_attribute("outcome", "failed")
-                self._fail(run.id, f"{type(exc).__name__}: {exc}")
+                self._fail(run.id, f"{type(exc).__name__}: {exc}", ctx=run_ctx)
+                self._clear_checkpoint(graph, run.id)
                 return
             snapshot = graph.get_state(config)
             if snapshot.next:
                 active.set_attribute("outcome", "paused")
-                self._paused(run.id)
+                self._paused(run.id, ctx=run_ctx)
                 return
             active.set_attribute("outcome", "completed")
             with self._lock:
                 self._states[run.id] = RunState.COMPLETED
             self._reporter.transition(
-                run.id, RunState.COMPLETED, actor="adapter", result=snapshot.values
+                run.id, RunState.COMPLETED, actor="adapter", result=snapshot.values, ctx=run_ctx
             )
+            self._clear_checkpoint(graph, run.id)
 
-    def _paused(self, run_id: str) -> None:
+    def _clear_checkpoint(self, graph: CompiledGraph, run_id: str) -> None:
+        """Delete a finished run's durable checkpoints (#507)."""
+        checkpointer = getattr(graph, "checkpointer", None)
+        delete = getattr(checkpointer, "delete_thread", None)
+        if delete is not None:
+            with suppress(Exception):
+                delete(run_id)
+
+    def _paused(self, run_id: str, *, ctx: TenantContext) -> None:
         with self._lock:
             self._interrupted[run_id] = True
             self._states[run_id] = RunState.PAUSED
-        self._reporter.transition(run_id, RunState.PAUSED, actor="adapter", detail="interrupted")
+        self._reporter.transition(
+            run_id, RunState.PAUSED, actor="adapter", detail="interrupted", ctx=ctx
+        )
 
-    def _fail(self, run_id: str, reason: str) -> None:
+    def _fail(self, run_id: str, reason: str, *, ctx: TenantContext) -> None:
         with suppress(IllegalTransitionError):
             self._reporter.transition(
                 run_id,
@@ -301,6 +361,7 @@ class LangGraphAdapter:
                 actor="adapter",
                 detail=reason,
                 failure_reason=reason,
+                ctx=ctx,
             )
         with self._lock:
             self._states[run_id] = RunState.FAILED

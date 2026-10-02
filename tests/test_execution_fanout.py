@@ -73,6 +73,58 @@ def test_notify_disabled_records_nothing(make_manifest: Callable[..., AgentWorkl
     assert store.list_deliveries("run-1") == []
 
 
+def test_notify_includes_the_public_verification_url(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    store = InMemoryRunStore()
+    store.save_run(_run())
+    recorder = _Recorder()
+    service = FanOutService(
+        store,
+        {FanOutType.WEBHOOK: recorder},
+        verification_base_url="https://hp.example",
+        clock=_clock,
+    )
+    workload = make_manifest(
+        fan_out={"on_completed": [{"type": "webhook", "url": "https://example.test/hook"}]},
+        certification={
+            "status": "certified",
+            "benchmark_corpus": "corpus",
+            "attestation_id": "att-1",
+            "expires_at": "2026-12-31T00:00:00Z",
+        },
+    )
+
+    service.notify(_run(), workload)
+
+    assert (
+        recorder.sent[0][1]["verification_url"]
+        == "https://hp.example/attestations/att-1/verify"
+    )
+
+
+def test_notify_without_base_url_omits_verification_url(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    store = InMemoryRunStore()
+    store.save_run(_run())
+    recorder = _Recorder()
+    service = FanOutService(store, {FanOutType.WEBHOOK: recorder}, clock=_clock)
+    workload = make_manifest(
+        fan_out={"on_completed": [{"type": "webhook", "url": "https://example.test/hook"}]},
+        certification={
+            "status": "certified",
+            "benchmark_corpus": "corpus",
+            "attestation_id": "att-1",
+            "expires_at": "2026-12-31T00:00:00Z",
+        },
+    )
+
+    service.notify(_run(), workload)
+
+    assert recorder.sent[0][1]["verification_url"] is None
+
+
 def test_notify_retries_then_records_failure(make_manifest: Callable[..., AgentWorkload]) -> None:
     store = InMemoryRunStore()
     store.save_run(_run())
@@ -144,3 +196,39 @@ def test_webhook_transport_without_url_raises() -> None:
     transport = WebhookTransport(default_url=None)
     with pytest.raises(RuntimeError):
         transport.send(FanOutDestination(type=FanOutType.SLACK, channel="#ops"), {})
+
+
+def test_notify_includes_artifact_links(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    store = InMemoryRunStore()
+    store.save_run(_run())
+    recorder = _Recorder()
+    service = FanOutService(
+        store,
+        {FanOutType.WEBHOOK: recorder},
+        clock=_clock,
+        artifact_lookup=lambda run_id: [
+            {
+                "artifact_id": "art-1",
+                "location": "file:///tmp/art-1",
+                "content_hash": "sha256:abc",
+                "size_bytes": 3,
+            }
+        ],
+    )
+    workload = _workload(
+        make_manifest, [{"type": "webhook", "url": "https://example.test/hook"}]
+    )
+
+    service.notify(_run(), workload)
+
+    artifacts = recorder.sent[0][1]["artifacts"]
+    assert artifacts == [
+        {
+            "artifact_id": "art-1",
+            "location": "file:///tmp/art-1",
+            "content_hash": "sha256:abc",
+            "size_bytes": 3,
+        }
+    ]

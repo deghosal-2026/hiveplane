@@ -1,0 +1,781 @@
+[
+  {
+    "method": "POST",
+    "path": "/workloads",
+    "status": 409,
+    "ms": 9.7,
+    "tenant": null,
+    "note": null,
+    "request": {
+      "apiVersion": "hiveplane/v1",
+      "kind": "AgentWorkload",
+      "metadata": {
+        "name": "uncertified-agent",
+        "owner": "platform-team",
+        "team": "platform",
+        "description": "S2 negative fixture \u2014 never certified, must be refused production.",
+        "labels": {
+          "environment": "field-test",
+          "source": "field_test"
+        }
+      },
+      "spec": {
+        "runtime": {
+          "adapter": "raw-worker",
+          "entrypoint": "field_test.shims.support_agent:run",
+          "env": {},
+          "adapter_contract": "2"
+        },
+        "budget": {
+          "per_run_usd": 0.5,
+          "per_day_usd": 5.0,
+          "per_team_usd": 50.0
+        },
+        "model": {
+          "strategy": "tiered",
+          "identity": {
+            "provider": "openai",
+            "family": "gpt-4o",
+            "version": "2024-08-06"
+          }
+        },
+        "certification": {
+          "benchmark_corpus": "corpora/support-agent/hiveplane-corpus.yaml",
+          "staging_threshold": 0.8,
+          "production_threshold": 0.9,
+          "no_critical_failures": true,
+          "latency_budget_ms": 30000,
+          "re_cert_interval": 1209600,
+          "status": "uncertified",
+          "attestation_id": null,
+          "certified_at": null,
+          "certified_by": null,
+          "expires_at": null
+        },
+        "triggers": [],
+        "sandbox": {
+          "enabled": true,
+          "resource_caps": {
+            "memory_mb": 512,
+            "cpu_cores": 1.0,
+            "wall_clock_s": 300
+          },
+          "egress": {
+            "allow": [
+              "api.github.com",
+              "api.pagerduty.com"
+            ],
+            "deny": [
+              "169.254.169.254"
+            ],
+            "mode": "restricted"
+          },
+          "network": null,
+          "filesystem": "isolated"
+        },
+        "output_shaping": {
+          "max_bytes": 16384,
+          "truncate_strategy": "tail",
+          "filter_rules": [],
+          "injection_scan": true
+        },
+        "tools": {
+          "allow": [
+            {
+              "tool_id": "mcp.github.read_issue",
+              "trust_level": "read_only",
+              "require_approval": false,
+              "allow_untrusted": false
+            },
+            {
+              "tool_id": "pagerduty.acknowledge",
+              "trust_level": "destructive",
+              "require_approval": true,
+              "allow_untrusted": false
+            }
+          ],
+          "deny": [
+            "mcp.github.create_pr"
+          ],
+          "mcp_servers": [],
+          "default_trust": "read_only"
+        },
+        "approvals": {
+          "required_for": [
+            "destructive",
+            "production_write"
+          ],
+          "contact": "#platform-oncall",
+          "auto_escalate_after": 300
+        },
+        "guards": null,
+        "fan_out": {
+          "on_completed": [],
+          "on_failed": [
+            {
+              "type": "slack",
+              "channel": "#platform-oncall",
+              "url": null,
+              "project": null,
+              "issue_type": null
+            }
+          ],
+          "on_escalation": [],
+          "always_include": [
+            "trace_link",
+            "attestation_link"
+          ]
+        },
+        "health": {
+          "readiness_probe": {
+            "type": "dry_run",
+            "interval": 60
+          },
+          "slo": {
+            "availability_target": 0.99,
+            "quality_target": 0.9,
+            "error_budget_window": 86400
+          },
+          "failure_rate_threshold": 0.15
+        },
+        "observability": {
+          "contract": "standard",
+          "trace_sampling": 1.0
+        },
+        "io": null,
+        "secrets": [],
+        "time_windows": []
+      }
+    },
+    "request_shape": "dict",
+    "response": {
+      "detail": "workload 'uncertified-agent' already exists"
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "PUT",
+    "path": "/workloads/uncertified-agent",
+    "status": 200,
+    "ms": 14.5,
+    "tenant": null,
+    "note": null,
+    "request": {
+      "apiVersion": "hiveplane/v1",
+      "kind": "AgentWorkload",
+      "metadata": {
+        "name": "uncertified-agent",
+        "owner": "platform-team",
+        "team": "platform",
+        "description": "S2 negative fixture \u2014 never certified, must be refused production.",
+        "labels": {
+          "environment": "field-test",
+          "source": "field_test"
+        }
+      },
+      "spec": {
+        "runtime": {
+          "adapter": "raw-worker",
+          "entrypoint": "field_test.shims.support_agent:run",
+          "env": {},
+          "adapter_contract": "2"
+        },
+        "budget": {
+          "per_run_usd": 0.5,
+          "per_day_usd": 5.0,
+          "per_team_usd": 50.0
+        },
+        "model": {
+          "strategy": "tiered",
+          "identity": {
+            "provider": "openai",
+            "family": "gpt-4o",
+            "version": "2024-08-06"
+          }
+        },
+        "certification": {
+          "benchmark_corpus": "corpora/support-agent/hiveplane-corpus.yaml",
+          "staging_threshold": 0.8,
+          "production_threshold": 0.9,
+          "no_critical_failures": true,
+          "latency_budget_ms": 30000,
+          "re_cert_interval": 1209600,
+          "status": "uncertified",
+          "attestation_id": null,
+          "certified_at": null,
+          "certified_by": null,
+          "expires_at": null
+        },
+        "triggers": [],
+        "sandbox": {
+          "enabled": true,
+          "resource_caps": {
+            "memory_mb": 512,
+            "cpu_cores": 1.0,
+            "wall_clock_s": 300
+          },
+          "egress": {
+            "allow": [
+              "api.github.com",
+              "api.pagerduty.com"
+            ],
+            "deny": [
+              "169.254.169.254"
+            ],
+            "mode": "restricted"
+          },
+          "network": null,
+          "filesystem": "isolated"
+        },
+        "output_shaping": {
+          "max_bytes": 16384,
+          "truncate_strategy": "tail",
+          "filter_rules": [],
+          "injection_scan": true
+        },
+        "tools": {
+          "allow": [
+            {
+              "tool_id": "mcp.github.read_issue",
+              "trust_level": "read_only",
+              "require_approval": false,
+              "allow_untrusted": false
+            },
+            {
+              "tool_id": "pagerduty.acknowledge",
+              "trust_level": "destructive",
+              "require_approval": true,
+              "allow_untrusted": false
+            }
+          ],
+          "deny": [
+            "mcp.github.create_pr"
+          ],
+          "mcp_servers": [],
+          "default_trust": "read_only"
+        },
+        "approvals": {
+          "required_for": [
+            "destructive",
+            "production_write"
+          ],
+          "contact": "#platform-oncall",
+          "auto_escalate_after": 300
+        },
+        "guards": null,
+        "fan_out": {
+          "on_completed": [],
+          "on_failed": [
+            {
+              "type": "slack",
+              "channel": "#platform-oncall",
+              "url": null,
+              "project": null,
+              "issue_type": null
+            }
+          ],
+          "on_escalation": [],
+          "always_include": [
+            "trace_link",
+            "attestation_link"
+          ]
+        },
+        "health": {
+          "readiness_probe": {
+            "type": "dry_run",
+            "interval": 60
+          },
+          "slo": {
+            "availability_target": 0.99,
+            "quality_target": 0.9,
+            "error_budget_window": 86400
+          },
+          "failure_rate_threshold": 0.15
+        },
+        "observability": {
+          "contract": "standard",
+          "trace_sampling": 1.0
+        },
+        "io": null,
+        "secrets": [],
+        "time_windows": []
+      }
+    },
+    "request_shape": "dict",
+    "response": {
+      "name": "uncertified-agent",
+      "manifest": {
+        "apiVersion": "hiveplane/v1",
+        "kind": "AgentWorkload",
+        "metadata": {
+          "name": "uncertified-agent",
+          "owner": "platform-team",
+          "team": "platform",
+          "description": "S2 negative fixture \u2014 never certified, must be refused production.",
+          "labels": {
+            "environment": "field-test",
+            "source": "field_test"
+          }
+        },
+        "spec": {
+          "runtime": {
+            "adapter": "raw-worker",
+            "entrypoint": "field_test.shims.support_agent:run",
+            "env": {},
+            "adapter_contract": "2"
+          },
+          "budget": {
+            "per_run_usd": 0.5,
+            "per_day_usd": 5.0,
+            "per_team_usd": 50.0
+          },
+          "model": {
+            "strategy": "tiered",
+            "identity": {
+              "provider": "openai",
+              "family": "gpt-4o",
+              "version": "2024-08-06"
+            }
+          },
+          "certification": {
+            "benchmark_corpus": "corpora/support-agent/hiveplane-corpus.yaml",
+            "staging_threshold": 0.8,
+            "production_threshold": 0.9,
+            "no_critical_failures": true,
+            "latency_budget_ms": 30000,
+            "re_cert_interval": 1209600,
+            "status": "uncertified",
+            "attestation_id": null,
+            "certified_at": null,
+            "certified_by": null,
+            "expires_at": null
+          },
+          "triggers": [],
+          "sandbox": {
+            "enabled": true,
+            "resource_caps": {
+              "memory_mb": 512,
+              "cpu_cores": 1.0,
+              "wall_clock_s": 300
+            },
+            "egress": {
+              "allow": [
+                "api.github.com",
+                "api.pagerduty.com"
+              ],
+              "deny": [
+                "169.254.169.254"
+              ],
+              "mode": "restricted"
+            },
+            "network": null,
+            "filesystem": "isolated"
+          },
+          "output_shaping": {
+            "max_bytes": 16384,
+            "truncate_strategy": "tail",
+            "filter_rules": [],
+            "injection_scan": true
+          },
+          "tools": {
+            "allow": [
+              {
+                "tool_id": "mcp.github.read_issue",
+                "trust_level": "read_only",
+                "require_approval": false,
+                "allow_untrusted": false
+              },
+              {
+                "tool_id": "pagerduty.acknowledge",
+                "trust_level": "destructive",
+                "require_approval": true,
+                "allow_untrusted": false
+              }
+            ],
+            "deny": [
+              "mcp.github.create_pr"
+            ],
+            "mcp_servers": [],
+            "default_trust": "read_only"
+          },
+          "approvals": {
+            "required_for": [
+              "destructive",
+              "production_write"
+            ],
+            "contact": "#platform-oncall",
+            "auto_escalate_after": 300
+          },
+          "guards": null,
+          "fan_out": {
+            "on_completed": [],
+            "on_failed": [
+              {
+                "type": "slack",
+                "channel": "#platform-oncall",
+                "url": null,
+                "project": null,
+                "issue_type": null
+              }
+            ],
+            "on_escalation": [],
+            "always_include": [
+              "trace_link",
+              "attestation_link"
+            ]
+          },
+          "health": {
+            "readiness_probe": {
+              "type": "dry_run",
+              "interval": 60
+            },
+            "slo": {
+              "availability_target": 0.99,
+              "quality_target": 0.9,
+              "error_budget_window": 86400
+            },
+            "failure_rate_threshold": 0.15
+          },
+          "observability": {
+            "contract": "standard",
+            "trace_sampling": 1.0
+          },
+          "io": null,
+          "secrets": [],
+          "time_windows": []
+        }
+      },
+      "current_version": 4,
+      "certification_status": "uncertified",
+      "owner": "platform-team",
+      "team": "platform",
+      "runtime": "raw-worker",
+      "created_at": "2026-10-02T00:43:40.840857Z",
+      "updated_at": "2026-10-02T00:48:34.895537Z",
+      "needs_re_certification": false,
+      "artifact_hash": "c9f35a1584dcb44df57a3a83b081f28add0eea096c0589d0317d9432058a09ab",
+      "bundle": {
+        "workload_id": "uncertified-agent",
+        "bundle_digest": "7df8ace06e2a2d1868c66febf5edcb7f56365293029c02006f367a674f47b6ac",
+        "entrypoint_digest": "82606cee2eba7d217d23911fbabfba1c1ad88fabe39dc2b1c87a61590e49daa1",
+        "manifest_hash": "42979eb223c2ce14f993f6e9877306e954c9429f9acc724c759bc0c2c1810fb4",
+        "key_id": "hp-signing-key-01",
+        "signature": "tHS3Z0UArGuN+GhwRY0qccis0ns/+jTqXxyKk5fDSskzzpeodfnlyBiKcuRDfzGoyzoa5fSQin1x5Np5GrV3DA==",
+        "registered_at": "2026-10-02T00:48:34.900458Z"
+      },
+      "production_runs_survived": 0,
+      "last_run_at": null,
+      "failure_count": 0,
+      "last_failure_at": null,
+      "tenant_id": "default"
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "POST",
+    "path": "/runs",
+    "status": 201,
+    "ms": 12.4,
+    "tenant": null,
+    "note": null,
+    "request": {
+      "workload": "uncertified-agent",
+      "caller": "field-test-v02",
+      "context": "sandbox",
+      "task": {
+        "query": "reset password",
+        "account_id": "ACC-001"
+      },
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit"
+    },
+    "request_shape": "dict",
+    "response": {
+      "id": "run-3a4a5c53b6e3",
+      "workload_id": "uncertified-agent",
+      "caller": "field-test-v02",
+      "state": "queued",
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "created_at": "2026-10-02T00:48:34.906815Z",
+      "updated_at": "2026-10-02T00:48:34.906815Z",
+      "started_at": null,
+      "finished_at": null,
+      "trigger_origin": null,
+      "pipeline_origin": null,
+      "agent_tool_origin": null,
+      "manifest_version": 4,
+      "context": "sandbox",
+      "sandbox": true,
+      "task": {
+        "query": "reset password",
+        "account_id": "ACC-001"
+      },
+      "result": null,
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "sandbox_id": null,
+      "trace_id": "fc01640f3e1f3105e2a47d8e804b5a32",
+      "shadow_of": null,
+      "probe": false,
+      "read_only": false,
+      "canary_rollout_id": null,
+      "canary_arm": null,
+      "tenant_id": "default",
+      "team_id": "default",
+      "attribution_key": "default"
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "DELETE",
+    "path": "/workloads/uncertified-agent",
+    "status": 409,
+    "ms": 6.6,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": {
+      "detail": "workload 'uncertified-agent' cannot be deleted while it has existing runs"
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "GET",
+    "path": "/readyz",
+    "status": 200,
+    "ms": 3.4,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": {
+      "status": "ready"
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-3a4a5c53b6e3",
+    "status": 200,
+    "ms": 26.9,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": {
+      "id": "run-3a4a5c53b6e3",
+      "workload_id": "uncertified-agent",
+      "caller": "field-test-v02",
+      "state": "queued",
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "created_at": "2026-10-02T00:48:34.906815Z",
+      "updated_at": "2026-10-02T00:48:34.906815Z",
+      "started_at": null,
+      "finished_at": null,
+      "trigger_origin": null,
+      "pipeline_origin": null,
+      "agent_tool_origin": null,
+      "manifest_version": 4,
+      "context": "sandbox",
+      "sandbox": true,
+      "task": {
+        "query": "reset password",
+        "account_id": "ACC-001"
+      },
+      "result": null,
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "sandbox_id": null,
+      "trace_id": "fc01640f3e1f3105e2a47d8e804b5a32",
+      "shadow_of": null,
+      "probe": false,
+      "read_only": false,
+      "canary_rollout_id": null,
+      "canary_arm": null,
+      "tenant_id": "default",
+      "team_id": "default",
+      "attribution_key": "default"
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-3a4a5c53b6e3",
+    "status": 200,
+    "ms": 2.5,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": {
+      "id": "run-3a4a5c53b6e3",
+      "workload_id": "uncertified-agent",
+      "caller": "field-test-v02",
+      "state": "queued",
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "created_at": "2026-10-02T00:48:34.906815Z",
+      "updated_at": "2026-10-02T00:48:34.906815Z",
+      "started_at": null,
+      "finished_at": null,
+      "trigger_origin": null,
+      "pipeline_origin": null,
+      "agent_tool_origin": null,
+      "manifest_version": 4,
+      "context": "sandbox",
+      "sandbox": true,
+      "task": {
+        "query": "reset password",
+        "account_id": "ACC-001"
+      },
+      "result": null,
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "sandbox_id": null,
+      "trace_id": "fc01640f3e1f3105e2a47d8e804b5a32",
+      "shadow_of": null,
+      "probe": false,
+      "read_only": false,
+      "canary_rollout_id": null,
+      "canary_arm": null,
+      "tenant_id": "default",
+      "team_id": "default",
+      "attribution_key": "default"
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-3a4a5c53b6e3/events",
+    "status": 200,
+    "ms": 3.7,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": [
+      {
+        "run_id": "run-3a4a5c53b6e3",
+        "sequence": 0,
+        "type": "admission",
+        "actor": "field-test-v02",
+        "timestamp": "2026-10-02T00:48:34.914411Z",
+        "from_state": null,
+        "to_state": "queued",
+        "detail": "sandbox_only"
+      }
+    ],
+    "response_shape": "list"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-3a4a5c53b6e3/story",
+    "status": 200,
+    "ms": 17.9,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": {
+      "run_id": "run-3a4a5c53b6e3",
+      "workload": "uncertified-agent",
+      "team": "platform",
+      "state": "queued",
+      "context": "sandbox",
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "cost_usd": 0.0,
+      "sandbox": true,
+      "sandbox_id": null,
+      "certification_status": "uncertified",
+      "attestation_id": null,
+      "trace_id": "fc01640f3e1f3105e2a47d8e804b5a32",
+      "entries": [
+        {
+          "timestamp": "2026-10-02T00:48:34.906815Z",
+          "kind": "admission",
+          "summary": "sandbox_only",
+          "detail": {
+            "outcome": "sandbox_only",
+            "refused_reason": null,
+            "escalation_required": false,
+            "sandbox": true,
+            "checks": [
+              {
+                "step": "halt",
+                "passed": true,
+                "reason": null,
+                "rule": "incident"
+              },
+              {
+                "step": "certification",
+                "passed": true,
+                "reason": null,
+                "rule": "certification"
+              },
+              {
+                "step": "model_identity",
+                "passed": true,
+                "reason": null,
+                "rule": "model_binding"
+              },
+              {
+                "step": "budget",
+                "passed": true,
+                "reason": null,
+                "rule": "run"
+              },
+              {
+                "step": "policy",
+                "passed": true,
+                "reason": "no tool policy applies",
+                "rule": "run.allow"
+              },
+              {
+                "step": "sandbox",
+                "passed": true,
+                "reason": null,
+                "rule": "sandbox"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-3a4a5c53b6e3/usage",
+    "status": 200,
+    "ms": 3.1,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": [],
+    "response_shape": "list"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-3a4a5c53b6e3/deliveries",
+    "status": 200,
+    "ms": 2.5,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": [],
+    "response_shape": "list"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-3a4a5c53b6e3/feedback",
+    "status": 200,
+    "ms": 42.6,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": [],
+    "response_shape": "list"
+  }
+]

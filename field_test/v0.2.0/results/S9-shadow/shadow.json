@@ -1,0 +1,31 @@
+{
+  "shadow_run_id": "shadow-baf145c4c9a7",
+  "candidate_workload_id": "support-agent",
+  "production_run_id": "run-068595da6327",
+  "input_ref": "run:run-068595da6327",
+  "candidate_version": null,
+  "result": {
+    "answer": "Reset at portal.example.com/settings",
+    "status": "success",
+    "account_tier": "pro"
+  },
+  "cost_usd": 0.0,
+  "latency_ms": 9,
+  "tool_calls": [
+    {
+      "event": "tool_call",
+      "detail": "mcp.github.read_issue"
+    }
+  ],
+  "policy_decisions": [
+    {
+      "event": "policy_decision",
+      "detail": "sandbox.allow: sandbox context allows the tool"
+    }
+  ],
+  "budget_id": "shadow",
+  "status": "completed",
+  "failure_reason": null,
+  "created_at": "2026-10-02T00:44:40.827227Z",
+  "tenant_id": "default"
+}

@@ -8,10 +8,9 @@ use stay side-effect free. Metric names and labels follow
 
 from __future__ import annotations
 
-from typing import Protocol
+from typing import Any, Protocol
 
 from opentelemetry.metrics import Meter
-from opentelemetry.util.types import AttributeValue
 
 
 class FleetMetrics(Protocol):
@@ -298,7 +297,7 @@ class OtelFleetMetrics:
         self._regressions.add(1, _attrs(workload=workload))
 
 
-def _attrs(**items: str | None) -> dict[str, AttributeValue]:
+def _attrs(**items: str | None) -> dict[str, Any]:
     """Build attributes, dropping absent (None) labels."""
     return {key: value for key, value in items.items() if value is not None}
 

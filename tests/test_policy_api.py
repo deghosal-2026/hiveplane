@@ -1,9 +1,10 @@
-"""Tests for the policy and approval API."""
+"""Tests for the policy and approval API (M58-03)."""
 
 from __future__ import annotations
 
 from collections.abc import Callable
 
+import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
@@ -88,3 +89,171 @@ def test_approve_resumes_and_deny_fails(make_manifest: Callable[..., AgentWorklo
 def test_unknown_approval_returns_404(make_manifest: Callable[..., AgentWorkload]) -> None:
     client = _setup(make_manifest)
     assert client.get("/approvals/nope").status_code == 404
+
+
+def test_policy_dry_run_matches_the_real_decision(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    client = _setup(make_manifest)
+    body = {
+        "run_id": "run-1",
+        "workload": "agent-1",
+        "environment": "production",
+        "tool_id": "mcp.t.read",
+        "action_class": "read_only",
+    }
+
+    real = client.post("/policy/evaluate", json=body).json()
+    what_if = client.post("/policy/evaluate", json={**body, "dry_run": True}).json()
+
+    assert what_if["outcome"] == real["outcome"]
+    assert what_if["rule"] == real["rule"]
+    assert what_if["dry_run"] is True
+    assert real["dry_run"] is False
+
+
+def test_kill_switch_api_disables_and_enables() -> None:
+    client = TestClient(create_app())
+
+    disabled = client.post(
+        "/tools/mcp.t.read/disable", json={"reason": "incident"}
+    )
+    assert disabled.status_code == 200
+    assert disabled.json()["disabled"] is True
+    assert client.get("/tools/disabled").json()[0]["tool_id"] == "mcp.t.read"
+
+    enabled = client.post("/tools/mcp.t.read/enable", json={})
+    assert enabled.status_code == 200
+    assert enabled.json()["disabled"] is False
+
+
+def test_kill_switch_audit_uses_authenticated_principal(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("HIVEPLANE_AUTH__ENABLED", "true")
+    from hiveplane.config import get_settings
+
+    get_settings.cache_clear()
+    from hiveplane.tenancy.models import Role
+
+    app = create_app()
+    admin = app.state.auth_service.keys.create("default", Role.ADMIN)
+    client = TestClient(app)
+    headers = {"Authorization": f"Bearer {admin.token}"}
+
+    response = client.post(
+        "/tools/mcp.t.read/disable",
+        json={"reason": "incident"},
+        headers=headers,
+    )
+
+    assert response.status_code == 200
+    record = app.state.kill_switch.records()[0]
+    assert record.actor == admin.key_id
+
+
+def test_policy_pack_publish_and_apply() -> None:
+    client = TestClient(create_app())
+    pack = {
+        "apiVersion": "hiveplane/v1",
+        "kind": "PolicyPack",
+        "metadata": {"name": "strict", "team": "platform", "version": "1"},
+        "spec": {"overrides": []},
+    }
+    assert client.post("/policy-packs", json=pack).status_code == 201
+
+    applied = client.post("/policy-packs/strict/apply", json={"team": "payments"})
+
+    assert applied.status_code == 200
+    assert applied.json()[0]["metadata"]["team"] == "payments"
+
+
+def test_policy_pack_apply_unknown_is_404() -> None:
+    client = TestClient(create_app())
+
+    assert client.post("/policy-packs/ghost/apply", json={"team": "payments"}).status_code == 404
+
+
+def test_viewer_cannot_register_or_apply_policy_pack(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("HIVEPLANE_AUTH__ENABLED", "true")
+    from hiveplane.config import get_settings
+
+    get_settings.cache_clear()
+    from hiveplane.tenancy.models import Role
+
+    app = create_app()
+    viewer = app.state.auth_service.keys.create("default", Role.VIEWER)
+    client = TestClient(app)
+    headers = {"Authorization": f"Bearer {viewer.token}"}
+    pack = {
+        "apiVersion": "hiveplane/v1",
+        "kind": "PolicyPack",
+        "metadata": {"name": "strict", "team": "platform", "version": "1"},
+        "spec": {"overrides": []},
+    }
+
+    assert client.post("/policy-packs", json=pack, headers=headers).status_code == 403
+    assert (
+        client.post(
+            "/policy-packs/strict/apply", json={"team": "payments"}, headers=headers
+        ).status_code
+        == 403
+    )
+
+
+def test_pack_publish_is_audited() -> None:
+    app = create_app()
+    client = TestClient(app)
+    pack = {
+        "apiVersion": "hiveplane/v1",
+        "kind": "PolicyPack",
+        "metadata": {"name": "strict", "team": "platform", "version": "1"},
+        "spec": {"overrides": []},
+    }
+
+    assert client.post("/policy-packs", json=pack).status_code == 201
+
+    actions = [record.action for record in app.state.audit_log.records()]
+    assert "policy_pack.registered" in actions
+
+
+def test_evaluate_is_tenant_scoped_by_header() -> None:
+    client = TestClient(create_app())
+    pack = {
+        "apiVersion": "hiveplane/v1",
+        "kind": "PolicyPack",
+        "metadata": {
+            "name": "tenant-default",
+            "team": "platform",
+            "version": "1",
+            "default": True,
+        },
+        "spec": {
+            "overrides": [
+                {
+                    "match": {"environment": "production"},
+                    "rules": [{"action": "deny"}],
+                }
+            ]
+        },
+    }
+    registered = client.post(
+        "/policy-packs", json=pack, headers={"X-Hiveplane-Tenant": "acme"}
+    )
+    assert registered.status_code == 201
+
+    body = {"run_id": "run-1", "workload": "agent-1", "environment": "production"}
+    acme = client.post(
+        "/policy/evaluate", json=body, headers={"X-Hiveplane-Tenant": "acme"}
+    ).json()
+    beta = client.post(
+        "/policy/evaluate", json=body, headers={"X-Hiveplane-Tenant": "beta"}
+    ).json()
+
+    assert acme["outcome"] == "deny"
+    assert acme["rule"] == "pack.deny"
+    assert beta["outcome"] == "allow"
+    assert beta["rule"] == "run.allow"
+

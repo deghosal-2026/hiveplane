@@ -23,3 +23,20 @@ def test_ui_settings_env_override(monkeypatch: pytest.MonkeyPatch) -> None:
 
     assert settings.ui.api_url == "http://api:9999"
     assert settings.ui.port == 9000
+
+
+def test_ui_session_defaults() -> None:
+    from hiveplane.config import UiSettings
+
+    settings = UiSettings()
+    assert settings.session_ttl_hours == 12
+    assert isinstance(settings.session_secret, str)
+    assert settings.session_secret
+    assert settings.session_cookie_secure is True
+
+
+def test_ui_session_cookie_secure_env_override(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("HIVEPLANE_UI__SESSION_COOKIE_SECURE", "false")
+    get_settings.cache_clear()
+
+    assert get_settings().ui.session_cookie_secure is False

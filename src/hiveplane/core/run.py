@@ -6,6 +6,8 @@ from enum import StrEnum
 
 from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, JsonValue
 
+from hiveplane.tenancy.context import DEFAULT_TENANT_ID
+
 
 class RunState(StrEnum):
     """Observable states of a run."""
@@ -56,6 +58,30 @@ class TriggerOrigin(BaseModel):
     timestamp: AwareDatetime
 
 
+class PipelineOrigin(BaseModel):
+    """Attribution metadata for a pipeline-node child run (M29-02)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    pipeline_run_id: str = Field(min_length=1)
+    pipeline_id: str = Field(min_length=1)
+    node_id: str = Field(min_length=1)
+    parent_run_id: str | None = None
+    attempt: int = Field(default=1, ge=1)
+
+
+class AgentToolOrigin(BaseModel):
+    """Attribution metadata for a nested agent-as-tool run (M30-04..M30-06)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    caller_run_id: str = Field(min_length=1)
+    tool_id: str = Field(min_length=1)
+    workload: str = Field(min_length=1)
+    depth: int = Field(ge=1)
+    chain: list[str] = Field(default_factory=list)
+
+
 class Run(BaseModel):
     """A single execution of a workload through the control plane."""
 
@@ -71,6 +97,8 @@ class Run(BaseModel):
     started_at: AwareDatetime | None = None
     finished_at: AwareDatetime | None = None
     trigger_origin: TriggerOrigin | None = None
+    pipeline_origin: PipelineOrigin | None = None
+    agent_tool_origin: AgentToolOrigin | None = None
     manifest_version: int | None = None
     context: AdmissionContext | None = None
     sandbox: bool = False
@@ -80,3 +108,11 @@ class Run(BaseModel):
     cost_usd: float = Field(default=0.0, ge=0.0)
     sandbox_id: str | None = None
     trace_id: str | None = None
+    shadow_of: str | None = None
+    probe: bool = False
+    read_only: bool = False
+    canary_rollout_id: str | None = None
+    canary_arm: str | None = None
+    tenant_id: str = Field(default=DEFAULT_TENANT_ID, min_length=1, max_length=64)
+    team_id: str | None = None
+    attribution_key: str | None = None

@@ -3,13 +3,18 @@
 from __future__ import annotations
 
 import threading
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from contextlib import suppress
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 from hiveplane import telemetry
+from hiveplane.adapters.base import (
+    AdapterCapabilities,
+    AdapterEvent,
+    buffered_stream,
+)
 from hiveplane.adapters.errors import (
     RunCancelledError,
     ToolCallEscalatedError,
@@ -21,7 +26,7 @@ from hiveplane.adapters.reporter import RunReporter
 from hiveplane.adapters.worker import RunControl, WorkerContext
 from hiveplane.budget.pricing import CostTable
 from hiveplane.core.event import EventType
-from hiveplane.core.run import RunState
+from hiveplane.core.run import Run, RunState
 from hiveplane.core.spec import RuntimeAdapter
 from hiveplane.core.usage import UsageReport
 from hiveplane.core.workload import AgentWorkload
@@ -30,6 +35,8 @@ from hiveplane.execution.models import RunContext
 from hiveplane.execution.sandbox_spec import SandboxWorkerSpec, worker_command
 from hiveplane.execution.tools import ToolCallResult, ToolGateway
 from hiveplane.llm.provider import LLMProvider
+from hiveplane.tenancy import TenantContext
+from hiveplane.tenancy.context import context_for_run
 
 if TYPE_CHECKING:
     from hiveplane.api.sandbox_channel import SandboxChannel
@@ -85,7 +92,13 @@ class RawWorkerAdapter:
         self._escalated: dict[str, bool] = {}
         self._tool_calls: dict[str, list[ToolCallResult]] = {}
         self._usage: dict[str, UsageReport | None] = {}
+        self._identities: dict[str, str] = {}
         self._recovered: set[str] = set()
+
+    @staticmethod
+    def _run_ctx(run: Run) -> TenantContext:
+        """A trusted internal context scoped to the run's own tenant."""
+        return context_for_run(run.tenant_id, run.team_id, run.attribution_key)
 
     def _subprocess_enabled(self, context: RunContext) -> bool:
         """Whether this run executes in the capped subprocess (#110)."""
@@ -103,7 +116,11 @@ class RawWorkerAdapter:
         assert self._sandbox_channel is not None
         assert self._base_url is not None
         assert self._subprocess_spawner is not None
-        token = self._sandbox_channel.mint(run.id)
+        self._tools.reset_drive(run.id)
+        token = self._sandbox_channel.mint(
+            run.id,
+            ctx=context_for_run(run.tenant_id, run.team_id, run.attribution_key),
+        )
         sandbox = context.workload.spec.sandbox
         caps = sandbox.resource_caps if sandbox is not None else None
         spec = SandboxWorkerSpec(
@@ -120,27 +137,28 @@ class RawWorkerAdapter:
 
         def _launch() -> None:
             outcome = spawner.launch(command, caps)
-            self._reconcile(run.id, outcome)
+            self._reconcile(run, outcome)
 
         threading.Thread(
             target=telemetry.propagate_context(_launch), daemon=True
         ).start()
 
-    def _reconcile(self, run_id: str, outcome: SpawnOutcome) -> None:
+    def _reconcile(self, run: Run, outcome: SpawnOutcome) -> None:
         """Fail a run whose child died or exited without reporting a terminal state."""
-        run = self._reporter.get(run_id)
-        if run.state not in _TERMINAL:
+        current = self._reporter.get(run.id, ctx=self._run_ctx(run))
+        if current.state not in _TERMINAL:
             reason = outcome.failure_reason or "subprocess exited without reporting"
             with suppress(IllegalTransitionError):
                 self._reporter.transition(
-                    run_id,
+                    run.id,
                     RunState.FAILED,
                     actor="sandbox",
                     detail=reason,
                     failure_reason=reason,
+                    ctx=self._run_ctx(run),
                 )
             with self._lock:
-                self._states[run_id] = RunState.FAILED
+                self._states[run.id] = RunState.FAILED
 
     def register(self, workload: AgentWorkload) -> None:
         """Load and cache a workload's entrypoint, rejecting other adapters."""
@@ -213,11 +231,16 @@ class RawWorkerAdapter:
             entry = self._entry(context.workload)
             run_control = self._controls[run_id]
             run_control.resume()  # clear the pause the escalation/recovery set
-            self._spawner(
-                telemetry.propagate_context(
-                    lambda: self._execute(entry, context, run_control)
+            if self._subprocess_enabled(context):
+                # Re-drive inside the sandbox (#501): a resumed sandbox run must
+                # not fall back to running in-process in the control plane.
+                self._subprocess_execute(context)
+            else:
+                self._spawner(
+                    telemetry.propagate_context(
+                        lambda: self._execute(entry, context, run_control)
+                    )
                 )
-            )
             return True
         control = self._controls.get(run_id)
         if control is None:
@@ -225,7 +248,7 @@ class RawWorkerAdapter:
         control.resume()
         return True
 
-    def cancel(self, run_id: str) -> None:
+    def cancel(self, run_id: str, *, deadline_s: float | None = None) -> None:
         """Request cancellation; the run state is owned by the control plane."""
         control = self._controls.get(run_id)
         if control is not None:
@@ -243,6 +266,31 @@ class RawWorkerAdapter:
         """Return the tool calls routed through the boundary for the run."""
         return list(self._tool_calls.get(run_id, []))
 
+    def capabilities(self) -> AdapterCapabilities:
+        """Declare the raw worker's capabilities."""
+        return AdapterCapabilities(
+            streaming=False,
+            pause_resume=True,
+            state_edit=False,
+            tool_execution=True,
+            sandbox=True,
+            deterministic_replay=True,
+        )
+
+    def stream(self, run_id: str) -> Iterator[AdapterEvent]:
+        """Yield a buffered state stream for the run."""
+        return buffered_stream(
+            run_id, self.status(run_id), model_identity=self.model_identity(run_id)
+        )
+
+    def model_identity(self, run_id: str) -> str | None:
+        """Return the model identity captured from inference, if any."""
+        return self._identities.get(run_id)
+
+    def conformance_version(self) -> str:
+        """Conform to contract v2."""
+        return "2"
+
     def _entry(self, workload: AgentWorkload) -> Entrypoint:
         entry = self._entries.get(workload.name)
         if entry is None:
@@ -252,6 +300,8 @@ class RawWorkerAdapter:
 
     def _execute(self, entry: Entrypoint, context: RunContext, control: RunControl) -> None:
         run = context.run
+        run_ctx = self._run_ctx(run)
+        self._tools.reset_drive(run.id)
         tool_calls = self._tool_calls[run.id]
         ctx = WorkerContext(
             run=run,
@@ -276,23 +326,32 @@ class RawWorkerAdapter:
                 with self._lock:
                     self._escalated[run.id] = True
                 self._reporter.record_event(
-                    run.id, EventType.OPERATOR_ACTION, "adapter", detail="tool call escalated"
+                    run.id,
+                    EventType.OPERATOR_ACTION,
+                    "adapter",
+                    detail="tool call escalated",
+                    ctx=run_ctx,
                 )
                 return
             except WorkerError as exc:
                 active.set_attribute("outcome", "failed")
-                self._fail(run.id, str(exc))
+                self._fail(run.id, str(exc), ctx=run_ctx)
                 return
             except Exception as exc:
                 active.set_attribute("outcome", "failed")
-                self._fail(run.id, f"{type(exc).__name__}: {exc}")
+                self._fail(run.id, f"{type(exc).__name__}: {exc}", ctx=run_ctx)
                 return
             active.set_attribute("outcome", "completed")
-            self._reporter.transition(run.id, RunState.COMPLETED, actor="adapter", result=result)
+            if ctx.reported_model_identity is not None:
+                with self._lock:
+                    self._identities[run.id] = ctx.reported_model_identity
+            self._reporter.transition(
+                run.id, RunState.COMPLETED, actor="adapter", result=result, ctx=run_ctx
+            )
             with self._lock:
                 self._states[run.id] = RunState.COMPLETED
 
-    def _fail(self, run_id: str, reason: str) -> None:
+    def _fail(self, run_id: str, reason: str, *, ctx: TenantContext) -> None:
         with suppress(IllegalTransitionError):
             self._reporter.transition(
                 run_id,
@@ -300,6 +359,7 @@ class RawWorkerAdapter:
                 actor="adapter",
                 detail=reason,
                 failure_reason=reason,
+                ctx=ctx,
             )
         with self._lock:
             self._states[run_id] = RunState.FAILED

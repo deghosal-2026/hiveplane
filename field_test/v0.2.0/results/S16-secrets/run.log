@@ -1,0 +1,17 @@
+# S16 secrets
+
+status:   pass
+detail:   write-only; absent from run surfaces
+started:  2026-10-02T00:45:10.819517+00:00
+duration: 0.11s
+model:    omlx/qwen3-4b-instruct-2507/4bit
+git_sha:  b186ba158779686f69cd3fdaba1672de84a13038
+calls:    14
+runs:     run-8a93aa68e406
+
+## Mutating calls (inputs)
+
+  POST /tenants -> 201
+  POST /secrets -> 201
+  POST /workloads -> 201
+  POST /runs -> 201

@@ -1,0 +1,310 @@
+{
+  "run": {
+    "status": 200,
+    "body": {
+      "id": "run-4616219029f6",
+      "workload_id": "eval-judge",
+      "caller": "benchmark",
+      "state": "completed",
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "created_at": "2026-10-02T00:43:43.212035Z",
+      "updated_at": "2026-10-02T00:43:43.232696Z",
+      "started_at": "2026-10-02T00:43:43.219853Z",
+      "finished_at": "2026-10-02T00:43:43.232696Z",
+      "trigger_origin": null,
+      "pipeline_origin": null,
+      "agent_tool_origin": null,
+      "manifest_version": 2,
+      "context": "sandbox",
+      "sandbox": true,
+      "task": {
+        "task_id": "clamp",
+        "solution": "def clamp(x, lo, hi):\n    return min(lo, max(hi, x))\n"
+      },
+      "result": {
+        "log": [
+          "init -> task=clamp",
+          "run_tests -> 1/5 passed",
+          "judge(reveal_tests=False) -> score=5, confidence=0.7",
+          "escalate -> revealing unit-test results to the judge, re-judging",
+          "judge(reveal_tests=True) -> score=2, confidence=0.9",
+          "finalize -> FAIL"
+        ],
+        "task": {
+          "task_id": "clamp",
+          "solution": "def clamp(x, lo, hi):\n    return min(lo, max(hi, x))\n"
+        },
+        "prompt": "def clamp(x, lo, hi): return x limited to the range [lo, hi].",
+        "task_id": "clamp",
+        "verdict": "FAIL",
+        "attempts": 1,
+        "solution": "def clamp(x, lo, hi):\n    return min(lo, max(hi, x))\n",
+        "judge_score": 2,
+        "tests_total": 5,
+        "reveal_tests": true,
+        "tests_passed": 1,
+        "judge_confidence": 0.9
+      },
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "sandbox_id": "sb-2a35e6374306",
+      "trace_id": "d879a7c5f11a45188de07842cfb8c65b",
+      "shadow_of": null,
+      "probe": false,
+      "read_only": false,
+      "canary_rollout_id": null,
+      "canary_arm": null,
+      "tenant_id": "default",
+      "team_id": "default",
+      "attribution_key": "default"
+    }
+  },
+  "events": {
+    "status": 200,
+    "body": [
+      {
+        "run_id": "run-4616219029f6",
+        "sequence": 0,
+        "type": "admission",
+        "actor": "benchmark",
+        "timestamp": "2026-10-02T00:43:43.218086Z",
+        "from_state": null,
+        "to_state": "queued",
+        "detail": "sandbox_only"
+      },
+      {
+        "run_id": "run-4616219029f6",
+        "sequence": 1,
+        "type": "state_change",
+        "actor": "benchmark",
+        "timestamp": "2026-10-02T00:43:43.220711Z",
+        "from_state": "queued",
+        "to_state": "running",
+        "detail": null
+      },
+      {
+        "run_id": "run-4616219029f6",
+        "sequence": 2,
+        "type": "sandbox",
+        "actor": "benchmark",
+        "timestamp": "2026-10-02T00:43:43.222655Z",
+        "from_state": null,
+        "to_state": null,
+        "detail": "provisioned sb-2a35e6374306"
+      },
+      {
+        "run_id": "run-4616219029f6",
+        "sequence": 3,
+        "type": "policy_decision",
+        "actor": "policy",
+        "timestamp": "2026-10-02T00:43:43.225539Z",
+        "from_state": null,
+        "to_state": null,
+        "detail": "sandbox.allow: sandbox context allows the tool"
+      },
+      {
+        "run_id": "run-4616219029f6",
+        "sequence": 4,
+        "type": "tool_call",
+        "actor": "adapter",
+        "timestamp": "2026-10-02T00:43:43.227015Z",
+        "from_state": null,
+        "to_state": null,
+        "detail": "mcp.github.read_issue"
+      },
+      {
+        "run_id": "run-4616219029f6",
+        "sequence": 5,
+        "type": "state_change",
+        "actor": "adapter",
+        "timestamp": "2026-10-02T00:43:43.234057Z",
+        "from_state": "running",
+        "to_state": "completed",
+        "detail": null
+      },
+      {
+        "run_id": "run-4616219029f6",
+        "sequence": 6,
+        "type": "sandbox",
+        "actor": "adapter",
+        "timestamp": "2026-10-02T00:43:43.235107Z",
+        "from_state": null,
+        "to_state": null,
+        "detail": "destroyed sb-2a35e6374306"
+      }
+    ]
+  },
+  "story": {
+    "status": 200,
+    "body": {
+      "run_id": "run-4616219029f6",
+      "workload": "eval-judge",
+      "team": "platform",
+      "state": "completed",
+      "context": "sandbox",
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "cost_usd": 0.0,
+      "sandbox": true,
+      "sandbox_id": "sb-2a35e6374306",
+      "certification_status": "certified",
+      "attestation_id": "att-dfd4777c5cd4",
+      "trace_id": "d879a7c5f11a45188de07842cfb8c65b",
+      "entries": [
+        {
+          "timestamp": "2026-10-02T00:43:43.212035Z",
+          "kind": "admission",
+          "summary": "sandbox_only",
+          "detail": {
+            "outcome": "sandbox_only",
+            "refused_reason": null,
+            "escalation_required": false,
+            "sandbox": true,
+            "checks": [
+              {
+                "step": "halt",
+                "passed": true,
+                "reason": null,
+                "rule": "incident"
+              },
+              {
+                "step": "certification",
+                "passed": true,
+                "reason": null,
+                "rule": "certification"
+              },
+              {
+                "step": "model_identity",
+                "passed": true,
+                "reason": null,
+                "rule": "model_binding"
+              },
+              {
+                "step": "budget",
+                "passed": true,
+                "reason": null,
+                "rule": "run"
+              },
+              {
+                "step": "policy",
+                "passed": true,
+                "reason": "no tool policy applies",
+                "rule": "run.allow"
+              },
+              {
+                "step": "sandbox",
+                "passed": true,
+                "reason": null,
+                "rule": "sandbox"
+              }
+            ]
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:43:43.220711Z",
+          "kind": "state",
+          "summary": "queued -> running",
+          "detail": {
+            "actor": "benchmark",
+            "detail": null,
+            "from_state": "queued",
+            "to_state": "running",
+            "sequence": 1
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:43:43.222655Z",
+          "kind": "sandbox",
+          "summary": "provisioned sb-2a35e6374306",
+          "detail": {
+            "actor": "benchmark",
+            "detail": "provisioned sb-2a35e6374306",
+            "from_state": null,
+            "to_state": null,
+            "sequence": 2
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:43:43.225539Z",
+          "kind": "policy_decision",
+          "summary": "sandbox.allow: sandbox context allows the tool",
+          "detail": {
+            "actor": "policy",
+            "detail": "sandbox.allow: sandbox context allows the tool",
+            "from_state": null,
+            "to_state": null,
+            "sequence": 3
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:43:43.227015Z",
+          "kind": "tool_call",
+          "summary": "mcp.github.read_issue",
+          "detail": {
+            "actor": "adapter",
+            "detail": "mcp.github.read_issue",
+            "from_state": null,
+            "to_state": null,
+            "sequence": 4
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:43:43.234057Z",
+          "kind": "state",
+          "summary": "running -> completed",
+          "detail": {
+            "actor": "adapter",
+            "detail": null,
+            "from_state": "running",
+            "to_state": "completed",
+            "sequence": 5
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:43:43.235107Z",
+          "kind": "sandbox",
+          "summary": "destroyed sb-2a35e6374306",
+          "detail": {
+            "actor": "adapter",
+            "detail": "destroyed sb-2a35e6374306",
+            "from_state": null,
+            "to_state": null,
+            "sequence": 6
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:43:43.236856Z",
+          "kind": "delivery",
+          "summary": "slack delivered",
+          "detail": {
+            "target": "#eval-judge-results",
+            "status": "delivered",
+            "attempts": 1,
+            "error": null
+          }
+        }
+      ]
+    }
+  },
+  "usage": {
+    "status": 200,
+    "body": []
+  },
+  "deliveries": {
+    "status": 200,
+    "body": [
+      {
+        "run_id": "run-4616219029f6",
+        "destination_type": "slack",
+        "target": "#eval-judge-results",
+        "status": "delivered",
+        "attempts": 1,
+        "error": null,
+        "timestamp": "2026-10-02T00:43:43.236856Z"
+      }
+    ]
+  },
+  "feedback": {
+    "status": 200,
+    "body": []
+  }
+}

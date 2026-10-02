@@ -13,6 +13,7 @@ from datetime import UTC, datetime, timedelta
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
+from hiveplane.certification.binding import compute_binding
 from hiveplane.certification.engine import CertificationEngine, workload_policy
 from hiveplane.certification.models import (
     Attestation,
@@ -27,6 +28,8 @@ from hiveplane.certification.models import (
 from hiveplane.certification.runner import BENCHMARK_VERSION
 from hiveplane.certification.signing import sign_attestation
 from hiveplane.registry.service import RegistryService
+from hiveplane.tenancy import DEFAULT_CONTEXT, TenantContext
+from hiveplane.transparency.log import TransparencyLog
 
 #: Placeholder written before signing; ``canonical_payload`` excludes it.
 UNSIGNED = "unsigned"
@@ -47,6 +50,8 @@ class CertificationService:
         benchmark_version: str = BENCHMARK_VERSION,
         clock: Callable[[], datetime] | None = None,
         id_factory: Callable[[], str] | None = None,
+        policy_version_lookup: Callable[[str], str | None] | None = None,
+        transparency_log: TransparencyLog | None = None,
     ) -> None:
         self._engine = engine
         self._registry = registry
@@ -57,6 +62,8 @@ class CertificationService:
         self._benchmark_version = benchmark_version
         self._clock = clock or (lambda: datetime.now(UTC))
         self._id_factory = id_factory or (lambda: f"att-{uuid.uuid4().hex[:12]}")
+        self._policy_version_lookup = policy_version_lookup
+        self._transparency_log = transparency_log
 
     def certify(
         self,
@@ -64,12 +71,16 @@ class CertificationService:
         *,
         target_context: TargetContext,
         previous_attestation_id: str | None = None,
+        profile: str = "full",
+        ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> Attestation:
         """Evaluate, sign, store, and record an attestation for a benchmark result."""
         return self.certify_with_result(
             result,
             target_context=target_context,
             previous_attestation_id=previous_attestation_id,
+            profile=profile,
+            ctx=ctx,
         ).attestation
 
     def certify_with_result(
@@ -78,13 +89,15 @@ class CertificationService:
         *,
         target_context: TargetContext,
         previous_attestation_id: str | None = None,
+        profile: str = "full",
+        ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> CertificationRecord:
         """Like :meth:`certify` but returns the certification, attestation, and result.
 
         The production-survival count is read from the registry record, never from
         the caller, so a client cannot claim runs it did not survive.
         """
-        record = self._registry.get(result.workload_id)
+        record = self._registry.get(result.workload_id, ctx=ctx)
         spec = record.manifest.spec.certification
         policy = workload_policy(spec, self._engine.policy) if spec is not None else None
         certification = self._engine.evaluate(
@@ -94,6 +107,12 @@ class CertificationService:
             production_runs_survived=record.production_runs_survived,
             policy=policy,
         )
+        policy_version = (
+            self._policy_version_lookup(result.workload_id)
+            if self._policy_version_lookup is not None
+            else None
+        )
+        binding = compute_binding(record.manifest, policy_version=policy_version)
         attestation = Attestation(
             attestation_id=self._id_factory(),
             workload_id=result.workload_id,
@@ -109,16 +128,39 @@ class CertificationService:
             timestamp=certification.timestamp,
             environment=self._environment,
             signer=Signer(identity=self._identity, key_id=self._key_id, signature=UNSIGNED),
+            artifact_hash=binding.artifact_hash,
+            binding=binding,
             previous_attestation_id=previous_attestation_id,
+            profile=profile,
         )
-        stored = self._registry.store_attestation(sign_attestation(attestation, self._private_key))
+        stored = self._registry.store_attestation(
+            sign_attestation(attestation, self._private_key), ctx=ctx
+        )
+        if self._transparency_log is not None:
+            self._transparency_log.append(stored)
         if certification.status is not record.certification_status:
             event = _event_for(record.certification_status, certification.status)
             if event is not None:
                 expires_at = stored.timestamp + timedelta(
                     seconds=(policy or self._engine.policy).re_cert_interval
                 )
-                self._registry.apply_attestation(stored, event=event, expires_at=expires_at)
+                self._registry.apply_attestation(
+                    stored, event=event, expires_at=expires_at, ctx=ctx
+                )
+        elif (
+            target_context is TargetContext.PRODUCTION
+            and certification.status is CertificationStatus.PROVISIONAL
+        ):
+            # Survival gate deferral: a workload that passed the production
+            # benchmark but has not survived enough production runs stays
+            # provisional, yet must carry the passing production attestation so
+            # production admission can verify it while the gate is satisfied.
+            expires_at = stored.timestamp + timedelta(
+                seconds=(policy or self._engine.policy).re_cert_interval
+            )
+            self._registry.apply_attestation(
+                stored, status=certification.status, expires_at=expires_at, ctx=ctx
+            )
         return CertificationRecord(
             record_id=stored.attestation_id,
             certification=certification,

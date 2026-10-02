@@ -36,6 +36,7 @@
       nav { display: flex; gap: 1rem; }
       nav a { color: var(--muted); text-decoration: none; }
       nav a:hover { color: var(--accent); }
+      .session { margin-left: auto; display: flex; gap: 0.75rem; align-items: center; }
       main { padding: 1.5rem; max-width: 1200px; margin: 0 auto; }
       h1 { font-size: 1.4rem; margin: 0 0 1rem; }
       h2 { font-size: 1.05rem; margin: 1.5rem 0 0.5rem; }
@@ -60,6 +61,13 @@
       .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
       .card { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
       .card .value { font-size: 1.6rem; font-weight: 700; }
+      .bar-cell { width: 40%; }
+      .bar-cell svg { display: block; }
+      .badge.healthy { color: var(--ok); border-color: var(--ok); }
+      .badge.degraded { color: var(--warn); border-color: var(--warn); }
+      .badge.unhealthy { color: var(--bad); border-color: var(--bad); }
+      .badge.insufficient_data { color: var(--muted); }
+      .evidence { margin: 0; padding-left: 1rem; }
     </style>
   </head>
   <body>
@@ -67,10 +75,28 @@
       <a class="brand" href="/">HivePlane</a>
       <nav>
         <a href="/">Fleet</a>
-        <a href="/approvals">Approvals</a>
+        {% if visible_actions is defined and visible_actions.approve %}<a href="/approvals">Approvals</a>{% endif %}
         <a href="/certifications">Certification</a>
         <a href="/spend">Spend</a>
+        <a href="/cost">Cost</a>
+        <a href="/roi">ROI</a>
+        <a href="/health">Health</a>
+        <a href="/triggers">Triggers</a>
+        <a href="/queue">Queue</a>
+        <a href="/diff">Diff</a>
+        <a href="/search">Search</a>
+        <a href="/onboarding">Onboarding</a>
       </nav>
+      <div class="session">
+        {% if identity is defined and identity.operator_id != "anonymous" %}
+          <span class="muted">{{ identity.operator_id }} ({{ identity.role }})</span>
+          <form class="inline" method="post" action="/logout">
+            <button type="submit">Sign out</button>
+          </form>
+        {% else %}
+          <a href="/login">Sign in</a>
+        {% endif %}
+      </div>
     </header>
     <main>
       {% block content %}{% endblock %}

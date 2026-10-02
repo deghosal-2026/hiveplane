@@ -98,7 +98,7 @@ def test_tool_call_endpoint_denies_unlisted_tool(
 
     assert response.status_code == 200
     assert response.json()["outcome"] == "denied"
-    assert response.json()["rule"] == "default.deny"
+    assert response.json()["rule"] == "tool_not_allowed"
 
 
 def test_start_queued_run(make_manifest: Callable[..., AgentWorkload]) -> None:

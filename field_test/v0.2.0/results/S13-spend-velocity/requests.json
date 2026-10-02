@@ -1,0 +1,912 @@
+[
+  {
+    "method": "POST",
+    "path": "/workloads",
+    "status": 201,
+    "ms": 10.0,
+    "tenant": null,
+    "note": null,
+    "request": {
+      "apiVersion": "hiveplane/v1",
+      "kind": "AgentWorkload",
+      "metadata": {
+        "name": "velocity-guard-probe",
+        "owner": "platform-team",
+        "team": "platform",
+        "description": "Spend-velocity probe \u2014 a tiny velocity ceiling pauses a priced run (S13).",
+        "labels": {
+          "environment": "field-test",
+          "source": "field_test"
+        }
+      },
+      "spec": {
+        "runtime": {
+          "adapter": "raw-worker",
+          "entrypoint": "field_test.shims.budget_agent:run",
+          "env": {},
+          "adapter_contract": "2"
+        },
+        "budget": {
+          "per_run_usd": 1.0,
+          "per_day_usd": 10.0,
+          "per_team_usd": 100.0
+        },
+        "model": {
+          "strategy": "tiered",
+          "identity": {
+            "provider": "omlx",
+            "family": "qwen3-4b-instruct-2507",
+            "version": "4bit"
+          }
+        },
+        "certification": {
+          "benchmark_corpus": "corpora/support-agent/hiveplane-corpus.yaml",
+          "staging_threshold": 0.8,
+          "production_threshold": 0.9,
+          "no_critical_failures": true,
+          "latency_budget_ms": 30000,
+          "re_cert_interval": 1209600,
+          "status": "uncertified",
+          "attestation_id": null,
+          "certified_at": null,
+          "certified_by": null,
+          "expires_at": null
+        },
+        "triggers": [],
+        "sandbox": {
+          "enabled": true,
+          "resource_caps": {
+            "memory_mb": 512,
+            "cpu_cores": 1.0,
+            "wall_clock_s": 300
+          },
+          "egress": {
+            "allow": [
+              "api.github.com"
+            ],
+            "deny": [
+              "169.254.169.254"
+            ],
+            "mode": "restricted"
+          },
+          "network": null,
+          "filesystem": "isolated"
+        },
+        "output_shaping": {
+          "max_bytes": 16384,
+          "truncate_strategy": "tail",
+          "filter_rules": [],
+          "injection_scan": true
+        },
+        "tools": {
+          "allow": [],
+          "deny": [],
+          "mcp_servers": [],
+          "default_trust": "read_only"
+        },
+        "approvals": {
+          "required_for": [],
+          "contact": null,
+          "auto_escalate_after": 300
+        },
+        "guards": {
+          "context_tokens": null,
+          "context_warn_at": null,
+          "velocity_window_seconds": 60,
+          "velocity_limit_usd": 0.0001,
+          "velocity_multiplier": null
+        },
+        "fan_out": {
+          "on_completed": [
+            {
+              "type": "slack",
+              "channel": "#platform-oncall",
+              "url": null,
+              "project": null,
+              "issue_type": null
+            }
+          ],
+          "on_failed": [],
+          "on_escalation": [],
+          "always_include": [
+            "trace_link"
+          ]
+        },
+        "health": {
+          "readiness_probe": {
+            "type": "dry_run",
+            "interval": 60
+          },
+          "slo": {
+            "availability_target": 0.99,
+            "quality_target": 0.9,
+            "error_budget_window": 86400
+          },
+          "failure_rate_threshold": 0.15
+        },
+        "observability": {
+          "contract": "standard",
+          "trace_sampling": 1.0
+        },
+        "io": null,
+        "secrets": [],
+        "time_windows": []
+      }
+    },
+    "request_shape": "dict",
+    "response": {
+      "name": "velocity-guard-probe",
+      "manifest": {
+        "apiVersion": "hiveplane/v1",
+        "kind": "AgentWorkload",
+        "metadata": {
+          "name": "velocity-guard-probe",
+          "owner": "platform-team",
+          "team": "platform",
+          "description": "Spend-velocity probe \u2014 a tiny velocity ceiling pauses a priced run (S13).",
+          "labels": {
+            "environment": "field-test",
+            "source": "field_test"
+          }
+        },
+        "spec": {
+          "runtime": {
+            "adapter": "raw-worker",
+            "entrypoint": "field_test.shims.budget_agent:run",
+            "env": {},
+            "adapter_contract": "2"
+          },
+          "budget": {
+            "per_run_usd": 1.0,
+            "per_day_usd": 10.0,
+            "per_team_usd": 100.0
+          },
+          "model": {
+            "strategy": "tiered",
+            "identity": {
+              "provider": "omlx",
+              "family": "qwen3-4b-instruct-2507",
+              "version": "4bit"
+            }
+          },
+          "certification": {
+            "benchmark_corpus": "corpora/support-agent/hiveplane-corpus.yaml",
+            "staging_threshold": 0.8,
+            "production_threshold": 0.9,
+            "no_critical_failures": true,
+            "latency_budget_ms": 30000,
+            "re_cert_interval": 1209600,
+            "status": "uncertified",
+            "attestation_id": null,
+            "certified_at": null,
+            "certified_by": null,
+            "expires_at": null
+          },
+          "triggers": [],
+          "sandbox": {
+            "enabled": true,
+            "resource_caps": {
+              "memory_mb": 512,
+              "cpu_cores": 1.0,
+              "wall_clock_s": 300
+            },
+            "egress": {
+              "allow": [
+                "api.github.com"
+              ],
+              "deny": [
+                "169.254.169.254"
+              ],
+              "mode": "restricted"
+            },
+            "network": null,
+            "filesystem": "isolated"
+          },
+          "output_shaping": {
+            "max_bytes": 16384,
+            "truncate_strategy": "tail",
+            "filter_rules": [],
+            "injection_scan": true
+          },
+          "tools": {
+            "allow": [],
+            "deny": [],
+            "mcp_servers": [],
+            "default_trust": "read_only"
+          },
+          "approvals": {
+            "required_for": [],
+            "contact": null,
+            "auto_escalate_after": 300
+          },
+          "guards": {
+            "context_tokens": null,
+            "context_warn_at": null,
+            "velocity_window_seconds": 60,
+            "velocity_limit_usd": 0.0001,
+            "velocity_multiplier": null
+          },
+          "fan_out": {
+            "on_completed": [
+              {
+                "type": "slack",
+                "channel": "#platform-oncall",
+                "url": null,
+                "project": null,
+                "issue_type": null
+              }
+            ],
+            "on_failed": [],
+            "on_escalation": [],
+            "always_include": [
+              "trace_link"
+            ]
+          },
+          "health": {
+            "readiness_probe": {
+              "type": "dry_run",
+              "interval": 60
+            },
+            "slo": {
+              "availability_target": 0.99,
+              "quality_target": 0.9,
+              "error_budget_window": 86400
+            },
+            "failure_rate_threshold": 0.15
+          },
+          "observability": {
+            "contract": "standard",
+            "trace_sampling": 1.0
+          },
+          "io": null,
+          "secrets": [],
+          "time_windows": []
+        }
+      },
+      "current_version": 1,
+      "certification_status": "uncertified",
+      "owner": "platform-team",
+      "team": "platform",
+      "runtime": "raw-worker",
+      "created_at": "2026-10-02T00:44:55.353712Z",
+      "updated_at": "2026-10-02T00:44:55.353712Z",
+      "needs_re_certification": false,
+      "artifact_hash": "9041f153f88d2f1f7e68724959d901f6fc21b5199098431f0c53897db9648aa9",
+      "bundle": {
+        "workload_id": "velocity-guard-probe",
+        "bundle_digest": "83bc4be3176e168b167a4bcd40951e272f4442554087b050bfff74d24d04b49b",
+        "entrypoint_digest": "9906511799b1a931309038288035affee0d135ed2c58545b8ae64ce07fc8f1f1",
+        "manifest_hash": "1fb593b9f96c4296ddb73f8071c128c69eec0814d84095b2c024d28f0531a334",
+        "key_id": "hp-signing-key-01",
+        "signature": "QlUgz+AXIewTgE2Yb7p3QOs9hCwQhb0Y+QgAvdPIVEBilaERYVBJZr1Kmtq0SDbgYF5pnTfJF597aKK/z/ZcAA==",
+        "registered_at": "2026-10-02T00:44:55.353804Z"
+      },
+      "production_runs_survived": 0,
+      "last_run_at": null,
+      "failure_count": 0,
+      "last_failure_at": null,
+      "tenant_id": "default"
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "POST",
+    "path": "/runs",
+    "status": 201,
+    "ms": 11.3,
+    "tenant": null,
+    "note": null,
+    "request": {
+      "workload": "velocity-guard-probe",
+      "caller": "field-test-v02",
+      "context": "sandbox",
+      "task": {
+        "query": "reset password",
+        "account_id": "ACC-001"
+      },
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit"
+    },
+    "request_shape": "dict",
+    "response": {
+      "id": "run-9f3d18199800",
+      "workload_id": "velocity-guard-probe",
+      "caller": "field-test-v02",
+      "state": "queued",
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "created_at": "2026-10-02T00:44:55.361330Z",
+      "updated_at": "2026-10-02T00:44:55.361330Z",
+      "started_at": null,
+      "finished_at": null,
+      "trigger_origin": null,
+      "pipeline_origin": null,
+      "agent_tool_origin": null,
+      "manifest_version": 1,
+      "context": "sandbox",
+      "sandbox": true,
+      "task": {
+        "query": "reset password",
+        "account_id": "ACC-001"
+      },
+      "result": null,
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "sandbox_id": null,
+      "trace_id": "b09241ea15ecab6dac36cde96d3612e4",
+      "shadow_of": null,
+      "probe": false,
+      "read_only": false,
+      "canary_rollout_id": null,
+      "canary_arm": null,
+      "tenant_id": "default",
+      "team_id": "default",
+      "attribution_key": "default"
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "POST",
+    "path": "/runs/run-9f3d18199800/start",
+    "status": 200,
+    "ms": 7.3,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": {
+      "id": "run-9f3d18199800",
+      "workload_id": "velocity-guard-probe",
+      "caller": "field-test-v02",
+      "state": "running",
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "created_at": "2026-10-02T00:44:55.361330Z",
+      "updated_at": "2026-10-02T00:44:55.372240Z",
+      "started_at": "2026-10-02T00:44:55.372240Z",
+      "finished_at": null,
+      "trigger_origin": null,
+      "pipeline_origin": null,
+      "agent_tool_origin": null,
+      "manifest_version": 1,
+      "context": "sandbox",
+      "sandbox": true,
+      "task": {
+        "query": "reset password",
+        "account_id": "ACC-001"
+      },
+      "result": null,
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "sandbox_id": "sb-46199e170167",
+      "trace_id": "78660118efa7404484965a08b06f78df",
+      "shadow_of": null,
+      "probe": false,
+      "read_only": false,
+      "canary_rollout_id": null,
+      "canary_arm": null,
+      "tenant_id": "default",
+      "team_id": "default",
+      "attribution_key": "default"
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-9f3d18199800",
+    "status": 200,
+    "ms": 2.4,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": {
+      "id": "run-9f3d18199800",
+      "workload_id": "velocity-guard-probe",
+      "caller": "field-test-v02",
+      "state": "running",
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "created_at": "2026-10-02T00:44:55.361330Z",
+      "updated_at": "2026-10-02T00:44:55.372240Z",
+      "started_at": "2026-10-02T00:44:55.372240Z",
+      "finished_at": null,
+      "trigger_origin": null,
+      "pipeline_origin": null,
+      "agent_tool_origin": null,
+      "manifest_version": 1,
+      "context": "sandbox",
+      "sandbox": true,
+      "task": {
+        "query": "reset password",
+        "account_id": "ACC-001"
+      },
+      "result": null,
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "sandbox_id": "sb-46199e170167",
+      "trace_id": "78660118efa7404484965a08b06f78df",
+      "shadow_of": null,
+      "probe": false,
+      "read_only": false,
+      "canary_rollout_id": null,
+      "canary_arm": null,
+      "tenant_id": "default",
+      "team_id": "default",
+      "attribution_key": "default"
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-9f3d18199800",
+    "status": 200,
+    "ms": 8.2,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": {
+      "id": "run-9f3d18199800",
+      "workload_id": "velocity-guard-probe",
+      "caller": "field-test-v02",
+      "state": "completed",
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "created_at": "2026-10-02T00:44:55.361330Z",
+      "updated_at": "2026-10-02T00:44:55.652019Z",
+      "started_at": "2026-10-02T00:44:55.372240Z",
+      "finished_at": "2026-10-02T00:44:55.652019Z",
+      "trigger_origin": null,
+      "pipeline_origin": null,
+      "agent_tool_origin": null,
+      "manifest_version": 1,
+      "context": "sandbox",
+      "sandbox": true,
+      "task": {
+        "query": "reset password",
+        "account_id": "ACC-001"
+      },
+      "result": {
+        "status": "completed",
+        "response": "ok"
+      },
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "sandbox_id": "sb-46199e170167",
+      "trace_id": "78660118efa7404484965a08b06f78df",
+      "shadow_of": null,
+      "probe": false,
+      "read_only": false,
+      "canary_rollout_id": null,
+      "canary_arm": null,
+      "tenant_id": "default",
+      "team_id": "default",
+      "attribution_key": "default"
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-9f3d18199800/events",
+    "status": 200,
+    "ms": 6.2,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": [
+      {
+        "run_id": "run-9f3d18199800",
+        "sequence": 0,
+        "type": "admission",
+        "actor": "field-test-v02",
+        "timestamp": "2026-10-02T00:44:55.368133Z",
+        "from_state": null,
+        "to_state": "queued",
+        "detail": "sandbox_only"
+      },
+      {
+        "run_id": "run-9f3d18199800",
+        "sequence": 1,
+        "type": "state_change",
+        "actor": "api",
+        "timestamp": "2026-10-02T00:44:55.373480Z",
+        "from_state": "queued",
+        "to_state": "running",
+        "detail": null
+      },
+      {
+        "run_id": "run-9f3d18199800",
+        "sequence": 2,
+        "type": "sandbox",
+        "actor": "api",
+        "timestamp": "2026-10-02T00:44:55.374895Z",
+        "from_state": null,
+        "to_state": null,
+        "detail": "provisioned sb-46199e170167"
+      },
+      {
+        "run_id": "run-9f3d18199800",
+        "sequence": 3,
+        "type": "usage",
+        "actor": "adapter",
+        "timestamp": "2026-10-02T00:44:55.645097Z",
+        "from_state": null,
+        "to_state": null,
+        "detail": "0.0"
+      },
+      {
+        "run_id": "run-9f3d18199800",
+        "sequence": 4,
+        "type": "state_change",
+        "actor": "adapter",
+        "timestamp": "2026-10-02T00:44:55.653336Z",
+        "from_state": "running",
+        "to_state": "completed",
+        "detail": null
+      },
+      {
+        "run_id": "run-9f3d18199800",
+        "sequence": 5,
+        "type": "sandbox",
+        "actor": "adapter",
+        "timestamp": "2026-10-02T00:44:55.655146Z",
+        "from_state": null,
+        "to_state": null,
+        "detail": "destroyed sb-46199e170167"
+      }
+    ],
+    "response_shape": "list"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-9f3d18199800/usage",
+    "status": 200,
+    "ms": 6.2,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": [
+      {
+        "run_id": "run-9f3d18199800",
+        "input_tokens": 15,
+        "output_tokens": 1,
+        "tool_calls": 0,
+        "cost_usd": 0.0,
+        "timestamp": "2026-10-02T00:44:55.621856Z",
+        "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+        "prompt": "Reply with the single word: ok",
+        "response": "ok",
+        "latency_ms": 246
+      }
+    ],
+    "response_shape": "list"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-9f3d18199800",
+    "status": 200,
+    "ms": 3.9,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": {
+      "id": "run-9f3d18199800",
+      "workload_id": "velocity-guard-probe",
+      "caller": "field-test-v02",
+      "state": "completed",
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "created_at": "2026-10-02T00:44:55.361330Z",
+      "updated_at": "2026-10-02T00:44:55.652019Z",
+      "started_at": "2026-10-02T00:44:55.372240Z",
+      "finished_at": "2026-10-02T00:44:55.652019Z",
+      "trigger_origin": null,
+      "pipeline_origin": null,
+      "agent_tool_origin": null,
+      "manifest_version": 1,
+      "context": "sandbox",
+      "sandbox": true,
+      "task": {
+        "query": "reset password",
+        "account_id": "ACC-001"
+      },
+      "result": {
+        "status": "completed",
+        "response": "ok"
+      },
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "sandbox_id": "sb-46199e170167",
+      "trace_id": "78660118efa7404484965a08b06f78df",
+      "shadow_of": null,
+      "probe": false,
+      "read_only": false,
+      "canary_rollout_id": null,
+      "canary_arm": null,
+      "tenant_id": "default",
+      "team_id": "default",
+      "attribution_key": "default"
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-9f3d18199800/events",
+    "status": 200,
+    "ms": 3.8,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": [
+      {
+        "run_id": "run-9f3d18199800",
+        "sequence": 0,
+        "type": "admission",
+        "actor": "field-test-v02",
+        "timestamp": "2026-10-02T00:44:55.368133Z",
+        "from_state": null,
+        "to_state": "queued",
+        "detail": "sandbox_only"
+      },
+      {
+        "run_id": "run-9f3d18199800",
+        "sequence": 1,
+        "type": "state_change",
+        "actor": "api",
+        "timestamp": "2026-10-02T00:44:55.373480Z",
+        "from_state": "queued",
+        "to_state": "running",
+        "detail": null
+      },
+      {
+        "run_id": "run-9f3d18199800",
+        "sequence": 2,
+        "type": "sandbox",
+        "actor": "api",
+        "timestamp": "2026-10-02T00:44:55.374895Z",
+        "from_state": null,
+        "to_state": null,
+        "detail": "provisioned sb-46199e170167"
+      },
+      {
+        "run_id": "run-9f3d18199800",
+        "sequence": 3,
+        "type": "usage",
+        "actor": "adapter",
+        "timestamp": "2026-10-02T00:44:55.645097Z",
+        "from_state": null,
+        "to_state": null,
+        "detail": "0.0"
+      },
+      {
+        "run_id": "run-9f3d18199800",
+        "sequence": 4,
+        "type": "state_change",
+        "actor": "adapter",
+        "timestamp": "2026-10-02T00:44:55.653336Z",
+        "from_state": "running",
+        "to_state": "completed",
+        "detail": null
+      },
+      {
+        "run_id": "run-9f3d18199800",
+        "sequence": 5,
+        "type": "sandbox",
+        "actor": "adapter",
+        "timestamp": "2026-10-02T00:44:55.655146Z",
+        "from_state": null,
+        "to_state": null,
+        "detail": "destroyed sb-46199e170167"
+      }
+    ],
+    "response_shape": "list"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-9f3d18199800/story",
+    "status": 200,
+    "ms": 11.2,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": {
+      "run_id": "run-9f3d18199800",
+      "workload": "velocity-guard-probe",
+      "team": "platform",
+      "state": "completed",
+      "context": "sandbox",
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "cost_usd": 0.0,
+      "sandbox": true,
+      "sandbox_id": "sb-46199e170167",
+      "certification_status": "uncertified",
+      "attestation_id": null,
+      "trace_id": "78660118efa7404484965a08b06f78df",
+      "entries": [
+        {
+          "timestamp": "2026-10-02T00:44:55.361330Z",
+          "kind": "admission",
+          "summary": "sandbox_only",
+          "detail": {
+            "outcome": "sandbox_only",
+            "refused_reason": null,
+            "escalation_required": false,
+            "sandbox": true,
+            "checks": [
+              {
+                "step": "halt",
+                "passed": true,
+                "reason": null,
+                "rule": "incident"
+              },
+              {
+                "step": "certification",
+                "passed": true,
+                "reason": null,
+                "rule": "certification"
+              },
+              {
+                "step": "model_identity",
+                "passed": true,
+                "reason": null,
+                "rule": "model_binding"
+              },
+              {
+                "step": "budget",
+                "passed": true,
+                "reason": null,
+                "rule": "run"
+              },
+              {
+                "step": "policy",
+                "passed": true,
+                "reason": "no tool policy applies",
+                "rule": "run.allow"
+              },
+              {
+                "step": "sandbox",
+                "passed": true,
+                "reason": null,
+                "rule": "sandbox"
+              }
+            ]
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:44:55.373480Z",
+          "kind": "state",
+          "summary": "queued -> running",
+          "detail": {
+            "actor": "api",
+            "detail": null,
+            "from_state": "queued",
+            "to_state": "running",
+            "sequence": 1
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:44:55.374895Z",
+          "kind": "sandbox",
+          "summary": "provisioned sb-46199e170167",
+          "detail": {
+            "actor": "api",
+            "detail": "provisioned sb-46199e170167",
+            "from_state": null,
+            "to_state": null,
+            "sequence": 2
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:44:55.621856Z",
+          "kind": "model_call",
+          "summary": "16 tokens, $0.0000",
+          "detail": {
+            "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+            "input_tokens": 15,
+            "output_tokens": 1,
+            "tool_calls": 0,
+            "cost_usd": 0.0,
+            "prompt": "Reply with the single word: ok",
+            "response": "ok",
+            "latency_ms": 246
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:44:55.653336Z",
+          "kind": "state",
+          "summary": "running -> completed",
+          "detail": {
+            "actor": "adapter",
+            "detail": null,
+            "from_state": "running",
+            "to_state": "completed",
+            "sequence": 4
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:44:55.655146Z",
+          "kind": "sandbox",
+          "summary": "destroyed sb-46199e170167",
+          "detail": {
+            "actor": "adapter",
+            "detail": "destroyed sb-46199e170167",
+            "from_state": null,
+            "to_state": null,
+            "sequence": 5
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:44:55.658301Z",
+          "kind": "delivery",
+          "summary": "slack delivered",
+          "detail": {
+            "target": "#platform-oncall",
+            "status": "delivered",
+            "attempts": 1,
+            "error": null
+          }
+        }
+      ]
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-9f3d18199800/usage",
+    "status": 200,
+    "ms": 3.8,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": [
+      {
+        "run_id": "run-9f3d18199800",
+        "input_tokens": 15,
+        "output_tokens": 1,
+        "tool_calls": 0,
+        "cost_usd": 0.0,
+        "timestamp": "2026-10-02T00:44:55.621856Z",
+        "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+        "prompt": "Reply with the single word: ok",
+        "response": "ok",
+        "latency_ms": 246
+      }
+    ],
+    "response_shape": "list"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-9f3d18199800/deliveries",
+    "status": 200,
+    "ms": 3.3,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": [
+      {
+        "run_id": "run-9f3d18199800",
+        "destination_type": "slack",
+        "target": "#platform-oncall",
+        "status": "delivered",
+        "attempts": 1,
+        "error": null,
+        "timestamp": "2026-10-02T00:44:55.658301Z"
+      }
+    ],
+    "response_shape": "list"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-9f3d18199800/feedback",
+    "status": 200,
+    "ms": 3.6,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": [],
+    "response_shape": "list"
+  }
+]

@@ -30,6 +30,7 @@ from hiveplane.certification.service import CertificationService
 from hiveplane.certification.signing import generate_keypair
 from hiveplane.certification.store import InMemoryCertificationStore
 from hiveplane.certification.workflow import CertificationCoordinator
+from hiveplane.core.run import AdmissionContext
 from hiveplane.core.workload import AgentWorkload
 from hiveplane.registry.service import RegistryService
 from hiveplane.registry.store import InMemoryRegistryStore
@@ -408,6 +409,41 @@ def test_production_certification_requires_server_side_survived_runs(
     assert promoted.certification.status is CertificationStatus.CERTIFIED
 
 
+def test_workload_reaches_certified_with_default_survival_gate(
+    make_manifest: Callable[..., AgentWorkload], tmp_path: Path
+) -> None:
+    from hiveplane.config import get_settings
+
+    minimum = get_settings().certification.production.min_production_runs_survived
+    assert minimum > 0
+    corpora_dir = _write_corpus(tmp_path, _TASKS)
+    private_key, public_key = generate_keypair()
+    registry = RegistryService(
+        InMemoryRegistryStore(),
+        clock=lambda: _FIXED_NOW,
+        attestation_public_key=public_key,
+    )
+    registry.create(
+        make_manifest(name="survival-agent", certification={"benchmark_corpus": "corpus.yaml"})
+    )
+    coordinator = _service_with_survival(registry, corpora_dir, minimum, private_key)
+
+    staged = coordinator.certify("survival-agent", target_context=TargetContext.STAGING)
+    assert staged.certification.status is CertificationStatus.PROVISIONAL
+    deferred = coordinator.certify("survival-agent", target_context=TargetContext.PRODUCTION)
+    assert deferred.certification.status is CertificationStatus.PROVISIONAL
+
+    # A survival-gated provisional workload must still be admissible to production,
+    # otherwise the run that counts toward the gate can never happen.
+    assert registry.check_admission("survival-agent", AdmissionContext.PRODUCTION).admitted is True
+
+    for _ in range(minimum):
+        registry.increment_production_runs("survival-agent")
+    certified = coordinator.certify("survival-agent", target_context=TargetContext.PRODUCTION)
+
+    assert certified.certification.status is CertificationStatus.CERTIFIED
+
+
 def test_records_are_append_only(
     make_manifest: Callable[..., AgentWorkload], tmp_path: Path
 ) -> None:
@@ -457,3 +493,68 @@ def test_attestations_form_a_chain(
     assert (
         second.attestation.previous_attestation_id == first.attestation.attestation_id
     )
+
+
+# --------------------------------------------------------------------------- #
+# Benchmark profiles (M55-04)
+# --------------------------------------------------------------------------- #
+_FAST_TASKS: list[dict[str, Any]] = [
+    {
+        "id": "t1",
+        "name": "classify low risk",
+        "check": {"type": "exact_match", "field": "risk", "value": "low"},
+        "profiles": ["fast", "full"],
+    },
+    {
+        "id": "t2",
+        "name": "classify high risk",
+        "check": {"type": "exact_match", "field": "risk", "value": "low"},
+        "profiles": ["full"],
+    },
+]
+
+
+def test_fast_profile_runs_a_subset_and_records_the_profile(
+    make_manifest: Callable[..., AgentWorkload], tmp_path: Path
+) -> None:
+    from hiveplane.corpus.profiles import Profile
+
+    _write_corpus(tmp_path, _FAST_TASKS)
+    _, _, coordinator = _setup(make_manifest, tmp_path)
+
+    record = coordinator.certify(
+        "repo-agent", target_context=TargetContext.STAGING, profile=Profile.FAST
+    )
+
+    assert record.attestation.profile == "fast"
+    assert len(record.benchmark_result.tasks) == 1
+
+
+def test_full_profile_runs_all_and_is_recorded(
+    make_manifest: Callable[..., AgentWorkload], tmp_path: Path
+) -> None:
+    from hiveplane.corpus.profiles import Profile
+
+    _write_corpus(tmp_path, _FAST_TASKS)
+    _, _, coordinator = _setup(make_manifest, tmp_path)
+
+    record = coordinator.certify(
+        "repo-agent", target_context=TargetContext.STAGING, profile=Profile.FULL
+    )
+
+    assert record.attestation.profile == "full"
+    assert len(record.benchmark_result.tasks) == 2
+
+
+def test_fast_profile_cannot_certify_production(
+    make_manifest: Callable[..., AgentWorkload], tmp_path: Path
+) -> None:
+    from hiveplane.corpus.profiles import Profile, ProfileNotAllowedError
+
+    _write_corpus(tmp_path, _FAST_TASKS)
+    _, _, coordinator = _setup(make_manifest, tmp_path)
+
+    with pytest.raises(ProfileNotAllowedError):
+        coordinator.certify(
+            "repo-agent", target_context=TargetContext.PRODUCTION, profile=Profile.FAST
+        )

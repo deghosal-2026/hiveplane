@@ -1,0 +1,13 @@
+# H1 image-matches-source
+
+status:   fail
+detail:   image hiveplane-api:latest has no revision label; rebuild before trusting results
+started:  2026-10-02T00:47:50.350836+00:00
+duration: 0.09s
+model:    omlx/qwen3-4b-instruct-2507/4bit
+git_sha:  b186ba158779686f69cd3fdaba1672de84a13038
+calls:    0
+runs:     (none)
+
+## Mutating calls (inputs)
+

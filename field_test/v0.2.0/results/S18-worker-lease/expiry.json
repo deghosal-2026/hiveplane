@@ -1,0 +1,22 @@
+{
+  "run_id": "run-c14c03951a65",
+  "status": 200,
+  "reassigned": [
+    {
+      "lease": {
+        "lease_id": "lease-48fbe519b9da42518109",
+        "tenant_id": "default",
+        "run_id": "run-c14c03951a65",
+        "worker_id": "ft-worker-target",
+        "workload_id": "support-agent",
+        "attempt": 2,
+        "granted_at": "2026-10-02T00:45:17.396454Z",
+        "expires_at": "2026-10-02T00:46:17.396454Z",
+        "fencing_token": 2
+      },
+      "workload_id": "support-agent",
+      "run_id": "run-c14c03951a65",
+      "reassigned_from": "ft-worker-expiry"
+    }
+  ]
+}

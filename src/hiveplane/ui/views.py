@@ -130,9 +130,12 @@ class RunDetailView(BaseModel):
     attestation_id: str | None = None
     trace_id: str | None = None
     entries: list[StoryEntryView] = Field(default_factory=list)
+    artifacts: list[dict[str, Any]] = Field(default_factory=list)
 
 
-def build_run_detail(story: dict[str, Any]) -> RunDetailView:
+def build_run_detail(
+    story: dict[str, Any], artifacts: list[dict[str, Any]] | None = None
+) -> RunDetailView:
     """Build the run detail view from a run story payload."""
     entries = [
         StoryEntryView(
@@ -157,6 +160,7 @@ def build_run_detail(story: dict[str, Any]) -> RunDetailView:
         attestation_id=story.get("attestation_id"),
         trace_id=story.get("trace_id"),
         entries=entries,
+        artifacts=artifacts or [],
     )
 
 
@@ -193,6 +197,10 @@ class QuarantineEntry(BaseModel):
     workload: str
     timestamp: str
     record_id: str
+    reason: str | None = None
+    severity: str | None = None
+    status: str = "active"
+    quarantine_id: str | None = None
 
 
 class CertDashboardView(BaseModel):
@@ -206,8 +214,15 @@ class CertDashboardView(BaseModel):
     quarantine_history: list[QuarantineEntry] = Field(default_factory=list)
 
 
-def build_cert_dashboard(records: list[dict[str, Any]]) -> CertDashboardView:
-    """Aggregate certification records into the dashboard view."""
+def build_cert_dashboard(
+    records: list[dict[str, Any]],
+    quarantines: list[dict[str, Any]] | None = None,
+) -> CertDashboardView:
+    """Aggregate certification records into the dashboard view.
+
+    ``quarantines`` are optional persisted drift-quarantine records (M34-05);
+    when supplied their reason/severity/status enrich the quarantine history.
+    """
     status_counts = dict.fromkeys(_CERT_STATUSES, 0)
     trends: list[CertTrendPoint] = []
     quarantine: list[QuarantineEntry] = []
@@ -241,6 +256,20 @@ def build_cert_dashboard(records: list[dict[str, Any]]) -> CertDashboardView:
                     record_id=str(record.get("record_id", "")),
                 )
             )
+
+    if quarantines:
+        quarantine = [
+            QuarantineEntry(
+                workload=str(item.get("workload", "")),
+                timestamp=str(item.get("timestamp", "")),
+                record_id=str(item.get("quarantine_id", "")),
+                reason=item.get("reason"),
+                severity=item.get("severity"),
+                status=str(item.get("status", "active")),
+                quarantine_id=str(item.get("quarantine_id", "")),
+            )
+            for item in quarantines
+        ]
 
     trends.sort(key=lambda point: (point.workload, point.timestamp))
     quarantine.sort(key=lambda entry: (entry.workload, entry.timestamp))
@@ -313,4 +342,397 @@ def build_spend(spend: dict[str, Any]) -> SpendView:
         by_workload=by_workload,
         by_team=by_team,
         total_usd=sum(row.total_usd for row in by_workload),
+    )
+
+
+# --------------------------------------------------------------------------- #
+# M52 — queue, health, ROI, search, diff, onboarding
+# --------------------------------------------------------------------------- #
+class QueueItemView(BaseModel):
+    """One queued task in the queue visualizer."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    task_id: str
+    workload: str
+    qos: str
+    priority: int = 0
+    reason: str = "awaiting capacity"
+
+
+class QueueView(BaseModel):
+    """Queue depth, priorities, and running load."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    depth: int = 0
+    by_qos: dict[str, int] = Field(default_factory=dict)
+    by_priority: dict[str, int] = Field(default_factory=dict)
+    items: list[QueueItemView] = Field(default_factory=list)
+    running_by_workload: dict[str, int] = Field(default_factory=dict)
+
+
+def build_queue(snapshot: dict[str, Any]) -> QueueView:
+    """Build the queue visualizer view from a queue snapshot."""
+    return QueueView(
+        depth=int(snapshot.get("depth", 0)),
+        by_qos={str(k): int(v) for k, v in snapshot.get("by_qos", {}).items()},
+        by_priority={str(k): int(v) for k, v in snapshot.get("by_priority", {}).items()},
+        items=[
+            QueueItemView(
+                task_id=str(item.get("task_id", "")),
+                workload=str(item.get("workload", "")),
+                qos=str(item.get("qos", "")),
+                priority=int(item.get("priority", 0)),
+                reason=str(item.get("reason", "awaiting capacity")),
+            )
+            for item in snapshot.get("waiting", [])
+        ],
+        running_by_workload={
+            str(k): int(v) for k, v in snapshot.get("running_by_workload", {}).items()
+        },
+    )
+
+
+class HealthWorkloadView(BaseModel):
+    """One workload's health row."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    workload: str
+    status: str = "unknown"
+    success_rate: float = 0.0
+    error_budget_remaining: float = 0.0
+
+
+class HealthView(BaseModel):
+    """The health dashboard: per-workload status and SLO budget."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    healthy: int = 0
+    degraded: int = 0
+    workloads: list[HealthWorkloadView] = Field(default_factory=list)
+
+
+def build_health(workloads: list[dict[str, Any]]) -> HealthView:
+    """Build the health dashboard from workload health payloads."""
+    rows = [
+        HealthWorkloadView(
+            workload=str(item.get("workload") or item.get("name", "")),
+            status=str(item.get("status", "unknown")),
+            success_rate=float(item.get("success_rate", 0.0)),
+            error_budget_remaining=float(item.get("error_budget_remaining", 0.0)),
+        )
+        for item in workloads
+    ]
+    healthy = sum(1 for row in rows if row.status in ("healthy", "ok"))
+    return HealthView(
+        healthy=healthy, degraded=len(rows) - healthy, workloads=rows
+    )
+
+
+def build_health_from_api(workloads: list[dict[str, Any]]) -> HealthView:
+    """Map control-plane ``WorkloadHealth`` rows into the health view.
+
+    ``failure_rate`` (0..1) becomes ``success_rate = 1 - failure_rate``; the
+    error-budget remaining is taken from the ``availability`` objective when
+    present, otherwise it defaults to ``0.0``.
+    """
+    mapped: list[dict[str, Any]] = []
+    for item in workloads:
+        objectives = item.get("objectives") or []
+        availability = next(
+            (obj for obj in objectives if obj.get("objective") == "availability"),
+            None,
+        )
+        mapped.append(
+            {
+                "workload": str(item.get("workload", "")),
+                "status": str(item.get("status", "unknown")),
+                "success_rate": 1.0 - float(item.get("failure_rate", 0.0)),
+                "error_budget_remaining": (
+                    float(availability.get("remaining", 0.0))
+                    if availability is not None
+                    else 0.0
+                ),
+            }
+        )
+    return build_health(mapped)
+
+
+class RoiRowView(BaseModel):
+    """One ROI row with its evidence-backed flag."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    workload: str
+    spend_usd: float = 0.0
+    value_usd: float = 0.0
+    roi: float = 0.0
+    expensive_low_value: bool = False
+    evidence: list[str] = Field(default_factory=list)
+
+
+class RoiView(BaseModel):
+    """The ROI dashboard: spend vs outcome and low-value flags."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    fleet_roi: float = 0.0
+    total_spend_usd: float = 0.0
+    rows: list[RoiRowView] = Field(default_factory=list)
+
+    @property
+    def flagged(self) -> list[RoiRowView]:
+        """Return the flagged expensive-but-low-value rows."""
+        return [row for row in self.rows if row.expensive_low_value]
+
+
+def build_roi(payload: dict[str, Any]) -> RoiView:
+    """Build the ROI dashboard from a fleet ROI report."""
+    return RoiView(
+        fleet_roi=float(payload.get("fleet_roi", 0.0)),
+        total_spend_usd=float(payload.get("total_spend_usd", 0.0)),
+        rows=[
+            RoiRowView(
+                workload=str(row.get("workload_id", "")),
+                spend_usd=float(row.get("spend_usd", 0.0)),
+                value_usd=float(row.get("value_usd", 0.0)),
+                roi=float(row.get("roi", 0.0)),
+                expensive_low_value=bool(row.get("expensive_low_value", False)),
+                evidence=[str(e) for e in row.get("evidence", [])],
+            )
+            for row in payload.get("rows", [])
+        ],
+    )
+
+
+class SearchHitView(BaseModel):
+    """One global-search hit."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    kind: str
+    identifier: str
+    label: str = ""
+
+
+class SearchView(BaseModel):
+    """Global search results across runs, approvals, and workloads."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    query: str = ""
+    hits: list[SearchHitView] = Field(default_factory=list)
+
+
+def build_search(query: str, hits: list[dict[str, Any]]) -> SearchView:
+    """Build the global-search view."""
+    return SearchView(
+        query=query,
+        hits=[
+            SearchHitView(
+                kind=str(hit.get("kind", "")),
+                identifier=str(hit.get("identifier", "")),
+                label=str(hit.get("label", "")),
+            )
+            for hit in hits
+        ],
+    )
+
+
+class DiffEntryView(BaseModel):
+    """One changed field in a run/manifest diff."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    field: str
+    before: str = ""
+    after: str = ""
+
+
+class DiffView(BaseModel):
+    """A regression or run-to-run diff."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    title: str = ""
+    entries: list[DiffEntryView] = Field(default_factory=list)
+
+
+def build_diff(payload: dict[str, Any]) -> DiffView:
+    """Build a diff view from a diff payload."""
+    return DiffView(
+        title=str(payload.get("title", "Diff")),
+        entries=[
+            DiffEntryView(
+                field=str(entry.get("field", "")),
+                before=str(entry.get("before", "")),
+                after=str(entry.get("after", "")),
+            )
+            for entry in payload.get("entries", [])
+        ],
+    )
+
+
+def diff_from_version_diff(payload: dict[str, Any]) -> DiffView:
+    """Map a registry ``VersionDiff`` into a diff view.
+
+    Each changed field is shown as a marker entry since the API reports field
+    names only, not their prior/next values.
+    """
+    return DiffView(
+        title=(
+            f"{payload.get('workload', '')} "
+            f"v{payload.get('from_version', '')}\u2192v{payload.get('to_version', '')}"
+        ),
+        entries=[
+            DiffEntryView(field=str(field), before="\u2014", after="changed")
+            for field in payload.get("changed_fields", [])
+        ],
+    )
+
+
+def diff_from_regression(payload: dict[str, Any]) -> DiffView:
+    """Map a certification ``RegressionDiff`` into a diff view."""
+    deltas = list(payload.get("regressed", [])) + list(payload.get("improved", []))
+    return DiffView(
+        title=f"{payload.get('workload_id', '')} regression",
+        entries=[
+            DiffEntryView(
+                field=str(delta.get("task_id", "")),
+                before=str(delta.get("before", "")),
+                after=str(delta.get("after", "")),
+            )
+            for delta in deltas
+        ],
+    )
+
+
+_RUN_DIFF_FIELDS = ("state", "cost_usd", "model_identity")
+
+
+def diff_from_runs(before: dict[str, Any], after: dict[str, Any]) -> DiffView:
+    """Compare two run stories' top-level state, cost, and model identity."""
+    return DiffView(
+        title=f"run {before.get('run_id', '')}\u2192{after.get('run_id', '')}",
+        entries=[
+            DiffEntryView(
+                field=field,
+                before=str(before.get(field, "")),
+                after=str(after.get(field, "")),
+            )
+            for field in _RUN_DIFF_FIELDS
+            if before.get(field) != after.get(field)
+        ],
+    )
+
+
+class ReplayFrameView(BaseModel):
+    """One reconstructed run frame (M60)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    sequence: int = 0
+    event_type: str = ""
+    state: str = ""
+    detail: str = ""
+    usage: str = ""
+
+
+class ReplayView(BaseModel):
+    """A frame-by-frame replay of a run (M60)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    run_id: str = ""
+    digest: str = ""
+    side_effects: bool = False
+    frames: list[ReplayFrameView] = Field(default_factory=list)
+
+
+def build_replay(payload: dict[str, Any]) -> ReplayView:
+    """Map a replay frame set into a display-ready view."""
+    frames = []
+    for frame in payload.get("frames", []):
+        before = frame.get("from_state")
+        after = frame.get("to_state")
+        state = f"{before} \u2192 {after}" if before or after else ""
+        usage = frame.get("usage") or {}
+        frames.append(
+            ReplayFrameView(
+                sequence=int(frame.get("sequence", 0)),
+                event_type=str(frame.get("event_type", "")),
+                state=state,
+                detail=str(frame.get("detail") or ""),
+                usage=str(usage.get("model_identity") or "") if usage else "",
+            )
+        )
+    return ReplayView(
+        run_id=str(payload.get("run_id", "")),
+        digest=str(payload.get("digest", "")),
+        side_effects=bool(payload.get("side_effects", False)),
+        frames=frames,
+    )
+
+
+def diff_from_replay(payload: dict[str, Any]) -> DiffView:
+    """Map a run-to-run ``RunDiff`` into a diff view (M60)."""
+    source = payload.get("source_run_id", "")
+    target = payload.get("target_run_id", "")
+    suffix = " (identical)" if payload.get("identical") else ""
+    return DiffView(
+        title=f"run {source}\u2192{target}{suffix}",
+        entries=[
+            DiffEntryView(
+                field=str(delta.get("field", "")),
+                before=str(delta.get("before", "")),
+                after=str(delta.get("after", "")),
+            )
+            for delta in payload.get("field_deltas", [])
+        ],
+    )
+
+
+class OnboardingStep(BaseModel):
+    """One onboarding-wizard step and its completion state."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    key: str
+    title: str
+    done: bool = False
+    href: str = ""
+
+
+class OnboardingView(BaseModel):
+    """The onboarding wizard: register → certify → first trigger."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    steps: list[OnboardingStep] = Field(default_factory=list)
+
+    @property
+    def completed(self) -> int:
+        """Return the number of completed steps."""
+        return sum(1 for step in self.steps if step.done)
+
+
+_ONBOARDING_STEPS = (
+    ("connect", "Connect a model", "/settings/model"),
+    ("register", "Register a workload", "/workloads"),
+    ("certify", "Certify the workload", "/certifications"),
+    ("trigger", "Fire the first trigger", "/triggers"),
+)
+
+
+def build_onboarding(done: set[str] | None = None) -> OnboardingView:
+    """Build the onboarding wizard with the completed step keys."""
+    completed = done or set()
+    return OnboardingView(
+        steps=[
+            OnboardingStep(key=key, title=title, done=key in completed, href=href)
+            for key, title, href in _ONBOARDING_STEPS
+        ]
     )

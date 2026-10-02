@@ -1,0 +1,37 @@
+{
+  "readyz": 200,
+  "run": {
+    "id": "run-3a4a5c53b6e3",
+    "workload_id": "uncertified-agent",
+    "caller": "field-test-v02",
+    "state": "queued",
+    "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+    "created_at": "2026-10-02T00:48:34.906815Z",
+    "updated_at": "2026-10-02T00:48:34.906815Z",
+    "started_at": null,
+    "finished_at": null,
+    "trigger_origin": null,
+    "pipeline_origin": null,
+    "agent_tool_origin": null,
+    "manifest_version": 4,
+    "context": "sandbox",
+    "sandbox": true,
+    "task": {
+      "query": "reset password",
+      "account_id": "ACC-001"
+    },
+    "result": null,
+    "failure_reason": null,
+    "cost_usd": 0.0,
+    "sandbox_id": null,
+    "trace_id": "fc01640f3e1f3105e2a47d8e804b5a32",
+    "shadow_of": null,
+    "probe": false,
+    "read_only": false,
+    "canary_rollout_id": null,
+    "canary_arm": null,
+    "tenant_id": "default",
+    "team_id": "default",
+    "attribution_key": "default"
+  }
+}

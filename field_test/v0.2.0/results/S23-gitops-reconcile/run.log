@@ -1,0 +1,17 @@
+# S23 gitops-reconcile
+
+status:   pass
+detail:   add temp -> register; delete -> deregister; threshold change -> re-certified; converged
+started:  2026-10-02T01:22:14.619486+00:00
+duration: 0.13s
+model:    omlx/qwen3-4b-instruct-2507/4bit
+git_sha:  739840737846df1d5061c0f119d125534f2ae07a
+calls:    12
+runs:     (none)
+
+## Mutating calls (inputs)
+
+  POST /reconcile/ft-gitops-inline/apply -> 200
+  POST /reconcile/ft-gitops-inline/apply -> 200
+  POST /reconcile/ft-gitops-inline/apply -> 200
+  POST /reconcile/ft-gitops-inline/plan -> 200

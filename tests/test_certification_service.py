@@ -26,6 +26,8 @@ from hiveplane.registry.errors import AttestationAlreadyExistsError
 from hiveplane.registry.models import AdmissionContext
 from hiveplane.registry.service import RegistryService
 from hiveplane.registry.store import InMemoryRegistryStore
+from hiveplane.tenancy import Role, TenantContext
+from hiveplane.transparency import InMemoryTransparencyStore, TransparencyLog
 
 _FIXED_NOW = datetime(2026, 9, 12, 10, 0, 0, tzinfo=UTC)
 _ENV = Environment(
@@ -237,3 +239,64 @@ def test_manifest_staging_threshold_overrides_fleet_default(setup: Setup) -> Non
     )
 
     assert certification.status is CertificationStatus.UNCERTIFIED
+
+
+def test_certify_appends_to_the_transparency_log(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    private_key, public_key = generate_keypair()
+    registry = RegistryService(
+        InMemoryRegistryStore(),
+        clock=lambda: _FIXED_NOW,
+        attestation_public_key=public_key,
+    )
+    registry.create(make_manifest(name="repo-agent"))
+    engine = CertificationEngine(_policy(), clock=lambda: _FIXED_NOW)
+    log = TransparencyLog(InMemoryTransparencyStore())
+    service = CertificationService(
+        engine,
+        registry,
+        private_key=private_key,
+        environment=_ENV,
+        clock=lambda: _FIXED_NOW,
+        id_factory=lambda: "att-1",
+        transparency_log=log,
+    )
+
+    service.certify(_result(), target_context=TargetContext.STAGING)
+
+    entry = log.get_entry("att-1")
+    assert entry is not None
+    assert entry.attestation.attestation_id == "att-1"
+    assert log.verify_chain().valid is True
+
+
+def test_certification_via_non_default_tenant(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    private_key, public_key = generate_keypair()
+    registry = RegistryService(
+        InMemoryRegistryStore(),
+        clock=lambda: _FIXED_NOW,
+        attestation_public_key=public_key,
+    )
+    acme = TenantContext(tenant_id="acme", role=Role.ADMIN)
+    registry.create(make_manifest(name="repo-agent"), ctx=acme)
+    engine = CertificationEngine(_policy(), clock=lambda: _FIXED_NOW)
+    service = CertificationService(
+        engine,
+        registry,
+        private_key=private_key,
+        environment=_ENV,
+        clock=lambda: _FIXED_NOW,
+        id_factory=lambda: "att-1",
+    )
+
+    attestation = service.certify(
+        _result(), target_context=TargetContext.STAGING, ctx=acme
+    )
+
+    assert attestation.workload_id == "repo-agent"
+    assert registry.get("repo-agent", ctx=acme).certification_status is (
+        CertificationStatus.PROVISIONAL
+    )

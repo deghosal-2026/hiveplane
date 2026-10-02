@@ -1,0 +1,11 @@
+[
+  {
+    "run_id": "run-04a2371a89e1",
+    "destination_type": "slack",
+    "target": "#platform-oncall",
+    "status": "delivered",
+    "attempts": 1,
+    "error": null,
+    "timestamp": "2026-10-02T00:47:49.028517Z"
+  }
+]

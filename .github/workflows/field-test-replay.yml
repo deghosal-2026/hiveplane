@@ -1,0 +1,58 @@
+name: Field-test replay sweep (v0.2.0)
+
+# Hermetic, deterministic control-loop sweep: the v0.2.0 real-agent scenarios (S1-S31 +
+# H1-H5) run against the fake/replay provider (`.env.ci`) with no network and no model.
+# This protects the control loop continuously; the nightly job (docker-nightly-v02.yml)
+# still exercises real inference on the self-hosted OMLX runner.
+
+on:
+  pull_request:
+    branches: [main, feat-v0.2.0]
+    paths:
+      - "src/hiveplane/**"
+      - "scripts/field_test_runner_v02.py"
+      - "scripts/field-test-v02.sh"
+      - "field_test/**"
+      - ".env.ci"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: field-test-replay-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  replay-sweep:
+    name: S1-S31 + H1-H5 on the fake/replay provider
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev,langgraph]"
+
+      # The runner talks to the API over HTTP; $HIVEPLANE_MODEL__PROVIDER=fake makes the
+      # script skip the local-LLM preflight and compose serve deterministic replays.
+      - name: Run the hermetic replay sweep
+        env:
+          HIVEPLANE_MODEL__PROVIDER: fake
+        run: |
+          scripts/field-test-v02.sh --no-build --env-file .env.ci
+
+      - name: Upload field-test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: field-test-replay-evidence
+          path: |
+            field_test/v0.2.0/results/**
+            field_test/v0.2.0/results/report.generated.md
+          if-no-files-found: warn

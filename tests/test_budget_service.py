@@ -14,6 +14,12 @@ from hiveplane.budget.store import InMemoryBudgetStore
 from hiveplane.core.run import AdmissionContext
 from hiveplane.core.usage import BudgetLevel, UsageReport
 from hiveplane.core.workload import AgentWorkload
+from hiveplane.cost.models import BudgetScope, CostEvent
+from hiveplane.cost.service import CostService
+from hiveplane.cost.store import InMemoryCostStore
+from hiveplane.fleet.cost import CostPeriodKind
+from hiveplane.tenancy import DEFAULT_CONTEXT, Role, TenantContext
+from hiveplane.tenancy.context import DEFAULT_TENANT_ID, context_for_run
 from metrics import RecordingMetrics
 
 
@@ -133,6 +139,21 @@ def test_check_denies_when_team_exhausted(make_manifest: Callable[..., AgentWork
     assert check.level is BudgetLevel.TEAM
 
 
+def test_check_does_not_see_another_tenants_spend(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    service, store = _service()
+    workload = make_manifest()
+    store.add_day_spend(
+        workload.name,
+        "2026-01-01",
+        workload.spec.budget.per_day_usd,
+        ctx=context_for_run("acme"),
+    )
+    check = service.check(workload, AdmissionContext.PRODUCTION, ctx=DEFAULT_CONTEXT)
+    assert check.allowed is True
+
+
 def test_record_usage_without_model_identity_is_rejected(
     make_manifest: Callable[..., AgentWorkload],
 ) -> None:
@@ -148,3 +169,38 @@ def test_record_usage_without_model_identity_is_rejected(
 
     with pytest.raises(MissingModelIdentityError):
         service.record_usage(make_manifest(), report)
+
+
+def test_monthly_tenant_cap_blocks_admission(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    """An enforced MONTH cap must deny admission even with no DAY cap."""
+    ctx = TenantContext(tenant_id=DEFAULT_TENANT_ID, role=Role.ADMIN)
+    cost = CostService(InMemoryCostStore(), clock=_clock)
+    cost.set_budget(
+        DEFAULT_TENANT_ID,
+        BudgetScope.TENANT,
+        DEFAULT_TENANT_ID,
+        CostPeriodKind.MONTH,
+        limit_usd=100.0,
+        cap_usd=50.0,
+        enforced=True,
+        ctx=ctx,
+    )
+    cost.record(
+        CostEvent(
+            event_id="e1",
+            tenant_id=DEFAULT_TENANT_ID,
+            team_id="platform",
+            workload_id="agent-1",
+            cost_usd=60.0,
+            occurred_at=_clock(),
+        ),
+        ctx=ctx,
+    )
+
+    store = InMemoryBudgetStore()
+    service = BudgetService(store, CostTable(), clock=_clock, cost_service=cost)
+    check = service.check(make_manifest(), AdmissionContext.PRODUCTION, ctx=ctx)
+    assert check.allowed is False
+    assert check.reason == "tenant spend cap exceeded"

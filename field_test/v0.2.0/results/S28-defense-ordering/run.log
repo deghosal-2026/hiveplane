@@ -1,0 +1,28 @@
+# S28 defense-ordering
+
+status:   pass
+detail:   denied vs blocked ordering proven
+started:  2026-10-02T00:47:10.391167+00:00
+duration: 19.16s
+model:    omlx/qwen3-4b-instruct-2507/4bit
+git_sha:  b186ba158779686f69cd3fdaba1672de84a13038
+calls:    2696
+runs:     run-c8b8b176c549, run-a60fc7bca06b
+
+## Mutating calls (inputs)
+
+  POST /workloads -> 409
+  PUT /workloads/support-agent -> 200
+  POST /certifications -> 201
+  POST /quarantines/quar-5ca4f814a1c8/reinstate -> 409
+  POST /certifications -> 201
+  POST /quarantines/quar-af2a9b9a8904/reinstate -> 409
+  POST /certifications -> 201
+  POST /quarantines/quar-101c5ab6dffa/reinstate -> 409
+  POST /certifications -> 201
+  POST /runs -> 201
+  POST /runs/run-c8b8b176c549/start -> 200
+  POST /runs/run-c8b8b176c549/tool-calls -> 200
+  POST /runs -> 201
+  POST /runs/run-a60fc7bca06b/start -> 200
+  POST /runs/run-a60fc7bca06b/tool-calls -> 200

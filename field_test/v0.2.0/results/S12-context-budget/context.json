@@ -1,0 +1,18 @@
+{
+  "run_id": "run-7a55ae1737c3",
+  "state": "paused",
+  "limit_tokens": 1,
+  "used_tokens": 16,
+  "guard_events": [
+    {
+      "run_id": "run-7a55ae1737c3",
+      "sequence": 4,
+      "type": "guard",
+      "actor": "guard",
+      "timestamp": "2026-10-02T00:44:54.537612Z",
+      "from_state": null,
+      "to_state": null,
+      "detail": "context: context budget exceeded"
+    }
+  ]
+}

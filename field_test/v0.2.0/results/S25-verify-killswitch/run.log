@@ -1,0 +1,32 @@
+# S25 verify-killswitch
+
+status:   pass
+detail:   verify valid; kill switch deny+restore; malformed 422; tampered bundle refused on provenance
+started:  2026-10-02T00:46:20.009269+00:00
+duration: 16.29s
+model:    omlx/qwen3-4b-instruct-2507/4bit
+git_sha:  b186ba158779686f69cd3fdaba1672de84a13038
+calls:    2266
+runs:     run-8eddeebc9641
+
+## Mutating calls (inputs)
+
+  POST /workloads -> 409
+  PUT /workloads/support-agent -> 200
+  POST /certifications -> 201
+  POST /quarantines/quar-5ca4f814a1c8/reinstate -> 409
+  POST /certifications -> 201
+  POST /quarantines/quar-af2a9b9a8904/reinstate -> 409
+  POST /certifications -> 201
+  POST /quarantines/quar-101c5ab6dffa/reinstate -> 409
+  POST /certifications -> 201
+  POST /tools/mcp.github.read_issue/enable -> 200
+  POST /tools/mcp.github.read_issue/disable -> 200
+  POST /runs -> 201
+  POST /runs/run-8eddeebc9641/start -> 200
+  POST /runs/run-8eddeebc9641/tool-calls -> 200
+  POST /tools/mcp.github.read_issue/enable -> 200
+  POST /import -> 422
+  POST /export -> 200
+  POST /import -> 200
+  POST /import -> 400

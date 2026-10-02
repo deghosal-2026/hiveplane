@@ -1,0 +1,73 @@
+{
+  "pipeline_run_id": "prun-2373141bd3fb",
+  "pipeline_id": "ft-pipeline",
+  "state": "completed",
+  "budget_usd": 0.0,
+  "spent_usd": 0.0,
+  "error": null,
+  "nodes": [
+    {
+      "pipeline_run_id": "prun-2373141bd3fb",
+      "pipeline_id": "ft-pipeline",
+      "node_id": "a",
+      "tenant_id": "default",
+      "attempt": 1,
+      "status": "completed",
+      "child_run_id": "run-09e12cb7c9f9",
+      "output": {
+        "answer": "Reset at portal.example.com/settings",
+        "status": "success",
+        "account_tier": "pro"
+      },
+      "cost_usd": 0.0,
+      "error": null,
+      "approval_id": null,
+      "artifacts": [],
+      "instances": [],
+      "started_at": "2026-10-02T00:43:54.419818Z",
+      "finished_at": "2026-10-02T00:43:59.423718Z"
+    },
+    {
+      "pipeline_run_id": "prun-2373141bd3fb",
+      "pipeline_id": "ft-pipeline",
+      "node_id": "b",
+      "tenant_id": "default",
+      "attempt": 1,
+      "status": "completed",
+      "child_run_id": "run-6875930b122c",
+      "output": {
+        "answer": "Reset at portal.example.com/settings",
+        "status": "success",
+        "account_tier": "pro"
+      },
+      "cost_usd": 0.0,
+      "error": null,
+      "approval_id": null,
+      "artifacts": [],
+      "instances": [],
+      "started_at": "2026-10-02T00:43:59.427886Z",
+      "finished_at": "2026-10-02T00:44:04.479417Z"
+    },
+    {
+      "pipeline_run_id": "prun-2373141bd3fb",
+      "pipeline_id": "ft-pipeline",
+      "node_id": "c",
+      "tenant_id": "default",
+      "attempt": 1,
+      "status": "completed",
+      "child_run_id": "run-0a1e254d1cef",
+      "output": {
+        "answer": "Reset at portal.example.com/settings",
+        "status": "success",
+        "account_tier": "pro"
+      },
+      "cost_usd": 0.0,
+      "error": null,
+      "approval_id": null,
+      "artifacts": [],
+      "instances": [],
+      "started_at": "2026-10-02T00:44:04.482978Z",
+      "finished_at": "2026-10-02T00:44:09.537144Z"
+    }
+  ]
+}

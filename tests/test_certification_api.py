@@ -249,6 +249,7 @@ def test_start_certification_forwards_model_identity() -> None:
             target_context: Any,
             corpus_ref: Any,
             model_identity: str | None = None,
+            **_: Any,
         ) -> Any:
             captured["workload"] = workload
             captured["model_identity"] = model_identity
@@ -257,7 +258,14 @@ def test_start_certification_forwards_model_identity() -> None:
     request = CertificationRequest(
         workload="repo-agent", model_identity="openai/gpt-4o/2024-08-06"
     )
-    result = start_certification(request, _FakeCoordinator())  # type: ignore[arg-type]
+    from hiveplane.tenancy.context import DEFAULT_CONTEXT
+
+    result = start_certification(
+        request,
+        _FakeCoordinator(),  # type: ignore[arg-type]
+        DEFAULT_CONTEXT,
+        None,  # type: ignore[arg-type]
+    )
 
     assert result is sentinel
     assert captured["workload"] == "repo-agent"

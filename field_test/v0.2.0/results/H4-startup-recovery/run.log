@@ -1,0 +1,17 @@
+# H4 startup-recovery
+
+status:   pass
+detail:   API restarted with orphaned run
+started:  2026-10-02T00:48:34.877834+00:00
+duration: 3.35s
+model:    omlx/qwen3-4b-instruct-2507/4bit
+git_sha:  b186ba158779686f69cd3fdaba1672de84a13038
+calls:    12
+runs:     run-3a4a5c53b6e3
+
+## Mutating calls (inputs)
+
+  POST /workloads -> 409
+  PUT /workloads/uncertified-agent -> 200
+  POST /runs -> 201
+  DELETE /workloads/uncertified-agent -> 409

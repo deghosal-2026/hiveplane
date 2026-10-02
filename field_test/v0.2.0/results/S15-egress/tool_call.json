@@ -1,0 +1,10 @@
+{
+  "run_id": "run-51f2d242b522",
+  "tool_id": "mcp.github.read_issue",
+  "outcome": "denied",
+  "rule": "egress.denied",
+  "reason": "egress to 'evil.example.com' is not on the allow-list",
+  "shaped_output": null,
+  "approval_id": null,
+  "egress_checked": false
+}

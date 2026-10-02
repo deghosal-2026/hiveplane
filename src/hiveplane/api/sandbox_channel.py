@@ -26,6 +26,7 @@ from hiveplane.execution.service import RunService
 from hiveplane.execution.tools import ToolCallRequest, ToolCallResult, ToolGateway
 from hiveplane.llm.models import CompletionRequest, CompletionResult, Message
 from hiveplane.llm.provider import LLMProvider
+from hiveplane.tenancy import DEFAULT_CONTEXT, TenantContext
 
 _RUN_TOKEN_HEADER = "X-HivePlane-Run-Token"
 
@@ -35,14 +36,21 @@ class SandboxChannel:
 
     def __init__(self) -> None:
         self._tokens: dict[str, str] = {}
+        self._contexts: dict[str, TenantContext] = {}
         self._lock = threading.Lock()
 
-    def mint(self, run_id: str) -> str:
-        """Create and store a token for a run."""
+    def mint(self, run_id: str, *, ctx: TenantContext = DEFAULT_CONTEXT) -> str:
+        """Create and store a token (and its tenant context) for a run."""
         token = f"tok-{uuid4().hex}"
         with self._lock:
             self._tokens[run_id] = token
+            self._contexts[run_id] = ctx
         return token
+
+    def context(self, run_id: str) -> TenantContext:
+        """Return the tenant context recorded when the run's token was minted."""
+        with self._lock:
+            return self._contexts.get(run_id, DEFAULT_CONTEXT)
 
     def verify(self, run_id: str, token: str) -> bool:
         """Return True when ``token`` is the run's current token."""
@@ -54,6 +62,7 @@ class SandboxChannel:
         """Drop a run's token so the channel can no longer be used."""
         with self._lock:
             self._tokens.pop(run_id, None)
+            self._contexts.pop(run_id, None)
 
 
 class ModelCallRequest(BaseModel):
@@ -110,7 +119,8 @@ def sandbox_tool_call(
     """Route a tool call through the control-plane boundary."""
     _require_token(request, run_id)
     gateway: ToolGateway = request.app.state.tool_gateway
-    return gateway.invoke(run_id, payload)
+    run_ctx = request.app.state.sandbox_channel.context(run_id)
+    return gateway.invoke(run_id, payload, ctx=run_ctx)
 
 
 @router.post("/{run_id}/model", response_model=CompletionResult)
@@ -122,7 +132,8 @@ def sandbox_model_call(
     run_service: RunService = request.app.state.run_service
     provider: LLMProvider = request.app.state.provider
     cost_table: CostTable = request.app.state.cost_table
-    bound = run_service.get(run_id).model_identity
+    run_ctx = request.app.state.sandbox_channel.context(run_id)
+    bound = run_service.get(run_id, ctx=run_ctx).model_identity
     if bound is None:
         raise HTTPException(status_code=422, detail="run has no bound model identity")
     response = provider.complete(
@@ -153,6 +164,7 @@ def sandbox_model_call(
             timestamp=datetime.now(UTC),
             model_identity=canonical,
         ),
+        ctx=run_ctx,
     )
     return CompletionResult(
         content=response.content,
@@ -169,6 +181,8 @@ def sandbox_usage(
     """Record non-model usage for server-side budget enforcement."""
     _require_token(request, run_id)
     run_service: RunService = request.app.state.run_service
+    run_ctx = request.app.state.sandbox_channel.context(run_id)
+    run = run_service.get(run_id, ctx=run_ctx)
     return run_service.record_usage(
         run_id,
         UsageReport(
@@ -178,8 +192,9 @@ def sandbox_usage(
             tool_calls=payload.tool_calls,
             cost_usd=payload.cost_usd,
             timestamp=datetime.now(UTC),
-            model_identity=run_service.get(run_id).model_identity,
+            model_identity=run.model_identity,
         ),
+        ctx=run_ctx,
     )
 
 
@@ -190,8 +205,9 @@ def sandbox_result(
     """Complete the run with the agent's final result."""
     _require_token(request, run_id)
     run_service: RunService = request.app.state.run_service
+    run_ctx = request.app.state.sandbox_channel.context(run_id)
     return run_service.transition(
-        run_id, RunState.COMPLETED, actor="adapter", result=payload.result
+        run_id, RunState.COMPLETED, actor="adapter", result=payload.result, ctx=run_ctx
     )
 
 
@@ -202,8 +218,9 @@ def sandbox_failure(
     """Fail the run with the reported reason."""
     _require_token(request, run_id)
     run_service: RunService = request.app.state.run_service
+    run_ctx = request.app.state.sandbox_channel.context(run_id)
     return run_service.fail(
-        run_id, actor="adapter", reason=payload.reason or "agent failed"
+        run_id, actor="adapter", reason=payload.reason or "agent failed", ctx=run_ctx
     )
 
 
@@ -212,7 +229,8 @@ def sandbox_control(run_id: Annotated[str, Path], request: Request) -> dict[str,
     """Report the run's state so the child can checkpoint cooperatively."""
     _require_token(request, run_id)
     run_service: RunService = request.app.state.run_service
-    run = run_service.get(run_id)
+    run_ctx = request.app.state.sandbox_channel.context(run_id)
+    run = run_service.get(run_id, ctx=run_ctx)
     return {
         "state": run.state.value,
         "paused": run.state is RunState.PAUSED,

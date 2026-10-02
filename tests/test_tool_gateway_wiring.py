@@ -112,6 +112,7 @@ def test_build_tool_gateway_serves_fixture_for_allowed_tool(
         context=AdmissionContext.SANDBOX,
         model_identity="openai/gpt-4o/2024-08-06",
     )
+    service.start(run.id, actor="test")
     result = gateway.invoke(run.id, ToolCallRequest(tool_id="mcp.t.read"))
 
     assert result.outcome is ToolCallOutcome.ALLOWED
@@ -136,6 +137,7 @@ def test_missing_fixture_fails_loudly(
         context=AdmissionContext.SANDBOX,
         model_identity="openai/gpt-4o/2024-08-06",
     )
+    service.start(run.id, actor="test")
     with pytest.raises(ToolFixtureNotFoundError):
         gateway.invoke(run.id, ToolCallRequest(tool_id="mcp.t.read"))
 
@@ -159,6 +161,7 @@ def test_caller_supplied_output_still_overrides_fixture(
         context=AdmissionContext.SANDBOX,
         model_identity="openai/gpt-4o/2024-08-06",
     )
+    service.start(run.id, actor="test")
     result = gateway.invoke(
         run.id, ToolCallRequest(tool_id="mcp.t.read", output="caller-provided")
     )

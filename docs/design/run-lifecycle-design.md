@@ -1,6 +1,7 @@
 # D2: Run Lifecycle Design
 
 > Status: draft
+> **v0.2.0:** extended by [Orchestration (D24)](orchestration-design.md) and [Fleet Execution (D34)](fleet-execution-design.md).
 
 ## Problem
 

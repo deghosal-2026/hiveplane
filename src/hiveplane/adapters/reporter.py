@@ -13,13 +13,14 @@ from pydantic import JsonValue
 from hiveplane.core.event import EventType
 from hiveplane.core.run import Run, RunState
 from hiveplane.core.usage import UsageReport
+from hiveplane.tenancy import DEFAULT_CONTEXT, TenantContext
 
 
 @runtime_checkable
 class RunReporter(Protocol):
     """The control-plane operations a runtime adapter may report through."""
 
-    def get(self, run_id: str) -> Run:
+    def get(self, run_id: str, *, ctx: TenantContext = DEFAULT_CONTEXT) -> Run:
         """Return the current run aggregate."""
         ...
 
@@ -32,11 +33,18 @@ class RunReporter(Protocol):
         detail: str | None = None,
         failure_reason: str | None = None,
         result: JsonValue | None = None,
+        ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> Run:
         """Move a run to a target state, recording the transition."""
         ...
 
-    def record_usage(self, run_id: str, report: UsageReport) -> Run:
+    def record_usage(
+        self,
+        run_id: str,
+        report: UsageReport,
+        *,
+        ctx: TenantContext = DEFAULT_CONTEXT,
+    ) -> Run:
         """Record priced usage for a run and enforce budget."""
         ...
 
@@ -47,6 +55,7 @@ class RunReporter(Protocol):
         actor: str,
         *,
         detail: str | None = None,
+        ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> None:
         """Append an attributed event to a run's history."""
         ...

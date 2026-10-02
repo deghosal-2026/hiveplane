@@ -1,0 +1,21 @@
+{
+  "quarantine_id": "quar-101c5ab6dffa",
+  "workload": "support-agent",
+  "status": "active",
+  "severity": "warning",
+  "reason": "3 injection attempts within the repeat window",
+  "actor": "defense",
+  "baseline_attestation_id": null,
+  "assessment": null,
+  "evidence": {},
+  "regression_diff": null,
+  "notified": [
+    "#agent-certifications",
+    "http://webhook-sink:8081/webhook"
+  ],
+  "cancelled_runs": [],
+  "tenant_id": "default",
+  "timestamp": "2026-10-02T00:44:50.411108Z",
+  "reinstated_at": null,
+  "reinstated_by": null
+}

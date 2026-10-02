@@ -7,13 +7,22 @@ sandbox, output shaping, tools, fan-out, health, and observability blocks.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from datetime import UTC, datetime
 from enum import StrEnum
+from typing import Any
 
-from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, model_validator
+from pydantic import (
+    AwareDatetime,
+    BaseModel,
+    ConfigDict,
+    Field,
+    JsonValue,
+    model_validator,
+)
 
 from hiveplane.certification.models import CertificationStatus
-from hiveplane.core.decision import ActionClass
+from hiveplane.core.decision import ActionClass, TimeWindow
 from hiveplane.core.fanout import FanOutSpec
 from hiveplane.core.health import HealthSpec
 from hiveplane.core.sandbox import SandboxSpec
@@ -24,10 +33,13 @@ from hiveplane.core.types import Duration
 
 
 class RuntimeAdapter(StrEnum):
-    """Supported runtime adapter types in v0.1.0."""
+    """Supported runtime adapter types."""
 
     RAW_WORKER = "raw-worker"
     LANGGRAPH = "langgraph"
+    PYDANTIC_AI = "pydanticai"
+    OPENAI_AGENTS = "openai-agents"
+    CREWAI = "crewai"
 
 
 class RuntimeSpec(BaseModel):
@@ -38,6 +50,7 @@ class RuntimeSpec(BaseModel):
     adapter: RuntimeAdapter
     entrypoint: str = Field(min_length=1)
     env: dict[str, str] = Field(default_factory=dict)
+    adapter_contract: str = Field(default="2", pattern=r"^[0-9]+$")
 
 
 class ModelStrategy(StrEnum):
@@ -105,6 +118,21 @@ class BudgetSpec(BaseModel):
         return self
 
 
+class GuardsSpec(BaseModel):
+    """Per-workload runtime-guard limits (M41; #508).
+
+    Unset fields fall back to the plane-wide guard configuration.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    context_tokens: int | None = Field(default=None, ge=1)
+    context_warn_at: float | None = Field(default=None, ge=0.0, le=1.0)
+    velocity_window_seconds: int | None = Field(default=None, gt=0)
+    velocity_limit_usd: float | None = Field(default=None, gt=0.0)
+    velocity_multiplier: float | None = Field(default=None, gt=0.0)
+
+
 class ApprovalsSpec(BaseModel):
     """Which action classes require human approval."""
 
@@ -122,6 +150,22 @@ class ObservabilitySpec(BaseModel):
 
     contract: str = "standard"
     trace_sampling: float = Field(default=1.0, gt=0.0, le=1.0)
+
+
+class IOSpec(BaseModel):
+    """Declared input/output schemas for pipeline handoff validation (M29-03)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    input_schema: dict[str, JsonValue] | None = None
+    output_schema: dict[str, JsonValue] | None = None
+
+
+def parse_io_spec(data: Mapping[str, Any] | None) -> IOSpec | None:
+    """Validate a manifest ``spec.io`` block, or return None when absent."""
+    if data is None:
+        return None
+    return IOSpec.model_validate(dict(data))
 
 
 class CertificationSpec(BaseModel):
@@ -155,6 +199,29 @@ class CertificationSpec(BaseModel):
         return self
 
 
+class SecretBinding(BaseModel):
+    """A manifest-declared secret a workload is allowed to resolve (M45-02)."""
+
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+
+    ref: str = Field(min_length=1)
+    injection: dict[str, JsonValue] | None = None
+
+    def parsed(self) -> Any:
+        """Parse the binding's ref, failing closed when malformed."""
+        from hiveplane.secrets.models import SecretRef
+
+        return SecretRef.parse(self.ref)
+
+    def injection_spec(self) -> Any:
+        """Validate and return the injection spec, if declared."""
+        if self.injection is None:
+            return None
+        from hiveplane.secrets.models import SecretInjection
+
+        return SecretInjection.model_validate(self.injection)
+
+
 class WorkloadSpec(BaseModel):
     """The complete specification block of an agent workload manifest."""
 
@@ -169,9 +236,13 @@ class WorkloadSpec(BaseModel):
     output_shaping: OutputShapingSpec | None = None
     tools: ToolsSpec = Field(default_factory=ToolsSpec)
     approvals: ApprovalsSpec = Field(default_factory=ApprovalsSpec)
+    guards: GuardsSpec | None = None
     fan_out: FanOutSpec = Field(default_factory=FanOutSpec)
     health: HealthSpec = Field(default_factory=HealthSpec)
     observability: ObservabilitySpec = Field(default_factory=ObservabilitySpec)
+    io: IOSpec | None = None
+    secrets: list[SecretBinding] = Field(default_factory=list)
+    time_windows: list[TimeWindow] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def _certification_requires_model_identity(self) -> WorkloadSpec:

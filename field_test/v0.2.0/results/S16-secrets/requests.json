@@ -1,0 +1,802 @@
+[
+  {
+    "method": "POST",
+    "path": "/tenants",
+    "status": 201,
+    "ms": 6.9,
+    "tenant": null,
+    "note": null,
+    "request": {
+      "tenant_id": "ft-tenant",
+      "name": "Field Test Tenant"
+    },
+    "request_shape": "dict",
+    "response": {
+      "tenant_id": "ft-tenant",
+      "name": "Field Test Tenant",
+      "created_at": "2026-10-02T00:45:10.824452Z",
+      "status": "active",
+      "quota": {
+        "max_agents": null,
+        "max_monthly_usd": null,
+        "max_concurrent_runs": null
+      }
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "POST",
+    "path": "/secrets",
+    "status": 201,
+    "ms": 17.9,
+    "tenant": "ft-tenant",
+    "note": null,
+    "request": {
+      "name": "db-password",
+      "value": "s3cr3t-should-never-appear"
+    },
+    "request_shape": "dict",
+    "response": {
+      "tenant_id": "ft-tenant",
+      "name": "db-password",
+      "current_version": 1,
+      "versions": [
+        1
+      ],
+      "created_at": "2026-10-02T00:45:10.836735Z",
+      "rotated_at": null,
+      "consumers": []
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "GET",
+    "path": "/secrets",
+    "status": 200,
+    "ms": 4.6,
+    "tenant": "ft-tenant",
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": [
+      {
+        "tenant_id": "ft-tenant",
+        "name": "db-password",
+        "current_version": 1,
+        "versions": [
+          1
+        ],
+        "created_at": "2026-10-02T00:45:10.836735Z",
+        "rotated_at": null,
+        "consumers": []
+      }
+    ],
+    "response_shape": "list"
+  },
+  {
+    "method": "POST",
+    "path": "/workloads",
+    "status": 201,
+    "ms": 9.3,
+    "tenant": "ft-tenant",
+    "note": null,
+    "request": {
+      "apiVersion": "hiveplane/v1",
+      "kind": "AgentWorkload",
+      "metadata": {
+        "name": "tenant-b-agent",
+        "owner": "support-team",
+        "team": "support",
+        "description": "S16/S17 fixture - second-tenant support agent \u2014 answers KB questions and escalates unknowns.",
+        "labels": {
+          "environment": "field-test",
+          "source": "field_test"
+        }
+      },
+      "spec": {
+        "runtime": {
+          "adapter": "raw-worker",
+          "entrypoint": "field_test.shims.support_agent:run",
+          "env": {},
+          "adapter_contract": "2"
+        },
+        "budget": {
+          "per_run_usd": 0.5,
+          "per_day_usd": 5.0,
+          "per_team_usd": 50.0
+        },
+        "model": {
+          "strategy": "tiered",
+          "identity": {
+            "provider": "omlx",
+            "family": "qwen3-4b-instruct-2507",
+            "version": "4bit"
+          }
+        },
+        "certification": {
+          "benchmark_corpus": "corpora/support-agent/hiveplane-corpus.yaml",
+          "staging_threshold": 0.8,
+          "production_threshold": 0.9,
+          "no_critical_failures": true,
+          "latency_budget_ms": 30000,
+          "re_cert_interval": 1209600,
+          "status": "uncertified",
+          "attestation_id": null,
+          "certified_at": null,
+          "certified_by": null,
+          "expires_at": null
+        },
+        "triggers": [],
+        "sandbox": {
+          "enabled": true,
+          "resource_caps": {
+            "memory_mb": 512,
+            "cpu_cores": 1.0,
+            "wall_clock_s": 300
+          },
+          "egress": {
+            "allow": [
+              "api.github.com",
+              "api.pagerduty.com"
+            ],
+            "deny": [
+              "169.254.169.254"
+            ],
+            "mode": "restricted"
+          },
+          "network": null,
+          "filesystem": "isolated"
+        },
+        "output_shaping": {
+          "max_bytes": 16384,
+          "truncate_strategy": "tail",
+          "filter_rules": [],
+          "injection_scan": true
+        },
+        "tools": {
+          "allow": [
+            {
+              "tool_id": "mcp.github.read_issue",
+              "trust_level": "read_only",
+              "require_approval": false,
+              "allow_untrusted": false
+            },
+            {
+              "tool_id": "mcp.github.read_large_issue",
+              "trust_level": "read_only",
+              "require_approval": false,
+              "allow_untrusted": false
+            },
+            {
+              "tool_id": "pagerduty.acknowledge",
+              "trust_level": "destructive",
+              "require_approval": true,
+              "allow_untrusted": true
+            }
+          ],
+          "deny": [
+            "mcp.github.create_pr",
+            "mcp.github.delete_repo"
+          ],
+          "mcp_servers": [],
+          "default_trust": "read_only"
+        },
+        "approvals": {
+          "required_for": [
+            "destructive",
+            "production_write"
+          ],
+          "contact": "#support-oncall",
+          "auto_escalate_after": 300
+        },
+        "guards": null,
+        "fan_out": {
+          "on_completed": [
+            {
+              "type": "slack",
+              "channel": "#support-agent-results",
+              "url": null,
+              "project": null,
+              "issue_type": null
+            }
+          ],
+          "on_failed": [
+            {
+              "type": "slack",
+              "channel": "#support-oncall",
+              "url": null,
+              "project": null,
+              "issue_type": null
+            }
+          ],
+          "on_escalation": [],
+          "always_include": [
+            "trace_link",
+            "attestation_link"
+          ]
+        },
+        "health": {
+          "readiness_probe": {
+            "type": "dry_run",
+            "interval": 60
+          },
+          "slo": {
+            "availability_target": 0.99,
+            "quality_target": 0.9,
+            "error_budget_window": 86400
+          },
+          "failure_rate_threshold": 0.15
+        },
+        "observability": {
+          "contract": "standard",
+          "trace_sampling": 1.0
+        },
+        "io": null,
+        "secrets": [],
+        "time_windows": []
+      }
+    },
+    "request_shape": "dict",
+    "response": {
+      "name": "tenant-b-agent",
+      "manifest": {
+        "apiVersion": "hiveplane/v1",
+        "kind": "AgentWorkload",
+        "metadata": {
+          "name": "tenant-b-agent",
+          "owner": "support-team",
+          "team": "support",
+          "description": "S16/S17 fixture - second-tenant support agent \u2014 answers KB questions and escalates unknowns.",
+          "labels": {
+            "environment": "field-test",
+            "source": "field_test"
+          }
+        },
+        "spec": {
+          "runtime": {
+            "adapter": "raw-worker",
+            "entrypoint": "field_test.shims.support_agent:run",
+            "env": {},
+            "adapter_contract": "2"
+          },
+          "budget": {
+            "per_run_usd": 0.5,
+            "per_day_usd": 5.0,
+            "per_team_usd": 50.0
+          },
+          "model": {
+            "strategy": "tiered",
+            "identity": {
+              "provider": "omlx",
+              "family": "qwen3-4b-instruct-2507",
+              "version": "4bit"
+            }
+          },
+          "certification": {
+            "benchmark_corpus": "corpora/support-agent/hiveplane-corpus.yaml",
+            "staging_threshold": 0.8,
+            "production_threshold": 0.9,
+            "no_critical_failures": true,
+            "latency_budget_ms": 30000,
+            "re_cert_interval": 1209600,
+            "status": "uncertified",
+            "attestation_id": null,
+            "certified_at": null,
+            "certified_by": null,
+            "expires_at": null
+          },
+          "triggers": [],
+          "sandbox": {
+            "enabled": true,
+            "resource_caps": {
+              "memory_mb": 512,
+              "cpu_cores": 1.0,
+              "wall_clock_s": 300
+            },
+            "egress": {
+              "allow": [
+                "api.github.com",
+                "api.pagerduty.com"
+              ],
+              "deny": [
+                "169.254.169.254"
+              ],
+              "mode": "restricted"
+            },
+            "network": null,
+            "filesystem": "isolated"
+          },
+          "output_shaping": {
+            "max_bytes": 16384,
+            "truncate_strategy": "tail",
+            "filter_rules": [],
+            "injection_scan": true
+          },
+          "tools": {
+            "allow": [
+              {
+                "tool_id": "mcp.github.read_issue",
+                "trust_level": "read_only",
+                "require_approval": false,
+                "allow_untrusted": false
+              },
+              {
+                "tool_id": "mcp.github.read_large_issue",
+                "trust_level": "read_only",
+                "require_approval": false,
+                "allow_untrusted": false
+              },
+              {
+                "tool_id": "pagerduty.acknowledge",
+                "trust_level": "destructive",
+                "require_approval": true,
+                "allow_untrusted": true
+              }
+            ],
+            "deny": [
+              "mcp.github.create_pr",
+              "mcp.github.delete_repo"
+            ],
+            "mcp_servers": [],
+            "default_trust": "read_only"
+          },
+          "approvals": {
+            "required_for": [
+              "destructive",
+              "production_write"
+            ],
+            "contact": "#support-oncall",
+            "auto_escalate_after": 300
+          },
+          "guards": null,
+          "fan_out": {
+            "on_completed": [
+              {
+                "type": "slack",
+                "channel": "#support-agent-results",
+                "url": null,
+                "project": null,
+                "issue_type": null
+              }
+            ],
+            "on_failed": [
+              {
+                "type": "slack",
+                "channel": "#support-oncall",
+                "url": null,
+                "project": null,
+                "issue_type": null
+              }
+            ],
+            "on_escalation": [],
+            "always_include": [
+              "trace_link",
+              "attestation_link"
+            ]
+          },
+          "health": {
+            "readiness_probe": {
+              "type": "dry_run",
+              "interval": 60
+            },
+            "slo": {
+              "availability_target": 0.99,
+              "quality_target": 0.9,
+              "error_budget_window": 86400
+            },
+            "failure_rate_threshold": 0.15
+          },
+          "observability": {
+            "contract": "standard",
+            "trace_sampling": 1.0
+          },
+          "io": null,
+          "secrets": [],
+          "time_windows": []
+        }
+      },
+      "current_version": 1,
+      "certification_status": "uncertified",
+      "owner": "support-team",
+      "team": "support",
+      "runtime": "raw-worker",
+      "created_at": "2026-10-02T00:45:10.856527Z",
+      "updated_at": "2026-10-02T00:45:10.856527Z",
+      "needs_re_certification": false,
+      "artifact_hash": "fe280dd8a4c03ac777a7c396d85259da13a0d00b8a8c97f8774cb923dae8116b",
+      "bundle": {
+        "workload_id": "tenant-b-agent",
+        "bundle_digest": "f66a17a4cf109f2e13db495990b4ce91a2156918459adbdde7132b0998e115de",
+        "entrypoint_digest": "82606cee2eba7d217d23911fbabfba1c1ad88fabe39dc2b1c87a61590e49daa1",
+        "manifest_hash": "24034be719ab5eb604493ed7599f9dc7a316fb53cab8278347a2bc54284dda72",
+        "key_id": "hp-signing-key-01",
+        "signature": "S6skQvIiZvECbF8OU4e0E3ObXPOt8vL1/lP+XEQV81k9F74Uu8cE7wmLBNLuXv+WLC9eduG/pG6KMJTx/zA/Ag==",
+        "registered_at": "2026-10-02T00:45:10.856603Z"
+      },
+      "production_runs_survived": 0,
+      "last_run_at": null,
+      "failure_count": 0,
+      "last_failure_at": null,
+      "tenant_id": "ft-tenant"
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "POST",
+    "path": "/runs",
+    "status": 201,
+    "ms": 11.1,
+    "tenant": "ft-tenant",
+    "note": null,
+    "request": {
+      "workload": "tenant-b-agent",
+      "caller": "field-test-v02",
+      "context": "sandbox",
+      "task": {
+        "query": "reset password",
+        "account_id": "ACC-001"
+      },
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit"
+    },
+    "request_shape": "dict",
+    "response": {
+      "id": "run-8a93aa68e406",
+      "workload_id": "tenant-b-agent",
+      "caller": "field-test-v02",
+      "state": "queued",
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "created_at": "2026-10-02T00:45:10.862589Z",
+      "updated_at": "2026-10-02T00:45:10.862589Z",
+      "started_at": null,
+      "finished_at": null,
+      "trigger_origin": null,
+      "pipeline_origin": null,
+      "agent_tool_origin": null,
+      "manifest_version": 1,
+      "context": "sandbox",
+      "sandbox": true,
+      "task": {
+        "query": "reset password",
+        "account_id": "ACC-001"
+      },
+      "result": null,
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "sandbox_id": null,
+      "trace_id": "3aa7fd8545f61783e6ec7c05a6de7574",
+      "shadow_of": null,
+      "probe": false,
+      "read_only": false,
+      "canary_rollout_id": null,
+      "canary_arm": null,
+      "tenant_id": "ft-tenant",
+      "team_id": null,
+      "attribution_key": null
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-8a93aa68e406/events",
+    "status": 200,
+    "ms": 2.8,
+    "tenant": "ft-tenant",
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": [
+      {
+        "run_id": "run-8a93aa68e406",
+        "sequence": 0,
+        "type": "admission",
+        "actor": "field-test-v02",
+        "timestamp": "2026-10-02T00:45:10.869616Z",
+        "from_state": null,
+        "to_state": "queued",
+        "detail": "sandbox_only"
+      }
+    ],
+    "response_shape": "list"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-8a93aa68e406/story",
+    "status": 200,
+    "ms": 5.4,
+    "tenant": "ft-tenant",
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": {
+      "run_id": "run-8a93aa68e406",
+      "workload": "tenant-b-agent",
+      "team": "support",
+      "state": "queued",
+      "context": "sandbox",
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "cost_usd": 0.0,
+      "sandbox": true,
+      "sandbox_id": null,
+      "certification_status": "uncertified",
+      "attestation_id": null,
+      "trace_id": "3aa7fd8545f61783e6ec7c05a6de7574",
+      "entries": [
+        {
+          "timestamp": "2026-10-02T00:45:10.862589Z",
+          "kind": "admission",
+          "summary": "sandbox_only",
+          "detail": {
+            "outcome": "sandbox_only",
+            "refused_reason": null,
+            "escalation_required": false,
+            "sandbox": true,
+            "checks": [
+              {
+                "step": "halt",
+                "passed": true,
+                "reason": null,
+                "rule": "incident"
+              },
+              {
+                "step": "certification",
+                "passed": true,
+                "reason": null,
+                "rule": "certification"
+              },
+              {
+                "step": "model_identity",
+                "passed": true,
+                "reason": null,
+                "rule": "model_binding"
+              },
+              {
+                "step": "budget",
+                "passed": true,
+                "reason": null,
+                "rule": "run"
+              },
+              {
+                "step": "policy",
+                "passed": true,
+                "reason": "no tool policy applies",
+                "rule": "run.allow"
+              },
+              {
+                "step": "sandbox",
+                "passed": true,
+                "reason": null,
+                "rule": "sandbox"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-8a93aa68e406",
+    "status": 200,
+    "ms": 2.3,
+    "tenant": "ft-tenant",
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": {
+      "id": "run-8a93aa68e406",
+      "workload_id": "tenant-b-agent",
+      "caller": "field-test-v02",
+      "state": "queued",
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "created_at": "2026-10-02T00:45:10.862589Z",
+      "updated_at": "2026-10-02T00:45:10.862589Z",
+      "started_at": null,
+      "finished_at": null,
+      "trigger_origin": null,
+      "pipeline_origin": null,
+      "agent_tool_origin": null,
+      "manifest_version": 1,
+      "context": "sandbox",
+      "sandbox": true,
+      "task": {
+        "query": "reset password",
+        "account_id": "ACC-001"
+      },
+      "result": null,
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "sandbox_id": null,
+      "trace_id": "3aa7fd8545f61783e6ec7c05a6de7574",
+      "shadow_of": null,
+      "probe": false,
+      "read_only": false,
+      "canary_rollout_id": null,
+      "canary_arm": null,
+      "tenant_id": "ft-tenant",
+      "team_id": null,
+      "attribution_key": null
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-8a93aa68e406",
+    "status": 200,
+    "ms": 2.1,
+    "tenant": "ft-tenant",
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": {
+      "id": "run-8a93aa68e406",
+      "workload_id": "tenant-b-agent",
+      "caller": "field-test-v02",
+      "state": "queued",
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "created_at": "2026-10-02T00:45:10.862589Z",
+      "updated_at": "2026-10-02T00:45:10.862589Z",
+      "started_at": null,
+      "finished_at": null,
+      "trigger_origin": null,
+      "pipeline_origin": null,
+      "agent_tool_origin": null,
+      "manifest_version": 1,
+      "context": "sandbox",
+      "sandbox": true,
+      "task": {
+        "query": "reset password",
+        "account_id": "ACC-001"
+      },
+      "result": null,
+      "failure_reason": null,
+      "cost_usd": 0.0,
+      "sandbox_id": null,
+      "trace_id": "3aa7fd8545f61783e6ec7c05a6de7574",
+      "shadow_of": null,
+      "probe": false,
+      "read_only": false,
+      "canary_rollout_id": null,
+      "canary_arm": null,
+      "tenant_id": "ft-tenant",
+      "team_id": null,
+      "attribution_key": null
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-8a93aa68e406/events",
+    "status": 200,
+    "ms": 2.6,
+    "tenant": "ft-tenant",
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": [
+      {
+        "run_id": "run-8a93aa68e406",
+        "sequence": 0,
+        "type": "admission",
+        "actor": "field-test-v02",
+        "timestamp": "2026-10-02T00:45:10.869616Z",
+        "from_state": null,
+        "to_state": "queued",
+        "detail": "sandbox_only"
+      }
+    ],
+    "response_shape": "list"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-8a93aa68e406/story",
+    "status": 200,
+    "ms": 5.1,
+    "tenant": "ft-tenant",
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": {
+      "run_id": "run-8a93aa68e406",
+      "workload": "tenant-b-agent",
+      "team": "support",
+      "state": "queued",
+      "context": "sandbox",
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "cost_usd": 0.0,
+      "sandbox": true,
+      "sandbox_id": null,
+      "certification_status": "uncertified",
+      "attestation_id": null,
+      "trace_id": "3aa7fd8545f61783e6ec7c05a6de7574",
+      "entries": [
+        {
+          "timestamp": "2026-10-02T00:45:10.862589Z",
+          "kind": "admission",
+          "summary": "sandbox_only",
+          "detail": {
+            "outcome": "sandbox_only",
+            "refused_reason": null,
+            "escalation_required": false,
+            "sandbox": true,
+            "checks": [
+              {
+                "step": "halt",
+                "passed": true,
+                "reason": null,
+                "rule": "incident"
+              },
+              {
+                "step": "certification",
+                "passed": true,
+                "reason": null,
+                "rule": "certification"
+              },
+              {
+                "step": "model_identity",
+                "passed": true,
+                "reason": null,
+                "rule": "model_binding"
+              },
+              {
+                "step": "budget",
+                "passed": true,
+                "reason": null,
+                "rule": "run"
+              },
+              {
+                "step": "policy",
+                "passed": true,
+                "reason": "no tool policy applies",
+                "rule": "run.allow"
+              },
+              {
+                "step": "sandbox",
+                "passed": true,
+                "reason": null,
+                "rule": "sandbox"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-8a93aa68e406/usage",
+    "status": 200,
+    "ms": 3.0,
+    "tenant": "ft-tenant",
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": [],
+    "response_shape": "list"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-8a93aa68e406/deliveries",
+    "status": 200,
+    "ms": 2.7,
+    "tenant": "ft-tenant",
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": [],
+    "response_shape": "list"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-8a93aa68e406/feedback",
+    "status": 200,
+    "ms": 3.5,
+    "tenant": "ft-tenant",
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": [],
+    "response_shape": "list"
+  }
+]

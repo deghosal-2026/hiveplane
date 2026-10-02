@@ -1,0 +1,34 @@
+{
+  "shadow_run_id": "shadow-baf145c4c9a7",
+  "production_run_id": "run-068595da6327",
+  "candidate_workload_id": "support-agent",
+  "outcome_diff": {
+    "output_changed": false,
+    "production_output": {
+      "answer": "Reset at portal.example.com/settings",
+      "status": "success",
+      "account_tier": "pro"
+    },
+    "candidate_output": {
+      "answer": "Reset at portal.example.com/settings",
+      "status": "success",
+      "account_tier": "pro"
+    },
+    "cost_delta_usd": 0.0,
+    "latency_delta_ms": 0,
+    "tool_calls_added": [
+      {
+        "event": "tool_call",
+        "detail": "mcp.github.read_issue"
+      }
+    ],
+    "tool_calls_removed": [],
+    "policy_decisions_added": [
+      {
+        "event": "policy_decision",
+        "detail": "sandbox.allow: sandbox context allows the tool"
+      }
+    ],
+    "policy_decisions_removed": []
+  }
+}

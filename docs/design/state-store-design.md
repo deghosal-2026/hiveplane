@@ -1,6 +1,7 @@
 # D7: State Store Design
 
 > Status: partial. The schema and migrations exist (M18), and `PostgresRunStore` /
+> **v0.2.0:** extended by [Fleet Control Data Model (D21)](fleet-control-data-model-design.md) and [Reporting, Tenancy & Distribution (D38)](reporting-tenancy-distribution-design.md).
 > `PostgresAuditLog` are implemented. However the app factory (`create_app`) still hardcodes
 > in-memory stores for registry, policy packs, approvals, budget, and certifications, and
 > migrations do not run on startup — so a fresh `docker compose up` is not durable. PostgreSQL

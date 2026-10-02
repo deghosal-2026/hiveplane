@@ -30,11 +30,17 @@ class _FakeRegistry:
         self._model = model
         self.calls: list[tuple[str, AdmissionContext]] = []
 
-    def check_admission(self, workload: str, context: AdmissionContext) -> AdmissionDecision:
+    def check_admission(
+        self,
+        workload: str,
+        context: AdmissionContext,
+        *,
+        ctx: object = None,
+    ) -> AdmissionDecision:
         self.calls.append((workload, context))
         return self._decision
 
-    def list_attestations(self, workload: str) -> list[object]:
+    def list_attestations(self, workload: str, *, ctx: object = None) -> list[object]:
         if self._model is None:
             return []
 

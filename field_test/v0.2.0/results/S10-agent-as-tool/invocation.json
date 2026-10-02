@@ -1,0 +1,17 @@
+{
+  "invocation_id": "atool-8ab9c6c523fd",
+  "tenant_id": "default",
+  "caller_run_id": "run-b691eb54b81e",
+  "nested_run_id": "run-95e4d9aa9c2a",
+  "tool_id": "agent.support-agent",
+  "workload": "support-agent",
+  "depth": 1,
+  "chain": [
+    "support-agent"
+  ],
+  "context": "production",
+  "decision": "allowed",
+  "reason": null,
+  "cost_usd": 0.0,
+  "created_at": "2026-10-02T00:44:45.589302Z"
+}

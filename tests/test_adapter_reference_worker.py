@@ -39,6 +39,9 @@ def test_bundled_repo_agent_runs(make_manifest: Callable[..., AgentWorkload]) ->
     )
 
     class _Tools:
+        def reset_drive(self, run_id: str) -> None:
+            return None
+
         def invoke(self, run_id: str, request: object) -> ToolCallResult:
             return ToolCallResult(
                 run_id=run_id,
@@ -47,13 +50,15 @@ def test_bundled_repo_agent_runs(make_manifest: Callable[..., AgentWorkload]) ->
             )
 
     class _Reporter:
-        def get(self, run_id: str) -> Run:
+        def get(self, run_id: str, *, ctx: object = None) -> Run:
             return run
 
         def transition(self, run_id: str, target: RunState, **kwargs: object) -> Run:
             return run
 
-        def record_usage(self, run_id: str, report: UsageReport) -> Run:
+        def record_usage(
+            self, run_id: str, report: UsageReport, *, ctx: object = None
+        ) -> Run:
             usage.append(report)
             return run
 

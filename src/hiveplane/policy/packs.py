@@ -7,18 +7,29 @@ from typing import Protocol
 
 from hiveplane.policy.errors import PolicyPackAlreadyExistsError
 from hiveplane.policy.models import PolicyPack
+from hiveplane.tenancy import DEFAULT_CONTEXT, TenantContext
 
 
 class PolicyPackStore(Protocol):
-    """Storage for team policy packs."""
+    """Storage for team policy packs, keyed by ``(tenant_id, name)``.
 
-    def save(self, pack: PolicyPack) -> None: ...
+    Names are unique within a tenant, not across tenants. Reads are filtered
+    by ``ctx.scopes`` and writes call ``ctx.require``.
+    """
 
-    def get(self, name: str) -> PolicyPack | None: ...
+    def save(self, pack: PolicyPack, *, ctx: TenantContext = DEFAULT_CONTEXT) -> None: ...
 
-    def list_packs(self) -> list[PolicyPack]: ...
+    def get(
+        self, name: str, *, ctx: TenantContext = DEFAULT_CONTEXT
+    ) -> PolicyPack | None: ...
 
-    def for_team(self, team: str | None) -> list[PolicyPack]: ...
+    def list_packs(
+        self, *, ctx: TenantContext = DEFAULT_CONTEXT
+    ) -> list[PolicyPack]: ...
+
+    def for_team(
+        self, team: str | None, *, ctx: TenantContext = DEFAULT_CONTEXT
+    ) -> list[PolicyPack]: ...
 
 
 class InMemoryPolicyPackStore:
@@ -26,30 +37,47 @@ class InMemoryPolicyPackStore:
 
     def __init__(self) -> None:
         self._lock = threading.RLock()
-        self._packs: dict[str, PolicyPack] = {}
+        self._packs: dict[tuple[str, str], PolicyPack] = {}
 
-    def save(self, pack: PolicyPack) -> None:
-        """Register a pack, rejecting a duplicate name."""
+    def save(self, pack: PolicyPack, *, ctx: TenantContext = DEFAULT_CONTEXT) -> None:
+        """Register a pack, rejecting a duplicate ``(tenant_id, name)``."""
+        ctx.require(pack.metadata.tenant_id)
         with self._lock:
-            name = pack.metadata.name
-            if name in self._packs:
-                raise PolicyPackAlreadyExistsError(name)
-            self._packs[name] = pack.model_copy(deep=True)
+            key = (pack.metadata.tenant_id, pack.metadata.name)
+            if key in self._packs:
+                raise PolicyPackAlreadyExistsError(pack.metadata.name)
+            self._packs[key] = pack.model_copy(deep=True)
 
-    def get(self, name: str) -> PolicyPack | None:
-        """Return a pack by name."""
+    def get(self, name: str, *, ctx: TenantContext = DEFAULT_CONTEXT) -> PolicyPack | None:
+        """Return a pack by name from the acting tenant's scope."""
         with self._lock:
-            pack = self._packs.get(name)
-            return pack.model_copy(deep=True) if pack is not None else None
+            candidates = [
+                pack
+                for (tenant_id, pack_name), pack in self._packs.items()
+                if pack_name == name and ctx.scopes(tenant_id)
+            ]
+            if not candidates:
+                return None
+            candidates.sort(key=lambda pack: pack.metadata.tenant_id)
+            return candidates[0].model_copy(deep=True)
 
-    def list_packs(self) -> list[PolicyPack]:
-        """Return all packs, ordered by name."""
+    def list_packs(self, *, ctx: TenantContext = DEFAULT_CONTEXT) -> list[PolicyPack]:
+        """Return the tenant's packs, ordered by name then tenant."""
         with self._lock:
-            ordered = sorted(self._packs.values(), key=lambda pack: pack.metadata.name)
+            ordered = sorted(
+                (pack for pack in self._packs.values() if ctx.scopes(pack.metadata.tenant_id)),
+                key=lambda pack: (pack.metadata.name, pack.metadata.tenant_id),
+            )
             return [pack.model_copy(deep=True) for pack in ordered]
 
-    def for_team(self, team: str | None) -> list[PolicyPack]:
-        """Return packs belonging to a team."""
+    def for_team(
+        self, team: str | None, *, ctx: TenantContext = DEFAULT_CONTEXT
+    ) -> list[PolicyPack]:
+        """Return the tenant's packs belonging to a team."""
         if team is None:
             return []
-        return [pack for pack in self.list_packs() if pack.metadata.team == team]
+        return [
+            pack
+            for pack in self.list_packs(ctx=ctx)
+            if pack.metadata.team == team
+        ]

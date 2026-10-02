@@ -1,0 +1,25 @@
+# S27 trigger-run
+
+status:   pass
+detail:   trigger submitted and run completed (explicit start)
+started:  2026-10-02T00:46:54.468932+00:00
+duration: 15.89s
+model:    omlx/qwen3-4b-instruct-2507/4bit
+git_sha:  b186ba158779686f69cd3fdaba1672de84a13038
+calls:    2540
+runs:     (none)
+
+## Mutating calls (inputs)
+
+  POST /workloads -> 409
+  PUT /workloads/support-agent -> 200
+  POST /certifications -> 201
+  POST /quarantines/quar-5ca4f814a1c8/reinstate -> 409
+  POST /certifications -> 201
+  POST /quarantines/quar-af2a9b9a8904/reinstate -> 409
+  POST /certifications -> 201
+  POST /quarantines/quar-101c5ab6dffa/reinstate -> 409
+  POST /certifications -> 201
+  POST /triggers -> 201
+  POST /triggers/webhook/ft-s27 -> 202
+  POST /runs/run-8d7b24d030fa/start -> 200

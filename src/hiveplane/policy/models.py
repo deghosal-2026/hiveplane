@@ -9,6 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from hiveplane.core.decision import ActionClass, DataSensitivity, DecisionOutcome
 from hiveplane.core.run import AdmissionContext
 from hiveplane.core.tools import ToolTrustLevel
+from hiveplane.tenancy.context import DEFAULT_TENANT_ID
 
 
 class PolicyPackDefaults(BaseModel):
@@ -57,6 +58,7 @@ class PolicyPackSpec(BaseModel):
     defaults: PolicyPackDefaults = Field(default_factory=PolicyPackDefaults)
     overrides: list[PolicyPackOverride] = Field(default_factory=list)
     approval_contacts: dict[str, str] = Field(default_factory=dict)
+    inherits: list[str] = Field(default_factory=list)
 
 
 class PolicyPackMetadata(BaseModel):
@@ -67,6 +69,8 @@ class PolicyPackMetadata(BaseModel):
     name: str = Field(min_length=1)
     team: str = Field(min_length=1)
     version: str = Field(min_length=1)
+    tenant_id: str = Field(default=DEFAULT_TENANT_ID, min_length=1, max_length=64)
+    default: bool = False
 
 
 class PolicyPack(BaseModel):
@@ -93,3 +97,6 @@ class PolicyEvaluationRequest(BaseModel):
     tool_trust: ToolTrustLevel | None = None
     action_class: ActionClass | None = None
     data_sensitivity: DataSensitivity = DataSensitivity.INTERNAL
+    budget_exhausted: bool = False
+    taint_untrusted: bool = False
+    dry_run: bool = False

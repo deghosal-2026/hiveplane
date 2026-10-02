@@ -1,0 +1,207 @@
+{{- if .Values.telemetry.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "hiveplane.fullname" . }}-otel
+  labels:
+    {{- include "hiveplane.labels" . | nindent 4 }}
+data:
+  otel-collector.yaml: |
+    receivers:
+      otlp:
+        protocols:
+          grpc: {endpoint: 0.0.0.0:4317}
+          http: {endpoint: 0.0.0.0:4318}
+    exporters:
+      otlp:
+        endpoint: {{ include "hiveplane.fullname" . }}-tempo:4317
+        tls: {insecure: true}
+    service:
+      pipelines:
+        traces: {receivers: [otlp], exporters: [otlp]}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "hiveplane.fullname" . }}-otel-collector
+  labels:
+    {{- include "hiveplane.labels" . | nindent 4 }}
+    app.kubernetes.io/component: otel-collector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: otel-collector
+  template:
+    metadata:
+      labels:
+        {{- include "hiveplane.labels" . | nindent 8 }}
+        app.kubernetes.io/component: otel-collector
+    spec:
+      containers:
+        - name: otel-collector
+          image: "{{ .Values.telemetry.otelCollector.image.repository }}:{{ .Values.telemetry.otelCollector.image.tag }}"
+          args: ["--config=/etc/otel/otel-collector.yaml"]
+          ports:
+            - {name: otlp-grpc, containerPort: 4317}
+            - {name: otlp-http, containerPort: 4318}
+          volumeMounts:
+            - {name: config, mountPath: /etc/otel}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "hiveplane.fullname" . }}-otel
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "hiveplane.fullname" . }}-otel-collector
+  labels:
+    {{- include "hiveplane.labels" . | nindent 4 }}
+spec:
+  selector:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: otel-collector
+  ports:
+    - {name: otlp-grpc, port: 4317, targetPort: otlp-grpc}
+    - {name: otlp-http, port: 4318, targetPort: otlp-http}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "hiveplane.fullname" . }}-tempo
+  labels:
+    {{- include "hiveplane.labels" . | nindent 4 }}
+    app.kubernetes.io/component: tempo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: tempo
+  template:
+    metadata:
+      labels:
+        {{- include "hiveplane.labels" . | nindent 8 }}
+        app.kubernetes.io/component: tempo
+    spec:
+      containers:
+        - name: tempo
+          image: "{{ .Values.telemetry.tempo.image.repository }}:{{ .Values.telemetry.tempo.image.tag }}"
+          args: ["-config.file=/etc/tempo/tempo.yaml"]
+          ports:
+            - {name: otlp-grpc, containerPort: 4317}
+            - {name: http, containerPort: 3200}
+          volumeMounts:
+            - {name: tempo-config, mountPath: /etc/tempo/tempo.yaml, subPath: tempo.yaml}
+            - {name: tempo-data, mountPath: /var/tempo}
+      volumes:
+        - name: tempo-config
+          configMap:
+            name: {{ include "hiveplane.fullname" . }}-tempo-config
+        - name: tempo-data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "hiveplane.fullname" . }}-tempo-config
+  labels:
+    {{- include "hiveplane.labels" . | nindent 4 }}
+    app.kubernetes.io/component: tempo
+data:
+  tempo.yaml: |
+    server:
+      http_listen_port: 3200
+      log_level: warn
+    distributor:
+      receivers:
+        otlp:
+          protocols:
+            grpc:
+              endpoint: 0.0.0.0:4317
+            http:
+              endpoint: 0.0.0.0:4318
+    ingester:
+      max_block_duration: 5m
+    compactor:
+      compaction:
+        block_retention: 24h
+    storage:
+      trace:
+        backend: local
+        local:
+          path: /var/tempo/blocks
+        wal:
+          path: /var/tempo/wal
+    metrics_generator:
+      registry:
+        external_labels:
+          source: tempo
+      storage:
+        path: /var/tempo/generator/wal
+    overrides:
+      defaults:
+        metrics_generator:
+          processors: [service-graphs, span-metrics]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "hiveplane.fullname" . }}-tempo
+  labels:
+    {{- include "hiveplane.labels" . | nindent 4 }}
+spec:
+  selector:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: tempo
+  ports:
+    - {name: otlp-grpc, port: 4317, targetPort: otlp-grpc}
+    - {name: http, port: 3200, targetPort: http}
+{{- if .Values.telemetry.grafana.enabled }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "hiveplane.fullname" . }}-grafana
+  labels:
+    {{- include "hiveplane.labels" . | nindent 4 }}
+    app.kubernetes.io/component: grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: grafana
+  template:
+    metadata:
+      labels:
+        {{- include "hiveplane.labels" . | nindent 8 }}
+        app.kubernetes.io/component: grafana
+    spec:
+      containers:
+        - name: grafana
+          image: "{{ .Values.telemetry.grafana.image.repository }}:{{ .Values.telemetry.grafana.image.tag }}"
+          ports:
+            - {name: http, containerPort: 3000}
+          env:
+            - name: GF_SECURITY_ADMIN_USER
+              value: {{ .Values.telemetry.grafana.adminUser | quote }}
+            - name: GF_SECURITY_ADMIN_PASSWORD
+              value: {{ .Values.telemetry.grafana.adminPassword | quote }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "hiveplane.fullname" . }}-grafana
+  labels:
+    {{- include "hiveplane.labels" . | nindent 4 }}
+spec:
+  selector:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: grafana
+  ports:
+    - {name: http, port: 3000, targetPort: http}
+{{- end }}
+{{- end }}

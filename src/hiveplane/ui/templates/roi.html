@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}ROI · HivePlane{% endblock %}
+{% block content %}
+<h1>ROI</h1>
+<div class="grid">
+  <div class="card">
+    <div class="muted">Fleet ROI</div>
+    <div class="value">{{ "%.2f"|format(view.fleet_roi) }}×</div>
+  </div>
+  <div class="card">
+    <div class="muted">Total spend</div>
+    <div class="value">${{ "%.2f"|format(view.total_spend_usd) }}</div>
+  </div>
+  <div class="card">
+    <div class="muted">Flagged workloads</div>
+    <div class="value">{{ view.flagged | length }}</div>
+  </div>
+</div>
+
+{% if not view.rows %}
+<p class="muted">No ROI data recorded.</p>
+{% else %}
+<h2>Flagged: expensive, low value</h2>
+{% if view.flagged %}
+<table>
+  <thead>
+    <tr>
+      <th>Workload</th>
+      <th>Spend</th>
+      <th>Value</th>
+      <th>ROI</th>
+      <th>Evidence</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in view.flagged %}
+    <tr>
+      <td>{{ row.workload }}</td>
+      <td>${{ "%.2f"|format(row.spend_usd) }}</td>
+      <td>${{ "%.2f"|format(row.value_usd) }}</td>
+      <td>{{ "%.2f"|format(row.roi) }}</td>
+      <td>
+        {% if row.evidence %}
+        <ul class="evidence">
+          {% for item in row.evidence %}<li>{{ item }}</li>{% endfor %}
+        </ul>
+        {% else %}
+        <span class="muted">—</span>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">No workloads are currently flagged.</p>
+{% endif %}
+
+<h2>All workloads</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Workload</th>
+      <th>Spend</th>
+      <th>Value</th>
+      <th>ROI</th>
+      <th>Flag</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in view.rows %}
+    <tr>
+      <td>{{ row.workload }}</td>
+      <td>${{ "%.2f"|format(row.spend_usd) }}</td>
+      <td>${{ "%.2f"|format(row.value_usd) }}</td>
+      <td>{{ "%.2f"|format(row.roi) }}</td>
+      <td>
+        {% if row.expensive_low_value %}
+        <span class="badge failed">expensive</span>
+        {% else %}
+        <span class="muted">ok</span>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+{% endblock %}

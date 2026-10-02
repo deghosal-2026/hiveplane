@@ -1,5 +1,10 @@
 FROM python:3.12-slim
 
+# Source revision, baked as an OCI label so the field-test harness (H1) can
+# detect a stale image that predates the code under test.
+ARG GIT_SHA=""
+LABEL org.opencontainers.image.revision=$GIT_SHA
+
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \

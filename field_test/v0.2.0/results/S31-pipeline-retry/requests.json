@@ -1,0 +1,963 @@
+[
+  {
+    "method": "POST",
+    "path": "/workloads",
+    "status": 409,
+    "ms": 5.4,
+    "tenant": null,
+    "note": null,
+    "request": {
+      "apiVersion": "hiveplane/v1",
+      "kind": "AgentWorkload",
+      "metadata": {
+        "name": "failing-agent",
+        "owner": "platform-team",
+        "team": "platform",
+        "description": "S30/S31 fixture \u2014 a run that deterministically fails (terminal failure path).",
+        "labels": {
+          "environment": "field-test",
+          "source": "field_test"
+        }
+      },
+      "spec": {
+        "runtime": {
+          "adapter": "raw-worker",
+          "entrypoint": "field_test.shims.failing_agent:run",
+          "env": {},
+          "adapter_contract": "2"
+        },
+        "budget": {
+          "per_run_usd": 0.5,
+          "per_day_usd": 5.0,
+          "per_team_usd": 50.0
+        },
+        "model": {
+          "strategy": "tiered",
+          "identity": {
+            "provider": "omlx",
+            "family": "qwen3-4b-instruct-2507",
+            "version": "4bit"
+          }
+        },
+        "certification": null,
+        "triggers": [],
+        "sandbox": {
+          "enabled": true,
+          "resource_caps": {
+            "memory_mb": 512,
+            "cpu_cores": 1.0,
+            "wall_clock_s": 300
+          },
+          "egress": {
+            "allow": [
+              "api.github.com"
+            ],
+            "deny": [
+              "169.254.169.254"
+            ],
+            "mode": "restricted"
+          },
+          "network": null,
+          "filesystem": "isolated"
+        },
+        "output_shaping": null,
+        "tools": {
+          "allow": [],
+          "deny": [
+            "mcp.github.delete_repo"
+          ],
+          "mcp_servers": [],
+          "default_trust": "read_only"
+        },
+        "approvals": {
+          "required_for": [
+            "production_write"
+          ],
+          "contact": "#platform-oncall",
+          "auto_escalate_after": 300
+        },
+        "guards": null,
+        "fan_out": {
+          "on_completed": [],
+          "on_failed": [
+            {
+              "type": "slack",
+              "channel": "#platform-oncall",
+              "url": null,
+              "project": null,
+              "issue_type": null
+            }
+          ],
+          "on_escalation": [],
+          "always_include": [
+            "trace_link"
+          ]
+        },
+        "health": {
+          "readiness_probe": {
+            "type": "dry_run",
+            "interval": 60
+          },
+          "slo": {
+            "availability_target": 0.99,
+            "quality_target": 0.9,
+            "error_budget_window": 86400
+          },
+          "failure_rate_threshold": 0.15
+        },
+        "observability": {
+          "contract": "standard",
+          "trace_sampling": 1.0
+        },
+        "io": null,
+        "secrets": [],
+        "time_windows": []
+      }
+    },
+    "request_shape": "dict",
+    "response": {
+      "detail": "workload 'failing-agent' already exists"
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "PUT",
+    "path": "/workloads/failing-agent",
+    "status": 200,
+    "ms": 10.3,
+    "tenant": null,
+    "note": null,
+    "request": {
+      "apiVersion": "hiveplane/v1",
+      "kind": "AgentWorkload",
+      "metadata": {
+        "name": "failing-agent",
+        "owner": "platform-team",
+        "team": "platform",
+        "description": "S30/S31 fixture \u2014 a run that deterministically fails (terminal failure path).",
+        "labels": {
+          "environment": "field-test",
+          "source": "field_test"
+        }
+      },
+      "spec": {
+        "runtime": {
+          "adapter": "raw-worker",
+          "entrypoint": "field_test.shims.failing_agent:run",
+          "env": {},
+          "adapter_contract": "2"
+        },
+        "budget": {
+          "per_run_usd": 0.5,
+          "per_day_usd": 5.0,
+          "per_team_usd": 50.0
+        },
+        "model": {
+          "strategy": "tiered",
+          "identity": {
+            "provider": "omlx",
+            "family": "qwen3-4b-instruct-2507",
+            "version": "4bit"
+          }
+        },
+        "certification": null,
+        "triggers": [],
+        "sandbox": {
+          "enabled": true,
+          "resource_caps": {
+            "memory_mb": 512,
+            "cpu_cores": 1.0,
+            "wall_clock_s": 300
+          },
+          "egress": {
+            "allow": [
+              "api.github.com"
+            ],
+            "deny": [
+              "169.254.169.254"
+            ],
+            "mode": "restricted"
+          },
+          "network": null,
+          "filesystem": "isolated"
+        },
+        "output_shaping": null,
+        "tools": {
+          "allow": [],
+          "deny": [
+            "mcp.github.delete_repo"
+          ],
+          "mcp_servers": [],
+          "default_trust": "read_only"
+        },
+        "approvals": {
+          "required_for": [
+            "production_write"
+          ],
+          "contact": "#platform-oncall",
+          "auto_escalate_after": 300
+        },
+        "guards": null,
+        "fan_out": {
+          "on_completed": [],
+          "on_failed": [
+            {
+              "type": "slack",
+              "channel": "#platform-oncall",
+              "url": null,
+              "project": null,
+              "issue_type": null
+            }
+          ],
+          "on_escalation": [],
+          "always_include": [
+            "trace_link"
+          ]
+        },
+        "health": {
+          "readiness_probe": {
+            "type": "dry_run",
+            "interval": 60
+          },
+          "slo": {
+            "availability_target": 0.99,
+            "quality_target": 0.9,
+            "error_budget_window": 86400
+          },
+          "failure_rate_threshold": 0.15
+        },
+        "observability": {
+          "contract": "standard",
+          "trace_sampling": 1.0
+        },
+        "io": null,
+        "secrets": [],
+        "time_windows": []
+      }
+    },
+    "request_shape": "dict",
+    "response": {
+      "name": "failing-agent",
+      "manifest": {
+        "apiVersion": "hiveplane/v1",
+        "kind": "AgentWorkload",
+        "metadata": {
+          "name": "failing-agent",
+          "owner": "platform-team",
+          "team": "platform",
+          "description": "S30/S31 fixture \u2014 a run that deterministically fails (terminal failure path).",
+          "labels": {
+            "environment": "field-test",
+            "source": "field_test"
+          }
+        },
+        "spec": {
+          "runtime": {
+            "adapter": "raw-worker",
+            "entrypoint": "field_test.shims.failing_agent:run",
+            "env": {},
+            "adapter_contract": "2"
+          },
+          "budget": {
+            "per_run_usd": 0.5,
+            "per_day_usd": 5.0,
+            "per_team_usd": 50.0
+          },
+          "model": {
+            "strategy": "tiered",
+            "identity": {
+              "provider": "omlx",
+              "family": "qwen3-4b-instruct-2507",
+              "version": "4bit"
+            }
+          },
+          "certification": null,
+          "triggers": [],
+          "sandbox": {
+            "enabled": true,
+            "resource_caps": {
+              "memory_mb": 512,
+              "cpu_cores": 1.0,
+              "wall_clock_s": 300
+            },
+            "egress": {
+              "allow": [
+                "api.github.com"
+              ],
+              "deny": [
+                "169.254.169.254"
+              ],
+              "mode": "restricted"
+            },
+            "network": null,
+            "filesystem": "isolated"
+          },
+          "output_shaping": null,
+          "tools": {
+            "allow": [],
+            "deny": [
+              "mcp.github.delete_repo"
+            ],
+            "mcp_servers": [],
+            "default_trust": "read_only"
+          },
+          "approvals": {
+            "required_for": [
+              "production_write"
+            ],
+            "contact": "#platform-oncall",
+            "auto_escalate_after": 300
+          },
+          "guards": null,
+          "fan_out": {
+            "on_completed": [],
+            "on_failed": [
+              {
+                "type": "slack",
+                "channel": "#platform-oncall",
+                "url": null,
+                "project": null,
+                "issue_type": null
+              }
+            ],
+            "on_escalation": [],
+            "always_include": [
+              "trace_link"
+            ]
+          },
+          "health": {
+            "readiness_probe": {
+              "type": "dry_run",
+              "interval": 60
+            },
+            "slo": {
+              "availability_target": 0.99,
+              "quality_target": 0.9,
+              "error_budget_window": 86400
+            },
+            "failure_rate_threshold": 0.15
+          },
+          "observability": {
+            "contract": "standard",
+            "trace_sampling": 1.0
+          },
+          "io": null,
+          "secrets": [],
+          "time_windows": []
+        }
+      },
+      "current_version": 2,
+      "certification_status": "uncertified",
+      "owner": "platform-team",
+      "team": "platform",
+      "runtime": "raw-worker",
+      "created_at": "2026-10-02T00:47:48.992755Z",
+      "updated_at": "2026-10-02T00:47:50.178717Z",
+      "needs_re_certification": false,
+      "artifact_hash": "4717a5e4ab74dda40f94dfef13da116d8cf0cbec938baf942ae13d97985fe168",
+      "bundle": {
+        "workload_id": "failing-agent",
+        "bundle_digest": "b1896842133ea73bac9601e11557d7782ecfa0dad518bb43d2367d218b058d8d",
+        "entrypoint_digest": "07b6d341bb768cd22af32039f72c239c1727dd7487316613fc14eed7d9b7e253",
+        "manifest_hash": "6869e654f3eab8dc4fad69688ecaee4aab8fda65e6b50c67ad55d5810b3ed564",
+        "key_id": "hp-signing-key-01",
+        "signature": "ZCgX8UaS8OK957CU29vIuAxbxD1hfxAV3xdEAP60rPF8Iofa3pugyn6NxkKZqTQoMTR0BRo7waTW004eJCeXDw==",
+        "registered_at": "2026-10-02T00:47:50.182171Z"
+      },
+      "production_runs_survived": 0,
+      "last_run_at": null,
+      "failure_count": 0,
+      "last_failure_at": null,
+      "tenant_id": "default"
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "POST",
+    "path": "/pipelines",
+    "status": 201,
+    "ms": 3.5,
+    "tenant": null,
+    "note": null,
+    "request": {
+      "id": "ft-retry",
+      "name": "Field test retry pipeline",
+      "nodes": [
+        {
+          "id": "a",
+          "kind": "workload",
+          "workload": "failing-agent",
+          "inputs": {},
+          "retry": {
+            "max_attempts": 2,
+            "backoff_s": 0.0
+          }
+        }
+      ]
+    },
+    "request_shape": "dict",
+    "response": {
+      "id": "ft-retry",
+      "tenant_id": "default",
+      "name": "Field test retry pipeline",
+      "version": 1,
+      "nodes": [
+        {
+          "id": "a",
+          "kind": "workload",
+          "workload": "failing-agent",
+          "inputs": {},
+          "on_failure": "fail_fast",
+          "retry": {
+            "max_attempts": 2,
+            "backoff_s": 0.0,
+            "mode": "restart"
+          },
+          "requires_approval": null,
+          "budget": null,
+          "depends_on": [],
+          "over": null,
+          "as_name": null,
+          "node": null,
+          "from_nodes": [],
+          "reducer": null,
+          "transform": null
+        }
+      ],
+      "edges": [],
+      "budget": {
+        "usd": 0.0,
+        "on_exceed": "pause"
+      },
+      "created_at": null
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "POST",
+    "path": "/pipelines/ft-retry/runs",
+    "status": 200,
+    "ms": 51.1,
+    "tenant": null,
+    "note": null,
+    "request": {
+      "inputs": {},
+      "context": "sandbox"
+    },
+    "request_shape": "dict",
+    "response": {
+      "pipeline_run_id": "prun-f1cf7ad1d56b",
+      "pipeline_id": "ft-retry",
+      "state": "failed",
+      "budget_usd": 0.0,
+      "spent_usd": 0.0,
+      "error": null,
+      "nodes": [
+        {
+          "pipeline_run_id": "prun-f1cf7ad1d56b",
+          "pipeline_id": "ft-retry",
+          "node_id": "a",
+          "tenant_id": "default",
+          "attempt": 2,
+          "status": "failed",
+          "child_run_id": "run-e2538377b294",
+          "output": null,
+          "cost_usd": 0.0,
+          "error": "RuntimeError: deliberate field-test failure (failing-agent)",
+          "approval_id": null,
+          "artifacts": [],
+          "instances": [],
+          "started_at": "2026-10-02T00:47:50.193456Z",
+          "finished_at": "2026-10-02T00:47:50.232159Z"
+        }
+      ]
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "GET",
+    "path": "/pipeline-runs/prun-f1cf7ad1d56b",
+    "status": 200,
+    "ms": 3.8,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": {
+      "pipeline_run_id": "prun-f1cf7ad1d56b",
+      "pipeline_id": "ft-retry",
+      "state": "failed",
+      "budget_usd": 0.0,
+      "spent_usd": 0.0,
+      "error": null,
+      "nodes": [
+        {
+          "pipeline_run_id": "prun-f1cf7ad1d56b",
+          "pipeline_id": "ft-retry",
+          "node_id": "a",
+          "tenant_id": "default",
+          "attempt": 2,
+          "status": "failed",
+          "child_run_id": "run-e2538377b294",
+          "output": null,
+          "cost_usd": 0.0,
+          "error": "RuntimeError: deliberate field-test failure (failing-agent)",
+          "approval_id": null,
+          "artifacts": [],
+          "instances": [],
+          "started_at": "2026-10-02T00:47:50.193456Z",
+          "finished_at": "2026-10-02T00:47:50.232159Z"
+        }
+      ]
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "GET",
+    "path": "/runs?workload=failing-agent",
+    "status": 200,
+    "ms": 3.2,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": [
+      {
+        "id": "run-04a2371a89e1",
+        "workload_id": "failing-agent",
+        "caller": "field-test-v02",
+        "state": "failed",
+        "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+        "created_at": "2026-10-02T00:47:48.999160Z",
+        "updated_at": "2026-10-02T00:47:49.019319Z",
+        "started_at": "2026-10-02T00:47:49.014146Z",
+        "finished_at": "2026-10-02T00:47:49.019319Z",
+        "trigger_origin": null,
+        "pipeline_origin": null,
+        "agent_tool_origin": null,
+        "manifest_version": 1,
+        "context": "sandbox",
+        "sandbox": true,
+        "task": {},
+        "result": null,
+        "failure_reason": "RuntimeError: deliberate field-test failure (failing-agent)",
+        "cost_usd": 0.0,
+        "sandbox_id": "sb-98457bfdaddb",
+        "trace_id": "a6ff3d3c581ff969d9fc8ec491de817c",
+        "shadow_of": null,
+        "probe": false,
+        "read_only": false,
+        "canary_rollout_id": null,
+        "canary_arm": null,
+        "tenant_id": "default",
+        "team_id": "default",
+        "attribution_key": "default"
+      },
+      {
+        "id": "run-df4ac03b7df7",
+        "workload_id": "failing-agent",
+        "caller": "pipeline:prun-f1cf7ad1d56b",
+        "state": "failed",
+        "model_identity": null,
+        "created_at": "2026-10-02T00:47:50.194832Z",
+        "updated_at": "2026-10-02T00:47:50.206391Z",
+        "started_at": "2026-10-02T00:47:50.202896Z",
+        "finished_at": "2026-10-02T00:47:50.206391Z",
+        "trigger_origin": null,
+        "pipeline_origin": {
+          "pipeline_run_id": "prun-f1cf7ad1d56b",
+          "pipeline_id": "ft-retry",
+          "node_id": "a",
+          "parent_run_id": null,
+          "attempt": 1
+        },
+        "agent_tool_origin": null,
+        "manifest_version": 2,
+        "context": "sandbox",
+        "sandbox": true,
+        "task": {},
+        "result": null,
+        "failure_reason": "RuntimeError: deliberate field-test failure (failing-agent)",
+        "cost_usd": 0.0,
+        "sandbox_id": "sb-558c3c52fff0",
+        "trace_id": "a2167e78bb4370206f23514202a234d2",
+        "shadow_of": null,
+        "probe": false,
+        "read_only": false,
+        "canary_rollout_id": null,
+        "canary_arm": null,
+        "tenant_id": "default",
+        "team_id": "default",
+        "attribution_key": "default"
+      },
+      {
+        "id": "run-e2538377b294",
+        "workload_id": "failing-agent",
+        "caller": "pipeline:prun-f1cf7ad1d56b",
+        "state": "failed",
+        "model_identity": null,
+        "created_at": "2026-10-02T00:47:50.214018Z",
+        "updated_at": "2026-10-02T00:47:50.226864Z",
+        "started_at": "2026-10-02T00:47:50.223354Z",
+        "finished_at": "2026-10-02T00:47:50.226864Z",
+        "trigger_origin": null,
+        "pipeline_origin": {
+          "pipeline_run_id": "prun-f1cf7ad1d56b",
+          "pipeline_id": "ft-retry",
+          "node_id": "a",
+          "parent_run_id": null,
+          "attempt": 2
+        },
+        "agent_tool_origin": null,
+        "manifest_version": 2,
+        "context": "sandbox",
+        "sandbox": true,
+        "task": {},
+        "result": null,
+        "failure_reason": "RuntimeError: deliberate field-test failure (failing-agent)",
+        "cost_usd": 0.0,
+        "sandbox_id": "sb-380766e9f4af",
+        "trace_id": "a2167e78bb4370206f23514202a234d2",
+        "shadow_of": null,
+        "probe": false,
+        "read_only": false,
+        "canary_rollout_id": null,
+        "canary_arm": null,
+        "tenant_id": "default",
+        "team_id": "default",
+        "attribution_key": "default"
+      }
+    ],
+    "response_shape": "list"
+  },
+  {
+    "method": "GET",
+    "path": "/pipeline-runs/prun-f1cf7ad1d56b",
+    "status": 200,
+    "ms": 7.0,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": {
+      "pipeline_run_id": "prun-f1cf7ad1d56b",
+      "pipeline_id": "ft-retry",
+      "state": "failed",
+      "budget_usd": 0.0,
+      "spent_usd": 0.0,
+      "error": null,
+      "nodes": [
+        {
+          "pipeline_run_id": "prun-f1cf7ad1d56b",
+          "pipeline_id": "ft-retry",
+          "node_id": "a",
+          "tenant_id": "default",
+          "attempt": 2,
+          "status": "failed",
+          "child_run_id": "run-e2538377b294",
+          "output": null,
+          "cost_usd": 0.0,
+          "error": "RuntimeError: deliberate field-test failure (failing-agent)",
+          "approval_id": null,
+          "artifacts": [],
+          "instances": [],
+          "started_at": "2026-10-02T00:47:50.193456Z",
+          "finished_at": "2026-10-02T00:47:50.232159Z"
+        }
+      ]
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-e2538377b294",
+    "status": 200,
+    "ms": 3.3,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": {
+      "id": "run-e2538377b294",
+      "workload_id": "failing-agent",
+      "caller": "pipeline:prun-f1cf7ad1d56b",
+      "state": "failed",
+      "model_identity": null,
+      "created_at": "2026-10-02T00:47:50.214018Z",
+      "updated_at": "2026-10-02T00:47:50.226864Z",
+      "started_at": "2026-10-02T00:47:50.223354Z",
+      "finished_at": "2026-10-02T00:47:50.226864Z",
+      "trigger_origin": null,
+      "pipeline_origin": {
+        "pipeline_run_id": "prun-f1cf7ad1d56b",
+        "pipeline_id": "ft-retry",
+        "node_id": "a",
+        "parent_run_id": null,
+        "attempt": 2
+      },
+      "agent_tool_origin": null,
+      "manifest_version": 2,
+      "context": "sandbox",
+      "sandbox": true,
+      "task": {},
+      "result": null,
+      "failure_reason": "RuntimeError: deliberate field-test failure (failing-agent)",
+      "cost_usd": 0.0,
+      "sandbox_id": "sb-380766e9f4af",
+      "trace_id": "a2167e78bb4370206f23514202a234d2",
+      "shadow_of": null,
+      "probe": false,
+      "read_only": false,
+      "canary_rollout_id": null,
+      "canary_arm": null,
+      "tenant_id": "default",
+      "team_id": "default",
+      "attribution_key": "default"
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-e2538377b294/events",
+    "status": 200,
+    "ms": 4.4,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": [
+      {
+        "run_id": "run-e2538377b294",
+        "sequence": 0,
+        "type": "admission",
+        "actor": "pipeline:prun-f1cf7ad1d56b",
+        "timestamp": "2026-10-02T00:47:50.221307Z",
+        "from_state": null,
+        "to_state": "queued",
+        "detail": "sandbox_only"
+      },
+      {
+        "run_id": "run-e2538377b294",
+        "sequence": 1,
+        "type": "state_change",
+        "actor": "pipeline",
+        "timestamp": "2026-10-02T00:47:50.224244Z",
+        "from_state": "queued",
+        "to_state": "running",
+        "detail": null
+      },
+      {
+        "run_id": "run-e2538377b294",
+        "sequence": 2,
+        "type": "sandbox",
+        "actor": "pipeline",
+        "timestamp": "2026-10-02T00:47:50.225431Z",
+        "from_state": null,
+        "to_state": null,
+        "detail": "provisioned sb-380766e9f4af"
+      },
+      {
+        "run_id": "run-e2538377b294",
+        "sequence": 3,
+        "type": "state_change",
+        "actor": "adapter",
+        "timestamp": "2026-10-02T00:47:50.228453Z",
+        "from_state": "running",
+        "to_state": "failed",
+        "detail": "RuntimeError: deliberate field-test failure (failing-agent)"
+      },
+      {
+        "run_id": "run-e2538377b294",
+        "sequence": 4,
+        "type": "sandbox",
+        "actor": "adapter",
+        "timestamp": "2026-10-02T00:47:50.230383Z",
+        "from_state": null,
+        "to_state": null,
+        "detail": "destroyed sb-380766e9f4af"
+      }
+    ],
+    "response_shape": "list"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-e2538377b294/story",
+    "status": 200,
+    "ms": 6.6,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": {
+      "run_id": "run-e2538377b294",
+      "workload": "failing-agent",
+      "team": "platform",
+      "state": "failed",
+      "context": "sandbox",
+      "model_identity": null,
+      "cost_usd": 0.0,
+      "sandbox": true,
+      "sandbox_id": "sb-380766e9f4af",
+      "certification_status": "uncertified",
+      "attestation_id": null,
+      "trace_id": "a2167e78bb4370206f23514202a234d2",
+      "entries": [
+        {
+          "timestamp": "2026-10-02T00:47:50.214018Z",
+          "kind": "admission",
+          "summary": "sandbox_only",
+          "detail": {
+            "outcome": "sandbox_only",
+            "refused_reason": null,
+            "escalation_required": false,
+            "sandbox": true,
+            "checks": [
+              {
+                "step": "halt",
+                "passed": true,
+                "reason": null,
+                "rule": "incident"
+              },
+              {
+                "step": "certification",
+                "passed": true,
+                "reason": null,
+                "rule": "certification"
+              },
+              {
+                "step": "model_identity",
+                "passed": true,
+                "reason": null,
+                "rule": "model_binding"
+              },
+              {
+                "step": "budget",
+                "passed": true,
+                "reason": null,
+                "rule": "run"
+              },
+              {
+                "step": "policy",
+                "passed": true,
+                "reason": "no tool policy applies",
+                "rule": "run.allow"
+              },
+              {
+                "step": "sandbox",
+                "passed": true,
+                "reason": null,
+                "rule": "sandbox"
+              }
+            ]
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:47:50.224244Z",
+          "kind": "state",
+          "summary": "queued -> running",
+          "detail": {
+            "actor": "pipeline",
+            "detail": null,
+            "from_state": "queued",
+            "to_state": "running",
+            "sequence": 1
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:47:50.225431Z",
+          "kind": "sandbox",
+          "summary": "provisioned sb-380766e9f4af",
+          "detail": {
+            "actor": "pipeline",
+            "detail": "provisioned sb-380766e9f4af",
+            "from_state": null,
+            "to_state": null,
+            "sequence": 2
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:47:50.228453Z",
+          "kind": "state",
+          "summary": "running -> failed",
+          "detail": {
+            "actor": "adapter",
+            "detail": "RuntimeError: deliberate field-test failure (failing-agent)",
+            "from_state": "running",
+            "to_state": "failed",
+            "sequence": 3
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:47:50.230383Z",
+          "kind": "sandbox",
+          "summary": "destroyed sb-380766e9f4af",
+          "detail": {
+            "actor": "adapter",
+            "detail": "destroyed sb-380766e9f4af",
+            "from_state": null,
+            "to_state": null,
+            "sequence": 4
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:47:50.234663Z",
+          "kind": "delivery",
+          "summary": "slack delivered",
+          "detail": {
+            "target": "#platform-oncall",
+            "status": "delivered",
+            "attempts": 1,
+            "error": null
+          }
+        }
+      ]
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-e2538377b294/usage",
+    "status": 200,
+    "ms": 3.6,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": [],
+    "response_shape": "list"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-e2538377b294/deliveries",
+    "status": 200,
+    "ms": 2.9,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": [
+      {
+        "run_id": "run-e2538377b294",
+        "destination_type": "slack",
+        "target": "#platform-oncall",
+        "status": "delivered",
+        "attempts": 1,
+        "error": null,
+        "timestamp": "2026-10-02T00:47:50.234663Z"
+      }
+    ],
+    "response_shape": "list"
+  },
+  {
+    "method": "GET",
+    "path": "/runs/run-e2538377b294/feedback",
+    "status": 200,
+    "ms": 4.2,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": [],
+    "response_shape": "list"
+  }
+]

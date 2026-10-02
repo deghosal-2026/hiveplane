@@ -1,0 +1,27 @@
+{
+  "pipeline_run_id": "prun-f1cf7ad1d56b",
+  "pipeline_id": "ft-retry",
+  "state": "failed",
+  "budget_usd": 0.0,
+  "spent_usd": 0.0,
+  "error": null,
+  "nodes": [
+    {
+      "pipeline_run_id": "prun-f1cf7ad1d56b",
+      "pipeline_id": "ft-retry",
+      "node_id": "a",
+      "tenant_id": "default",
+      "attempt": 2,
+      "status": "failed",
+      "child_run_id": "run-e2538377b294",
+      "output": null,
+      "cost_usd": 0.0,
+      "error": "RuntimeError: deliberate field-test failure (failing-agent)",
+      "approval_id": null,
+      "artifacts": [],
+      "instances": [],
+      "started_at": "2026-10-02T00:47:50.193456Z",
+      "finished_at": "2026-10-02T00:47:50.232159Z"
+    }
+  ]
+}

@@ -44,6 +44,9 @@ def _run(model_identity: str | None = "openai/gpt-4o/2024-08-06") -> Run:
 
 
 class _Tools:
+    def reset_drive(self, run_id: str) -> None:
+        return None
+
     def invoke(self, run_id: str, request: object) -> ToolCallResult:
         return ToolCallResult(run_id=run_id, tool_id="mcp.t.x", outcome=ToolCallOutcome.ALLOWED)
 
@@ -54,18 +57,26 @@ class _Reporter:
         self.usage: list[UsageReport] = []
         self.events: list[tuple[object, str | None]] = []
 
-    def get(self, run_id: str) -> Run:
+    def get(self, run_id: str, *, ctx: object = None) -> Run:
         return _run()
 
     def transition(self, run_id: str, target: RunState, **kwargs: object) -> Run:
         return _run()
 
-    def record_usage(self, run_id: str, report: UsageReport) -> Run:
+    def record_usage(
+        self, run_id: str, report: UsageReport, *, ctx: object = None
+    ) -> Run:
         self.usage.append(report)
         return _run(self._state)
 
     def record_event(
-        self, run_id: str, event_type: object, actor: str, *, detail: str | None = None
+        self,
+        run_id: str,
+        event_type: object,
+        actor: str,
+        *,
+        detail: str | None = None,
+        ctx: object = None,
     ) -> None:
         self.events.append((event_type, detail))
 

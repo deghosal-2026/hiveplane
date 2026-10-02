@@ -1,0 +1,16 @@
+# S13 spend-velocity
+
+status:   blocked
+detail:   requires the --priced profile (local model is zero-cost)
+started:  2026-10-02T00:44:55.346960+00:00
+duration: 1.11s
+model:    omlx/qwen3-4b-instruct-2507/4bit
+git_sha:  b186ba158779686f69cd3fdaba1672de84a13038
+calls:    13
+runs:     run-9f3d18199800
+
+## Mutating calls (inputs)
+
+  POST /workloads -> 201
+  POST /runs -> 201
+  POST /runs/run-9f3d18199800/start -> 200

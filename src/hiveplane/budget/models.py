@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 
+from hiveplane.tenancy.context import DEFAULT_TENANT_ID
+
 
 class CostAttribution(BaseModel):
     """A priced usage event attributed to a run, workload, and team."""
@@ -19,6 +21,8 @@ class CostAttribution(BaseModel):
     tool_calls: int = Field(ge=0)
     cost_usd: float = Field(ge=0.0)
     timestamp: AwareDatetime
+    tenant_id: str = Field(default=DEFAULT_TENANT_ID, min_length=1, max_length=64)
+    attribution_key: str | None = None
 
 
 class BudgetSnapshot(BaseModel):

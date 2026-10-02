@@ -10,6 +10,7 @@ from hiveplane.core.decision import (
     DataSensitivity,
     DecisionOutcome,
     PolicyContext,
+    TimeWindow,
 )
 from hiveplane.core.run import AdmissionContext
 from hiveplane.core.tools import ToolRef, ToolsSpec, ToolTrustLevel
@@ -381,3 +382,75 @@ def test_restricted_read_only_escalates() -> None:
 
     assert decision.outcome is DecisionOutcome.ESCALATE
     assert decision.rule == "sensitivity.restricted.read"
+
+
+def test_pack_override_that_does_not_match_is_skipped() -> None:
+    store = InMemoryPolicyPackStore()
+    store.save(
+        PolicyPack(
+            metadata=PolicyPackMetadata(name="mismatch", team="platform", version="1"),
+            spec=PolicyPackSpec(
+                overrides=[
+                    PolicyPackOverride(
+                        match=PolicyPackRuleMatch(environment=AdmissionContext.SANDBOX),
+                        rules=[PolicyPackRule(action=DecisionOutcome.DENY)],
+                    ),
+                    PolicyPackOverride(
+                        match=PolicyPackRuleMatch(environment=AdmissionContext.STAGING),
+                        rules=[PolicyPackRule(action=DecisionOutcome.ALLOW)],
+                    ),
+                ]
+            ),
+        )
+    )
+
+    decision = PolicyEngine(store, clock=_clock).evaluate(_context(team="platform"))
+
+    assert decision.outcome is DecisionOutcome.ALLOW
+    assert decision.rule == "run.allow"
+
+
+def test_pack_rule_skips_wrong_action_class_and_tool_trust() -> None:
+    store = InMemoryPolicyPackStore()
+    store.save(
+        PolicyPack(
+            metadata=PolicyPackMetadata(name="skips", team="platform", version="1"),
+            spec=PolicyPackSpec(
+                overrides=[
+                    PolicyPackOverride(
+                        match=PolicyPackRuleMatch(environment=AdmissionContext.STAGING),
+                        rules=[
+                            PolicyPackRule(
+                                action=DecisionOutcome.DENY,
+                                action_class=ActionClass.READ_ONLY,
+                            ),
+                            PolicyPackRule(
+                                action=DecisionOutcome.DENY,
+                                tool_trust=ToolTrustLevel.READ_ONLY,
+                            ),
+                        ],
+                    )
+                ]
+            ),
+        )
+    )
+
+    decision = PolicyEngine(store, clock=_clock).evaluate(
+        _context(
+            team="platform",
+            action_class=ActionClass.DESTRUCTIVE,
+            tool_trust=ToolTrustLevel.DESTRUCTIVE,
+        )
+    )
+
+    assert decision.rule == "run.allow"
+
+
+def test_time_window_for_another_action_class_is_skipped() -> None:
+    window = TimeWindow(action_class=ActionClass.READ_ONLY)
+
+    decision = _engine().evaluate(
+        _context(tool_id="t1", tools=_tools(), time_windows=[window])
+    )
+
+    assert decision.rule == "default.deny"

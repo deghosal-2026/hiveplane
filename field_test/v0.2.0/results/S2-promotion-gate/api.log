@@ -1,0 +1,3 @@
+INFO:     192.168.65.1:60381 - "POST /workloads HTTP/1.1" 409 Conflict
+INFO:     192.168.65.1:58510 - "PUT /workloads/uncertified-agent HTTP/1.1" 200 OK
+INFO:     192.168.65.1:30635 - "POST /promotions HTTP/1.1" 409 Conflict

@@ -15,9 +15,9 @@ spec:
   model:
     strategy: tiered
     identity:
-      provider: openai
-      family: gpt-4o
-      version: "2024-08-06"
+      provider: omlx
+      family: qwen3-4b-instruct-2507
+      version: "4bit"
   certification:
     benchmark_corpus: corpora/eval-judge/hiveplane-corpus.yaml
     staging_threshold: 0.80

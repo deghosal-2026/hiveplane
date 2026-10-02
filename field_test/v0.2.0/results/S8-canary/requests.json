@@ -1,0 +1,611 @@
+[
+  {
+    "method": "POST",
+    "path": "/workloads",
+    "status": 409,
+    "ms": 5.6,
+    "tenant": null,
+    "note": null,
+    "request": {
+      "apiVersion": "hiveplane/v1",
+      "kind": "AgentWorkload",
+      "metadata": {
+        "name": "support-agent",
+        "owner": "support-team",
+        "team": "support",
+        "description": "Real exectrace support agent \u2014 answers KB questions and escalates unknowns.",
+        "labels": {
+          "environment": "field-test",
+          "source": "field_test"
+        }
+      },
+      "spec": {
+        "runtime": {
+          "adapter": "raw-worker",
+          "entrypoint": "field_test.shims.support_agent:run",
+          "env": {},
+          "adapter_contract": "2"
+        },
+        "budget": {
+          "per_run_usd": 0.5,
+          "per_day_usd": 5.0,
+          "per_team_usd": 50.0
+        },
+        "model": {
+          "strategy": "tiered",
+          "identity": {
+            "provider": "omlx",
+            "family": "qwen3-4b-instruct-2507",
+            "version": "4bit"
+          }
+        },
+        "certification": {
+          "benchmark_corpus": "corpora/support-agent/hiveplane-corpus.yaml",
+          "staging_threshold": 0.8,
+          "production_threshold": 0.9,
+          "no_critical_failures": true,
+          "latency_budget_ms": 30000,
+          "re_cert_interval": 1209600,
+          "status": "uncertified",
+          "attestation_id": null,
+          "certified_at": null,
+          "certified_by": null,
+          "expires_at": null
+        },
+        "triggers": [],
+        "sandbox": {
+          "enabled": true,
+          "resource_caps": {
+            "memory_mb": 512,
+            "cpu_cores": 1.0,
+            "wall_clock_s": 300
+          },
+          "egress": {
+            "allow": [
+              "api.github.com",
+              "api.pagerduty.com"
+            ],
+            "deny": [
+              "169.254.169.254"
+            ],
+            "mode": "restricted"
+          },
+          "network": null,
+          "filesystem": "isolated"
+        },
+        "output_shaping": {
+          "max_bytes": 16384,
+          "truncate_strategy": "tail",
+          "filter_rules": [],
+          "injection_scan": true
+        },
+        "tools": {
+          "allow": [
+            {
+              "tool_id": "mcp.github.read_issue",
+              "trust_level": "read_only",
+              "require_approval": false,
+              "allow_untrusted": false
+            },
+            {
+              "tool_id": "mcp.github.read_large_issue",
+              "trust_level": "read_only",
+              "require_approval": false,
+              "allow_untrusted": false
+            },
+            {
+              "tool_id": "pagerduty.acknowledge",
+              "trust_level": "destructive",
+              "require_approval": true,
+              "allow_untrusted": true
+            }
+          ],
+          "deny": [
+            "mcp.github.create_pr",
+            "mcp.github.delete_repo"
+          ],
+          "mcp_servers": [],
+          "default_trust": "read_only"
+        },
+        "approvals": {
+          "required_for": [
+            "destructive",
+            "production_write"
+          ],
+          "contact": "#support-oncall",
+          "auto_escalate_after": 300
+        },
+        "guards": null,
+        "fan_out": {
+          "on_completed": [
+            {
+              "type": "slack",
+              "channel": "#support-agent-results",
+              "url": null,
+              "project": null,
+              "issue_type": null
+            }
+          ],
+          "on_failed": [
+            {
+              "type": "slack",
+              "channel": "#support-oncall",
+              "url": null,
+              "project": null,
+              "issue_type": null
+            }
+          ],
+          "on_escalation": [],
+          "always_include": [
+            "trace_link",
+            "attestation_link"
+          ]
+        },
+        "health": {
+          "readiness_probe": {
+            "type": "dry_run",
+            "interval": 60
+          },
+          "slo": {
+            "availability_target": 0.99,
+            "quality_target": 0.9,
+            "error_budget_window": 86400
+          },
+          "failure_rate_threshold": 0.15
+        },
+        "observability": {
+          "contract": "standard",
+          "trace_sampling": 1.0
+        },
+        "io": null,
+        "secrets": [],
+        "time_windows": []
+      }
+    },
+    "request_shape": "dict",
+    "response": {
+      "detail": "workload 'support-agent' already exists"
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "PUT",
+    "path": "/workloads/support-agent",
+    "status": 200,
+    "ms": 24.8,
+    "tenant": null,
+    "note": null,
+    "request": {
+      "apiVersion": "hiveplane/v1",
+      "kind": "AgentWorkload",
+      "metadata": {
+        "name": "support-agent",
+        "owner": "support-team",
+        "team": "support",
+        "description": "Real exectrace support agent \u2014 answers KB questions and escalates unknowns.",
+        "labels": {
+          "environment": "field-test",
+          "source": "field_test"
+        }
+      },
+      "spec": {
+        "runtime": {
+          "adapter": "raw-worker",
+          "entrypoint": "field_test.shims.support_agent:run",
+          "env": {},
+          "adapter_contract": "2"
+        },
+        "budget": {
+          "per_run_usd": 0.5,
+          "per_day_usd": 5.0,
+          "per_team_usd": 50.0
+        },
+        "model": {
+          "strategy": "tiered",
+          "identity": {
+            "provider": "omlx",
+            "family": "qwen3-4b-instruct-2507",
+            "version": "4bit"
+          }
+        },
+        "certification": {
+          "benchmark_corpus": "corpora/support-agent/hiveplane-corpus.yaml",
+          "staging_threshold": 0.8,
+          "production_threshold": 0.9,
+          "no_critical_failures": true,
+          "latency_budget_ms": 30000,
+          "re_cert_interval": 1209600,
+          "status": "uncertified",
+          "attestation_id": null,
+          "certified_at": null,
+          "certified_by": null,
+          "expires_at": null
+        },
+        "triggers": [],
+        "sandbox": {
+          "enabled": true,
+          "resource_caps": {
+            "memory_mb": 512,
+            "cpu_cores": 1.0,
+            "wall_clock_s": 300
+          },
+          "egress": {
+            "allow": [
+              "api.github.com",
+              "api.pagerduty.com"
+            ],
+            "deny": [
+              "169.254.169.254"
+            ],
+            "mode": "restricted"
+          },
+          "network": null,
+          "filesystem": "isolated"
+        },
+        "output_shaping": {
+          "max_bytes": 16384,
+          "truncate_strategy": "tail",
+          "filter_rules": [],
+          "injection_scan": true
+        },
+        "tools": {
+          "allow": [
+            {
+              "tool_id": "mcp.github.read_issue",
+              "trust_level": "read_only",
+              "require_approval": false,
+              "allow_untrusted": false
+            },
+            {
+              "tool_id": "mcp.github.read_large_issue",
+              "trust_level": "read_only",
+              "require_approval": false,
+              "allow_untrusted": false
+            },
+            {
+              "tool_id": "pagerduty.acknowledge",
+              "trust_level": "destructive",
+              "require_approval": true,
+              "allow_untrusted": true
+            }
+          ],
+          "deny": [
+            "mcp.github.create_pr",
+            "mcp.github.delete_repo"
+          ],
+          "mcp_servers": [],
+          "default_trust": "read_only"
+        },
+        "approvals": {
+          "required_for": [
+            "destructive",
+            "production_write"
+          ],
+          "contact": "#support-oncall",
+          "auto_escalate_after": 300
+        },
+        "guards": null,
+        "fan_out": {
+          "on_completed": [
+            {
+              "type": "slack",
+              "channel": "#support-agent-results",
+              "url": null,
+              "project": null,
+              "issue_type": null
+            }
+          ],
+          "on_failed": [
+            {
+              "type": "slack",
+              "channel": "#support-oncall",
+              "url": null,
+              "project": null,
+              "issue_type": null
+            }
+          ],
+          "on_escalation": [],
+          "always_include": [
+            "trace_link",
+            "attestation_link"
+          ]
+        },
+        "health": {
+          "readiness_probe": {
+            "type": "dry_run",
+            "interval": 60
+          },
+          "slo": {
+            "availability_target": 0.99,
+            "quality_target": 0.9,
+            "error_budget_window": 86400
+          },
+          "failure_rate_threshold": 0.15
+        },
+        "observability": {
+          "contract": "standard",
+          "trace_sampling": 1.0
+        },
+        "io": null,
+        "secrets": [],
+        "time_windows": []
+      }
+    },
+    "request_shape": "dict",
+    "response": {
+      "name": "support-agent",
+      "manifest": {
+        "apiVersion": "hiveplane/v1",
+        "kind": "AgentWorkload",
+        "metadata": {
+          "name": "support-agent",
+          "owner": "support-team",
+          "team": "support",
+          "description": "Real exectrace support agent \u2014 answers KB questions and escalates unknowns.",
+          "labels": {
+            "environment": "field-test",
+            "source": "field_test"
+          }
+        },
+        "spec": {
+          "runtime": {
+            "adapter": "raw-worker",
+            "entrypoint": "field_test.shims.support_agent:run",
+            "env": {},
+            "adapter_contract": "2"
+          },
+          "budget": {
+            "per_run_usd": 0.5,
+            "per_day_usd": 5.0,
+            "per_team_usd": 50.0
+          },
+          "model": {
+            "strategy": "tiered",
+            "identity": {
+              "provider": "omlx",
+              "family": "qwen3-4b-instruct-2507",
+              "version": "4bit"
+            }
+          },
+          "certification": {
+            "benchmark_corpus": "corpora/support-agent/hiveplane-corpus.yaml",
+            "staging_threshold": 0.8,
+            "production_threshold": 0.9,
+            "no_critical_failures": true,
+            "latency_budget_ms": 30000,
+            "re_cert_interval": 1209600,
+            "status": "uncertified",
+            "attestation_id": null,
+            "certified_at": null,
+            "certified_by": null,
+            "expires_at": null
+          },
+          "triggers": [],
+          "sandbox": {
+            "enabled": true,
+            "resource_caps": {
+              "memory_mb": 512,
+              "cpu_cores": 1.0,
+              "wall_clock_s": 300
+            },
+            "egress": {
+              "allow": [
+                "api.github.com",
+                "api.pagerduty.com"
+              ],
+              "deny": [
+                "169.254.169.254"
+              ],
+              "mode": "restricted"
+            },
+            "network": null,
+            "filesystem": "isolated"
+          },
+          "output_shaping": {
+            "max_bytes": 16384,
+            "truncate_strategy": "tail",
+            "filter_rules": [],
+            "injection_scan": true
+          },
+          "tools": {
+            "allow": [
+              {
+                "tool_id": "mcp.github.read_issue",
+                "trust_level": "read_only",
+                "require_approval": false,
+                "allow_untrusted": false
+              },
+              {
+                "tool_id": "mcp.github.read_large_issue",
+                "trust_level": "read_only",
+                "require_approval": false,
+                "allow_untrusted": false
+              },
+              {
+                "tool_id": "pagerduty.acknowledge",
+                "trust_level": "destructive",
+                "require_approval": true,
+                "allow_untrusted": true
+              }
+            ],
+            "deny": [
+              "mcp.github.create_pr",
+              "mcp.github.delete_repo"
+            ],
+            "mcp_servers": [],
+            "default_trust": "read_only"
+          },
+          "approvals": {
+            "required_for": [
+              "destructive",
+              "production_write"
+            ],
+            "contact": "#support-oncall",
+            "auto_escalate_after": 300
+          },
+          "guards": null,
+          "fan_out": {
+            "on_completed": [
+              {
+                "type": "slack",
+                "channel": "#support-agent-results",
+                "url": null,
+                "project": null,
+                "issue_type": null
+              }
+            ],
+            "on_failed": [
+              {
+                "type": "slack",
+                "channel": "#support-oncall",
+                "url": null,
+                "project": null,
+                "issue_type": null
+              }
+            ],
+            "on_escalation": [],
+            "always_include": [
+              "trace_link",
+              "attestation_link"
+            ]
+          },
+          "health": {
+            "readiness_probe": {
+              "type": "dry_run",
+              "interval": 60
+            },
+            "slo": {
+              "availability_target": 0.99,
+              "quality_target": 0.9,
+              "error_budget_window": 86400
+            },
+            "failure_rate_threshold": 0.15
+          },
+          "observability": {
+            "contract": "standard",
+            "trace_sampling": 1.0
+          },
+          "io": null,
+          "secrets": [],
+          "time_windows": []
+        }
+      },
+      "current_version": 4,
+      "certification_status": "uncertified",
+      "owner": "support-team",
+      "team": "support",
+      "runtime": "raw-worker",
+      "created_at": "2026-10-02T01:22:10.694625Z",
+      "updated_at": "2026-10-02T01:22:14.561082Z",
+      "needs_re_certification": false,
+      "artifact_hash": "fe280dd8a4c03ac777a7c396d85259da13a0d00b8a8c97f8774cb923dae8116b",
+      "bundle": {
+        "workload_id": "support-agent",
+        "bundle_digest": "f1b4efa034630c61a6bbea0a8e613296226a09d00484722bb61ede42b43e7caa",
+        "entrypoint_digest": "82606cee2eba7d217d23911fbabfba1c1ad88fabe39dc2b1c87a61590e49daa1",
+        "manifest_hash": "24034be719ab5eb604493ed7599f9dc7a316fb53cab8278347a2bc54284dda72",
+        "key_id": "hp-signing-key-01",
+        "signature": "sStoXQJ282IXLt0JMsMxyOjecRhUhTTmoH7ricjFj5Fn4ooiNe6c7ovkdF1ZS7C2ka2hVq3VcGI24s+iqE0LCw==",
+        "registered_at": "2026-10-02T01:22:14.567149Z"
+      },
+      "production_runs_survived": 0,
+      "last_run_at": null,
+      "failure_count": 0,
+      "last_failure_at": null,
+      "tenant_id": "default"
+    },
+    "response_shape": "dict"
+  },
+  {
+    "method": "GET",
+    "path": "/quarantines",
+    "status": 200,
+    "ms": 4.8,
+    "tenant": null,
+    "note": null,
+    "request": null,
+    "request_shape": "null",
+    "response": [
+      {
+        "quarantine_id": "quar-5283a5c2c62d",
+        "workload": "support-agent",
+        "status": "active",
+        "severity": "critical",
+        "reason": "behavioral drift confirmed (1/2): pass-rate drop 0.833 (threshold 0.100), 5 new failure(s), 1 critical",
+        "actor": "drift-detector",
+        "baseline_attestation_id": "att-c7d391416def",
+        "assessment": {
+          "workload": "support-agent",
+          "baseline_attestation_id": "att-c7d391416def",
+          "verdict": "drifted",
+          "pass_rate_before": 1.0,
+          "pass_rate_after": 0.16666666666666666,
+          "pass_rate_delta": 0.833333,
+          "failed_before": 0,
+          "failed_after": 5,
+          "new_failures": 5,
+          "critical_failures": 1,
+          "threshold_pass_rate": 0.1,
+          "max_new_failures": 2,
+          "required_consecutive_failures": 2,
+          "consecutive_failures": 1,
+          "exceeded": true,
+          "strong_signal": true,
+          "should_quarantine": true,
+          "reason": "behavioral drift confirmed (1/2): pass-rate drop 0.833 (threshold 0.100), 5 new failure(s), 1 critical",
+          "evidence": {
+            "new_failures": 5,
+            "pass_rate_delta": 0.833333,
+            "max_new_failures": 2,
+            "critical_failures": 1,
+            "threshold_pass_rate": 0.1,
+            "consecutive_failures": 1
+          },
+          "tenant_id": "default",
+          "timestamp": "2026-10-02T01:22:13.991995Z"
+        },
+        "evidence": {
+          "new_failures": 5,
+          "pass_rate_delta": 0.833333,
+          "max_new_failures": 2,
+          "critical_failures": 1,
+          "threshold_pass_rate": 0.1,
+          "consecutive_failures": 1
+        },
+        "regression_diff": null,
+        "notified": [
+          "#agent-certifications",
+          "http://webhook-sink:8081/webhook"
+        ],
+        "cancelled_runs": [],
+        "tenant_id": "default",
+        "timestamp": "2026-10-02T01:22:13.996647Z",
+        "reinstated_at": null,
+        "reinstated_by": null
+      }
+    ],
+    "response_shape": "list"
+  },
+  {
+    "method": "POST",
+    "path": "/quarantines/quar-5283a5c2c62d/reinstate",
+    "status": 409,
+    "ms": 6.8,
+    "tenant": null,
+    "note": null,
+    "request": {
+      "operator": "field-test-v02"
+    },
+    "request_shape": "dict",
+    "response": {
+      "detail": "reinstatement of 'support-agent' refused: workload is uncertified, not quarantined",
+      "error": {
+        "code": 409,
+        "message": "reinstatement of 'support-agent' refused: workload is uncertified, not quarantined",
+        "details": null,
+        "request_id": "c16040f86ee64e7991321852ed0b8e68"
+      }
+    },
+    "response_shape": "dict"
+  }
+]

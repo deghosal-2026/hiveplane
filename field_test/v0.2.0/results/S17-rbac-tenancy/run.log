@@ -1,0 +1,13 @@
+# S17 rbac-tenancy
+
+status:   blocked
+detail:   RBAC requires the --auth profile (HIVEPLANE_AUTH__ENABLED=true)
+started:  2026-10-02T00:45:10.940024+00:00
+duration: 0.02s
+model:    omlx/qwen3-4b-instruct-2507/4bit
+git_sha:  b186ba158779686f69cd3fdaba1672de84a13038
+calls:    0
+runs:     (none)
+
+## Mutating calls (inputs)
+

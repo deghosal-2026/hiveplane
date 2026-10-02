@@ -1,0 +1,23 @@
+{
+  "leases_before": [
+    "lease-112cd7a36a0c436b8b50"
+  ],
+  "leases_after": [],
+  "worker": {
+    "worker": {
+      "worker_id": "ft-worker-1",
+      "tenant_id": "default",
+      "state": "deregistered",
+      "capabilities": {
+        "adapters": [],
+        "labels": {},
+        "capacity": 1
+      },
+      "version": "0.2.0",
+      "registered_at": "2026-10-02T00:45:13.145508Z",
+      "last_seen_at": "2026-10-02T00:45:13.256677Z"
+    },
+    "load": 0,
+    "active_leases": []
+  }
+}

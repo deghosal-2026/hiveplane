@@ -1,0 +1,95 @@
+{
+  "triggers": [
+    {
+      "id": "ft-am",
+      "tenant_id": "default",
+      "source": "alertmanager",
+      "target": {
+        "kind": "workload",
+        "ref": "support-agent"
+      },
+      "filter": {
+        "events": [],
+        "actions": [],
+        "repo": null,
+        "service": null
+      },
+      "task_template": {
+        "ticket": "{{ event.number }}"
+      },
+      "dedup": null,
+      "cooldown_seconds": 0,
+      "rate_limit": null,
+      "admission_rule": "staging-auto",
+      "timezone": "UTC",
+      "schedule": null,
+      "missed_schedule_policy": "skip",
+      "max_concurrent_runs": null,
+      "max_field_bytes": 8192,
+      "max_total_bytes": 65536,
+      "enabled": true,
+      "created_at": null
+    },
+    {
+      "id": "ft-gh",
+      "tenant_id": "default",
+      "source": "github",
+      "target": {
+        "kind": "workload",
+        "ref": "support-agent"
+      },
+      "filter": {
+        "events": [],
+        "actions": [],
+        "repo": null,
+        "service": null
+      },
+      "task_template": {
+        "ticket": "{{ event.number }}"
+      },
+      "dedup": null,
+      "cooldown_seconds": 0,
+      "rate_limit": null,
+      "admission_rule": "staging-auto",
+      "timezone": "UTC",
+      "schedule": null,
+      "missed_schedule_policy": "skip",
+      "max_concurrent_runs": null,
+      "max_field_bytes": 8192,
+      "max_total_bytes": 65536,
+      "enabled": true,
+      "created_at": null
+    },
+    {
+      "id": "ft-wh",
+      "tenant_id": "default",
+      "source": "webhook",
+      "target": {
+        "kind": "workload",
+        "ref": "support-agent"
+      },
+      "filter": {
+        "events": [],
+        "actions": [],
+        "repo": null,
+        "service": null
+      },
+      "task_template": {
+        "ticket": "{{ event.number }}"
+      },
+      "dedup": null,
+      "cooldown_seconds": 0,
+      "rate_limit": null,
+      "admission_rule": "staging-auto",
+      "timezone": "UTC",
+      "schedule": null,
+      "missed_schedule_policy": "skip",
+      "max_concurrent_runs": null,
+      "max_field_bytes": 8192,
+      "max_total_bytes": 65536,
+      "enabled": true,
+      "created_at": null
+    }
+  ],
+  "dedup": "signed ingest accepted; duplicate deduped"
+}

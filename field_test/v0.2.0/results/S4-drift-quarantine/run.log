@@ -1,0 +1,21 @@
+# S4 drift-quarantine
+
+status:   pass
+detail:   seeded drift -> AUTO-quarantined (actor=drift-detector, severity=critical); production refused
+started:  2026-10-02T01:22:12.518753+00:00
+duration: 1.94s
+model:    omlx/qwen3-4b-instruct-2507/4bit
+git_sha:  739840737846df1d5061c0f119d125534f2ae07a
+calls:    120
+runs:     (none)
+
+## Mutating calls (inputs)
+
+  POST /workloads -> 409
+  PUT /workloads/support-agent -> 200
+  POST /certifications -> 201
+  POST /certifications -> 201
+  POST /tools/mcp.github.read_issue/disable -> 200
+  POST /drift/probe -> 200
+  POST /tools/mcp.github.read_issue/enable -> 200
+  POST /runs -> 403

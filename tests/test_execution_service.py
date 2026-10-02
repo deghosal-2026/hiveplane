@@ -18,7 +18,12 @@ from hiveplane.execution.errors import (
     RunNotFoundError,
     RunNotIntervenableError,
 )
-from hiveplane.execution.models import DeliveryRecord, InterventionAction, RunContext
+from hiveplane.execution.models import (
+    CanaryAssignment,
+    DeliveryRecord,
+    InterventionAction,
+    RunContext,
+)
 from hiveplane.execution.service import RunService
 from hiveplane.execution.store import InMemoryRunStore
 from hiveplane.registry.service import RegistryService
@@ -232,3 +237,112 @@ def test_record_usage_updates_cost(make_manifest: Callable[..., AgentWorkload]) 
     )
     assert updated.cost_usd == 0.25
     assert len(service.usage(run.id)) == 1
+
+
+def test_submit_require_approval_pauses_run(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    service, _, _, workload = _service(make_manifest)
+    run = service.submit(
+        workload=workload,
+        caller="trigger",
+        context=AdmissionContext.PRODUCTION,
+        require_approval=True,
+    )
+    assert run.state is RunState.PAUSED
+
+
+def test_terminal_production_run_triggers_eval_hook(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    service, _, _, workload = _service(make_manifest)
+    seen: list[str] = []
+    service.attach_eval_hook(lambda run: seen.append(run.id))
+    run = service.submit(
+        workload=workload,
+        caller="cli",
+        context=AdmissionContext.PRODUCTION,
+        model_identity="m1",
+    )
+    service.transition(run.id, RunState.RUNNING, actor="scheduler")
+    service.transition(run.id, RunState.COMPLETED, actor="runtime")
+
+    assert seen == ["run-1"]
+
+
+def test_staging_run_does_not_trigger_eval_hook(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    service, _, _, workload = _service(make_manifest)
+    seen: list[str] = []
+    service.attach_eval_hook(lambda run: seen.append(run.id))
+    run = service.submit(
+        workload=workload,
+        caller="cli",
+        context=AdmissionContext.STAGING,
+        model_identity="m1",
+    )
+    service.transition(run.id, RunState.RUNNING, actor="scheduler")
+    service.transition(run.id, RunState.COMPLETED, actor="runtime")
+
+    assert seen == []
+
+
+def test_shadow_run_never_triggers_fanout(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    service, _, fanout, workload = _service(make_manifest)
+    run = service.submit(
+        workload=workload,
+        caller="cli",
+        context=AdmissionContext.PRODUCTION,
+        model_identity="m1",
+        shadow_of="prod-run-1",
+    )
+    assert run.shadow_of == "prod-run-1"
+    service.transition(run.id, RunState.RUNNING, actor="scheduler")
+    service.transition(run.id, RunState.COMPLETED, actor="runtime")
+
+    assert fanout.notified == []
+
+
+class _FakeCanary:
+    """A canary router stub that records what the run service asked of it."""
+
+    def __init__(self) -> None:
+        self.routed: list[str] = []
+        self.recorded: list[str] = []
+
+    def route(self, run: Run) -> CanaryAssignment:
+        self.routed.append(run.id)
+        return CanaryAssignment(
+            rollout_id="canary-1", arm="candidate", candidate_version=2
+        )
+
+    def record(self, run: Run) -> None:
+        self.recorded.append(run.id)
+
+
+def test_canary_routes_and_samples_production_runs(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    service, _, _, workload = _service(make_manifest)
+    canary = _FakeCanary()
+    service.attach_canary(canary)
+
+    run = service.submit(
+        workload=workload,
+        caller="trigger",
+        context=AdmissionContext.PRODUCTION,
+        model_identity="m1",
+    )
+
+    assert canary.routed == [run.id]
+    assert run.canary_rollout_id == "canary-1"
+    assert run.canary_arm == "candidate"
+    assert run.manifest_version == 2
+
+    service.transition(run.id, RunState.RUNNING, actor="scheduler")
+    service.transition(run.id, RunState.COMPLETED, actor="runtime")
+
+    assert canary.recorded == [run.id]

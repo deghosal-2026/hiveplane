@@ -16,6 +16,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from hiveplane.budget.pricing import ModelPrice
 from hiveplane.execution.tool_executor import DEFAULT_TOOL_FIXTURES
+from hiveplane.fleet.cost import CostPeriodKind
 
 ENV_PREFIX = "HIVEPLANE_"
 ENV_NESTED_DELIMITER = "__"
@@ -97,6 +98,8 @@ class CertificationSettings(BaseModel):
     corpora_dir: str = "examples"
     executor: Literal["none", "reference", "adapter"] = "none"
     signing_key_file: str | None = None
+    signing_key_id: str = "hp-signing-key-01"
+    public_verification_base_url: str | None = None
 
     @model_validator(mode="after")
     def _production_not_weaker_than_staging(self) -> CertificationSettings:
@@ -107,6 +110,36 @@ class CertificationSettings(BaseModel):
                 f"staging.min_pass_rate={self.staging.min_pass_rate}"
             )
         return self
+
+
+class DriftSettings(BaseModel):
+    """Behavioral drift detection, auto-quarantine, and expiry (M34, DD-09..DD-12).
+
+    ``threshold_pass_rate``/``max_new_failures`` may be left unset to inherit the
+    ``certification.drift_threshold_pass_rate``/``certification.max_new_failures``
+    defaults (wiring resolves them); ``required_consecutive_failures`` is the
+    false-positive control that prevents quarantining on a single flaky run.
+    """
+
+    enabled: bool = True
+    required_consecutive_failures: int = Field(default=2, ge=1)
+    strong_multiplier: float = Field(default=2.0, ge=1.0)
+    renewal_window_days: int = Field(default=3, ge=0)
+    cancel_in_flight: bool = True
+    notify: bool = True
+    slack_webhook_url: str | None = None
+    generic_webhook_url: str | None = None
+    slack_channel: str = "#agent-certifications"
+
+
+class DefenseSettings(BaseModel):
+    """Injection defense, taint, and egress controls (M39, D29)."""
+
+    enabled: bool = True
+    repeat_threshold: int = Field(default=3, ge=1)
+    repeat_window_seconds: int = Field(default=3600, ge=0)
+    detector_severity_threshold: Literal["low", "medium", "high", "critical"] = "low"
+    escalate_to_block: bool = False
 
 
 class SandboxDefaults(BaseModel):
@@ -126,13 +159,21 @@ class SandboxSettings(BaseModel):
     defaults: SandboxDefaults = Field(default_factory=SandboxDefaults)
 
 
+class FederationSettings(BaseModel):
+    """Remote-plane federation (M59-08, stretch; disabled by default)."""
+
+    enabled: bool = False
+
+
 class ExecutionSettings(BaseModel):
     """Run-store configuration (DD-05) and runtime execution selection."""
 
     store: Literal["memory", "json", "postgres"] = "json"
     data_dir: str = ".hiveplane/runs"
     entrypoints_root: str = "."
-    adapter: Literal["none", "raw-worker", "langgraph", "auto"] = "none"
+    adapter: Literal[
+        "none", "raw-worker", "langgraph", "pydanticai", "openai-agents", "auto"
+    ] = "none"
     tool_fixtures: str = DEFAULT_TOOL_FIXTURES
     sandbox_mode: Literal["in-process", "subprocess"] = "in-process"
     base_url: str = "http://127.0.0.1:8100"
@@ -147,14 +188,69 @@ class FanoutSettings(BaseModel):
     max_retries: int = Field(default=3, ge=0)
     slack_webhook_url: str | None = None
     generic_webhook_url: str | None = None
+    escalation_targets: list[str] = Field(default_factory=list)
+    escalation_response_window_s: int = Field(default=900, gt=0)
+    escalation_tick_seconds: float = Field(default=60.0, gt=0)
+
+
+DEFAULT_UI_SESSION_SECRET = "dev-ui-session-secret-change-me"
 
 
 class UiSettings(BaseModel):
-    """Operator UI settings (M22)."""
+    """Operator UI settings (M22, M52)."""
 
     api_url: str = "http://localhost:8100"
     host: str = "0.0.0.0"
     port: int = Field(default=3001, ge=1, le=65535)
+    session_secret: str = DEFAULT_UI_SESSION_SECRET
+    session_ttl_hours: int = Field(default=12, ge=1)
+    session_cookie_secure: bool = True
+
+
+class ArtifactSettings(BaseModel):
+    """Artifact blob-storage configuration (M54, D38)."""
+
+    backend: Literal["local", "s3"] = "local"
+    data_dir: str = ".hiveplane/artifacts"
+    bucket: str = "hiveplane-artifacts"
+    prefix: str = "artifacts"
+    scheme: Literal["s3", "minio"] = "s3"
+    endpoint_url: str | None = None
+    region: str = "us-east-1"
+    access_key: SecretStr | None = None
+    secret_key: SecretStr | None = None
+
+
+class ApiSettings(BaseModel):
+    """Public API v2 configuration: versioning and per-tenant rate limits (M56)."""
+
+    version: str = "v2"
+    rate_limit_enabled: bool = False
+    rate_limit_requests: int = Field(default=600, ge=1)
+    rate_limit_window_seconds: float = Field(default=60.0, gt=0)
+    page_size_default: int = Field(default=50, ge=1)
+    page_size_max: int = Field(default=200, ge=1)
+
+
+class PluginsSettings(BaseModel):
+    """Community plugin configuration (M56-06/07)."""
+
+    enabled: bool = False
+    directory: str = "plugins"
+    timeout_seconds: float = Field(default=2.0, gt=0)
+
+
+class ReportingSettings(BaseModel):
+    """Reporting, compliance, retention, and PII configuration (M57, D38)."""
+
+    enabled: bool = False
+    digest_cron: str = "0 8 * * 1"
+    digest_period: CostPeriodKind = CostPeriodKind.WEEK
+    pii_enabled: bool = False
+    pii_salt: str = "hiveplane-pii"
+    default_retain_days: int = Field(default=90, ge=0)
+    signing_key_id: str = "reporting"
+    signing_key_file: str | None = None
 
 
 class BudgetSettings(BaseModel):
@@ -184,7 +280,6 @@ class BudgetSettings(BaseModel):
 
 class ModelSettings(BaseModel):
     """LLM provider selection and credentials (M23, #107)."""
-
     provider: Literal["local", "cloud", "fake"] = "fake"
     base_url: str | None = None
     api_key: SecretStr | None = None
@@ -211,6 +306,155 @@ class ModelSettings(BaseModel):
         return value
 
 
+class ReconcileSettings(BaseModel):
+    """Desired-state reconciliation guardrails and cadence (M26)."""
+    enabled: bool = False
+    poll_interval_s: int = Field(default=60, gt=0)
+    allow_destructive: bool = False
+    allow_empty: bool = False
+    max_destructive_per_run: int = Field(default=10, ge=0)
+    require_destructive_confirmation: bool = True
+    pinned_fields: list[str] = Field(default_factory=list)
+
+    @field_validator("pinned_fields", mode="before")
+    @classmethod
+    def _empty_pinned_fields_become_empty_list(cls, value: object) -> object:
+        """Treat an unset env var as no pinned fields."""
+        return [] if value == "" else value
+
+
+class RouterSettings(BaseModel):
+    """Smart task router guardrails (M30)."""
+
+    enabled: bool = False
+    model: str = "router-classifier"
+    confidence_threshold: float = Field(default=0.6, ge=0.0, le=1.0)
+    margin: float = Field(default=0.15, ge=0.0, le=1.0)
+    context: Literal["sandbox", "staging", "production"] = "staging"
+    max_candidates: int = Field(default=50, ge=1)
+
+
+class EvalSettings(BaseModel):
+    """Online eval sampling, judge, and quality guardrails (M36)."""
+
+    enabled: bool = True
+    sample_rate: int = Field(default=10, ge=0, le=100)
+    judge_model: str = "judge-model"
+    quality_target: float = Field(default=0.8, ge=0.0, le=1.0)
+    cost_cap_usd: float | None = Field(default=None, ge=0.0)
+    window: int = Field(default=50, ge=1)
+    pii_patterns: list[str] = Field(default_factory=list)
+
+    @field_validator("pii_patterns", mode="before")
+    @classmethod
+    def _empty_patterns_become_empty_list(cls, value: object) -> object:
+        """Treat an unset env var as no sensitive patterns."""
+        return [] if value == "" else value
+
+
+class HealthSettings(BaseModel):
+    """Agent health window and scoring thresholds (M42)."""
+
+    window_seconds: int = Field(default=86400, gt=0)
+    min_runs_for_score: int = Field(default=5, ge=1)
+
+
+class WorkerSettings(BaseModel):
+    """Distributed worker settings (M46)."""
+
+    identity_key_file: str = ".hiveplane/worker.key"
+    heartbeat_interval_s: int = Field(default=10, gt=0)
+    heartbeat_timeout_s: int = Field(default=30, gt=0)
+    lease_ttl_s: int = Field(default=60, gt=0)
+
+
+class AuthSettings(BaseModel):
+    """Operator authn/authz settings (M45)."""
+
+    enabled: bool = False
+    #: A known admin token seeded on startup so the first key can be minted over
+    #: HTTP when auth is enabled (field-test/dev bootstrap). Empty disables it.
+    admin_key: str | None = None
+    #: A plane-admin token seeded in the system tenant on startup so it can create
+    #: tenants; kept separate from ``admin_key`` (default tenant) so default-tenant
+    #: resource ownership is unaffected. Empty disables it.
+    system_key: str | None = None
+
+
+class SecretsSettings(BaseModel):
+    """Encrypted secret store settings (M45)."""
+
+    master_key_file: str = ".hiveplane/secrets.key"
+
+
+class McpSettings(BaseModel):
+    """Live MCP Registry v2 transport settings (M44)."""
+
+    enabled: bool = True
+    timeout_seconds: float = Field(default=30.0, gt=0.0)
+
+
+class ProbesSettings(BaseModel):
+    """Synthetic probe budget and cadence (M43)."""
+
+    enabled: bool = True
+    budget_cap_usd: float | None = Field(default=None, gt=0.0)
+    interval_seconds: int = Field(default=300, gt=0)
+
+
+class GuardsSettings(BaseModel):
+    """Runtime guards: context, spend-velocity, and circuit breakers (M41)."""
+
+    enabled: bool = True
+    context_tokens: int | None = Field(default=None, ge=1)
+    context_warn_at: float = Field(default=0.8, ge=0.0, le=1.0)
+    velocity_window_seconds: int = Field(default=300, gt=0)
+    velocity_limit_usd: float | None = Field(default=None, gt=0.0)
+    velocity_multiplier: float | None = Field(default=None, gt=0.0)
+    breaker_failure_threshold: float = Field(default=0.5, ge=0.0, le=1.0)
+    breaker_min_calls: int = Field(default=5, ge=1)
+    breaker_open_for_seconds: int = Field(default=30, ge=0)
+
+
+class A2ASettings(BaseModel):
+    """Agent2Agent interop feature flag and allow-list (M30-07)."""
+
+    enabled: bool = False
+    plane_id: str = "hiveplane"
+    allowed_planes: list[str] = Field(default_factory=list)
+    plane_secrets: dict[str, str] = Field(default_factory=dict)
+
+    @field_validator("allowed_planes", mode="before")
+    @classmethod
+    def _empty_planes_become_empty_list(cls, value: object) -> object:
+        """Treat an unset env var as no registered remote planes."""
+        return [] if value == "" else value
+
+
+class TriggerSettings(BaseModel):
+    """Trigger ingest, replay-protection, and rate-limit settings (M27).
+
+    ``secrets`` maps a trigger id to its webhook shared secret. It is a stopgap
+    until the secrets store (M45) resolves ``secret_ref``s; secrets never live in
+    the trigger document itself.
+    """
+
+    enabled: bool = True
+    webhook_skew_seconds: int = Field(default=300, gt=0)
+    replay_window_seconds: int = Field(default=300, gt=0)
+    global_max_per_minute: int = Field(default=600, gt=0)
+    global_burst: int = Field(default=0, ge=0)
+    max_catch_up: int = Field(default=10, ge=1)
+    tick_seconds: int = Field(default=60, gt=0)
+    secrets: dict[str, str] = Field(default_factory=dict)
+
+    @field_validator("secrets", mode="before")
+    @classmethod
+    def _empty_secrets_become_empty_map(cls, value: object) -> object:
+        """Treat an unset env var as no configured secrets."""
+        return {} if value == "" else value
+
+
 class Settings(BaseSettings):
     """Root settings object; instantiate via :func:`get_settings`."""
 
@@ -229,12 +473,31 @@ class Settings(BaseSettings):
     redis: RedisSettings = Field(default_factory=RedisSettings)
     otel: OtelSettings = Field(default_factory=OtelSettings)
     certification: CertificationSettings = Field(default_factory=CertificationSettings)
+    drift: DriftSettings = Field(default_factory=DriftSettings)
+    defense: DefenseSettings = Field(default_factory=DefenseSettings)
     sandbox: SandboxSettings = Field(default_factory=SandboxSettings)
+    federation: FederationSettings = Field(default_factory=FederationSettings)
     execution: ExecutionSettings = Field(default_factory=ExecutionSettings)
     fanout: FanoutSettings = Field(default_factory=FanoutSettings)
     ui: UiSettings = Field(default_factory=UiSettings)
+    artifacts: ArtifactSettings = Field(default_factory=ArtifactSettings)
+    api: ApiSettings = Field(default_factory=ApiSettings)
+    plugins: PluginsSettings = Field(default_factory=PluginsSettings)
+    reporting: ReportingSettings = Field(default_factory=ReportingSettings)
     model: ModelSettings = Field(default_factory=ModelSettings)
     budget: BudgetSettings = Field(default_factory=BudgetSettings)
+    reconcile: ReconcileSettings = Field(default_factory=ReconcileSettings)
+    triggers: TriggerSettings = Field(default_factory=TriggerSettings)
+    router: RouterSettings = Field(default_factory=RouterSettings)
+    a2a: A2ASettings = Field(default_factory=A2ASettings)
+    guards: GuardsSettings = Field(default_factory=GuardsSettings)
+    health: HealthSettings = Field(default_factory=HealthSettings)
+    probes: ProbesSettings = Field(default_factory=ProbesSettings)
+    mcp: McpSettings = Field(default_factory=McpSettings)
+    secrets: SecretsSettings = Field(default_factory=SecretsSettings)
+    auth: AuthSettings = Field(default_factory=AuthSettings)
+    worker: WorkerSettings = Field(default_factory=WorkerSettings)
+    eval: EvalSettings = Field(default_factory=EvalSettings)
 
 
 @lru_cache(maxsize=1)

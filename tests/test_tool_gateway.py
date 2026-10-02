@@ -28,20 +28,33 @@ class _Runs:
         self.events: list[tuple[EventType, str, str | None]] = []
         self.interventions: list[InterventionAction] = []
 
-    def get(self, run_id: str) -> Run:
+    def get(self, run_id: str, *, ctx: object = None) -> Run:
         return self._run
 
-    def intervene(self, run_id: str, action: InterventionAction, *, actor: str) -> Run:
+    def intervene(
+        self,
+        run_id: str,
+        action: InterventionAction,
+        *,
+        actor: str,
+        ctx: object = None,
+    ) -> Run:
         self.interventions.append(action)
         return self._run
 
     def record_event(
-        self, run_id: str, event_type: EventType, actor: str, *, detail: str | None = None
+        self,
+        run_id: str,
+        event_type: EventType,
+        actor: str,
+        *,
+        detail: str | None = None,
+        ctx: object = None,
     ) -> None:
         self.events.append((event_type, actor, detail))
 
 
-def _run(state: RunState = RunState.RUNNING) -> Run:
+def _run(state: RunState = RunState.RUNNING, *, read_only: bool = False) -> Run:
     return Run(
         id="run-1",
         workload_id="agent-1",
@@ -51,6 +64,7 @@ def _run(state: RunState = RunState.RUNNING) -> Run:
         created_at=_FIXED_NOW,
         updated_at=_FIXED_NOW,
         context=AdmissionContext.STAGING,
+        read_only=read_only,
     )
 
 
@@ -86,7 +100,7 @@ def _gateway(
     workload: AgentWorkload, runs: _Runs
 ) -> tuple[ToolGateway, ApprovalService]:
     approvals = ApprovalService(InMemoryApprovalStore(), clock=lambda: _FIXED_NOW)
-    registry = SimpleNamespace(get=lambda name: SimpleNamespace(manifest=workload))
+    registry = SimpleNamespace(get=lambda name, **_: SimpleNamespace(manifest=workload))
     gateway = ToolGateway(
         registry,  # type: ignore[arg-type]
         PolicyEngine(InMemoryPolicyPackStore(), clock=lambda: _FIXED_NOW),
@@ -203,3 +217,66 @@ def test_restricted_read_escalates(make_manifest: Callable[..., AgentWorkload]) 
 
     assert result.outcome is ToolCallOutcome.ESCALATED
     assert result.rule == "sensitivity.restricted.read"
+
+
+def test_read_only_run_blocks_a_destructive_tool(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    workload = _workload(make_manifest)
+    runs = _Runs(_run(read_only=True))
+    gateway, _ = _gateway(workload, runs)
+
+    result = gateway.invoke("run-1", ToolCallRequest(tool_id="mcp.t.destructive"))
+
+    assert result.outcome is ToolCallOutcome.DENIED
+    assert result.rule == "read_only.block"
+    assert InterventionAction.PAUSE not in runs.interventions
+    assert result.approval_id is None
+
+
+def test_read_only_run_allows_a_read_tool(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    workload = _workload(make_manifest)
+    gateway, _ = _gateway(workload, _Runs(_run(read_only=True)))
+
+    result = gateway.invoke("run-1", ToolCallRequest(tool_id="mcp.t.read"))
+
+    assert result.outcome is ToolCallOutcome.ALLOWED
+
+
+def test_manifest_time_window_blocks_destructive_outside_hours(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    workload = make_manifest(
+        name="agent-1",
+        status="provisional",
+        tools={
+            "allow": [
+                {
+                    "tool_id": "mcp.t.destructive",
+                    "trust_level": "destructive",
+                    "require_approval": True,
+                }
+            ]
+        },
+        time_windows=[
+            {
+                "action_class": "destructive",
+                "days": [0],
+                "start": "09:00",
+                "end": "17:00",
+                "tz": "UTC",
+            }
+        ],
+    )
+    # _run uses context STAGING and _FIXED_NOW (Thursday 2026-01-01), outside Monday 09-17.
+    gateway, _ = _gateway(workload, _Runs(_run()))
+
+    result = gateway.invoke(
+        "run-1",
+        ToolCallRequest(tool_id="mcp.t.destructive", action_class=ActionClass.DESTRUCTIVE),
+    )
+
+    assert result.outcome is ToolCallOutcome.DENIED
+    assert result.rule == "outside_time_window"

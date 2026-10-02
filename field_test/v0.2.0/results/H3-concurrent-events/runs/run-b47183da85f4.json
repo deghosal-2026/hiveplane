@@ -1,0 +1,243 @@
+{
+  "run": {
+    "status": 200,
+    "body": {
+      "id": "run-b47183da85f4",
+      "workload_id": "support-agent",
+      "caller": "benchmark",
+      "state": "failed",
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "created_at": "2026-10-02T00:43:47.628035Z",
+      "updated_at": "2026-10-02T00:43:47.641858Z",
+      "started_at": "2026-10-02T00:43:47.637493Z",
+      "finished_at": "2026-10-02T00:43:47.641858Z",
+      "trigger_origin": null,
+      "pipeline_origin": null,
+      "agent_tool_origin": null,
+      "manifest_version": 4,
+      "context": "sandbox",
+      "sandbox": true,
+      "task": {
+        "query": "reset password",
+        "account_id": "ACC-001"
+      },
+      "result": null,
+      "failure_reason": "tool call 'mcp.github.read_issue' denied: tool 'mcp.github.read_issue' is disabled fleet-wide",
+      "cost_usd": 0.0,
+      "sandbox_id": "sb-43f140bc7a75",
+      "trace_id": "4cdf54744cc4b8cdc728a5c17ebfdeff",
+      "shadow_of": null,
+      "probe": false,
+      "read_only": false,
+      "canary_rollout_id": null,
+      "canary_arm": null,
+      "tenant_id": "default",
+      "team_id": "default",
+      "attribution_key": "default"
+    }
+  },
+  "events": {
+    "status": 200,
+    "body": [
+      {
+        "run_id": "run-b47183da85f4",
+        "sequence": 0,
+        "type": "admission",
+        "actor": "benchmark",
+        "timestamp": "2026-10-02T00:43:47.635891Z",
+        "from_state": null,
+        "to_state": "queued",
+        "detail": "sandbox_only"
+      },
+      {
+        "run_id": "run-b47183da85f4",
+        "sequence": 1,
+        "type": "state_change",
+        "actor": "benchmark",
+        "timestamp": "2026-10-02T00:43:47.638194Z",
+        "from_state": "queued",
+        "to_state": "running",
+        "detail": null
+      },
+      {
+        "run_id": "run-b47183da85f4",
+        "sequence": 2,
+        "type": "sandbox",
+        "actor": "benchmark",
+        "timestamp": "2026-10-02T00:43:47.639159Z",
+        "from_state": null,
+        "to_state": null,
+        "detail": "provisioned sb-43f140bc7a75"
+      },
+      {
+        "run_id": "run-b47183da85f4",
+        "sequence": 3,
+        "type": "state_change",
+        "actor": "adapter",
+        "timestamp": "2026-10-02T00:43:47.642512Z",
+        "from_state": "running",
+        "to_state": "failed",
+        "detail": "tool call 'mcp.github.read_issue' denied: tool 'mcp.github.read_issue' is disabled fleet-wide"
+      },
+      {
+        "run_id": "run-b47183da85f4",
+        "sequence": 4,
+        "type": "sandbox",
+        "actor": "adapter",
+        "timestamp": "2026-10-02T00:43:47.643407Z",
+        "from_state": null,
+        "to_state": null,
+        "detail": "destroyed sb-43f140bc7a75"
+      }
+    ]
+  },
+  "story": {
+    "status": 200,
+    "body": {
+      "run_id": "run-b47183da85f4",
+      "workload": "support-agent",
+      "team": "support",
+      "state": "failed",
+      "context": "sandbox",
+      "model_identity": "omlx/qwen3-4b-instruct-2507/4bit",
+      "cost_usd": 0.0,
+      "sandbox": true,
+      "sandbox_id": "sb-43f140bc7a75",
+      "certification_status": "provisional",
+      "attestation_id": "att-ded5bec79b72",
+      "trace_id": "4cdf54744cc4b8cdc728a5c17ebfdeff",
+      "entries": [
+        {
+          "timestamp": "2026-10-02T00:43:47.628035Z",
+          "kind": "admission",
+          "summary": "sandbox_only",
+          "detail": {
+            "outcome": "sandbox_only",
+            "refused_reason": null,
+            "escalation_required": false,
+            "sandbox": true,
+            "checks": [
+              {
+                "step": "halt",
+                "passed": true,
+                "reason": null,
+                "rule": "incident"
+              },
+              {
+                "step": "certification",
+                "passed": true,
+                "reason": null,
+                "rule": "certification"
+              },
+              {
+                "step": "model_identity",
+                "passed": true,
+                "reason": null,
+                "rule": "model_binding"
+              },
+              {
+                "step": "budget",
+                "passed": true,
+                "reason": null,
+                "rule": "run"
+              },
+              {
+                "step": "policy",
+                "passed": true,
+                "reason": "no tool policy applies",
+                "rule": "run.allow"
+              },
+              {
+                "step": "sandbox",
+                "passed": true,
+                "reason": null,
+                "rule": "sandbox"
+              }
+            ]
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:43:47.638194Z",
+          "kind": "state",
+          "summary": "queued -> running",
+          "detail": {
+            "actor": "benchmark",
+            "detail": null,
+            "from_state": "queued",
+            "to_state": "running",
+            "sequence": 1
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:43:47.639159Z",
+          "kind": "sandbox",
+          "summary": "provisioned sb-43f140bc7a75",
+          "detail": {
+            "actor": "benchmark",
+            "detail": "provisioned sb-43f140bc7a75",
+            "from_state": null,
+            "to_state": null,
+            "sequence": 2
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:43:47.642512Z",
+          "kind": "state",
+          "summary": "running -> failed",
+          "detail": {
+            "actor": "adapter",
+            "detail": "tool call 'mcp.github.read_issue' denied: tool 'mcp.github.read_issue' is disabled fleet-wide",
+            "from_state": "running",
+            "to_state": "failed",
+            "sequence": 3
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:43:47.643407Z",
+          "kind": "sandbox",
+          "summary": "destroyed sb-43f140bc7a75",
+          "detail": {
+            "actor": "adapter",
+            "detail": "destroyed sb-43f140bc7a75",
+            "from_state": null,
+            "to_state": null,
+            "sequence": 4
+          }
+        },
+        {
+          "timestamp": "2026-10-02T00:43:47.644879Z",
+          "kind": "delivery",
+          "summary": "slack delivered",
+          "detail": {
+            "target": "#support-oncall",
+            "status": "delivered",
+            "attempts": 1,
+            "error": null
+          }
+        }
+      ]
+    }
+  },
+  "usage": {
+    "status": 200,
+    "body": []
+  },
+  "deliveries": {
+    "status": 200,
+    "body": [
+      {
+        "run_id": "run-b47183da85f4",
+        "destination_type": "slack",
+        "target": "#support-oncall",
+        "status": "delivered",
+        "attempts": 1,
+        "error": null,
+        "timestamp": "2026-10-02T00:43:47.644879Z"
+      }
+    ]
+  },
+  "feedback": {
+    "status": 200,
+    "body": []
+  }
+}

@@ -13,6 +13,8 @@ from hiveplane.core.spec import RuntimeAdapter
 from hiveplane.core.tools import ToolTrustLevel
 from hiveplane.core.triggers import TriggerRule
 from hiveplane.core.workload import AgentWorkload
+from hiveplane.tenancy.context import DEFAULT_TENANT_ID
+from hiveplane.transparency.provenance import WorkloadBundle
 
 
 class VersionStatus(StrEnum):
@@ -38,10 +40,13 @@ class WorkloadRecord(BaseModel):
     created_at: AwareDatetime
     updated_at: AwareDatetime
     needs_re_certification: bool = False
+    artifact_hash: str | None = None
+    bundle: WorkloadBundle | None = None
     production_runs_survived: int = Field(default=0, ge=0)
     last_run_at: AwareDatetime | None = None
     failure_count: int = Field(default=0, ge=0)
     last_failure_at: AwareDatetime | None = None
+    tenant_id: str = Field(default=DEFAULT_TENANT_ID, min_length=1, max_length=64)
 
 
 class WorkloadVersion(BaseModel):

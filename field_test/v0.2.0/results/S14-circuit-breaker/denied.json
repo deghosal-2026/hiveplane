@@ -1,0 +1,10 @@
+{
+  "run_id": "run-8de7c09fe261",
+  "tool_id": "mcp.github.read_issue",
+  "outcome": "denied",
+  "rule": "kill_switch",
+  "reason": "tool 'mcp.github.read_issue' is disabled fleet-wide",
+  "shaped_output": null,
+  "approval_id": null,
+  "egress_checked": false
+}

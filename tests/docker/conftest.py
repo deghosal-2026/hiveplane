@@ -23,6 +23,7 @@ import json
 import os
 import urllib.error
 import urllib.request
+from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
@@ -31,6 +32,18 @@ import pytest
 _DEFAULT_BASE_URL = "http://127.0.0.1:8000/v1"
 _DEFAULT_MODEL = "local-model"
 _ENV_FILE = Path(__file__).resolve().parents[2] / ".env.local"
+
+
+@pytest.fixture(autouse=True)
+def _isolated_settings() -> Iterator[None]:
+    """Override the repo's per-test settings isolation for live-stack tests.
+
+    Docker tests run against the running compose stack and must read the same
+    ``HIVEPLANE_*`` env the stack was launched with (API URL, auth bootstrap key,
+    rate limits). The parent fixture in ``tests/conftest.py`` strips them; this
+    no-op override keeps them visible to the container-layer suite.
+    """
+    yield
 
 
 def _read_env_file(path: Path) -> dict[str, str]:
@@ -62,6 +75,24 @@ _LOCAL_MODEL = (
     or _FILE_ENV.get("HIVEPLANE_MODEL__DEFAULT_MODEL")
     or _DEFAULT_MODEL
 )
+
+_ALIASES: dict[str, str] = {}
+_ALIASES_RAW = os.environ.get("HIVEPLANE_MODEL__MODEL_ALIASES") or _FILE_ENV.get(
+    "HIVEPLANE_MODEL__MODEL_ALIASES"
+)
+if _ALIASES_RAW:
+    try:
+        _ALIASES = {str(key): str(value) for key, value in json.loads(_ALIASES_RAW).items()}
+    except ValueError:
+        _ALIASES = {}
+
+#: canonical bound identity -> name the server serves.
+_CANONICAL_TO_SERVED = {canonical: served for served, canonical in _ALIASES.items()}
+
+
+def _resolve_served_model(model: str) -> str:
+    """Return the served model name for a configured (possibly canonical) identity."""
+    return _CANONICAL_TO_SERVED.get(model, model)
 
 
 class LocalLLM:
@@ -100,13 +131,13 @@ class LocalLLM:
 
 @pytest.fixture(scope="session")
 def local_llm() -> LocalLLM:
-    """Return a working local-LLM client, failing if inference is unavailable.
+    """Return a working local-LLM client for the configured model.
 
-    The configured model is preferred when the server serves it; otherwise a
-    served model is used, because the point of L7 is that real inference works —
-    an endpoint with no servable model is a failure, not a skip.
+    Only the configured model (``Qwen3-4B-Instruct-2507-4bit``) is used: if the
+    server does not serve it, the fixture fails. It never falls back to an
+    arbitrary served model (e.g. an alphabetically-first Llama).
     """
-    client = LocalLLM(_LOCAL_BASE_URL, _LOCAL_MODEL)
+    client = LocalLLM(_LOCAL_BASE_URL, _resolve_served_model(_LOCAL_MODEL))
     try:
         served = client.models()
     except (urllib.error.URLError, OSError, ValueError) as error:
@@ -115,11 +146,13 @@ def local_llm() -> LocalLLM:
             pytrace=False,
         )
     if not served:
-        pytest.fail(
-            f"local LLM at {_LOCAL_BASE_URL} serves no models", pytrace=False
-        )
+        pytest.fail(f"local LLM at {_LOCAL_BASE_URL} serves no models", pytrace=False)
     if client.model not in served:
-        client.model = sorted(served)[0]
+        pytest.fail(
+            f"configured model {_LOCAL_MODEL!r} resolves to {client.model!r}, which "
+            f"{_LOCAL_BASE_URL} does not serve (served: {served})",
+            pytrace=False,
+        )
     try:
         payload = client.complete("ping", max_tokens=1)
     except (urllib.error.URLError, OSError, ValueError) as error:

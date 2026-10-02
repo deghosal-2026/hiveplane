@@ -65,26 +65,44 @@ Product metrics measure operability and trust. Certification metrics measure whe
 - [ ] Docker Compose stack starts with one command
 - [ ] `hiveplane init` scaffolds a working project in < 5 minutes
 
-### v0.2.0
+### v0.2.0 — The Complete Fleet OS (final big release; absorbs former v0.3.0/v0.4.0)
 
-- [ ] **Drift detector auto-quarantines a seeded drifting agent**
+- [ ] **Drift detector auto-quarantines a seeded drifting agent, notifies the team, and reinstates it after re-cert**
 - [ ] **Promotion gate blocks a regression and produces a replayable diff**
-- [ ] Trigger rules fire from at least 2 sources (alert + cron or PR)
-- [ ] Result fan-out delivers to at least 2 channels (Slack + webhook)
-- [ ] Cost showback attributes spend by team and agent
+- [ ] Trigger rules fire from ≥3 sources (webhook + PR + alert/cron) with dedup/cooldown proven
+- [ ] Fan-out delivers to ≥3 channels; Slack interactive approvals + mobile approvals work
+- [ ] Cost showback attributes spend by tenant → team → agent with cost-per-completed-task
 - [ ] Context-aware policy differentiates staging vs. production for the same tool
-
-### v0.3.0
-
-- [ ] Agent health dashboard shows readiness, failure rate, SLO, drift
-- [ ] Prompt-injection defense blocks a seeded injection via tool output
-- [ ] Multi-runtime support (≥ 3 adapter types)
-
-### v0.4.0
-
-- [ ] Multi-tenant isolation verified
-- [ ] Helm chart deploys to a reference cluster
+- [ ] Seeded prompt-injection via tool output is blocked; repeated attempts quarantine the agent
+- [ ] Health dashboard shows readiness, failure rate, SLO burn; burn-through throttles; a circuit breaker trips and recovers
+- [ ] Helm chart deploys the full stack to a k3d cluster
+- [ ] Multi-tenant isolation verified (per-tenant budgets, policies, keys); viewer role cannot approve
 - [ ] ROI dashboard shows fleet-wide spend vs. outcome
+- [ ] A pipeline runs a multi-agent DAG end-to-end with per-step gates
+- [ ] Canary routes 10% to a candidate and auto-promotes on clean results
+- [ ] A secret never appears in logs/traces/agent context (verified by test)
+- [ ] A dead trigger replays from the DLQ
+- [ ] SDK + API v2 round-trip a full run; a plugin hook fires
+- [ ] Weekly digest auto-generates; an artifact is stored, linked, and retained per policy
+- [ ] Git deletes an agent → the plane deregisters it; git changes a cert threshold → re-cert fires (reconciliation)
+- [ ] An urgent run preempts a best-effort run with attribution
+- [ ] A worker daemon executes a run on a second host; kill it → lease expiry reassigns the run
+- [ ] Context budget exceeded → run pauses cleanly with accounting shown
+- [ ] A cache hit reuses a result and shows savings; re-cert invalidates it
+- [ ] A synthetic probe flags decay before the drift threshold trips
+- [ ] `ask` answers 5 live-state questions, itself under budget + cert
+- [ ] Incident mode halts the fleet in <5s and broadcasts
+- [ ] An attestation verifies publicly by ID; the tool kill switch disables a tool fleet-wide instantly
+- [ ] Signed image + SBOM published with the release; retention purge deletes tenant data on schedule
+- [ ] Field test: 25 scenarios + load test sustaining ≥50 concurrent runs
+- [ ] An operator-flagged failed run becomes a corpus case included in the next certification
+- [ ] Sampled production runs receive judge scores; a quality dip alerts before scheduled re-cert
+- [ ] A modified agent bundle fails admission on provenance-signature mismatch
+- [ ] A worker without a signed token is refused
+- [ ] Agent-as-tool calls propagate budget/policy/certification to the nested run
+- [ ] A second controller replica does not double-reconcile (leader election verified)
+- [ ] Chaos drills: kill a worker mid-run → lease reassigns the run; revoke a cert mid-flight → run halts
+- [ ] A per-workload service endpoint serves a run through all gates; over-limit tenants get 429s
 
 ## See Also
 

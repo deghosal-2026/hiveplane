@@ -1,0 +1,16 @@
+# S2 promotion-gate
+
+status:   pass
+detail:   refused (409)
+started:  2026-10-02T00:43:44.556010+00:00
+duration: 0.05s
+model:    omlx/qwen3-4b-instruct-2507/4bit
+git_sha:  b186ba158779686f69cd3fdaba1672de84a13038
+calls:    3
+runs:     (none)
+
+## Mutating calls (inputs)
+
+  POST /workloads -> 409
+  PUT /workloads/uncertified-agent -> 200
+  POST /promotions -> 409

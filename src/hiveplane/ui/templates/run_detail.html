@@ -40,6 +40,7 @@
   </div>
 </div>
 
+{% if visible_actions.intervene %}
 <h2>Intervene</h2>
 {% if view.state in ("queued", "running") %}
 <form class="inline" method="post" action="/runs/{{ view.run_id }}/pause">
@@ -56,25 +57,100 @@
   <button class="danger" type="submit">Stop</button>
 </form>
 {% endif %}
+{% endif %}
+
+{% if view.state in ("completed", "failed") %}
+<h2>Feedback</h2>
+<form class="inline" method="post" action="/runs/{{ view.run_id }}/feedback">
+  <select name="verdict" aria-label="Verdict">
+    <option value="good">good</option>
+    <option value="bad">bad</option>
+    <option value="failed-with-lesson">failed-with-lesson</option>
+  </select>
+  <input type="text" name="notes" placeholder="notes (required for failed-with-lesson)" />
+  <button type="submit">Record feedback</button>
+</form>
+{% endif %}
+
+<h2>Artifacts</h2>
+{% if view.artifacts %}
+<table>
+  <thead>
+    <tr><th>Artifact</th><th>Size</th><th>Hash</th></tr>
+  </thead>
+  <tbody>
+    {% for artifact in view.artifacts %}
+    <tr>
+      <td>{{ artifact.artifact_id }}</td>
+      <td>{{ artifact.size_bytes }} B</td>
+      <td class="muted">{{ artifact.content_hash }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="muted">No artifacts linked to this run.</p>
+{% endif %}
 
 <h2>Execution story</h2>
-{% if view.entries %}
-<ul class="timeline">
-  {% for entry in view.entries %}
-  <li>
-    <strong>{{ entry.kind }}</strong>
-    — {{ entry.summary }}
-    <span class="muted">{{ entry.timestamp }}</span>
-    {% if entry.kind == "model_call" and entry.detail.get("prompt") %}
-    <div class="muted">prompt: {{ entry.detail["prompt"] }}</div>
-    {% endif %}
-    {% if entry.kind == "model_call" and entry.detail.get("response") %}
-    <div class="muted">response: {{ entry.detail["response"] }}</div>
-    {% endif %}
-  </li>
-  {% endfor %}
-</ul>
-{% else %}
-<p class="muted">No events recorded for this run.</p>
-{% endif %}
+<div id="run-timeline" data-run-id="{{ view.run_id }}">
+  <ul class="timeline" id="run-events">
+    {% for entry in view.entries %}
+    <li data-sequence="{{ entry.detail.get('sequence', '') }}">
+      <strong>{{ entry.kind }}</strong>
+      — {{ entry.summary }}
+      <span class="muted">{{ entry.timestamp }}</span>
+      {% if entry.kind == "model_call" and entry.detail.get("prompt") %}
+      <div class="muted">prompt: {{ entry.detail["prompt"] }}</div>
+      {% endif %}
+      {% if entry.kind == "model_call" and entry.detail.get("response") %}
+      <div class="muted">response: {{ entry.detail["response"] }}</div>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% if not view.entries %}
+  <p class="muted">No events recorded for this run.</p>
+  {% endif %}
+</div>
+<script>
+  (function () {
+    var timeline = document.getElementById("run-timeline");
+    if (!timeline || typeof EventSource === "undefined") return;
+    var list = document.getElementById("run-events");
+    var rendered = list.querySelectorAll("li[data-sequence]");
+    var seen = 0;
+    for (var i = 0; i < rendered.length; i++) {
+      var value = parseInt(rendered[i].getAttribute("data-sequence"), 10);
+      if (!isNaN(value) && value > seen) seen = value;
+    }
+    var source = new EventSource("/runs/" + timeline.dataset.runId + "/stream?seen=" + seen);
+    source.addEventListener("run", function (message) {
+      var event = JSON.parse(message.data);
+      var item = document.createElement("li");
+      item.setAttribute("data-sequence", event.sequence);
+      var kind = document.createElement("strong");
+      kind.textContent = event.type || "event";
+      var summary = document.createElement("span");
+      var text;
+      if (event.type === "state_change") {
+        text = (event.from_state || "?") + " -> " + (event.to_state || "?");
+      } else {
+        text = event.detail || event.type || "";
+      }
+      summary.textContent = " — " + text;
+      item.appendChild(kind);
+      item.appendChild(summary);
+      if (event.timestamp) {
+        var stamp = document.createElement("span");
+        stamp.className = "muted";
+        stamp.textContent = " " + event.timestamp;
+        item.appendChild(stamp);
+      }
+      list.appendChild(item);
+    });
+    source.addEventListener("end", function () { source.close(); });
+    source.onerror = function () { source.close(); };
+  })();
+</script>
 {% endblock %}

@@ -1,0 +1,9 @@
+==> Preflight local LLM at http://127.0.0.1:8000/v1
+==> Build images
+==> Reset stack volumes (hermetic run)
+==> docker compose up
+==> Wait for /readyz
+==> Wait for UI /healthz
+==> Stack healthy (api :8100, ui :3001)
+==> Seed tool registry
+==> pytest tests/docker -m docker

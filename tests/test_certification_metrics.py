@@ -77,9 +77,37 @@ def _coordinator(
     )
 
 
-def test_get_attestation_records_verified(fleet_metrics: RecordingMetrics) -> None:
+def _seed_workload(
+    make_manifest: Callable[..., AgentWorkload], store: InMemoryRegistryStore
+) -> None:
+    from datetime import UTC, datetime
+
+    from hiveplane.certification.models import CertificationStatus
+    from hiveplane.registry.models import WorkloadRecord
+
+    now = datetime(2026, 9, 25, tzinfo=UTC)
+    manifest = make_manifest(name="repo-agent")
+    store.save_workload(
+        WorkloadRecord(
+            name=manifest.name,
+            manifest=manifest,
+            current_version=1,
+            certification_status=CertificationStatus.CERTIFIED,
+            owner=manifest.owner,
+            team=manifest.team,
+            runtime=manifest.spec.runtime.adapter,
+            created_at=now,
+            updated_at=now,
+        )
+    )
+
+
+def test_get_attestation_records_verified(
+    make_manifest: Callable[..., AgentWorkload], fleet_metrics: RecordingMetrics
+) -> None:
     private_key, public_key = generate_keypair()
     store = InMemoryRegistryStore()
+    _seed_workload(make_manifest, store)
     registry = RegistryService(store, attestation_public_key=public_key)
     store.add_attestation(sign_attestation(_attestation(), private_key))
 
@@ -91,11 +119,13 @@ def test_get_attestation_records_verified(fleet_metrics: RecordingMetrics) -> No
 
 
 def test_failed_attestation_verification_is_recorded(
+    make_manifest: Callable[..., AgentWorkload],
     fleet_metrics: RecordingMetrics,
 ) -> None:
     private_key, _ = generate_keypair()
     _, other_public = generate_keypair()
     store = InMemoryRegistryStore()
+    _seed_workload(make_manifest, store)
     registry = RegistryService(store, attestation_public_key=other_public)
     store.add_attestation(sign_attestation(_attestation(), private_key))
 

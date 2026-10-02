@@ -1,0 +1,98 @@
+ Image hiveplane-api Building 
+ Image hiveplane-ui Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 977B done
+#1 DONE 0.0s
+
+#2 [ui internal] load build definition from Dockerfile
+#2 DONE 0.0s
+
+#2 [ui internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.10kB done
+#2 DONE 0.0s
+
+#3 [api internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 0.0s
+
+#4 [api internal] load .dockerignore
+#4 transferring context: 346B done
+#4 DONE 0.0s
+
+#5 [ui  1/15] FROM docker.io/library/python:3.12-slim@sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f
+#5 resolve docker.io/library/python:3.12-slim@sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f done
+#5 DONE 0.0s
+
+#6 [ui internal] load build context
+#6 transferring context: 79.15kB 0.0s done
+#6 DONE 0.0s
+
+#7 [api  6/15] COPY deploy/testdata ./deploy/testdata
+#7 CACHED
+
+#8 [api  5/15] COPY examples ./examples
+#8 CACHED
+
+#9 [api  9/15] COPY field_test/shims ./field_test/shims
+#9 CACHED
+
+#10 [api  3/15] COPY pyproject.toml README.md ./
+#10 CACHED
+
+#11 [api 12/15] COPY field_test/corpora/regressed-agent ./field_test/corpora/regressed-agent
+#11 CACHED
+
+#12 [api 14/15] COPY field_test/agents/proven/exectrace/agent-eval-graph ./field_test/agents/proven/exectrace/agent-eval-graph
+#12 CACHED
+
+#13 [api 13/15] COPY field_test/agents/proven/exectrace/agent-raw ./field_test/agents/proven/exectrace/agent-raw
+#13 CACHED
+
+#14 [api  7/15] COPY field_test/__init__.py ./field_test/__init__.py
+#14 CACHED
+
+#15 [api  2/15] WORKDIR /app
+#15 CACHED
+
+#16 [api  4/15] COPY src ./src
+#16 CACHED
+
+#17 [api  8/15] COPY field_test/workloads ./field_test/workloads
+#17 CACHED
+
+#18 [api 10/15] COPY field_test/corpora/support-agent ./field_test/corpora/support-agent
+#18 CACHED
+
+#19 [api 11/15] COPY field_test/corpora/eval-judge ./field_test/corpora/eval-judge
+#19 CACHED
+
+#20 [ui 15/15] RUN python -m pip install --upgrade pip && python -m pip install ".[langgraph]"
+#20 CACHED
+
+#21 [api] exporting to image
+#21 exporting layers done
+#21 exporting manifest sha256:15b3c07a0028e6c3a9d8cda40b561e2aa4c1240c54241101fbbf804b8f079d26 done
+#21 exporting config sha256:5d26294ffcfa3b633b326ac70aa0f2a5d86ae1aa54bf54f13e92d6fe1a9aa213 done
+#21 exporting attestation manifest sha256:76d44c4cc260e1528995a2ded02dd5bc4fe9bcce78633aa4da99e4df3b3be350 done
+#21 exporting manifest list sha256:588f31558194ec10f8cf2e532ee8360b4538e4b76902bfe4663e47afceb4c62e done
+#21 naming to docker.io/library/hiveplane-api:latest
+#21 naming to docker.io/library/hiveplane-api:latest done
+#21 unpacking to docker.io/library/hiveplane-api:latest done
+#21 DONE 0.0s
+
+#22 [ui] exporting to image
+#22 exporting layers done
+#22 exporting manifest sha256:16a4c1f8be2263e8d116a6199821ef58851f59dfbb53d36a31b70c955f9d6710 done
+#22 exporting config sha256:840710e0f2c94e690e70c52c8927c1747055b1413bff25a135f706b61be153f4 done
+#22 exporting attestation manifest sha256:243af7c9d05a1fc525a57b6a3302ca9ce9e7c66c6e60f5e8f4a215f66bc4de0f done
+#22 exporting manifest list sha256:ca990dd3241387e3be2f368d0492207bf12e89c13f84b62bea75c9a3b4226177 done
+#22 naming to docker.io/library/hiveplane-ui:latest done
+#22 unpacking to docker.io/library/hiveplane-ui:latest done
+#22 DONE 0.0s
+
+#23 [ui] resolving provenance for metadata file
+#23 DONE 0.0s
+
+#24 [api] resolving provenance for metadata file
+#24 DONE 0.0s
+ Image hiveplane-ui Built 
+ Image hiveplane-api Built 

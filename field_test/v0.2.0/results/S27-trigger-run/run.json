@@ -1,0 +1,43 @@
+{
+  "id": "run-8d7b24d030fa",
+  "workload_id": "support-agent",
+  "caller": "trigger:ft-s27",
+  "state": "completed",
+  "model_identity": null,
+  "created_at": "2026-10-02T00:46:57.086805Z",
+  "updated_at": "2026-10-02T00:46:57.152296Z",
+  "started_at": "2026-10-02T00:46:57.140970Z",
+  "finished_at": "2026-10-02T00:46:57.152296Z",
+  "trigger_origin": {
+    "source": "webhook",
+    "event_id": "ev-63b747ade680",
+    "timestamp": "2026-10-02T00:46:57.084327Z"
+  },
+  "pipeline_origin": null,
+  "agent_tool_origin": null,
+  "manifest_version": 15,
+  "context": "staging",
+  "sandbox": true,
+  "task": {
+    "query": "reset password",
+    "ticket": 902017081,
+    "account_id": "ACC-001"
+  },
+  "result": {
+    "answer": "Reset at portal.example.com/settings",
+    "status": "success",
+    "account_tier": "pro"
+  },
+  "failure_reason": null,
+  "cost_usd": 0.0,
+  "sandbox_id": "sb-61d3af979f1b",
+  "trace_id": "af4cadb7db9f2c28c88d04bbfdd5ed2e",
+  "shadow_of": null,
+  "probe": false,
+  "read_only": false,
+  "canary_rollout_id": null,
+  "canary_arm": null,
+  "tenant_id": "default",
+  "team_id": "default",
+  "attribution_key": "default"
+}

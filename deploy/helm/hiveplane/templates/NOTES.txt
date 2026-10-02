@@ -1,0 +1,15 @@
+HivePlane {{ .Chart.AppVersion }} is being installed as {{ .Release.Name }}.
+
+The API is available inside the cluster at:
+  http://{{ include "hiveplane.fullname" . }}-api:{{ .Values.api.service.port }}
+
+Port-forward the API from your workstation:
+  kubectl port-forward svc/{{ include "hiveplane.fullname" . }}-api {{ .Values.api.service.port }}:{{ .Values.api.service.port }}
+
+Then confirm readiness:
+  curl http://localhost:{{ .Values.api.service.port }}/ready
+
+{{- if .Values.ui.enabled }}
+UI:
+  kubectl port-forward svc/{{ include "hiveplane.fullname" . }}-ui {{ .Values.ui.service.port }}:{{ .Values.ui.service.port }}
+{{- end }}

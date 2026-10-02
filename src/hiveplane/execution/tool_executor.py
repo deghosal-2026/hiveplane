@@ -60,3 +60,26 @@ class FixtureToolExecutor:
         if not candidate.is_relative_to(root):
             raise ToolFixtureNotFoundError(tool_id, candidate)
         return candidate
+
+
+class CompositeToolExecutor:
+    """Tries a sequence of executors, falling through on a missing fixture.
+
+    Lets the boundary serve fixture-backed output in CI while falling through
+    to the live MCP registry (M44-06) for registered tools.
+    """
+
+    def __init__(self, executors: list[ToolExecutor]) -> None:
+        self._executors = list(executors)
+
+    def execute(self, tool_id: str) -> str:
+        last_error: ToolExecutionError | None = None
+        for executor in self._executors:
+            try:
+                return executor.execute(tool_id)
+            except ToolFixtureNotFoundError as exc:
+                last_error = exc
+                continue
+        if last_error is not None:
+            raise last_error
+        raise ToolExecutionError(f"no executor could serve tool {tool_id!r}")

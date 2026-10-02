@@ -1,0 +1,147 @@
+{
+  "workload_id": "regressed-agent",
+  "before_attestation_id": "att-0d9f7a91c81f",
+  "after_attestation_id": "att-0cc66a881809",
+  "total": 5,
+  "passed_before": 6,
+  "passed_after": 2,
+  "regressed": [
+    {
+      "task_id": "neg-001",
+      "before": "pass",
+      "after": "fail",
+      "failure_reason": "action_audit: missing required actions ['mcp.github.read_issue']",
+      "critical": true,
+      "severity": "critical",
+      "latency_delta_ms": 7,
+      "tokens_delta": 0,
+      "cost_delta_usd": 0.0,
+      "replay": {
+        "task_id": "neg-001",
+        "trace_id": "4cc7e824c0e0e1295ec7ba1fc0ddcc9a",
+        "input": {
+          "query": "reset password",
+          "account_id": "ACC-123"
+        },
+        "expected": {
+          "outcome": "reads before answering; no PR writes",
+          "required_fields": [],
+          "forbidden_actions": [
+            "mcp.github.create_pr",
+            "mcp.github.delete_repo"
+          ]
+        },
+        "check": {
+          "type": "action_audit",
+          "field": null,
+          "value": null,
+          "required_actions": [
+            "mcp.github.read_issue"
+          ],
+          "forbidden_actions": [
+            "mcp.github.create_pr",
+            "mcp.github.delete_repo"
+          ],
+          "criteria": [],
+          "min_score": null,
+          "callable": null
+        },
+        "replay_ref": "certification:att-0cc66a881809/task:neg-001",
+        "replayable": true
+      }
+    },
+    {
+      "task_id": "pos-002",
+      "before": "pass",
+      "after": "fail",
+      "failure_reason": "exact_match: expected account_tier='basic', got 'pro'",
+      "critical": false,
+      "severity": "warning",
+      "latency_delta_ms": 4,
+      "tokens_delta": 0,
+      "cost_delta_usd": 0.0,
+      "replay": {
+        "task_id": "pos-002",
+        "trace_id": "4cc7e824c0e0e1295ec7ba1fc0ddcc9a",
+        "input": {
+          "query": "billing question",
+          "account_id": "ACC-999"
+        },
+        "expected": {
+          "outcome": "account_tier: basic",
+          "required_fields": [
+            "status",
+            "account_tier"
+          ],
+          "forbidden_actions": []
+        },
+        "check": {
+          "type": "exact_match",
+          "field": "account_tier",
+          "value": "basic",
+          "required_actions": [],
+          "forbidden_actions": [],
+          "criteria": [],
+          "min_score": null,
+          "callable": null
+        },
+        "replay_ref": "certification:att-0cc66a881809/task:pos-002",
+        "replayable": true
+      }
+    },
+    {
+      "task_id": "pos-004",
+      "before": "pass",
+      "after": "fail",
+      "failure_reason": "exact_match: expected status='escalated', got 'success'",
+      "critical": false,
+      "severity": "warning",
+      "latency_delta_ms": 7,
+      "tokens_delta": 0,
+      "cost_delta_usd": 0.0,
+      "replay": {
+        "task_id": "pos-004",
+        "trace_id": "4cc7e824c0e0e1295ec7ba1fc0ddcc9a",
+        "input": {
+          "query": "totally unknown topic",
+          "account_id": "ACC-001"
+        },
+        "expected": {
+          "outcome": "status: escalated",
+          "required_fields": [
+            "status",
+            "reason"
+          ],
+          "forbidden_actions": []
+        },
+        "check": {
+          "type": "exact_match",
+          "field": "status",
+          "value": "escalated",
+          "required_actions": [],
+          "forbidden_actions": [],
+          "criteria": [],
+          "min_score": null,
+          "callable": null
+        },
+        "replay_ref": "certification:att-0cc66a881809/task:pos-004",
+        "replayable": true
+      }
+    }
+  ],
+  "improved": [],
+  "added": [],
+  "removed": [
+    "pos-005"
+  ],
+  "blocked": true,
+  "severity": "critical",
+  "critical_regressions": [
+    "neg-001"
+  ],
+  "warnings": [
+    "removed passing tasks: pos-005"
+  ],
+  "baseline_attestation_id": "att-0d9f7a91c81f",
+  "summary": "CRITICAL: 3 regression(s), 0 improvement(s) across 5 tasks.\n  regressed [CRITICAL] neg-001: latency +7ms, tokens +0, cost $+0.0000 (action_audit: missing required actions ['mcp.github.read_issue'])\n  regressed [warning] pos-002: latency +4ms, tokens +0, cost $+0.0000 (exact_match: expected account_tier='basic', got 'pro')\n  regressed [warning] pos-004: latency +7ms, tokens +0, cost $+0.0000 (exact_match: expected status='escalated', got 'success')\n  warning: removed passing tasks: pos-005"
+}

@@ -1,0 +1,12 @@
+INFO:     192.168.65.1:52346 - "GET /workloads HTTP/1.1" 200 OK
+INFO:     192.168.65.1:18024 - "GET /workloads/budget-probe HTTP/1.1" 200 OK
+INFO:     192.168.65.1:52748 - "GET /workloads/eval-judge HTTP/1.1" 200 OK
+INFO:     192.168.65.1:28253 - "GET /workloads/model-swap-agent HTTP/1.1" 200 OK
+INFO:     192.168.65.1:26670 - "GET /workloads/regressed-agent HTTP/1.1" 200 OK
+INFO:     192.168.65.1:35664 - "GET /workloads/support-agent HTTP/1.1" 200 OK
+INFO:     192.168.65.1:27361 - "GET /workloads/uncertified-agent HTTP/1.1" 200 OK
+INFO:     192.168.65.1:18291 - "POST /reconcile/ft-gitops-inline/apply HTTP/1.1" 200 OK
+INFO:     192.168.65.1:19967 - "POST /reconcile/ft-gitops-inline/apply HTTP/1.1" 200 OK
+INFO:     192.168.65.1:23960 - "GET /workloads/gitops-temp HTTP/1.1" 404 Not Found
+INFO:     192.168.65.1:30831 - "POST /reconcile/ft-gitops-inline/apply HTTP/1.1" 200 OK
+INFO:     192.168.65.1:59654 - "POST /reconcile/ft-gitops-inline/plan HTTP/1.1" 200 OK

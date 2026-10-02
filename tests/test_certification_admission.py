@@ -181,3 +181,127 @@ def test_attestation_records_certified_status_and_model(certified: Certified) ->
     assert attestation.model_identity == _BOUND_MODEL
     assert attestation.status.value == "certified"
     assert attestation.target_context is TargetContext.PRODUCTION
+
+
+@pytest.fixture
+def certified_with_provenance(
+    make_manifest: Callable[..., AgentWorkload],
+) -> Certified:
+    private_key, public_key = generate_keypair()
+    registry = RegistryService(
+        InMemoryRegistryStore(),
+        clock=lambda: _FIXED_NOW,
+        attestation_public_key=public_key,
+        bundle_signing_key=private_key,
+    )
+    registry.create(make_manifest(name="repo-agent"))
+    engine = CertificationEngine(_policy(), clock=lambda: _FIXED_NOW)
+    counter = {"n": 0}
+
+    def _id() -> str:
+        counter["n"] += 1
+        return f"att-{counter['n']}"
+
+    service = CertificationService(
+        engine,
+        registry,
+        private_key=private_key,
+        environment=_ENV,
+        clock=lambda: _FIXED_NOW,
+        id_factory=_id,
+    )
+    service.certify(_result(), target_context=TargetContext.STAGING)
+    service.certify(_result(), target_context=TargetContext.PRODUCTION)
+    pipeline = AdmissionPipeline(
+        RegistryCertificationGate(registry),
+        PermissivePolicyGate(lambda: _FIXED_NOW),
+        UnlimitedBudgetGate(),
+        ManifestSandboxGate(),
+        clock=lambda: _FIXED_NOW,
+    )
+    return registry, pipeline, service
+
+
+def test_verified_provenance_admits_production(
+    certified_with_provenance: Certified,
+) -> None:
+    registry, _, _ = certified_with_provenance
+
+    assert registry.get("repo-agent").bundle is not None
+    assert registry.check_admission("repo-agent", AdmissionContext.PRODUCTION).admitted is True
+
+
+def test_tampered_bundle_is_refused_production_admission(
+    certified_with_provenance: Certified,
+) -> None:
+    registry, _, _ = certified_with_provenance
+    record = registry.get("repo-agent")
+    assert record.bundle is not None
+    tampered = record.bundle.model_copy(update={"bundle_digest": "deadbeef"})
+    registry._store.save_workload(record.model_copy(update={"bundle": tampered}))
+
+    assert registry.check_admission("repo-agent", AdmissionContext.PRODUCTION).admitted is False
+
+
+def test_swapped_manifest_identity_is_refused_production_admission(
+    certified_with_provenance: Certified,
+) -> None:
+    registry, _, _ = certified_with_provenance
+    record = registry.get("repo-agent")
+    assert record.bundle is not None
+    # Keep the bundle but claim a different entrypoint in the current manifest.
+    runtime = record.manifest.spec.runtime.model_copy(update={"entrypoint": "examples.evil:run"})
+    swapped_manifest = record.manifest.model_copy(
+        update={"spec": record.manifest.spec.model_copy(update={"runtime": runtime})}
+    )
+    registry._store.save_workload(
+        record.model_copy(update={"manifest": swapped_manifest})
+    )
+
+    assert registry.check_admission("repo-agent", AdmissionContext.PRODUCTION).admitted is False
+
+
+def test_missing_bundle_is_refused_production_admission(
+    certified_with_provenance: Certified,
+) -> None:
+    registry, _, _ = certified_with_provenance
+    record = registry.get("repo-agent")
+    registry._store.save_workload(record.model_copy(update={"bundle": None}))
+
+    assert registry.check_admission("repo-agent", AdmissionContext.PRODUCTION).admitted is False
+
+
+def test_unresolvable_bundle_key_is_refused(
+    make_manifest: Callable[..., AgentWorkload],
+) -> None:
+    private_key, public_key = generate_keypair()
+    registry = RegistryService(
+        InMemoryRegistryStore(),
+        clock=lambda: _FIXED_NOW,
+        attestation_public_key=public_key,
+        bundle_signing_key=private_key,
+        key_resolver=lambda _key_id: None,
+    )
+    registry.create(make_manifest(name="repo-agent"))
+    engine = CertificationEngine(_policy(), clock=lambda: _FIXED_NOW)
+    service = CertificationService(
+        engine,
+        registry,
+        private_key=private_key,
+        environment=_ENV,
+        clock=lambda: _FIXED_NOW,
+    )
+    service.certify(_result(), target_context=TargetContext.STAGING)
+    service.certify(_result(), target_context=TargetContext.PRODUCTION)
+
+    assert registry.check_admission("repo-agent", AdmissionContext.PRODUCTION).admitted is False
+
+
+def test_require_admission_succeeds_when_provenance_verifies(
+    certified_with_provenance: Certified,
+) -> None:
+    registry, _, _ = certified_with_provenance
+
+    decision = registry.require_admission("repo-agent", AdmissionContext.PRODUCTION)
+
+    assert decision.admitted is True

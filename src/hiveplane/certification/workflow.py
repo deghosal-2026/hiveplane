@@ -11,14 +11,16 @@ from __future__ import annotations
 from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
-
-from opentelemetry.util.types import AttributeValue
+from typing import Any
 
 from hiveplane import metrics, telemetry
 from hiveplane.certification.corpus import load_corpus
-from hiveplane.certification.diff import regression_diff
+from hiveplane.certification.diff import build_regression_report, regression_diff
 from hiveplane.certification.errors import CertificationNotFoundError, CorpusError
 from hiveplane.certification.models import (
+    BenchmarkCorpus,
+    BenchmarkResult,
+    BenchmarkTask,
     CertificationRecord,
     CertificationStatus,
     Environment,
@@ -30,8 +32,10 @@ from hiveplane.certification.service import CertificationService
 from hiveplane.certification.store import CertificationStore
 from hiveplane.core.spec import canonical_model_identity
 from hiveplane.core.workload import AgentWorkload
+from hiveplane.corpus.profiles import Profile, ensure_profile_allowed, select_profile
 from hiveplane.registry.models import WorkloadRecord
 from hiveplane.registry.service import RegistryService
+from hiveplane.tenancy.context import DEFAULT_CONTEXT, TenantContext
 
 
 class CertificationCoordinator:
@@ -49,6 +53,7 @@ class CertificationCoordinator:
         executor_factory: Callable[[str, str | None], TaskExecutor] | None = None,
         benchmark_version: str = BENCHMARK_VERSION,
         clock: Callable[[], datetime] | None = None,
+        corpus_integrator: Callable[[str, BenchmarkCorpus], BenchmarkCorpus] | None = None,
     ) -> None:
         self._registry = registry
         self._service = service
@@ -59,6 +64,7 @@ class CertificationCoordinator:
         self._environment = environment
         self._benchmark_version = benchmark_version
         self._clock = clock or (lambda: datetime.now(UTC))
+        self._corpus_integrator = corpus_integrator
 
     @property
     def store(self) -> CertificationStore:
@@ -72,10 +78,13 @@ class CertificationCoordinator:
         target_context: TargetContext,
         corpus_ref: str | None = None,
         model_identity: str | None = None,
+        profile: Profile = Profile.FULL,
+        ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> CertificationRecord:
         """Run the workload's corpus, certify it, and store the record."""
-        record = self._registry.get(workload)
-        attributes: dict[str, AttributeValue] = {
+        ensure_profile_allowed(profile, target_context)
+        record = self._registry.get(workload, ctx=ctx)
+        attributes: dict[str, Any] = {
             "workload": workload,
             "target_context": target_context.value,
         }
@@ -88,6 +97,8 @@ class CertificationCoordinator:
                 target_context=target_context,
                 corpus_ref=corpus_ref,
                 model_identity=model_identity,
+                profile=profile,
+                ctx=ctx,
             )
             active.set_attribute(
                 "attestation_id", certification_record.attestation.attestation_id
@@ -105,8 +116,85 @@ class CertificationCoordinator:
         target_context: TargetContext,
         corpus_ref: str | None,
         model_identity: str | None = None,
+        profile: Profile = Profile.FULL,
+        ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> CertificationRecord:
         """Execute the benchmark and persist the resulting certification record."""
+        result, corpus = self._execute(
+            record,
+            workload,
+            corpus_ref=corpus_ref,
+            model_identity=model_identity,
+            profile=profile,
+        )
+        previous = self._registry.list_attestations(workload, ctx=ctx)
+        certification_record = self._service.certify_with_result(
+            result,
+            target_context=target_context,
+            previous_attestation_id=(
+                previous[-1].attestation_id if previous else None
+            ),
+            profile=profile.value,
+            ctx=ctx,
+        )
+        baseline = self._baseline_record(workload, certification_record.record_id, ctx=ctx)
+        if baseline is not None:
+            diff = regression_diff(
+                baseline.benchmark_result,
+                result,
+                before_attestation_id=baseline.attestation.attestation_id,
+                after_attestation_id=certification_record.attestation.attestation_id,
+                task_catalog=_catalog(corpus),
+                baseline_attestation_id=baseline.attestation.attestation_id,
+            )
+            certification_record = certification_record.model_copy(
+                update={
+                    "regression_report": build_regression_report(
+                        diff, generated_at=self._clock()
+                    )
+                }
+            )
+        self._store.add(certification_record, ctx=ctx)
+        status = certification_record.certification.status
+        metrics.get_metrics().record_certification(
+            workload=workload,
+            team=record.team,
+            status=status.value,
+            duration_seconds=(result.finished_at - result.started_at).total_seconds(),
+        )
+        if previous and status in (
+            CertificationStatus.UNCERTIFIED,
+            CertificationStatus.QUARANTINED,
+        ):
+            metrics.get_metrics().record_regression(workload=workload)
+        return certification_record
+
+    def benchmark(
+        self,
+        workload: str,
+        *,
+        target_context: TargetContext = TargetContext.STAGING,
+        corpus_ref: str | None = None,
+        model_identity: str | None = None,
+        ctx: TenantContext = DEFAULT_CONTEXT,
+    ) -> BenchmarkResult:
+        """Run a workload's corpus without certifying (drift probing, M34)."""
+        record = self._registry.get(workload, ctx=ctx)
+        result, _ = self._execute(
+            record, workload, corpus_ref=corpus_ref, model_identity=model_identity
+        )
+        return result
+
+    def _execute(
+        self,
+        record: WorkloadRecord,
+        workload: str,
+        *,
+        corpus_ref: str | None,
+        model_identity: str | None = None,
+        profile: Profile = Profile.FULL,
+    ) -> tuple[BenchmarkResult, BenchmarkCorpus]:
+        """Run the workload's benchmark corpus and return the result and corpus."""
         certification = record.manifest.spec.certification
         reference = corpus_ref or (
             certification.benchmark_corpus if certification is not None else None
@@ -114,6 +202,9 @@ class CertificationCoordinator:
         if not reference:
             raise CorpusError(f"workload {workload!r} has no benchmark_corpus configured")
         corpus = load_corpus(self._resolve_corpus_path(reference))
+        if self._corpus_integrator is not None:
+            corpus = self._corpus_integrator(workload, corpus)
+        corpus = select_profile(corpus, profile)
         pinned = _pinned_identity(record.manifest, model_identity)
         executor = (
             self._executor_factory(workload, pinned)
@@ -130,28 +221,7 @@ class CertificationCoordinator:
         result = runner.run(
             corpus, workload_id=workload, manifest_version=record.current_version
         )
-        previous = self._registry.list_attestations(workload)
-        certification_record = self._service.certify_with_result(
-            result,
-            target_context=target_context,
-            previous_attestation_id=(
-                previous[-1].attestation_id if previous else None
-            ),
-        )
-        self._store.add(certification_record)
-        status = certification_record.certification.status
-        metrics.get_metrics().record_certification(
-            workload=workload,
-            team=record.team,
-            status=status.value,
-            duration_seconds=(result.finished_at - result.started_at).total_seconds(),
-        )
-        if previous and status in (
-            CertificationStatus.UNCERTIFIED,
-            CertificationStatus.QUARANTINED,
-        ):
-            metrics.get_metrics().record_regression(workload=workload)
-        return certification_record
+        return result, corpus
 
     def _resolve_corpus_path(self, reference: str) -> Path:
         """Resolve a corpus reference under the corpora root, rejecting escapes."""
@@ -163,9 +233,11 @@ class CertificationCoordinator:
             )
         return candidate
 
-    def get(self, record_id: str) -> CertificationRecord:
+    def get(
+        self, record_id: str, *, ctx: TenantContext = DEFAULT_CONTEXT
+    ) -> CertificationRecord:
         """Return a stored certification record or raise."""
-        record = self._store.get(record_id)
+        record = self._store.get(record_id, ctx=ctx)
         if record is None:
             raise CertificationNotFoundError(record_id)
         return record
@@ -177,22 +249,112 @@ class CertificationCoordinator:
         status: CertificationStatus | None = None,
         limit: int | None = None,
         offset: int = 0,
+        ctx: TenantContext = DEFAULT_CONTEXT,
     ) -> list[CertificationRecord]:
         """List stored certification records, optionally filtered."""
         return self._store.list(
-            workload=workload, status=status, limit=limit, offset=offset
+            workload=workload, status=status, limit=limit, offset=offset, ctx=ctx
         )
 
-    def compare(self, before_id: str, after_id: str) -> RegressionDiff:
+    def compare(
+        self, before_id: str, after_id: str, *, ctx: TenantContext = DEFAULT_CONTEXT
+    ) -> RegressionDiff:
         """Return the task-level regression diff between two certifications."""
-        before = self.get(before_id)
-        after = self.get(after_id)
+        before = self.get(before_id, ctx=ctx)
+        after = self.get(after_id, ctx=ctx)
         return regression_diff(
             before.benchmark_result,
             after.benchmark_result,
             before_attestation_id=before.attestation.attestation_id,
             after_attestation_id=after.attestation.attestation_id,
+            task_catalog=self._corpus_catalog(after, ctx=ctx),
+            baseline_attestation_id=before.attestation.attestation_id,
         )
+
+    def compare_to_baseline(
+        self,
+        workload: str,
+        after_id: str,
+        *,
+        baseline_id: str | None = None,
+        ctx: TenantContext = DEFAULT_CONTEXT,
+    ) -> RegressionDiff:
+        """Compare a certification to its baseline (M33-02).
+
+        The baseline is an explicit attestation id when given, otherwise the
+        most recent other ``certified`` record for the workload, falling back to
+        the most recent other record. Comparison is deterministic.
+        """
+        after = self.get(after_id, ctx=ctx)
+        if baseline_id is not None:
+            baseline = self.get(baseline_id, ctx=ctx)
+        else:
+            candidate = self._baseline_record(workload, after_id, ctx=ctx)
+            if candidate is None:
+                raise CertificationNotFoundError(f"no baseline for {workload!r}")
+            baseline = candidate
+        return regression_diff(
+            baseline.benchmark_result,
+            after.benchmark_result,
+            before_attestation_id=baseline.attestation.attestation_id,
+            after_attestation_id=after.attestation.attestation_id,
+            task_catalog=self._corpus_catalog(after, ctx=ctx),
+            baseline_attestation_id=baseline.attestation.attestation_id,
+        )
+
+    def _baseline_record(
+        self,
+        workload: str,
+        exclude_id: str,
+        *,
+        ctx: TenantContext = DEFAULT_CONTEXT,
+    ) -> CertificationRecord | None:
+        """Return the most recent other certified record, else the most recent other.
+
+        The diff baseline must be the last *certified* attestation so regressions
+        are measured against a trustworthy reference, not against an intermediate
+        quarantined/staging record (M33-02, certification-v2-design.md:190-194).
+        """
+        records = [
+            record
+            for record in self._store.list(workload=workload, ctx=ctx)
+            if record.record_id != exclude_id
+        ]
+        certified = [
+            record
+            for record in records
+            if record.certification.status is CertificationStatus.CERTIFIED
+        ]
+        pool = certified or records
+        pool.sort(key=lambda record: (record.attestation.timestamp, record.record_id))
+        return pool[-1] if pool else None
+
+    def _corpus_catalog(
+        self,
+        record: CertificationRecord,
+        *,
+        ctx: TenantContext = DEFAULT_CONTEXT,
+    ) -> dict[str, BenchmarkTask] | None:
+        """Best-effort load of the corpus tasks behind a certification record."""
+        workload = record.benchmark_result.workload_id
+        try:
+            manifest = self._registry.get(workload, ctx=ctx).manifest
+        except Exception:
+            return None
+        certification = manifest.spec.certification
+        reference = certification.benchmark_corpus if certification is not None else None
+        if not reference:
+            return None
+        try:
+            corpus = load_corpus(self._resolve_corpus_path(reference))
+        except (CorpusError, OSError):
+            return None
+        return _catalog(corpus)
+
+
+def _catalog(corpus: BenchmarkCorpus) -> dict[str, BenchmarkTask]:
+    """Index a corpus by task id for replay-frame construction."""
+    return {task.id: task for task in corpus.tasks}
 
 
 def _pinned_identity(manifest: AgentWorkload, override: str | None) -> str | None:
